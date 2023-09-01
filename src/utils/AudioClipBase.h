@@ -5,10 +5,13 @@
 #ifndef CHORUSKIT_AUDIOCLIPBASE_H
 #define CHORUSKIT_AUDIOCLIPBASE_H
 
-#include "buffer/IAudioSampleProvider.h"
-#include <QScopedPointer>
 #include <set>
-template<class T>
+
+#include <QScopedPointer>
+
+#include "buffer/IAudioSampleProvider.h"
+
+template <class T>
 struct AudioClipBase {
     qint64 position = -1;
     T *content;
@@ -19,24 +22,27 @@ struct AudioClipBase {
         return position < other.position;
     }
 };
-template<class T>
+template <class T>
 struct AudioClipSeriesBase {
 public:
     virtual bool addClip(const AudioClipBase<T> &clip) {
         int clipL = clip.position;
         int clipR = clip.position + clip.length;
         auto it = m_clips.lower_bound({clipL});
-        if(it != m_clips.end() && it->position < clipR) return false;
-        if(it != m_clips.begin()) {
+        if (it != m_clips.end() && it->position < clipR)
+            return false;
+        if (it != m_clips.begin()) {
             it--;
-            if(it->position + it->length > clipL) return false;
+            if (it->position + it->length > clipL)
+                return false;
         }
         m_clips.insert(clip);
         return true;
     }
     AudioClipBase<T> findClipAt(qint64 pos) const {
         auto it = findClipIt(pos);
-        if(it == m_clips.end()) return {};
+        if (it == m_clips.end())
+            return {};
         return *it;
     }
     QList<AudioClipBase<T>> clips() const {
@@ -44,7 +50,8 @@ public:
     }
     virtual bool removeClipAt(qint64 pos) {
         auto it = findClipIt(pos);
-        if(it == m_clips.end()) return false;
+        if (it == m_clips.end())
+            return false;
         m_clips.erase(it);
         return true;
     }
@@ -53,17 +60,23 @@ public:
     }
     qint64 effectiveLength() const {
         auto it = m_clips.crbegin();
-        if(it == m_clips.crend()) return 0;
+        if (it == m_clips.crend())
+            return 0;
         return it->position + it->length;
     }
+
 protected:
     std::set<AudioClipBase<T>> m_clips;
-    std::set<AudioClipBase<T>>::const_iterator findClipIt(qint64 pos) const {
+
+    typename std::set<AudioClipBase<T>>::const_iterator findClipIt(qint64 pos) const {
         auto it = m_clips.upper_bound({pos});
-        if(it == m_clips.begin()) return m_clips.end();
+        if (it == m_clips.begin())
+            return m_clips.end();
         it--;
-        if(it->position + it->length > pos) return it;
-        else return m_clips.end();
+        if (it->position + it->length > pos)
+            return it;
+        else
+            return m_clips.end();
     }
 };
 #endif // CHORUSKIT_AUDIOCLIPBASE_H

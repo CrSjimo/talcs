@@ -9,7 +9,7 @@
 
 class SineWaveAudioSourcePrivate;
 
-class SineWaveAudioSource: public PositionableAudioSource {
+class TALCS_EXPORT SineWaveAudioSource: public PositionableAudioSource {
     Q_DECLARE_PRIVATE(SineWaveAudioSource)
 public:
     SineWaveAudioSource();

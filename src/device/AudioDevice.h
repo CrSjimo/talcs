@@ -5,12 +5,12 @@
 #ifndef CHORUSKIT_AUDIODEVICE_H
 #define CHORUSKIT_AUDIODEVICE_H
 
+#include <QObject>
+
 #include "AudioDeviceCallback.h"
 #include "utils/IAudioStream.h"
 #include "utils/IErrorStringProvider.h"
 #include "utils/INameProvider.h"
-
-#include <QObject>
 
 class AudioDevicePrivate;
 class AudioDriver;
@@ -18,12 +18,15 @@ class AudioDriver;
 /**
  * @brief Base class for audio devices
  */
-class AudioDevice: public QObject, public IAudioStream, public INameProvider, public IErrorStringProvider {
+class TALCS_EXPORT AudioDevice : public QObject,
+                                 public IAudioStream,
+                                 public INameProvider,
+                                 public IErrorStringProvider {
     Q_OBJECT
     Q_DECLARE_PRIVATE(AudioDevice)
     friend class AudioDriver;
-public:
 
+public:
     virtual ~AudioDevice();
 
     /**
@@ -110,8 +113,8 @@ public:
     /**
      * Locks the audio callback.
      *
-     * Only lightweight work should be done while the audio device is locked. If any heavy work is going to be done, stop
-     * the audio device first, do the work, and start it again.
+     * Only lightweight work should be done while the audio device is locked. If any heavy work is going to be done,
+     * stop the audio device first, do the work, and start it again.
      *
      * The audio device must be unlocked when it is going to stop or close, otherwise these functions will be blocked.
      */
@@ -124,7 +127,8 @@ public:
 
     /**
      * Opens the control panel of this device.
-     * @return @c true if opened successfully, or @c false if the function fails or this device does not have control panel.
+     * @return @c true if opened successfully, or @c false if the function fails or this device does not have control
+     * panel.
      */
     virtual bool openControlPanel();
 
@@ -186,7 +190,6 @@ protected:
      * @see preferredBufferSize()
      */
     void setPreferredSampleRate(double sampleRate);
-
 };
 
 

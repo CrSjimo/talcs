@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.17)
 
-project(talcs VERSION 0.2.18.1 LANGUAGES CXX)
+project(talcs VERSION 0.0.1.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD 20)
 option(TALCS_BUILD_TRANSLATIONS "Build translations" ON)
 option(TALCS_BUILD_TESTS "Build test cases" ON)
 option(TALCS_INSTALL "Install library" ON)
+option(TALCS_ENABLE_ASIO "Enable ASIO feature" OFF)
 
 # ----------------------------------
 # CMake Settings

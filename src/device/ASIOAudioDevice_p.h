@@ -5,7 +5,7 @@
 #ifndef CHORUSKIT_ASIOAUDIODEVICE_P_H
 #define CHORUSKIT_ASIOAUDIODEVICE_P_H
 
-#ifdef USE_FEATURE_ASIO
+
 
 #include "ASIOAudioDevice.h"
 #include "AudioDevice_p.h"
@@ -13,6 +13,7 @@
 #include <qt_windows.h>
 #include <combaseapi.h>
 #include <iasiodrv.h>
+
 #include <QMutex>
 
 class ASIOAudioDevicePrivate: public AudioDevicePrivate {
@@ -38,6 +39,6 @@ class ASIOAudioDevicePrivate: public AudioDevicePrivate {
     QMutex mutex;
 };
 
-#endif // USE_FEATURE_ASIO
+
 
 #endif // CHORUSKIT_ASIOAUDIODEVICE_P_H

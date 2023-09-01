@@ -7,7 +7,9 @@
 
 #include <QtGlobal>
 
-class AudioSampleConverter {
+#include "global/TalcsGlobal.h"
+
+class TALCS_EXPORT AudioSampleConverter {
 public:
     static void convertFloatToInt16(void *dest, const float *src, qint64 length, bool isLittleEndian);
     static void convertFloatToInt24(void *dest, const float *src, qint64 length, bool isLittleEndian);

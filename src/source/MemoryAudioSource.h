@@ -11,7 +11,7 @@
 
 class MemoryAudioSourcePrivate;
 
-class MemoryAudioSource: public PositionableAudioSource {
+class TALCS_EXPORT MemoryAudioSource: public PositionableAudioSource {
     Q_DECLARE_PRIVATE(MemoryAudioSource)
 public:
     explicit MemoryAudioSource(IAudioSampleProvider *buffer = nullptr, bool takeOwnership = false);

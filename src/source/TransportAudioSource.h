@@ -2,8 +2,8 @@
 // Created by Crs_1 on 2023/7/11.
 //
 
-#ifndef CHORUSKIT_TRANSPORTAUDIOSOURCE_H
-#define CHORUSKIT_TRANSPORTAUDIOSOURCE_H
+#ifndef TRANSPORTAUDIOSOURCE_H
+#define TRANSPORTAUDIOSOURCE_H
 
 #include <QObject>
 
@@ -13,7 +13,7 @@
 class TransportAudioSourcePrivate;
 class TransportAudioSourceWriter;
 
-class TransportAudioSource: public QObject, public AudioSource {
+class TALCS_EXPORT TransportAudioSource: public QObject, public AudioSource {
     Q_OBJECT
 #define d_ptr AudioSource::d_ptr
     Q_DECLARE_PRIVATE(TransportAudioSource)
@@ -48,4 +48,4 @@ protected:
     TransportAudioSource(TransportAudioSourcePrivate &d, QObject *parent);
 };
 
-#endif // CHORUSKIT_TRANSPORTAUDIOSOURCE_H
+#endif // TRANSPORTAUDIOSOURCE_H

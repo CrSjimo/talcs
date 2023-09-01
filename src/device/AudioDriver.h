@@ -2,8 +2,8 @@
 // Created by Crs_1 on 2023/7/10.
 //
 
-#ifndef CHORUSKIT_AUDIODRIVER_H
-#define CHORUSKIT_AUDIODRIVER_H
+#ifndef AUDIODRIVER_H
+#define AUDIODRIVER_H
 
 #include <QObject>
 
@@ -82,4 +82,4 @@ protected:
 
 
 
-#endif // CHORUSKIT_AUDIODRIVER_H
+#endif // AUDIODRIVER_H

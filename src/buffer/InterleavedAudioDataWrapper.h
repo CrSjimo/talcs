@@ -2,8 +2,8 @@
 // Created by Crs_1 on 2023/7/11.
 //
 
-#ifndef CHORUSKIT_INTERLEAVEDAUDIODATAWRAPPER_H
-#define CHORUSKIT_INTERLEAVEDAUDIODATAWRAPPER_H
+#ifndef INTERLEAVEDAUDIODATAWRAPPER_H
+#define INTERLEAVEDAUDIODATAWRAPPER_H
 
 #include <QScopedPointer>
 
@@ -15,7 +15,7 @@ class InterleavedAudioDataWrapperPrivate;
  * @brief A Wrapper that points to a pre-allocated array of interleaved audio sample data.
  * @see AudioDataWrapper
  */
-class InterleavedAudioDataWrapper: public IAudioSampleContainer {
+class TALCS_EXPORT InterleavedAudioDataWrapper: public IAudioSampleContainer {
     Q_DECLARE_PRIVATE(InterleavedAudioDataWrapper)
 public:
     /**
@@ -60,4 +60,4 @@ protected:
 
 
 
-#endif // CHORUSKIT_INTERLEAVEDAUDIODATAWRAPPER_H
+#endif // INTERLEAVEDAUDIODATAWRAPPER_H

@@ -2,8 +2,8 @@
 // Created by Crs_1 on 2023/7/8.
 //
 
-#ifndef CHORUSKIT_AUDIODATAWRAPPER_H
-#define CHORUSKIT_AUDIODATAWRAPPER_H
+#ifndef AUDIODATAWRAPPER_H
+#define AUDIODATAWRAPPER_H
 
 #include <QScopedPointer>
 
@@ -18,7 +18,7 @@ class AudioDataWrapperPrivate;
  *
  * @see InterLeavedAudioDataWrapper
  */
-class AudioDataWrapper: public IAudioSampleContainer {
+class TALCS_EXPORT AudioDataWrapper: public IAudioSampleContainer {
     Q_DECLARE_PRIVATE(AudioDataWrapper)
 public:
 
@@ -67,4 +67,4 @@ protected:
 
 
 
-#endif // CHORUSKIT_AUDIODATAWRAPPER_H
+#endif // AUDIODATAWRAPPER_H

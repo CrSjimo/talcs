@@ -11,7 +11,7 @@ class SDLAudioDriverPrivate;
 class SDLAudioDriverEventPoller;
 class SDLAudioDevice;
 
-class SDLAudioDriver: public AudioDriver {
+class TALCS_EXPORT SDLAudioDriver: public AudioDriver {
     Q_OBJECT
     Q_DECLARE_PRIVATE(SDLAudioDriver)
     friend class SDLAudioDevice;

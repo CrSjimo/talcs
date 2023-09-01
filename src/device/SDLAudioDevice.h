@@ -10,7 +10,7 @@
 class SDLAudioDevicePrivate;
 class SDLAudioDriver;
 
-class SDLAudioDevice: public AudioDevice {
+class TALCS_EXPORT SDLAudioDevice: public AudioDevice {
     Q_OBJECT
     Q_DECLARE_PRIVATE(SDLAudioDevice)
     friend class SDLAudioDriver;
@@ -27,7 +27,6 @@ public:
 protected:
     SDLAudioDevice(const QString &name, SDLAudioDriver *driver);
     SDLAudioDevice(SDLAudioDevicePrivate &d, QObject *parent);
-
 };
 
 

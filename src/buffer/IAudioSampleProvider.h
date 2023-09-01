@@ -2,15 +2,17 @@
 // Created by Crs_1 on 2023/7/9.
 //
 
-#ifndef CHORUSKIT_IAUDIOSAMPLEPROVIDER_H
-#define CHORUSKIT_IAUDIOSAMPLEPROVIDER_H
+#ifndef IAUDIOSAMPLEPROVIDER_H
+#define IAUDIOSAMPLEPROVIDER_H
 
-#include <qglobal.h>
+#include <QtGlobal>
+
+#include "global/TalcsGlobal.h"
 
 /**
  * @brief Base class for object containing audio data for read
  */
-class IAudioSampleProvider {
+class TALCS_EXPORT IAudioSampleProvider {
 public:
     virtual ~IAudioSampleProvider() = default;
 
@@ -72,4 +74,4 @@ public:
 
 
 
-#endif // CHORUSKIT_IAUDIOSAMPLEPROVIDER_H
+#endif // IAUDIOSAMPLEPROVIDER_H

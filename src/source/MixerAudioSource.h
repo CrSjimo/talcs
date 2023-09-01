@@ -12,7 +12,7 @@
 
 class MixerAudioSourcePrivate;
 
-class MixerAudioSource: public QObject, public AudioSource {
+class TALCS_EXPORT MixerAudioSource: public QObject, public AudioSource {
     Q_OBJECT
 #define d_ptr AudioSource::d_ptr
     Q_DECLARE_PRIVATE(MixerAudioSource)

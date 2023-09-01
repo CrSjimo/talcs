@@ -2,18 +2,14 @@
 // Created by Crs_1 on 2023/8/17.
 //
 
-#ifndef CHORUSKIT_ASIOAUDIODRIVER_H
-#define CHORUSKIT_ASIOAUDIODRIVER_H
-
-#ifndef USE_FEATURE_ASIO
-#   warning ASIO Feature is not enabled
-#else
+#ifndef ASIOAUDIODRIVER_H
+#define ASIOAUDIODRIVER_H
 
 #include "AudioDriver.h"
 
 class ASIOAudioDriverPrivate;
 
-class ASIOAudioDriver: public AudioDriver {
+class TALCS_EXPORT ASIOAudioDriver: public AudioDriver {
     Q_OBJECT
     Q_DECLARE_PRIVATE(ASIOAudioDriver)
 public:
@@ -29,6 +25,4 @@ protected:
     ASIOAudioDriver(ASIOAudioDriverPrivate &d, QObject *parent);
 };
 
-#endif // USE_FEATURE_ASIO
-
-#endif // CHORUSKIT_ASIOAUDIODRIVER_H
+#endif // ASIOAUDIODRIVER_H

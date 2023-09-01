@@ -2,14 +2,14 @@
 // Created by Crs_1 on 2023/7/16.
 //
 
-#ifndef CHORUSKIT_CHANNELROUTINGAUDIOSOURCE_H
-#define CHORUSKIT_CHANNELROUTINGAUDIOSOURCE_H
+#ifndef CHANNELROUTINGAUDIOSOURCE_H
+#define CHANNELROUTINGAUDIOSOURCE_H
 
 #include "AudioSource.h"
 
 class ChannelRoutingAudioSourcePrivate;
 
-class ChannelRoutingAudioSource: public AudioSource {
+class TALCS_EXPORT ChannelRoutingAudioSource: public AudioSource {
     Q_DECLARE_PRIVATE(ChannelRoutingAudioSource);
 public:
     ChannelRoutingAudioSource();
@@ -30,4 +30,4 @@ protected:
 
 
 
-#endif // CHORUSKIT_CHANNELROUTINGAUDIOSOURCE_H
+#endif // CHANNELROUTINGAUDIOSOURCE_H

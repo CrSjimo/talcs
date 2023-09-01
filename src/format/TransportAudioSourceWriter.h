@@ -7,8 +7,9 @@
 
 #include <QObject>
 
-class TransportAudioSourceWriterPrivate;
+#include "global/TalcsGlobal.h"
 
+class TransportAudioSourceWriterPrivate;
 class TransportAudioSource;
 class AudioFormatIO;
 
@@ -19,15 +20,15 @@ class AudioFormatIO;
  *
  * @see TransportAudioSource, AudioFormatIO
  */
-class TransportAudioSourceWriter: public QObject {
+class TALCS_EXPORT TransportAudioSourceWriter : public QObject {
     Q_OBJECT
     Q_DECLARE_PRIVATE(TransportAudioSourceWriter)
 public:
     /**
      * Constructor.
      *
-     * TransportAudioSource object and the AudioFormatIO object must be opened before writing is started, and closed manually
-     * after writing.
+     * TransportAudioSource object and the AudioFormatIO object must be opened before writing is started, and closed
+     * manually after writing.
      *
      * Note that this object does not take the ownership of both objects.
      */
@@ -38,9 +39,10 @@ public slots:
     /**
      * Starts writing.
      *
-     * Note that the function should be called from another thread to avoid from blocking the main thread. It is recommended
-     * to move this object to another thread using [QObject::moveToThread](https://doc.qt.io/qt-5/qobject.html#moveToThread)()
-     * and connect signals and slots across different threads.
+     * Note that the function should be called from another thread to avoid from blocking the main thread. It is
+     * recommended to move this object to another thread using
+     * [QObject::moveToThread](https://doc.qt.io/qt-5/qobject.html#moveToThread)() and connect signals and slots across
+     * different threads.
      *
      * @see [QThread](https://doc.qt.io/qt-5/qthread.html)
      */
@@ -49,8 +51,8 @@ public slots:
     /**
      * Interrupts the writing process. This function is thread-safe.
      *
-     * Note that do not use queued connection to connect this slot to any signal, otherwise this function will not be invoked
-     * before completed, since the thread is blocked while writing.
+     * Note that do not use queued connection to connect this slot to any signal, otherwise this function will not be
+     * invoked before completed, since the thread is blocked while writing.
      */
     void interrupt();
 

@@ -2,7 +2,7 @@
 // Created by Crs_1 on 2023/8/17.
 //
 
-#ifdef USE_FEATURE_ASIO
+
 
 #include "ASIOAudioDriver.h"
 #include "ASIOAudioDriver_p.h"
@@ -143,4 +143,4 @@ AudioDevice *ASIOAudioDriver::createDevice(const QString &name) {
     return nullptr;
 }
 
-#endif // USE_FEATURE_ASIO
+

@@ -2,15 +2,15 @@
 // Created by Crs_1 on 2023/7/12.
 //
 
-#ifndef CHORUSKIT_AUDIOFORMATINPUTSOURCE_H
-#define CHORUSKIT_AUDIOFORMATINPUTSOURCE_H
+#ifndef AUDIOFORMATINPUTSOURCE_H
+#define AUDIOFORMATINPUTSOURCE_H
 
 #include "PositionableAudioSource.h"
 
 class AudioFormatInputSourcePrivate;
 class AudioFormatIO;
 
-class AudioFormatInputSource: public PositionableAudioSource {
+class TALCS_EXPORT AudioFormatInputSource: public PositionableAudioSource {
     Q_DECLARE_PRIVATE(AudioFormatInputSource);
 public:
     enum ResampleMode {
@@ -45,4 +45,4 @@ protected:
 };
 
 
-#endif // CHORUSKIT_AUDIOFORMATINPUTSOURCE_H
+#endif // AUDIOFORMATINPUTSOURCE_H

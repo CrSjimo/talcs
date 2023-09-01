@@ -2,10 +2,8 @@
 // Created by Crs_1 on 2023/7/8.
 //
 
-#ifndef CHORUSKIT_IAUDIOSAMPLECONTAINER_H
-#define CHORUSKIT_IAUDIOSAMPLECONTAINER_H
-
-
+#ifndef IAUDIOSAMPLECONTAINER_H
+#define IAUDIOSAMPLECONTAINER_H
 
 #include "IAudioSampleProvider.h"
 
@@ -13,7 +11,7 @@
  * @brief Base class for object containing audio data for read and write
  */
 
-class IAudioSampleContainer : public IAudioSampleProvider {
+class TALCS_EXPORT IAudioSampleContainer : public IAudioSampleProvider {
 public:
 
     /**
@@ -124,4 +122,4 @@ public:
 
 
 
-#endif // CHORUSKIT_IAUDIOSAMPLECONTAINER_H
+#endif // IAUDIOSAMPLECONTAINER_H

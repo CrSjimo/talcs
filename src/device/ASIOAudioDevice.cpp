@@ -1,7 +1,6 @@
 //
 // Created by Crs_1 on 2023/8/17.
 //
-#ifdef USE_FEATURE_ASIO
 
 #include "ASIOAudioDevice.h"
 #include "ASIOAudioDevice_p.h"
@@ -276,5 +275,3 @@ bool ASIOAudioDevice::openControlPanel() {
     Q_D(ASIOAudioDevice);
     return d->iasio->controlPanel() == ASE_OK;
 }
-
-#endif // USE_FEATURE_ASIO

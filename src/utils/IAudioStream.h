@@ -2,12 +2,14 @@
 // Created by Crs_1 on 2023/7/10.
 //
 
-#ifndef CHORUSKIT_IAUDIOSTREAM_H
-#define CHORUSKIT_IAUDIOSTREAM_H
+#ifndef IAUDIOSTREAM_H
+#define IAUDIOSTREAM_H
 
-#include <qglobal.h>
+#include <QtGlobal>
 
-class IAudioStream {
+#include "global/TalcsGlobal.h"
+
+class TALCS_EXPORT IAudioStream {
 public:
     virtual bool open(qint64 bufferSize, double sampleRate);
     bool isOpen() const;
@@ -24,4 +26,4 @@ private:
 
 
 
-#endif // CHORUSKIT_IAUDIOSTREAM_H
+#endif // IAUDIOSTREAM_H

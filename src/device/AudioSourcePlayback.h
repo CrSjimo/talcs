@@ -2,11 +2,13 @@
 // Created by Crs_1 on 2023/7/10.
 //
 
-#ifndef CHORUSKIT_AUDIOSOURCEPLAYBACK_H
-#define CHORUSKIT_AUDIOSOURCEPLAYBACK_H
+#ifndef AUDIOSOURCEPLAYBACK_H
+#define AUDIOSOURCEPLAYBACK_H
 
 #include <QScopedPointer>
+
 #include "AudioDeviceCallback.h"
+#include "global/TalcsGlobal.h"
 
 class AudioSourcePlaybackPrivate;
 
@@ -19,13 +21,14 @@ class AudioSource;
  *
  * @see AudioSource, TransportAudioSource
  */
-class AudioSourcePlayback: public AudioDeviceCallback {
+class TALCS_EXPORT AudioSourcePlayback : public AudioDeviceCallback {
     Q_DECLARE_PRIVATE(AudioSourcePlayback)
 public:
     /**
      * Constructor.
      * @param src the AudioSource to process
-     * @param takeOwnership If the ownership of the AudioSource object is taken, the object will be deleted on destruction.
+     * @param takeOwnership If the ownership of the AudioSource object is taken, the object will be deleted on
+     * destruction.
      */
     explicit AudioSourcePlayback(AudioSource *src, bool takeOwnership = false);
     ~AudioSourcePlayback();
@@ -51,4 +54,4 @@ protected:
 
 
 
-#endif // CHORUSKIT_AUDIOSOURCEPLAYBACK_H
+#endif // AUDIOSOURCEPLAYBACK_H

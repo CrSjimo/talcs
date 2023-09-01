@@ -2,8 +2,8 @@
 // Created by Crs_1 on 2023/7/13.
 //
 
-#ifndef CHORUSKIT_AUDIOSOURCECLIPSERIES_H
-#define CHORUSKIT_AUDIOSOURCECLIPSERIES_H
+#ifndef AUDIOSOURCECLIPSERIES_H
+#define AUDIOSOURCECLIPSERIES_H
 
 #include "PositionableAudioSource.h"
 #include "utils/AudioClipBase.h"
@@ -12,7 +12,8 @@ typedef AudioClipBase<PositionableAudioSource> AudioSourceClip;
 
 class AudioSourceClipSeriesPrivate;
 
-class AudioSourceClipSeries: public PositionableAudioSource, public AudioClipSeriesBase<PositionableAudioSource> {
+class TALCS_EXPORT AudioSourceClipSeries : public PositionableAudioSource,
+                                           public AudioClipSeriesBase<PositionableAudioSource> {
     Q_DECLARE_PRIVATE(AudioSourceClipSeries)
 public:
     AudioSourceClipSeries();
@@ -26,10 +27,11 @@ public:
     bool addClip(const AudioSourceClip &clip) override;
     virtual bool removeClipAt(qint64 pos) override;
     void clearClips() override;
+
 protected:
     AudioSourceClipSeries(AudioSourceClipSeriesPrivate &d);
 };
 
 
 
-#endif // CHORUSKIT_AUDIOSOURCECLIPSERIES_H
+#endif // AUDIOSOURCECLIPSERIES_H

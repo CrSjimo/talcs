@@ -2,12 +2,14 @@
 // Created by Crs_1 on 2023/7/10.
 //
 
-#ifndef CHORUSKIT_IERRORSTRINGPROVIDER_H
-#define CHORUSKIT_IERRORSTRINGPROVIDER_H
+#ifndef IERRORSTRINGPROVIDER_H
+#define IERRORSTRINGPROVIDER_H
 
 #include <QString>
 
-class IErrorStringProvider {
+#include "global/TalcsGlobal.h"
+
+class TALCS_EXPORT IErrorStringProvider {
 public:
     QString errorString() const;
 protected:
@@ -19,4 +21,4 @@ private:
 
 
 
-#endif // CHORUSKIT_IERRORSTRINGPROVIDER_H
+#endif // IERRORSTRINGPROVIDER_H

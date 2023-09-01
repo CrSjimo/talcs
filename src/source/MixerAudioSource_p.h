@@ -10,6 +10,7 @@
 #include <array>
 
 #include <QMutex>
+
 #include <QMChronMap.h>
 
 #include "AudioSource_p.h"

@@ -18,6 +18,7 @@ function(talcs_add_library _target _type)
         )
 
         target_include_directories(${PROJECT_NAME} PUBLIC
+            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
             "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${TALCS_INSTALL_NAME}>"
         )
     endif()
@@ -103,6 +104,10 @@ set(CMAKE_AUTOUIC on)
 set(CMAKE_AUTOMOC on)
 set(CMAKE_AUTORCC on)
 
+find_package(SDL2 REQUIRED)
+find_package(SndFile REQUIRED)
+find_package(SampleRate REQUIRED)
+
 # Platform libs
 set(_platform_libs)
 
@@ -117,14 +122,29 @@ endif()
 # Configure target
 file(GLOB_RECURSE _src *.h *.hpp *.cpp *.cc)
 
+if(TALCS_ENABLE_ASIO)
+# TODO: add inc and link
+else()
+    list(FILTER _src EXCLUDE REGEX "ASIO*")
+endif()
+
 talcs_add_library(${PROJECT_NAME} SHARED ${_src})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME Talcs)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE TALCS_LIBRARY)
 
+if(TALCS_ENABLE_ASIO)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC TALCS_ENABLE_ASIO)
+endif()
+
 # Link
-target_link_libraries(${PROJECT_NAME} PRIVATE ${_platform_libs})
+target_link_libraries(${PROJECT_NAME} PUBLIC qtmediate::Core)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    ${_platform_libs}
+    SDL2::SDL2 SndFile::sndfile SampleRate::samplerate
+)
 
 talcs_link_qt_libraries(${PROJECT_NAME} PUBLIC
     Core
@@ -140,8 +160,6 @@ talcs_include_qt_private(${PROJECT_NAME} PRIVATE
 )
 
 # Extra
-talcs_dir_skip_automoc(Collections Serialization Text)
-
 talcs_install_headers(.)
 
 if(TALCS_INSTALL)

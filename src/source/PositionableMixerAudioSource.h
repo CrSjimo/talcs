@@ -12,7 +12,7 @@
 
 class PositionableMixerAudioSourcePrivate;
 
-class PositionableMixerAudioSource: public QObject, public PositionableAudioSource {
+class TALCS_EXPORT PositionableMixerAudioSource: public QObject, public PositionableAudioSource {
     Q_OBJECT
 #define d_ptr PositionableAudioSource::d_ptr
     Q_DECLARE_PRIVATE(PositionableMixerAudioSource)

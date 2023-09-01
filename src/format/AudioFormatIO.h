@@ -18,7 +18,7 @@ class AudioFormatIOPrivate;
  * @brief The AudioFormatIO class provides interfaces to access audio files based on libsndfile.
  * @see @link URL https://libsndfile.github.io/libsndfile/ @endlink
  */
-class AudioFormatIO: public IErrorStringProvider {
+class TALCS_EXPORT AudioFormatIO: public IErrorStringProvider {
     Q_DECLARE_PRIVATE(AudioFormatIO)
 public:
 

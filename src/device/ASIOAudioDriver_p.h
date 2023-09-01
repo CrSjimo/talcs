@@ -5,8 +5,6 @@
 #ifndef CHORUSKIT_ASIOAUDIODRIVER_P_H
 #define CHORUSKIT_ASIOAUDIODRIVER_P_H
 
-#ifdef USE_FEATURE_ASIO
-
 #include "ASIOAudioDriver.h"
 #include "AudioDriver_p.h"
 
@@ -26,6 +24,6 @@ class ASIOAudioDriverPrivate : public AudioDriverPrivate {
     void createDriverSpec(HKEY hkey, char *keyName);
 };
 
-#endif // USE_FEATURE_ASIO
+
 
 #endif // CHORUSKIT_ASIOAUDIODRIVER_P_H

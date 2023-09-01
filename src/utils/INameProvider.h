@@ -2,12 +2,14 @@
 // Created by Crs_1 on 2023/7/10.
 //
 
-#ifndef CHORUSKIT_INAMEPROVIDER_H
-#define CHORUSKIT_INAMEPROVIDER_H
+#ifndef INAMEPROVIDER_H
+#define INAMEPROVIDER_H
 
 #include <QString>
 
-class INameProvider {
+#include "global/TalcsGlobal.h"
+
+class TALCS_EXPORT INameProvider {
 public:
     QString name() const;
 protected:
@@ -18,4 +20,4 @@ private:
 
 
 
-#endif // CHORUSKIT_INAMEPROVIDER_H
+#endif // INAMEPROVIDER_H

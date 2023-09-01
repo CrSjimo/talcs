@@ -1,18 +1,17 @@
-#ifndef CHORUSKIT_AUDIOBUFFER_H
-#define CHORUSKIT_AUDIOBUFFER_H
+#ifndef AUDIOBUFFER_H
+#define AUDIOBUFFER_H
+
+#include <QVector>
 
 #include "IAudioSampleContainer.h"
-#include <QVector>
 
 /**
  * @brief A container of audio sample data
  *
  * AudioBuffer use a two-dimensional QVector to store multi-channel audio internally and encapsulates some interfaces to access the internal vector.
  */
-class AudioBuffer: public IAudioSampleContainer {
-
+class TALCS_EXPORT AudioBuffer: public IAudioSampleContainer {
 public:
-
     /**
      * Creates an empty buffer with zero channel and zero sample initially.
      */
@@ -108,4 +107,4 @@ private:
 
 
 
-#endif // CHORUSKIT_AUDIOBUFFER_H
+#endif // AUDIOBUFFER_H

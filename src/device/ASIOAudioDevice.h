@@ -5,17 +5,14 @@
 #ifndef CHORUSKIT_ASIOAUDIODEVICE_H
 #define CHORUSKIT_ASIOAUDIODEVICE_H
 
-#ifndef USE_FEATURE_ASIO
-#   warning ASIO Feature is not enabled
-#else
-
 #include "AudioDevice.h"
 
 class ASIOAudioDevicePrivate;
 class ASIOAudioDriver;
+
 struct IASIO;
 
-class ASIOAudioDevice: public AudioDevice {
+class TALCS_EXPORT ASIOAudioDevice: public AudioDevice {
     Q_OBJECT
     Q_DECLARE_PRIVATE(ASIOAudioDevice)
 public:
@@ -33,7 +30,5 @@ protected:
     ASIOAudioDevice(const QString &name, IASIO *iasio, ASIOAudioDriver *driver);
     ASIOAudioDevice(ASIOAudioDevicePrivate &d, QObject *parent);
 };
-
-#endif // USE_FEATURE_ASIO
 
 #endif // CHORUSKIT_ASIOAUDIODEVICE_H

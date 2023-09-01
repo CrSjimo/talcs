@@ -14,7 +14,7 @@ class AudioDriverManagerPrivate;
  *
  * This object is designed for dynamatic registration of audio drivers for DiffScope plugins.
  */
-class AudioDriverManager: public QObject {
+class TALCS_EXPORT AudioDriverManager: public QObject {
     Q_OBJECT
     Q_DECLARE_PRIVATE(AudioDriverManager)
 public:
