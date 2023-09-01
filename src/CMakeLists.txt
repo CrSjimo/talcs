@@ -1,0 +1,179 @@
+# ----------------------------------
+# CMake API
+# ----------------------------------
+function(talcs_add_library _target _type)
+    add_library(${_target} ${_type} ${ARGN})
+
+    if(WIN32)
+        set(RC_VERSION_STRING ${TALCS_INSTALL_NAME})
+        include(${TALCS_MODULES_DIR}/winrc.cmake)
+    endif()
+
+    if(TALCS_INSTALL)
+        install(TARGETS ${_target}
+            EXPORT ${TALCS_INSTALL_NAME}Targets
+            RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" OPTIONAL
+            LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" OPTIONAL
+            ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" OPTIONAL
+        )
+
+        target_include_directories(${PROJECT_NAME} PUBLIC
+            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${TALCS_INSTALL_NAME}>"
+        )
+    endif()
+
+    set_property(GLOBAL APPEND PROPERTY TALCS_TRANSLATE_TARGETS ${_target})
+endfunction()
+
+function(talcs_add_plugin _target _category)
+    add_library(${_target} SHARED ${ARGN})
+    add_library(talcs::${_target} ALIAS ${_target})
+
+    if(WIN32)
+        set(RC_VERSION_STRING ${TALCS_VERSION})
+        include(${TALCS_MODULES_DIR}/winrc.cmake)
+    endif()
+
+    set(_output_dir ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${TALCS_INSTALL_NAME}/plugins/${_category})
+    set_target_properties(${_target} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${_output_dir}
+        ARCHIVE_OUTPUT_DIRECTORY ${_output_dir}
+        LIBRARY_OUTPUT_DIRECTORY ${_output_dir}
+    )
+
+    if(TALCS_INSTALL)
+        install(TARGETS ${_target}
+            RUNTIME DESTINATION "${CMAKE_INSTALL_LIBDIR}/${TALCS_INSTALL_NAME}/plugins/${_category}" OPTIONAL
+            LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/${TALCS_INSTALL_NAME}/plugins/${_category}" OPTIONAL
+        )
+    endif()
+
+    set_property(GLOBAL APPEND PROPERTY TRANSLATE_TARGETS ${_target})
+endfunction()
+
+function(talcs_include_directories _target)
+    foreach(_dir ${ARGN})
+        get_filename_component(_abs_dir ${_dir} ABSOLUTE)
+        file(RELATIVE_PATH _rel_path ${TALCS_SOURCE_DIR} ${_abs_dir})
+        target_include_directories(${_target} PUBLIC
+            "$<BUILD_INTERFACE:${_abs_dir}>"
+            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${TALCS_INSTALL_NAME}/${_rel_path}>"
+        )
+    endforeach()
+endfunction()
+
+macro(talcs_install_headers _dir)
+    if(TALCS_INSTALL)
+        get_filename_component(_abs_dir ${_dir} ABSOLUTE)
+        file(RELATIVE_PATH _rel_path ${TALCS_SOURCE_DIR} ${_abs_dir})
+        install(DIRECTORY ${_abs_dir}/
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${TALCS_INSTALL_NAME}/${_rel_path}
+            FILES_MATCHING PATTERN "*.h"
+        )
+    endif()
+endmacro()
+
+macro(talcs_dir_skip_automoc)
+    foreach(_item ${ARGN})
+        file(GLOB _src ${_item}/*.h ${_item}/*.cpp ${_item}/*.cc)
+        set_source_files_properties(
+            ${_src} PROPERTIES SKIP_AUTOMOC ON
+        )
+    endforeach()
+endmacro()
+
+macro(talcs_link_qt_libraries _target _scope)
+    foreach(_module ${ARGN})
+        find_package(QT NAMES Qt6 Qt5 COMPONENTS ${_module} REQUIRED)
+        find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${_module} REQUIRED)
+        target_link_libraries(${_target} ${_scope} Qt${QT_VERSION_MAJOR}::${_module})
+    endforeach()
+endmacro()
+
+macro(talcs_include_qt_private _target _scope)
+    foreach(_module ${ARGN})
+        target_include_directories(${_target} ${_scope} ${Qt${QT_VERSION_MAJOR}${_module}_PRIVATE_INCLUDE_DIRS})
+    endforeach()
+endmacro()
+
+# ----------------------------------
+# Main Project
+# ----------------------------------
+set(CMAKE_AUTOUIC on)
+set(CMAKE_AUTOMOC on)
+set(CMAKE_AUTORCC on)
+
+# Platform libs
+set(_platform_libs)
+
+if(APPLE)
+    list(APPEND _platform_libs "-framework CoreFoundation")
+endif()
+
+if(NOT WIN32)
+    list(APPEND _platform_libs dl)
+endif()
+
+# Configure target
+file(GLOB_RECURSE _src *.h *.hpp *.cpp *.cc)
+
+talcs_add_library(${PROJECT_NAME} SHARED ${_src})
+
+set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME Talcs)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE TALCS_LIBRARY)
+
+# Link
+target_link_libraries(${PROJECT_NAME} PRIVATE ${_platform_libs})
+
+talcs_link_qt_libraries(${PROJECT_NAME} PUBLIC
+    Core
+)
+
+# Include
+talcs_include_directories(${PROJECT_NAME}
+    .
+)
+
+talcs_include_qt_private(${PROJECT_NAME} PRIVATE
+    Core
+)
+
+# Extra
+talcs_dir_skip_automoc(Collections Serialization Text)
+
+talcs_install_headers(.)
+
+if(TALCS_INSTALL)
+    # Add install target
+    set(_install_dir ${CMAKE_INSTALL_LIBDIR}/cmake/${TALCS_INSTALL_NAME})
+
+    # Add version file
+    write_basic_package_version_file(
+        "${CMAKE_CURRENT_BINARY_DIR}/${TALCS_INSTALL_NAME}ConfigVersion.cmake"
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY AnyNewerVersion
+    )
+
+    # Add configuration file
+    configure_package_config_file(
+        ${CMAKE_CURRENT_LIST_DIR}/${TALCS_INSTALL_NAME}Config.cmake.in
+        "${CMAKE_CURRENT_BINARY_DIR}/${TALCS_INSTALL_NAME}Config.cmake"
+        INSTALL_DESTINATION ${_install_dir}
+        NO_CHECK_REQUIRED_COMPONENTS_MACRO
+    )
+
+    # Install cmake files
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/${TALCS_INSTALL_NAME}Config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/${TALCS_INSTALL_NAME}ConfigVersion.cmake"
+        DESTINATION ${_install_dir}
+    )
+
+    # Install cmake targets files
+    install(EXPORT ${TALCS_INSTALL_NAME}Targets
+        FILE "${TALCS_INSTALL_NAME}Targets.cmake"
+        NAMESPACE talcs::
+        DESTINATION ${_install_dir}
+    )
+endif()

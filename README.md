@@ -1,2 +1,2 @@
-# talcs
-TALCS: Audio Library of CrSjimo
+# TALCS
+**T**ALCS: **A**udio **L**ibrary of **C**r**S**jimo
