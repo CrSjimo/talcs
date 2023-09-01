@@ -6,7 +6,7 @@ function(talcs_add_library _target _type)
 
     if(WIN32)
         set(RC_VERSION_STRING ${TALCS_INSTALL_NAME})
-        include(${TALCS_MODULES_DIR}/winrc.cmake)
+        include(${QTMEDIATE_MODULES_DIR}/winrc.cmake)
     endif()
 
     if(TALCS_INSTALL)
@@ -74,29 +74,6 @@ macro(talcs_install_headers _dir)
     endif()
 endmacro()
 
-macro(talcs_dir_skip_automoc)
-    foreach(_item ${ARGN})
-        file(GLOB _src ${_item}/*.h ${_item}/*.cpp ${_item}/*.cc)
-        set_source_files_properties(
-            ${_src} PROPERTIES SKIP_AUTOMOC ON
-        )
-    endforeach()
-endmacro()
-
-macro(talcs_link_qt_libraries _target _scope)
-    foreach(_module ${ARGN})
-        find_package(QT NAMES Qt6 Qt5 COMPONENTS ${_module} REQUIRED)
-        find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${_module} REQUIRED)
-        target_link_libraries(${_target} ${_scope} Qt${QT_VERSION_MAJOR}::${_module})
-    endforeach()
-endmacro()
-
-macro(talcs_include_qt_private _target _scope)
-    foreach(_module ${ARGN})
-        target_include_directories(${_target} ${_scope} ${Qt${QT_VERSION_MAJOR}${_module}_PRIVATE_INCLUDE_DIRS})
-    endforeach()
-endmacro()
-
 # ----------------------------------
 # Main Project
 # ----------------------------------
@@ -107,6 +84,15 @@ set(CMAKE_AUTORCC on)
 find_package(SDL2 REQUIRED)
 find_package(SndFile REQUIRED)
 find_package(SampleRate REQUIRED)
+
+if(NOT TARGET qtmediate::Core)
+    find_package(qtmediate REQUIRED)
+endif()
+
+include(${QTMEDIATE_MODULES_DIR}/qtmediateMacros.cmake)
+
+set(RC_DESCRIPTION "TALCS: Audio Library of CrSjimo")
+set(RC_COPYRIGHT "Copyright 2022-2023 CrsSjimo")
 
 # Platform libs
 set(_platform_libs)
@@ -146,7 +132,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     SDL2::SDL2 SndFile::sndfile SampleRate::samplerate
 )
 
-talcs_link_qt_libraries(${PROJECT_NAME} PUBLIC
+qtmediate_link_qt_libraries(${PROJECT_NAME} PUBLIC
     Core
 )
 
@@ -155,7 +141,7 @@ talcs_include_directories(${PROJECT_NAME}
     .
 )
 
-talcs_include_qt_private(${PROJECT_NAME} PRIVATE
+qtmediate_include_qt_private(${PROJECT_NAME} PRIVATE
     Core
 )
 
