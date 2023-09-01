@@ -31,6 +31,7 @@ public:
      * @param startPos      the optional start position of samples in each channel, indicating the starting index of the second dimension
      */
     AudioDataWrapper(float *const *data, int channelCount, qint64 sampleCount, qint64 startPos = 0);
+    ~AudioDataWrapper();
 
     float &sampleAt(int channel, qint64 pos) override;
     float constSampleAt(int channel, qint64 pos) const override;

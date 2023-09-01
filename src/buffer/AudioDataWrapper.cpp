@@ -13,6 +13,9 @@ AudioDataWrapper::AudioDataWrapper(float *const *data, int channelCount, qint64 
     d->startPos = startPos;
 }
 
+AudioDataWrapper::~AudioDataWrapper() {
+}
+
 float &AudioDataWrapper::sampleAt(int channel, qint64 pos) {
     Q_D(AudioDataWrapper);
     return d->data[channel][d->startPos + pos];

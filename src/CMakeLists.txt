@@ -92,7 +92,7 @@ endif()
 include(${QTMEDIATE_MODULES_DIR}/qtmediateMacros.cmake)
 
 set(RC_DESCRIPTION "TALCS: Audio Library of CrSjimo")
-set(RC_COPYRIGHT "Copyright 2022-2023 CrsSjimo")
+set(RC_COPYRIGHT "Copyright 2022-2023 CrSjimo")
 
 # Platform libs
 set(_platform_libs)
@@ -108,8 +108,12 @@ endif()
 # Configure target
 file(GLOB_RECURSE _src *.h *.hpp *.cpp *.cc)
 
-if(TALCS_ENABLE_ASIO)
-# TODO: add inc and link
+if(WIN32 AND TALCS_ENABLE_ASIO)
+    if(NOT TALCS_ASIOSDK_DIR)
+        message(FATAL_ERROR "TALCS: TALCS_ASIOSDK_DIR not specified.")
+    endif()
+    target_compile_definitions(${PROJECT_NAME} PUBLIC TALCS_USE_FEATURE_ASIO)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${TALCS_ASIOSDK_DIR}/common)
 else()
     list(FILTER _src EXCLUDE REGEX "ASIO*")
 endif()
@@ -119,10 +123,6 @@ talcs_add_library(${PROJECT_NAME} SHARED ${_src})
 set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME Talcs)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE TALCS_LIBRARY)
-
-if(TALCS_ENABLE_ASIO)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC TALCS_ENABLE_ASIO)
-endif()
 
 # Link
 target_link_libraries(${PROJECT_NAME} PUBLIC qtmediate::Core)

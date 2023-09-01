@@ -56,17 +56,17 @@ SDLAudioDevice::~SDLAudioDevice() {
 bool SDLAudioDevice::open(qint64 bufferSize, double sampleRate) {
     Q_D(SDLAudioDevice);
     if(isOpen()) close();
-    d->spec = {
-        .freq = (int)sampleRate,
-        .format = AUDIO_F32SYS,
-        .channels = (quint8)activeChannelCount(),
-        .silence = 0,
-        .samples = (quint16)bufferSize,
-        .callback = [](void *d, quint8 *rawBuf, int length){
-            reinterpret_cast<SDLAudioDevicePrivate *>(d)->sdlCallback(rawBuf, length);
-        },
-        .userdata = d,
+
+    d->spec.freq = (int)sampleRate;
+    d->spec.format = AUDIO_F32SYS;
+    d->spec.channels = (quint8)activeChannelCount();
+    d->spec.silence = 0;
+    d->spec.samples = (quint16)bufferSize;
+    d->spec.callback = [](void *d, quint8 *rawBuf, int length){
+        reinterpret_cast<SDLAudioDevicePrivate *>(d)->sdlCallback(rawBuf, length);
     };
+    d->spec.userdata = d;
+
     d->devId = SDL_OpenAudioDevice(name().toUtf8().data(), 0, &d->spec, nullptr, 0);
     if(d->devId == 0) {
         setErrorString(SDL_GetError());
