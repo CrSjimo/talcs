@@ -1,68 +1,64 @@
-//
-// Created by Crs_1 on 2023/7/10.
-//
-
-#ifndef CHORUSKIT_AUDIODRIVERMANAGER_H
-#define CHORUSKIT_AUDIODRIVERMANAGER_H
+#ifndef TALCS_AUDIODRIVERMANAGER_H
+#define TALCS_AUDIODRIVERMANAGER_H
 
 #include "AudioDriver.h"
 
-class AudioDriverManagerPrivate;
-
-/**
- * @brief A registry of audio drivers
- *
- * This object is designed for dynamatic registration of audio drivers for DiffScope plugins.
- */
-class TALCS_EXPORT AudioDriverManager: public QObject {
-    Q_OBJECT
-    Q_DECLARE_PRIVATE(AudioDriverManager)
-public:
-    AudioDriverManager(QObject *parent = nullptr);
-    ~AudioDriverManager();
+namespace talcs {
+    class AudioDriverManagerPrivate;
 
     /**
-     * Adds audio driver to this manager.
+     * @brief A registry of audio drivers
      *
-     * Note that the parent of driver object is set to this object.
-     *
-     * @return @c true if added successfully, @c false if already exists.
+     * This object is designed for dynamatic registration of audio drivers for DiffScope plugins.
      */
-    bool addAudioDriver(AudioDriver *driver);
+    class TALCS_EXPORT AudioDriverManager : public QObject {
+        Q_OBJECT
+        Q_DECLARE_PRIVATE(AudioDriverManager)
+    public:
+        AudioDriverManager(QObject *parent = nullptr);
+        ~AudioDriverManager();
 
-    /**
-     * Remove audio driver from this manager.
-     *
-     * Note that the parent of driver object is set to @c nullptr.
-     *
-     * @return @c true if removed successfully, @c false if not exists.
-     */
-    bool removeDriver(AudioDriver *driver);
+        /**
+         * Adds audio driver to this manager.
+         *
+         * Note that the parent of driver object is set to this object.
+         *
+         * @return @c true if added successfully, @c false if already exists.
+         */
+        bool addAudioDriver(AudioDriver *driver);
 
-    /**
-     * Gets the driver with a specified name.
-     */
-    AudioDriver *driver(const QString &name) const;
+        /**
+         * Remove audio driver from this manager.
+         *
+         * Note that the parent of driver object is set to @c nullptr.
+         *
+         * @return @c true if removed successfully, @c false if not exists.
+         */
+        bool removeDriver(AudioDriver *driver);
 
-    /**
-     * Gets a list of names of all drivers.
-     */
-    QStringList drivers() const;
+        /**
+         * Gets the driver with a specified name.
+         */
+        AudioDriver *driver(const QString &name) const;
 
-    /**
-     * Creates an audio driver manager with all built-in drivers.
-     */
-    static AudioDriverManager *createBuiltInDriverManager(QObject *parent = nullptr);
+        /**
+         * Gets a list of names of all drivers.
+         */
+        QStringList drivers() const;
 
-signals:
-    void driverAdded(AudioDriver *driver);
-    void driverRemoved(AudioDriver *driver);
+        /**
+         * Creates an audio driver manager with all built-in drivers.
+         */
+        static AudioDriverManager *createBuiltInDriverManager(QObject *parent = nullptr);
 
-protected:
-    AudioDriverManager(AudioDriverManagerPrivate &d, QObject *parent);
-    QScopedPointer<AudioDriverManagerPrivate> d_ptr;
-};
+    signals:
+        void driverAdded(AudioDriver *driver);
+        void driverRemoved(AudioDriver *driver);
 
+    protected:
+        AudioDriverManager(AudioDriverManagerPrivate &d, QObject *parent);
+        QScopedPointer<AudioDriverManagerPrivate> d_ptr;
+    };
+}
 
-
-#endif // CHORUSKIT_AUDIODRIVERMANAGER_H
+#endif // TALCS_AUDIODRIVERMANAGER_H

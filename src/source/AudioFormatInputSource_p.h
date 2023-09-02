@@ -1,9 +1,5 @@
-//
-// Created by Crs_1 on 2023/7/12.
-//
-
-#ifndef CHORUSKIT_AUDIOFORMATINPUTSOURCE_P_H
-#define CHORUSKIT_AUDIOFORMATINPUTSOURCE_P_H
+#ifndef TALCS_AUDIOFORMATINPUTSOURCE_P_H
+#define TALCS_AUDIOFORMATINPUTSOURCE_P_H
 
 #include "AudioFormatInputSource.h"
 #include "PositionableAudioSource_p.h"
@@ -13,31 +9,32 @@
 #include <QVector>
 #include <QMutex>
 
-class AudioFormatIO;
+namespace talcs {
+    class AudioFormatIO;
 
-class AudioFormatInputSourcePrivate: public PositionableAudioSourcePrivate {
-    Q_DECLARE_PUBLIC(AudioFormatInputSource);
-public:
-    AudioFormatIO *io = nullptr;
-    double ratio = 0;
-    SRC_STATE *srcState = nullptr;
+    class AudioFormatInputSourcePrivate : public PositionableAudioSourcePrivate {
+        Q_DECLARE_PUBLIC(AudioFormatInputSource);
 
-    qint64 inPosition = 0;
+    public:
+        AudioFormatIO *io = nullptr;
+        double ratio = 0;
+        SRC_STATE *srcState = nullptr;
 
-    QVector<float> inData;
-    QVector<float> outData;
+        qint64 inPosition = 0;
 
-    bool doStereoize = true;
+        QVector<float> inData;
+        QVector<float> outData;
 
-    QMutex mutex;
+        bool doStereoize = true;
 
-    void resizeInDataBuffers(qint64 bufferSize);
-    void resizeOutDataBuffers(qint64 bufferSize);
+        QMutex mutex;
 
-    long fetchInData(float **data);
+        void resizeInDataBuffers(qint64 bufferSize);
+        void resizeOutDataBuffers(qint64 bufferSize);
 
-    AudioFormatInputSource::ResampleMode resampleMode = AudioFormatInputSource::SincBestQuality;
+        long fetchInData(float **data);
 
-};
-
-#endif // CHORUSKIT_AUDIOFORMATINPUTSOURCE_P_H
+        AudioFormatInputSource::ResampleMode resampleMode = AudioFormatInputSource::SincBestQuality;
+    };
+}
+#endif // TALCS_AUDIOFORMATINPUTSOURCE_P_H

@@ -1,77 +1,26 @@
-//
-// Created by Crs_1 on 2023/7/9.
-//
-
-#ifndef IAUDIOSAMPLEPROVIDER_H
-#define IAUDIOSAMPLEPROVIDER_H
+#ifndef TALCS_IAUDIOSAMPLEPROVIDER_H
+#define TALCS_IAUDIOSAMPLEPROVIDER_H
 
 #include <QtGlobal>
 
 #include "global/TalcsGlobal.h"
 
-/**
- * @brief Base class for object containing audio data for read
- */
-class TALCS_EXPORT IAudioSampleProvider {
-public:
-    virtual ~IAudioSampleProvider() = default;
+namespace talcs {
+    class TALCS_EXPORT IAudioSampleProvider {
+    public:
+        virtual float constSampleAt(int channel, qint64 pos) const = 0;
+        virtual bool isContinuous() const;
+        virtual const float *readPointerTo(int channel, qint64 startPos) const;
 
-    /**
-     * Gets the sample at a specified channel and position.
-     *
-     * Note that if the sample data is stored continuously, performance will be better when using the pointer to read directly.
-     *
-     * @see isContinuous(), readPointerTo()
-     */
-    virtual float constSampleAt(int channel, qint64 pos) const = 0;
+        virtual int channelCount() const = 0;
+        virtual qint64 sampleCount() const = 0;
 
-    /**
-     * Gets the number of channels.
-     */
-    virtual int channelCount() const = 0;
+        float magnitude(int channel, qint64 startPos, qint64 length) const;
+        float magnitude(int channel) const;
 
-    /**
-     * Gets the number of samples that every channel contains.
-     */
-    virtual qint64 sampleCount() const = 0;
+        float rms(int channel, qint64 startPos, qint64 length) const;
+        float rms(int channel) const;
+    };
+}
 
-    /**
-     * Gets whether the sample data is stored continuously or not. If so, the pointer can be used to read data directly.
-     *
-     * @see readPointerTo()
-     */
-    virtual bool isContinuous() const;
-
-    /**
-     * Gets the read pointer to a specified position of a specified channel.
-     *
-     * Note that his function should return @c nullptr if the sample data is not stored continuously.
-     *
-     * @see isContinuous
-     */
-    virtual const float *readPointerTo(int channel, qint64 startPos) const;
-
-    /**
-     * Gets the highest absolute sample value within a range of a specified channel.
-     */
-    float magnitude(int channel, qint64 startPos, qint64 length) const;
-
-    /**
-     * Gets the highest absolute sample value within a specified channel.
-     */
-    float magnitude(int channel) const;
-
-    /**
-     * Calculates the root mean squared sample value within a range of a specified channel.
-     */
-    float rms(int channel, qint64 startPos, qint64 length) const;
-
-    /**
-     * Calculates the root mean squared sample value within a specified channel.
-     */
-    float rms(int channel) const;
-};
-
-
-
-#endif // IAUDIOSAMPLEPROVIDER_H
+#endif // TALCS_IAUDIOSAMPLEPROVIDER_H
