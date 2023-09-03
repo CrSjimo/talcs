@@ -3,6 +3,8 @@
 
 #include "PositionableAudioSource.h"
 
+#include <functional>
+
 namespace talcs {
     class SineWaveAudioSourcePrivate;
 
@@ -11,13 +13,16 @@ namespace talcs {
     public:
         SineWaveAudioSource();
         explicit SineWaveAudioSource(double frequency);
+        explicit SineWaveAudioSource(const std::function<double(qint64)> &getFreq);
         ~SineWaveAudioSource() override = default;
+
         bool open(qint64 bufferSize, double sampleRate) override;
         qint64 read(const AudioSourceReadData &readData) override;
         qint64 length() const override;
 
         void setFrequency(double frequency);
-        double frequency() const;
+        void setFrequency(const std::function<double(qint64)> &getFreq);
+        std::function<double(qint64)> frequency() const;
 
     protected:
         explicit SineWaveAudioSource(SineWaveAudioSourcePrivate &d);

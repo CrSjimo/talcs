@@ -9,9 +9,8 @@
 namespace talcs {
     class SineWaveAudioSourcePrivate : public PositionableAudioSourcePrivate {
         Q_DECLARE_PUBLIC(SineWaveAudioSource);
-
     public:
-        double freq = 0;
+        std::function<double(qint64)> freq = [](qint64 _){ return 0.0; };
         QMutex mutex;
     };
 }
