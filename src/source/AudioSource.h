@@ -9,7 +9,7 @@
 namespace talcs {
     class TALCS_EXPORT AudioSourceReadData {
     public:
-        AudioSourceReadData(IAudioSampleContainer *buffer); // implicit use IAudioSampleContainer
+        AudioSourceReadData(IAudioSampleContainer *buffer);
         AudioSourceReadData(IAudioSampleContainer *buffer, qint64 startPos, qint64 length);
         IAudioSampleContainer *buffer;
         qint64 startPos;
@@ -18,7 +18,6 @@ namespace talcs {
 
     class AudioSourcePrivate;
 
-    /* abstract */
     class TALCS_EXPORT AudioSource : public IAudioStream {
         Q_DECLARE_PRIVATE(AudioSource)
     public:
@@ -31,7 +30,5 @@ namespace talcs {
         QScopedPointer<AudioSourcePrivate> d_ptr;
     };
 }
-
-
 
 #endif // AUDIOSOURCE_H

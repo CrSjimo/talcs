@@ -568,7 +568,7 @@ namespace talcs {
 
     /**
      * @struct AudioFormatIO::SubtypeInfo
-     * The specs of a subtype.
+     * @brief The specs of a subtype.
      * @var AudioFormatIO::SubtypeInfo::subtype
      * The enum value of subtype
      *
@@ -578,7 +578,7 @@ namespace talcs {
 
     /**
      * @struct AudioFormatIO::FormatInfo
-     * The specs of a major format and all available subtypes.
+     * @brief The specs of a major format and all available subtypes.
      * @var AudioFormatIO::FormatInfo::majorFormat
      * The enum value of major format
      *

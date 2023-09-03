@@ -6,8 +6,8 @@
 
 #include <samplerate.h>
 
-#include <QVector>
 #include <QMutex>
+#include <QVector>
 
 namespace talcs {
     class AudioFormatIO;
@@ -37,4 +37,5 @@ namespace talcs {
         AudioFormatInputSource::ResampleMode resampleMode = AudioFormatInputSource::SincBestQuality;
     };
 }
+
 #endif // TALCS_AUDIOFORMATINPUTSOURCE_P_H

@@ -12,6 +12,7 @@ namespace talcs {
     /**
      * @class TransportAudioSourceWriter
      * @brief The TransportAudioSourceWriter class provides interfaces to write audio.
+     *
      * The audio is read from a TransportAudioSource object, and write to an AudioFormatIO object.
      * @see TransportAudioSource, AudioFormatIO
      */

@@ -9,7 +9,6 @@ namespace talcs {
 
     class TALCS_EXPORT AudioFormatInputSource : public PositionableAudioSource {
         Q_DECLARE_PRIVATE(AudioFormatInputSource);
-
     public:
         enum ResampleMode {
             SincBestQuality = 0,
@@ -32,8 +31,8 @@ namespace talcs {
 
         void flush();
 
-        void setDoStereoize(bool doStereoize);
-        bool doStereoize() const;
+        void setStereoize(bool stereoize);
+        bool stereoize() const;
 
         void setResamplerMode(ResampleMode mode);
         ResampleMode resampleMode() const;
@@ -42,6 +41,5 @@ namespace talcs {
         explicit AudioFormatInputSource(AudioFormatInputSourcePrivate &d);
     };
 }
-
 
 #endif // AUDIOFORMATINPUTSOURCE_H

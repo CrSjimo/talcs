@@ -1,8 +1,8 @@
 #ifndef TALCS_POSITIONABLEAUDIOSOURCE_P_H
 #define TALCS_POSITIONABLEAUDIOSOURCE_P_H
 
-#include "PositionableAudioSource.h"
 #include "AudioSource_p.h"
+#include "PositionableAudioSource.h"
 
 namespace talcs {
     class PositionableAudioSourcePrivate : public AudioSourcePrivate {

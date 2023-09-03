@@ -10,4 +10,5 @@ namespace talcs {
         AudioSource *q_ptr;
     };
 }
+
 #endif // TALCS_AUDIOSOURCE_P_H

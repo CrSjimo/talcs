@@ -5,6 +5,7 @@ namespace talcs {
     /**
      * @class AudioDataWrapper
      * @brief A Wrapper that points to a set of pre-allocated arrays of sample data
+     *
      * This class is useful when processing audio data stored planarly in the memory.
      * @see InterLeavedAudioDataWrapper
      */

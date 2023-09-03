@@ -4,6 +4,7 @@ namespace talcs {
     /**
      * @class AudioBuffer
      * @brief A container of audio sample data
+     *
      * AudioBuffer use a two-dimensional QVector to store multi-channel audio internally and encapsulates some
      * interfaces to access the internal vector.
      */

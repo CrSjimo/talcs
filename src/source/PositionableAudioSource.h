@@ -6,7 +6,6 @@
 namespace talcs {
     class PositionableAudioSourcePrivate;
 
-    /* abstract */
     class TALCS_EXPORT PositionableAudioSource : public AudioSource {
         Q_DECLARE_PRIVATE(PositionableAudioSource)
     public:
@@ -19,7 +18,5 @@ namespace talcs {
         explicit PositionableAudioSource(PositionableAudioSourcePrivate &d);
     };
 }
-
-
 
 #endif // TALCS_POSITIONABLEAUDIOSOURCE_H
