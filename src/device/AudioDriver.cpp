@@ -7,10 +7,13 @@ namespace talcs {
      * @brief Base class for audio drivers that underlay audio devices
      */
 
-    AudioDriver::AudioDriver(QObject * parent) : AudioDriver(*new AudioDriverPrivate, parent) {
+    /**
+     * Constructor.
+     */
+    AudioDriver::AudioDriver(QObject *parent) : AudioDriver(*new AudioDriverPrivate, parent) {
     }
 
-    AudioDriver::AudioDriver(AudioDriverPrivate & d, QObject * parent) : QObject(parent), d_ptr(&d) {
+    AudioDriver::AudioDriver(AudioDriverPrivate &d, QObject *parent) : QObject(parent), d_ptr(&d) {
         d.q_ptr = this;
     }
 

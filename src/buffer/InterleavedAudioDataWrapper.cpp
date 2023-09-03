@@ -61,6 +61,7 @@ namespace talcs {
         d->channelCount = channelCount;
         d->sampleCount = sampleCount;
     }
+
     InterleavedAudioDataWrapper::InterleavedAudioDataWrapper(InterleavedAudioDataWrapperPrivate & d) : d_ptr(&d) {
         d.q_ptr = this;
     }

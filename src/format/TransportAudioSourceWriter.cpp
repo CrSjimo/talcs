@@ -1,16 +1,31 @@
-
-
 #include "TransportAudioSourceWriter.h"
 #include "TransportAudioSourceWriter_p.h"
 
 #include <QMutex>
 
-#include "buffer/InterleavedAudioDataWrapper.h"
 #include "AudioFormatIO.h"
+#include "buffer/InterleavedAudioDataWrapper.h"
 #include "source/TransportAudioSource.h"
 
 namespace talcs {
-    TransportAudioSourceWriter::TransportAudioSourceWriter(TransportAudioSource * src, AudioFormatIO * outFile,
+
+    /**
+     * @class TransportAudioSourceWriter
+     * @brief The TransportAudioSourceWriter class provides interfaces to write audio.
+     * The audio is read from a TransportAudioSource object, and write to an AudioFormatIO object.
+     * @see TransportAudioSource, AudioFormatIO
+     */
+
+
+    /**
+     * Constructor.
+     *
+     * TransportAudioSource object and the AudioFormatIO object must be opened before writing is started, and closed
+     * manually after writing.
+     *
+     * Note that this object does not take the ownership of both objects.
+     */
+    TransportAudioSourceWriter::TransportAudioSourceWriter(TransportAudioSource *src, AudioFormatIO *outFile,
                                                            qint64 startPos, qint64 length)
         : TransportAudioSourceWriter(*new TransportAudioSourceWriterPrivate) {
         Q_D(TransportAudioSourceWriter);
@@ -20,12 +35,20 @@ namespace talcs {
         d->startPos = startPos;
         d->length = length;
     }
-    TransportAudioSourceWriter::TransportAudioSourceWriter(TransportAudioSourceWriterPrivate & d) : d_ptr(&d) {
+    TransportAudioSourceWriter::TransportAudioSourceWriter(TransportAudioSourceWriterPrivate &d) : d_ptr(&d) {
         d.q_ptr = this;
     }
-    TransportAudioSourceWriter::~TransportAudioSourceWriter() {
-    }
+    TransportAudioSourceWriter::~TransportAudioSourceWriter() = default;
 
+    /**
+     * Starts writing.
+     *
+     * Note that the function should be called from another thread to avoid from blocking the main thread. It is
+     * recommended to move this object to another thread using
+     * [QObject::moveToThread](https://doc.qt.io/qt-5/qobject.html#moveToThread)() and connect signals and slots
+     * across different threads.
+     * @see [QThread](https://doc.qt.io/qt-5/qthread.html)
+     */
     void TransportAudioSourceWriter::start() {
         Q_D(TransportAudioSourceWriter);
         {
@@ -73,8 +96,40 @@ namespace talcs {
             emit finished(true);
         }
     }
+
+    /**
+     * Interrupts the writing process. This function is thread-safe.
+     *
+     * Note that do not use queued connection to connect this slot to any signal, otherwise this function will not
+     * be invoked before completed, since the thread is blocked while writing.
+     */
     void TransportAudioSourceWriter::interrupt() {
         Q_D(TransportAudioSourceWriter);
         d->stopRequested = true;
     }
+
+    /**
+     * @fn void TransportAudioSourceWriter::percentageUpdated(float percentage)
+     * Emitted when each block have been written.
+     * @param percentage the percentage of the part finished.
+     */
+
+    /**
+     * @fn void TransportAudioSourceWriter::completed()
+     * Emitted when writing is completed.
+     *
+     * Note that this signal is emitted after percentageUpdated().
+     */
+
+    /**
+     * @fn void TransportAudioSourceWriter::interrupted()
+     * Emitted when writing is interrupted.
+     */
+
+    /**
+     * @fn void TransportAudioSourceWriter::finished(bool isCompleted)
+     * Emitted when writing finishes, either interrupted or completed.
+     *
+     * Note that this signal is emitted after completed() or interrupted().
+     */
 }

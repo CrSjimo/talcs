@@ -8,6 +8,16 @@
 #include <QDebug>
 
 namespace talcs {
+
+    /**
+     * @class SDLAudioDriver
+     * @brief The audio driver using SDL2 Audio
+     * @see @link URL https://wiki.libsdl.org/ @endlink
+     */
+
+    /**
+     * Constructor.
+     */
     SDLAudioDriver::SDLAudioDriver(QObject * parent) : SDLAudioDriver(*new SDLAudioDriverPrivate, parent) {
         Q_D(SDLAudioDriver);
         d->eventPoller.moveToThread(&d->eventPollerThread);
@@ -15,8 +25,15 @@ namespace talcs {
         connect(&d->eventPoller, &SDLEventPoller::event,
                 [=](const QByteArray &sdlEventData) { d->handleSDLEvent(sdlEventData); });
     }
+
     SDLAudioDriver::SDLAudioDriver(SDLAudioDriverPrivate & d, QObject * parent) : AudioDriver(d, parent) {
     }
+
+    /**
+     * Destructor.
+     *
+     * If the driver is still running, it will be terminated now.
+     */
     SDLAudioDriver::~SDLAudioDriver() {
         Q_D(SDLAudioDriver);
         SDLAudioDriver::finalize();
@@ -109,6 +126,19 @@ namespace talcs {
             return;
         it.value()->close();
     }
+
+    /**
+     * @class SDLEventPoller
+     * The object runs in another thread to poll event from SDL2.
+     * @internal
+     */
+
+    /**
+     * @fn void SDLEventPoller::event(QByteArray sdlEventData)
+     * Emitted when received event.
+     * @param sdlEventData the raw buffer of SDL_Event struct
+     * @internal
+     */
 
     void SDLEventPoller::start() {
         while (!stopRequested) {

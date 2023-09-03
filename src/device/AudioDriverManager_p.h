@@ -3,7 +3,7 @@
 
 #include "AudioDriverManager.h"
 
-#include "QMChronMap.h"
+#include <QMChronMap.h>
 
 namespace talcs {
     class AudioDriverManagerPrivate {

@@ -5,6 +5,11 @@
 #include <cstring>
 
 namespace talcs {
+
+    /**
+     * @internal
+     * Prevent the range accessed from exceeding the boundary.
+     */
     static inline void boundCheck(const IAudioSampleProvider &iAudioStorage, int channel, qint64 startPos,
                                   qint64 length) {
         assert(channel >= 0 && channel < iAudioStorage.channelCount());

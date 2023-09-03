@@ -3,7 +3,6 @@
 
 #include <QObject>
 
-#include "global/TalcsGlobal.h"
 #include "utils/IErrorStringProvider.h"
 #include "utils/INameProvider.h"
 

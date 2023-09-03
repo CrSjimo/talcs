@@ -9,7 +9,6 @@ namespace talcs {
      * @see InterLeavedAudioDataWrapper
      */
 
-
     /**
      * Creates a wrapper that points to a set of pre-allocated arrays of sample data.
      * @param data          a two-dimensional float array contains sample data
@@ -27,8 +26,7 @@ namespace talcs {
         d->startPos = startPos;
     }
 
-    AudioDataWrapper::~AudioDataWrapper() {
-    }
+    AudioDataWrapper::~AudioDataWrapper() = default;
 
     float &AudioDataWrapper::sampleAt(int channel, qint64 pos) {
         Q_D(AudioDataWrapper);

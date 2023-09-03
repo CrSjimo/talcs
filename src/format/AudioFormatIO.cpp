@@ -6,23 +6,57 @@
 #include <QDebug>
 #include <QIODevice>
 
-#define TEST_IS_OPEN(ret) \
-if(d->sf.isNull()) { \
-    qDebug() << "AudioFormatIO: Not open."; \
-    return ret; \
-}
+/**
+ * If there is no SndFile handle, this will output a warning message and return the given value.
+ * @internal
+ */
+#define TEST_IS_OPEN(ret)                                                                                              \
+    if (d->sf.isNull()) {                                                                                              \
+        qWarning() << "AudioFormatIO: Not open.";                                                                      \
+        return ret;                                                                                                    \
+    }
 
 namespace talcs {
-    AudioFormatIO::AudioFormatIO(QIODevice * stream) : AudioFormatIO(*new AudioFormatIOPrivate) {
+
+    /**
+     * @class AudioFormatIO
+     * @brief The AudioFormatIO class provides interfaces to access audio files based on libsndfile.
+     * @see @link URL https://libsndfile.github.io/libsndfile/ @endlink
+     */
+
+    /**
+     * Constructor.
+     *
+     * Note that the stream must be closed, and it will cause undefined behavior to set one stream to multiple
+     * AudioFormatIO.
+     * @param stream the QIODevice to access. This object will not take the ownership of the QIODevice object.
+     * @see setStream()
+     */
+    AudioFormatIO::AudioFormatIO(QIODevice *stream) : AudioFormatIO(*new AudioFormatIOPrivate) {
         setStream(stream);
     }
-    AudioFormatIO::AudioFormatIO(AudioFormatIOPrivate & d) : d_ptr(&d) {
+    AudioFormatIO::AudioFormatIO(AudioFormatIOPrivate &d) : d_ptr(&d) {
         d.q_ptr = this;
     }
+
+    /**
+     * Destructor.
+     *
+     * If the AudioFormatIO object is not close, it will be closed now.
+     */
     AudioFormatIO::~AudioFormatIO() {
         close();
     }
-    void AudioFormatIO::setStream(QIODevice * stream) {
+
+    /**
+     * Dynamically sets the device.
+     *
+     * Note that this function will neither change the open mode of the original QIODevice object, nor set the open
+     * mode of the original stream to the new stream.
+     *
+     * @see AudioFormatIO()
+     */
+    void AudioFormatIO::setStream(QIODevice *stream) {
         Q_D(AudioFormatIO);
         if (d->openMode) {
             qWarning() << "AudioFormatIO: Cannot set stream when AudioFormatIO is open.";
@@ -30,6 +64,10 @@ namespace talcs {
         }
         d->stream = stream;
     }
+
+    /**
+     * Gets the stream that this object is currently using.
+     */
     QIODevice *AudioFormatIO::stream() const {
         Q_D(const AudioFormatIO);
         return d->stream;
@@ -71,9 +109,19 @@ namespace talcs {
         },
         [](void *d) { return reinterpret_cast<AudioFormatIOPrivate *>(d)->sfVioTell(); }};
 
+    /**
+     * Opens the device and initialize libsndfile with default format, number of channels and sample rate, usually
+     * used for reading.
+     * @return true if successful
+     */
     bool AudioFormatIO::open(QIODevice::OpenMode openMode) {
         return open(openMode, 0, 0, 0);
     }
+
+    /**
+     * Opens the device and initialize libsndfile with specified format, number of channels and sample rate.
+     * @return true if successful
+     */
     bool AudioFormatIO::open(QIODevice::OpenMode openMode, int format, int channels, double sampleRate) {
         Q_D(AudioFormatIO);
         close();
@@ -104,10 +152,20 @@ namespace talcs {
         d->openMode = openMode;
         return true;
     }
+
+    /**
+     * Gets the open mode of the stream.
+     */
     QIODevice::OpenMode AudioFormatIO::openMode() const {
         Q_D(const AudioFormatIO);
         return d->openMode;
     }
+
+    /**
+     * Closes the AudioFormatIO object.
+     *
+     * The stream will also be closed.
+     */
     void AudioFormatIO::close() {
         Q_D(AudioFormatIO);
         d->sf.reset();
@@ -116,65 +174,431 @@ namespace talcs {
         d->openMode = QIODevice::NotOpen;
         clearErrorString();
     }
+
+    /**
+     * Gets the number of channels.
+     *
+     * Note that this function should be called after the AudioFormatIO object is opened.
+     */
     int AudioFormatIO::channels() const {
         Q_D(const AudioFormatIO);
         TEST_IS_OPEN(0)
         return d->sf->channels();
     }
+
+    /**
+     * Gets the sample rate.
+     *
+     * Note that this function should be called after the AudioFormatIO object is opened.
+     */
     double AudioFormatIO::sampleRate() const {
         Q_D(const AudioFormatIO);
         TEST_IS_OPEN(0)
         return d->sf->samplerate();
     }
+
+    /**
+     * @enum AudioFormatIO::MajorFormat
+     * Major formats.
+     * @see @link URL https://libsndfile.github.io/libsndfile/formats.html @endlink
+     * @var AudioFormatIO::WAV
+     * Microsoft WAV format (little endian default).
+     *
+     * @var AudioFormatIO::AIFF
+     * Apple/SGI AIFF format (big endian).
+     *
+     * @var AudioFormatIO::AU
+     * Sun/NeXT AU format (big endian).
+     *
+     * @var AudioFormatIO::RAW
+     * RAW PCM data.
+     *
+     * @var AudioFormatIO::PAF
+     * Ensoniq PARIS file format.
+     *
+     * @var AudioFormatIO::SVX
+     * Amiga IFF / SVX8 / SV16 format.
+     *
+     * @var AudioFormatIO::NIST
+     * Sphere NIST format.
+     *
+     * @var AudioFormatIO::VOC
+     * VOC files.
+     *
+     * @var AudioFormatIO::IRCAM
+     * Berkeley/IRCAM/CARL
+     *
+     * @var AudioFormatIO::W64
+     * Sonic Foundry's 64 bit RIFF/WAV
+     *
+     * @var AudioFormatIO::MAT4
+     * Matlab (tm) V4.2 / GNU Octave 2.0
+     *
+     * @var AudioFormatIO::MAT5
+     * Matlab (tm) V5.0 / GNU Octave 2.1
+     *
+     * @var AudioFormatIO::PVF
+     * Portable Voice Format
+     *
+     * @var AudioFormatIO::XI
+     * Fasttracker 2 Extended Instrument
+     *
+     * @var AudioFormatIO::HTK
+     * HMM Tool Kit format
+     *
+     * @var AudioFormatIO::SDS
+     * Midi Sample Dump Standard
+     *
+     * @var AudioFormatIO::AVR
+     * Audio Visual Research
+     *
+     * @var AudioFormatIO::WAVEX
+     * MS WAVE with WAVEFORMATEX
+     *
+     * @var AudioFormatIO::SD2
+     * Sound Designer 2
+     *
+     * @var AudioFormatIO::FLAC
+     * FLAC lossless file format
+     *
+     * @var AudioFormatIO::CAF
+     * Core Audio File format
+     *
+     * @var AudioFormatIO::WVE
+     * Psion WVE format
+     *
+     * @var AudioFormatIO::OGG
+     * Xiph OGG container
+     *
+     * @var AudioFormatIO::MPC2K
+     * Akai MPC 2000 sampler
+     *
+     * @var AudioFormatIO::RF64
+     * RF64 WAV file
+     *
+     * @var AudioFormatIO::MPEG
+     * MPEG-1/2 audio stream
+     *
+     * @var AudioFormatIO::InvalidMajorFormat
+     * Invalid major format
+     *
+     * @var AudioFormatIO::MajorFormatMask
+     * Major format mask
+     */
+
+    /**
+     * @enum AudioFormatIO::Subtype
+     * Subtypes.
+     * @see @link URL https://libsndfile.github.io/libsndfile/formats.html @endlink
+     * @var AudioFormatIO::PCM_S8
+     * Signed 8 bit data
+     *
+     * @var AudioFormatIO::PCM_16
+     * Signed 16 bit data
+     *
+     * @var AudioFormatIO::PCM_24
+     * Signed 24 bit data
+     *
+     * @var AudioFormatIO::PCM_32
+     * Signed 32 bit data
+     *
+     * @var AudioFormatIO::PCM_U8
+     * Unsigned 8 bit data (WAV and RAW only)
+     *
+     * @var AudioFormatIO::FLOAT
+     * 32 bit float data
+     *
+     * @var AudioFormatIO::DOUBLE
+     * 64 bit float data
+     *
+     * @var AudioFormatIO::ULAW
+     * U-Law encoded.
+     *
+     * @var AudioFormatIO::ALAW
+     * A-Law encoded.
+     *
+     * @var AudioFormatIO::IMA_ADPCM
+     * IMA ADPCM.
+     *
+     * @var AudioFormatIO::MS_ADPCM
+     * Microsoft ADPCM.
+     *
+     * @var AudioFormatIO::GSM610
+     * GSM 6.10 encoding.
+     *
+     * @var AudioFormatIO::VOX_ADPCM
+     * OKI / Dialogix ADPCM
+     *
+     * @var AudioFormatIO::NMS_ADPCM_16
+     * 16kbs NMS G721-variant encoding.
+     *
+     * @var AudioFormatIO::NMS_ADPCM_24
+     * 24kbs NMS G721-variant encoding.
+     *
+     * @var AudioFormatIO::NMS_ADPCM_32
+     * 32kbs NMS G721-variant encoding.
+     *
+     * @var AudioFormatIO::G721_32
+     * 32kbs G721 ADPCM encoding.
+     *
+     * @var AudioFormatIO::G723_24
+     * 24kbs G723 ADPCM encoding.
+     *
+     * @var AudioFormatIO::G723_40
+     * 40kbs G723 ADPCM encoding.
+     *
+     * @var AudioFormatIO::DWVW_12
+     * 12 bit Delta Width Variable Word encoding.
+     *
+     * @var AudioFormatIO::DWVW_16
+     * 16 bit Delta Width Variable Word encoding.
+     *
+     * @var AudioFormatIO::DWVW_24
+     * 24 bit Delta Width Variable Word encoding.
+     *
+     * @var AudioFormatIO::DWVW_N
+     * N bit Delta Width Variable Word encoding.
+     *
+     * @var AudioFormatIO::DPCM_8
+     * 8 bit differential PCM (XI only)
+     *
+     * @var AudioFormatIO::DPCM_16
+     * 16 bit differential PCM (XI only)
+     *
+     * @var AudioFormatIO::VORBIS
+     * Xiph Vorbis encoding.
+     *
+     * @var AudioFormatIO::OPUS
+     * Xiph/Skype Opus encoding.
+     *
+     * @var AudioFormatIO::ALAC_16
+     * Apple Lossless Audio Codec (16 bit).
+     *
+     * @var AudioFormatIO::ALAC_20
+     * Apple Lossless Audio Codec (20 bit).
+     *
+     * @var AudioFormatIO::ALAC_24
+     * Apple Lossless Audio Codec (24 bit).
+     *
+     * @var AudioFormatIO::ALAC_32
+     * Apple Lossless Audio Codec (32 bit).
+     *
+     * @var AudioFormatIO::MPEG_LAYER_I
+     * MPEG-1 Audio Layer I
+     *
+     * @var AudioFormatIO::MPEG_LAYER_II
+     * MPEG-1 Audio Layer II
+     *
+     * @var AudioFormatIO::MPEG_LAYER_III
+     * MPEG-2 Audio Layer III
+     *
+     * @var AudioFormatIO::InvalidSubtype
+     * Invalid subtype
+     *
+     * @var AudioFormatIO::SubtypeMask
+     * Subtype mask
+     */
+
+    /**
+     * @enum AudioFormatIO::ByteOrder
+     * Byte orders.
+     * @var AudioFormatIO::DefaultOrder
+     * Default file endian-ness.
+     *
+     * @var AudioFormatIO::LittleEndian
+     * Force little endian-ness.
+     *
+     * @var AudioFormatIO::BigEndian
+     * Force big endian-ness.
+     *
+     * @var AudioFormatIO::SystemOrder
+     * Force CPU endian-ness.
+     *
+     * @var AudioFormatIO::ByteOrderMask
+     * Byte order mask
+     */
+
+
+    /**
+     * Gets the format code (the combination of major format, subtype and byte order).
+     *
+     * Note that this function should be called after the AudioFormatIO object is opened.
+     */
     int AudioFormatIO::format() const {
         Q_D(const AudioFormatIO);
         TEST_IS_OPEN(0)
         return d->sf->format();
     }
+
+    /**
+     * Gets the major format.
+     *
+     * Note that this function should be called after the AudioFormatIO object is opened.
+     */
     AudioFormatIO::MajorFormat AudioFormatIO::majorFormat() const {
         return (MajorFormat) (format() & MajorFormatMask);
     }
+
+    /**
+     * Gets the subtype.
+     *
+     * Note that this function should be called after the AudioFormatIO object is opened.
+     */
     AudioFormatIO::Subtype AudioFormatIO::subType() const {
         return (Subtype) (format() & SubtypeMask);
     }
+
+    /**
+     * Gets the byte order.
+     *
+     * Note that this function should be called after the AudioFormatIO object is opened.
+     */
     AudioFormatIO::ByteOrder AudioFormatIO::byteOrder() const {
         return (ByteOrder) (format() & ByteOrderMask);
     }
+
+    /**
+     * Gets the length of the audio measured in samples.
+     */
     qint64 AudioFormatIO::length() const {
         Q_D(const AudioFormatIO);
         TEST_IS_OPEN(0)
         return d->sf->frames();
     }
+
+    /**
+     * @enum AudioFormatIO::MetaData
+     * Types of the meta data.
+     * @var AudioFormatIO::Title
+     * Title
+     *
+     * @var AudioFormatIO::Copyright
+     * Copyright
+     *
+     * @var AudioFormatIO::Software
+     * Software
+     *
+     * @var AudioFormatIO::Artist
+     * Artist
+     *
+     * @var AudioFormatIO::Comment
+     * Comment
+     *
+     * @var AudioFormatIO::Date
+     * Date
+     *
+     * @var AudioFormatIO::Album
+     * Album
+     *
+     * @var AudioFormatIO::License
+     * License
+     *
+     * @var AudioFormatIO::TrackNumber
+     * Track number
+     *
+     * @var AudioFormatIO::Genre
+     * Genre
+     */
+
+    /**
+     * Sets the meta data.
+     *
+     * Note that this function should be called after the AudioFormatIO object is opened.
+     */
     void AudioFormatIO::setMetaData(AudioFormatIO::MetaData metaDataType, const QString &str) {
         Q_D(AudioFormatIO);
         TEST_IS_OPEN(void())
         d->sf->setString(metaDataType, str.toUtf8().data());
     }
+
+    /**
+     * Gets the meta data.
+     *
+     * Note that this function should be called after the AudioFormatIO object is opened.
+     */
     QString AudioFormatIO::getMetaData(AudioFormatIO::MetaData metaDataType) const {
         Q_D(const AudioFormatIO);
         TEST_IS_OPEN({})
         return QString::fromUtf8(d->sf->getString(metaDataType));
     }
+
+    /**
+     * Reads audio data and moves the file pointer.
+     * @param ptr pointer to a pre-allocated float array to store audio data in
+     * @param length size of audio data to read measured in samples
+     * @return the size of audio data actually read.
+     */
     qint64 AudioFormatIO::read(float *ptr, qint64 length) {
         Q_D(AudioFormatIO);
         TEST_IS_OPEN(0)
         return d->sf->readf(ptr, length);
     }
+
+    /**
+     * Writes audio data and moves the file pointer.
+     * @param ptr pointer to a pre-allocated float array that stores audio data
+     * @param length size of audio data to write measured in samples
+     * @return the size of audio data actually written.
+     */
     qint64 AudioFormatIO::write(const float *ptr, qint64 length) {
         Q_D(AudioFormatIO);
         TEST_IS_OPEN(0)
         return d->sf->writef(ptr, length);
     }
+
+    /**
+     * Sets the file pointer to a new position.
+     * @param pos position measured in samples
+     * @return the resulting position if successful, -1 if any error occurs
+     */
     qint64 AudioFormatIO::seek(qint64 pos) {
         Q_D(AudioFormatIO);
         TEST_IS_OPEN(0)
         return d->sf->seek(pos, SF_SEEK_SET);
     }
+
+    /**
+     * Gets the position of the file pointer measured in samples.
+     */
     qint64 AudioFormatIO::pos() {
         Q_D(AudioFormatIO);
         TEST_IS_OPEN(0)
         return d->sf->seek(0, SF_SEEK_CUR);
     }
+
+    /**
+     * @struct AudioFormatIO::SubtypeInfo
+     * The specs of a subtype.
+     * @var AudioFormatIO::SubtypeInfo::subtype
+     * The enum value of subtype
+     *
+     * @var AudioFormatIO::SubtypeInfo::name
+     * The name of subtype
+     */
+
+    /**
+     * @struct AudioFormatIO::FormatInfo
+     * The specs of a major format and all available subtypes.
+     * @var AudioFormatIO::FormatInfo::majorFormat
+     * The enum value of major format
+     *
+     * @var AudioFormatIO::FormatInfo::name
+     * The name of major format
+     *
+     * @var AudioFormatIO::FormatInfo::extension
+     * The extension in file name
+     *
+     * @var AudioFormatIO::FormatInfo::subtypes
+     * Available subtypes
+     *
+     * @var AudioFormatIO::FormatInfo::byteOrders
+     * Available byte orders
+     */
+
+    /**
+     * Lists all formats that could be processed.
+     * @see @link URL https://libsndfile.github.io/libsndfile/formats.html @endlink
+     */
     QList<AudioFormatIO::FormatInfo> AudioFormatIO::availableFormats() {
         QList<FormatInfo> formatInfoList;
         SF_INFO sfinfo = {};

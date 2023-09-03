@@ -26,10 +26,8 @@ namespace talcs {
         void clearClips() override;
 
     protected:
-        AudioSourceClipSeries(AudioSourceClipSeriesPrivate &d);
+        explicit AudioSourceClipSeries(AudioSourceClipSeriesPrivate &d);
     };
 }
-
-
 
 #endif // AUDIOSOURCECLIPSERIES_H

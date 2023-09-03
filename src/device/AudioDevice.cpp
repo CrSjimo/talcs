@@ -7,11 +7,16 @@ namespace talcs {
      * @brief Base class for audio devices
      */
 
-    AudioDevice::AudioDevice(QObject * parent) : AudioDevice(*new AudioDevicePrivate, parent) {
+    /**
+     * The constructor should be hidden and only accessible from corresponding AudioDriver object under most
+     * circumstances.
+     */
+    AudioDevice::AudioDevice(QObject *parent) : AudioDevice(*new AudioDevicePrivate, parent) {
     }
+
     AudioDevice::~AudioDevice() = default;
 
-    AudioDevice::AudioDevice(AudioDevicePrivate & d, QObject * parent) : d_ptr(&d) {
+    AudioDevice::AudioDevice(AudioDevicePrivate &d, QObject *parent) : d_ptr(&d) {
         d.q_ptr = this;
     }
 
@@ -92,7 +97,7 @@ namespace talcs {
     /**
      * Sets the driver underlying this device in the constructor.
      */
-    void AudioDevice::setDriver(AudioDriver * driver) {
+    void AudioDevice::setDriver(AudioDriver *driver) {
         Q_D(AudioDevice);
         d->driver = driver;
     }
@@ -150,7 +155,7 @@ namespace talcs {
      * @param audioDeviceCallback the callback for streaming audio data
      * @return true if started successfully
      */
-    bool AudioDevice::start(AudioDeviceCallback * audioDeviceCallback) {
+    bool AudioDevice::start(AudioDeviceCallback *audioDeviceCallback) {
         Q_D(AudioDevice);
         return d->isStarted = true;
     }
@@ -215,6 +220,7 @@ namespace talcs {
     bool AudioDevice::openControlPanel() {
         return false;
     }
+
     void AudioDevice::close() {
         IAudioStream::close();
         emit closed();

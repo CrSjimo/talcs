@@ -18,6 +18,12 @@ namespace talcs {
 
     static const QList<qint64> COMMON_SDL_BUFFER_SIZES = {512, 1024, 2048, 4096, 8192};
 
+    /**
+     * @class SDLAudioDevice
+     * @brief The audio device using SDL2 Audio
+     * @see @link URL https://wiki.libsdl.org/ @endlink
+     */
+
     SDLAudioDevice::SDLAudioDevice(const QString &name, SDLAudioDriver *driver)
         : SDLAudioDevice(*new SDLAudioDevicePrivate, driver) {
         Q_D(SDLAudioDevice);
@@ -49,8 +55,18 @@ namespace talcs {
 
         setIsInitialized(true);
     }
+
+    /**
+     * Only SDLAudioDriver can access this constructor.
+     */
     SDLAudioDevice::SDLAudioDevice(SDLAudioDevicePrivate & d, QObject * parent) : AudioDevice(d, parent) {
     }
+
+    /**
+     * Destructor.
+     *
+     * If the device is not close, it will be closed now.
+     */
     SDLAudioDevice::~SDLAudioDevice() {
         SDLAudioDevice::close();
     }
