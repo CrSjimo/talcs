@@ -78,6 +78,7 @@ namespace talcs {
 
     /**
      * @overload
+     *
      * Gets the highest absolute sample value within a specified channel.
      */
     float IAudioSampleProvider::magnitude(int channel) const {

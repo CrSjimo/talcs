@@ -156,6 +156,7 @@ namespace talcs {
      */
     void AudioFormatInputSource::flush() {
         Q_D(AudioFormatInputSource);
+        QMutexLocker locker(&d->mutex);
         if (d->srcState)
             src_reset(d->srcState);
     }
@@ -209,14 +210,10 @@ namespace talcs {
     /**
      * Sets the mode of resampler.
      *
-     * Note that this function should not be called when the source is open.
+     * Note that this function should be called when the source is not open. If it is called when the source is open, it
+     * will take effect the next time the source is opened.
      */
     void AudioFormatInputSource::setResamplerMode(AudioFormatInputSource::ResampleMode mode) {
-        Q_ASSERT(!isOpen());
-        if (isOpen()) {
-            qWarning() << "Cannot set resampler mode when source is opened.";
-            return;
-        }
         Q_D(AudioFormatInputSource);
         d->resampleMode = mode;
     }

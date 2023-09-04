@@ -33,6 +33,9 @@ namespace talcs {
         void setPan(float pan);
         float pan() const;
 
+        void setRouteChannels(bool routeChannels);
+        bool routeChannels() const;
+
     signals:
         void meterUpdated(float leftMagnitude, float rightMagnitude);
 

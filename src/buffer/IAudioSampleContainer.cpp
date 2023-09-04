@@ -68,6 +68,7 @@ namespace talcs {
 
     /**
      * @overload
+     *
      * Copies all channels and samples from another object to this one.
      *
      * Note that if the number of channels or the number of samples in the source object is less than that in this
@@ -109,6 +110,7 @@ namespace talcs {
 
     /**
      * @overload
+     *
      * Adds all channels and samples from another object to this one.
      *
      * Note that if the number of channels or the number of samples in the source object is less than that in this
@@ -143,6 +145,7 @@ namespace talcs {
 
     /**
      * @overload
+     *
      * Applies gain to all samples within a specified channel.
      */
     void IAudioSampleContainer::gainSampleRange(int destChannel, float gain) {
@@ -151,6 +154,7 @@ namespace talcs {
 
     /**
      * @overload
+     *
      * Applies gain to all samples in all channels.
      */
     void IAudioSampleContainer::gainSampleRange(float gain) {
@@ -180,6 +184,7 @@ namespace talcs {
 
     /**
      * @overload
+     *
      * Sets all samples within a specified channel to zero.
      */
     void IAudioSampleContainer::clear(int destChannel) {
@@ -188,6 +193,7 @@ namespace talcs {
 
     /**
      * @overload
+     *
      * Sets all samples in all channels to zero.
      */
     void IAudioSampleContainer::clear() {

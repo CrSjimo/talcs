@@ -23,7 +23,6 @@ namespace talcs {
         d->stop();
         if (d->start(bufferSize, sampleRate)) {
             d->setNextReadPositionToAll(d->position);
-            d->tmpBuf.resize(2, bufferSize);
             return PositionableAudioSource::open(bufferSize, sampleRate);
         } else {
             return false;
@@ -43,14 +42,7 @@ namespace talcs {
                 readData.buffer->clear(i, readData.startPos, readData.length);
             }
             readLength = std::min(readData.length, bufferLength - nextReadPosition());
-            auto gainLeftRight = applyGainAndPan(d->gain, d->pan);
-            for (auto src : sources()) {
-                src->read(&d->tmpBuf);
-                for (int i = 0; i < channelCount; i++) {
-                    auto gain = i == 0 ? gainLeftRight.first : i == 1 ? gainLeftRight.second : d->gain;
-                    readData.buffer->addSampleRange(i, readData.startPos, readLength, d->tmpBuf, i, 0, gain);
-                }
-            }
+            d->mix(readData, readLength);
 
             for (int i = 0; i < channelCount; i++) {
                 magnitude.append(readData.buffer->magnitude(i, readData.startPos, readLength));
@@ -150,5 +142,14 @@ namespace talcs {
     float PositionableMixerAudioSource::pan() const {
         Q_D(const PositionableMixerAudioSource);
         return d->pan;
+    }
+    void PositionableMixerAudioSource::setRouteChannels(bool routeChannels) {
+        Q_D(PositionableMixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        d->routeChannels = routeChannels;
+    }
+    bool PositionableMixerAudioSource::routeChannels() const {
+        Q_D(const PositionableMixerAudioSource);
+        return d->routeChannels;
     }
 }
