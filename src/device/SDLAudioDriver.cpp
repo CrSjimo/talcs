@@ -128,16 +128,16 @@ namespace talcs {
     }
 
     /**
+     * @internal
      * @class SDLEventPoller
      * The object runs in another thread to poll event from SDL2.
-     * @internal
      */
 
     /**
+     * @internal
      * @fn void SDLEventPoller::event(QByteArray sdlEventData)
      * Emitted when received event.
      * @param sdlEventData the raw buffer of SDL_Event struct
-     * @internal
      */
 
     void SDLEventPoller::start() {

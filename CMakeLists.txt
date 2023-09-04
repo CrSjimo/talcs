@@ -7,6 +7,7 @@ project(talcs VERSION 0.0.1.1 LANGUAGES CXX)
 # ----------------------------------
 option(TALCS_BUILD_TRANSLATIONS "Build translations" ON)
 option(TALCS_BUILD_TESTS "Build test cases" ON)
+option(TALCS_BUILD_DOCUMENTATIONS "Build documentations" OFF)
 option(TALCS_INSTALL "Install library" ON)
 option(TALCS_ENABLE_ASIO "Enable ASIO feature" OFF)
 
