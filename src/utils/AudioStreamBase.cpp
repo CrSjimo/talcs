@@ -1,24 +1,24 @@
-#include "IAudioStream.h"
+#include "AudioStreamBase.h"
 
 namespace talcs {
-    bool IAudioStream::open(qint64 bufferSize, double sampleRate) {
+    bool AudioStreamBase::open(qint64 bufferSize, double sampleRate) {
         m_bufferSize = bufferSize;
         m_sampleRate = sampleRate;
         m_isOpened = true;
         return true;
     }
-    bool IAudioStream::isOpen() const {
+    bool AudioStreamBase::isOpen() const {
         return m_isOpened;
     }
-    void IAudioStream::close() {
+    void AudioStreamBase::close() {
         m_bufferSize = 0;
         m_sampleRate = 0;
         m_isOpened = false;
     }
-    qint64 IAudioStream::bufferSize() const {
+    qint64 AudioStreamBase::bufferSize() const {
         return m_bufferSize;
     }
-    double IAudioStream::sampleRate() const {
+    double AudioStreamBase::sampleRate() const {
         return m_sampleRate;
     }
 }

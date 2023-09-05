@@ -4,19 +4,36 @@
 #include "buffer/AudioBuffer.h"
 
 namespace talcs {
-    PositionableMixerAudioSource::PositionableMixerAudioSource()
-        : PositionableMixerAudioSource(*new PositionableMixerAudioSourcePrivate) {
+    /**
+     * @class PositionableMixerAudioSource
+     * @brief A class very similar to MixerAudioSource, but this one supports repositioning.
+     * @see MixerAudioSource
+     */
+
+    /**
+     * @copydoc MixerAudioSource::MixerAudioSource()
+     */
+    PositionableMixerAudioSource::PositionableMixerAudioSource(QObject *parent)
+        : PositionableMixerAudioSource(*new PositionableMixerAudioSourcePrivate, parent) {
     }
-    PositionableMixerAudioSource::PositionableMixerAudioSource(PositionableMixerAudioSourcePrivate & d)
-        : PositionableAudioSource(d) {
+    PositionableMixerAudioSource::PositionableMixerAudioSource(PositionableMixerAudioSourcePrivate & d, QObject *parent)
+        : QObject(parent), PositionableAudioSource(d) {
     }
 
+    /**
+     * @copydoc MixerAudioSource::~MixerAudioSource()
+     */
     PositionableMixerAudioSource::~PositionableMixerAudioSource() {
         Q_D(PositionableMixerAudioSource);
         PositionableMixerAudioSource::close();
         d->deleteOwnedSources();
     }
 
+    /**
+     * @copydoc MixerAudioSource::open()
+     *
+     * All input sources are set to the same position after open.
+     */
     bool PositionableMixerAudioSource::open(qint64 bufferSize, double sampleRate) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
@@ -28,6 +45,7 @@ namespace talcs {
             return false;
         }
     }
+
     qint64 PositionableMixerAudioSource::read(const AudioSourceReadData &readData) {
         Q_D(PositionableMixerAudioSource);
         QList<float> magnitude;
@@ -60,12 +78,20 @@ namespace talcs {
         emit meterUpdated(magL, magR);
         return readLength;
     }
+
+    /**
+     * @copydoc MixerAudioSource::close()
+     */
     void PositionableMixerAudioSource::close() {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
         d->tmpBuf.resize(0, 0);
         PositionableAudioSource::close();
     }
+
+    /**
+     * Returns the minimum length among all input sources.
+     */
     qint64 PositionableMixerAudioSource::length() const {
         auto sourceList = sources();
         if (sourceList.length() == 0)
@@ -83,12 +109,16 @@ namespace talcs {
                       [=](PositionableAudioSource *src) { src->setNextReadPosition(pos); });
     }
 
+    /**
+     * Sets the next read position, and updates the read position to all input sources.
+     */
     void PositionableMixerAudioSource::setNextReadPosition(qint64 pos) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
         d->setNextReadPositionToAll(pos);
         PositionableAudioSource::setNextReadPosition(pos);
     }
+
     bool PositionableMixerAudioSource::addSource(PositionableAudioSource * src, bool takeOwnership) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
@@ -104,6 +134,7 @@ namespace talcs {
         }
         return true;
     }
+
     bool PositionableMixerAudioSource::removeSource(PositionableAudioSource * src) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
@@ -113,7 +144,8 @@ namespace talcs {
         }
         return false;
     }
-    void PositionableMixerAudioSource::removeAllSource() {
+
+    void PositionableMixerAudioSource::removeAllSources() {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
         d->stop();

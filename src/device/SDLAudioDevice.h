@@ -28,6 +28,4 @@ namespace talcs {
     };
 }
 
-
-
 #endif // TALCS_SDLAUDIODEVICE_H

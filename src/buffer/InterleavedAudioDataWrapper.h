@@ -12,7 +12,7 @@ namespace talcs {
         Q_DECLARE_PRIVATE(InterleavedAudioDataWrapper)
     public:
         InterleavedAudioDataWrapper(float *data, int channelCount, qint64 sampleCount);
-        ~InterleavedAudioDataWrapper();
+        ~InterleavedAudioDataWrapper() override;
 
         float &sampleAt(int channel, qint64 pos) override;
         float constSampleAt(int channel, qint64 pos) const override;

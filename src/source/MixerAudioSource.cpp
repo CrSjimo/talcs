@@ -1,21 +1,38 @@
 #include "MixerAudioSource.h"
 #include "MixerAudioSource_p.h"
 
-#include "buffer/AudioBuffer.h"
-
 namespace talcs {
-    MixerAudioSource::MixerAudioSource() : MixerAudioSource(*new MixerAudioSourcePrivate) {
+    /**
+     * @class MixerAudioSource
+     * @brief The object that mixes the output of other AudioSource objects.
+     * @see PositionableMixerAudioSource
+     */
+
+    /**
+     * Default constructor.
+     */
+    MixerAudioSource::MixerAudioSource(QObject *parent) : MixerAudioSource(*new MixerAudioSourcePrivate, parent) {
     }
 
-    MixerAudioSource::MixerAudioSource(MixerAudioSourcePrivate & d) : AudioSource(d) {
+    MixerAudioSource::MixerAudioSource(MixerAudioSourcePrivate & d, QObject *parent) : QObject(parent), AudioSource(d) {
     }
 
+    /**
+     * Destructor.
+     *
+     * If the object is not close, it will be closed now.
+     */
     MixerAudioSource::~MixerAudioSource() {
         Q_D(MixerAudioSource);
         MixerAudioSource::close();
         d->deleteOwnedSources();
     }
 
+    /**
+     * @copydoc AudioSource::open()
+     *
+     * The function also opens all input sources.
+     */
     bool MixerAudioSource::open(qint64 bufferSize, double sampleRate) {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
@@ -55,6 +72,11 @@ namespace talcs {
         return readLength;
     }
 
+    /**
+     * @copydoc AudioSource::close()
+     *
+     * The function also closes all input sources.
+     */
     void MixerAudioSource::close() {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
@@ -76,6 +98,7 @@ namespace talcs {
         }
         return true;
     }
+
     bool MixerAudioSource::removeSource(AudioSource * src) {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
@@ -85,39 +108,47 @@ namespace talcs {
         }
         return false;
     }
-    void MixerAudioSource::removeAllSource() {
+
+    void MixerAudioSource::removeAllSources() {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
         d->stop();
         d->sourceDict.clear();
     }
+
     QList<AudioSource *> MixerAudioSource::sources() const {
         Q_D(const MixerAudioSource);
         return d->sourceDict.keys();
     }
+
     void MixerAudioSource::setGain(float gain) {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
         d->gain = gain;
     }
+
     float MixerAudioSource::gain() const {
         Q_D(const MixerAudioSource);
         return d->gain;
     }
+
     void MixerAudioSource::setPan(float pan) {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
         d->pan = pan;
     }
+
     float MixerAudioSource::pan() const {
         Q_D(const MixerAudioSource);
         return d->pan;
     }
+
     void MixerAudioSource::setRouteChannels(bool routeChannels) {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
         d->routeChannels = routeChannels;
     }
+
     bool MixerAudioSource::routeChannels() const {
         Q_D(const MixerAudioSource);
         return d->routeChannels;

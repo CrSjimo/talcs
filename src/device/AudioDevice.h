@@ -4,24 +4,24 @@
 #include <QObject>
 
 #include "AudioDeviceCallback.h"
-#include "utils/IAudioStream.h"
-#include "utils/IErrorStringProvider.h"
-#include "utils/INameProvider.h"
+#include "utils/AudioStreamBase.h"
+#include "utils/ErrorStringProvider.h"
+#include "utils/NameProvider.h"
 
 namespace talcs {
     class AudioDevicePrivate;
     class AudioDriver;
 
     class TALCS_EXPORT AudioDevice : public QObject,
-                                     public IAudioStream,
-                                     public INameProvider,
-                                     public IErrorStringProvider {
+                                     public AudioStreamBase,
+                                     public NameProvider,
+                                     public ErrorStringProvider {
         Q_OBJECT
         Q_DECLARE_PRIVATE(AudioDevice)
         friend class AudioDriver;
 
     public:
-        virtual ~AudioDevice();
+        ~AudioDevice() override;
 
         bool isInitialized() const;
 

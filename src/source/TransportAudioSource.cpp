@@ -67,7 +67,7 @@ namespace talcs {
         d->isPlaying = false;
         if (d->src && d->src->open(bufferSize, sampleRate)) {
             d->isPlaying = false;
-            return IAudioStream::open(bufferSize, sampleRate);
+            return AudioStreamBase::open(bufferSize, sampleRate);
         }
         return false;
     }
@@ -76,7 +76,7 @@ namespace talcs {
         if (d->src)
             d->src->close();
         d->isPlaying = false;
-        IAudioStream::close();
+        AudioStreamBase::close();
     }
 
     void TransportAudioSource::setSource(PositionableAudioSource * src, bool takeOwnership) {

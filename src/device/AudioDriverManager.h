@@ -1,17 +1,21 @@
 #ifndef TALCS_AUDIODRIVERMANAGER_H
 #define TALCS_AUDIODRIVERMANAGER_H
 
-#include "AudioDriver.h"
+#include <QObject>
+
+#include "global/TalcsGlobal.h"
 
 namespace talcs {
     class AudioDriverManagerPrivate;
+
+    class AudioDriver;
 
     class TALCS_EXPORT AudioDriverManager : public QObject {
         Q_OBJECT
         Q_DECLARE_PRIVATE(AudioDriverManager)
     public:
-        AudioDriverManager(QObject *parent = nullptr);
-        ~AudioDriverManager();
+        explicit AudioDriverManager(QObject *parent = nullptr);
+        ~AudioDriverManager() override;
 
         bool addAudioDriver(AudioDriver *driver);
         bool removeDriver(AudioDriver *driver);

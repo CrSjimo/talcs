@@ -1,12 +1,12 @@
-#ifndef INAMEPROVIDER_H
-#define INAMEPROVIDER_H
+#ifndef TALCS_NAMEPROVIDER_H
+#define TALCS_NAMEPROVIDER_H
 
 #include <QString>
 
 #include "global/TalcsGlobal.h"
 
 namespace talcs {
-    class TALCS_EXPORT INameProvider {
+    class TALCS_EXPORT NameProvider {
     public:
         QString name() const;
 
@@ -20,4 +20,4 @@ namespace talcs {
 
 
 
-#endif // INAMEPROVIDER_H
+#endif // TALCS_NAMEPROVIDER_H

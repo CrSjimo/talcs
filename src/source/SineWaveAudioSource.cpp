@@ -4,17 +4,31 @@
 #include <cmath>
 
 namespace talcs {
-    SineWaveAudioSource::SineWaveAudioSource() : SineWaveAudioSource(*new SineWaveAudioSourcePrivate) {
-    }
-    SineWaveAudioSource::SineWaveAudioSource(double frequency) : SineWaveAudioSource() {
+    /**
+     * @class SineWaveAudioSource
+     * Generates sine wave.
+     */
+
+    /**
+     * @overload
+     *
+     * Constructor that initialize the generator with a fixed frequency (Hz).
+     */
+    SineWaveAudioSource::SineWaveAudioSource(double frequency) {
         Q_D(SineWaveAudioSource);
         setFrequency(frequency);
     }
-    SineWaveAudioSource::SineWaveAudioSource(const std::function<double(qint64)> &getFreq) : SineWaveAudioSource() {
+
+    /**
+     * Constructor that initialize the generator with a frequency that changes over time.
+     * @param frequencyIntegration @f$\mathtt{frequencyIntegration}(x) = \int_{0}^{x}f(\tau)\mathrm{d}\tau@f$,
+     * where @f$f(\tau)@f$ represents the frequency (Hz) at time @f$\tau@f$ (measured in samples).
+     */
+    SineWaveAudioSource::SineWaveAudioSource(const std::function<double(qint64)> &frequencyIntegration) {
         Q_D(SineWaveAudioSource);
-        setFrequency(getFreq);
+        setFrequency(frequencyIntegration);
     }
-    SineWaveAudioSource::SineWaveAudioSource(SineWaveAudioSourcePrivate & d) : PositionableAudioSource(d) {
+    SineWaveAudioSource::SineWaveAudioSource(SineWaveAudioSourcePrivate &d) : PositionableAudioSource(d) {
     }
 
     bool SineWaveAudioSource::open(qint64 bufferSize, double sampleRate) {
@@ -24,11 +38,12 @@ namespace talcs {
     qint64 SineWaveAudioSource::read(const AudioSourceReadData &readData) {
         Q_D(SineWaveAudioSource);
         QMutexLocker locker(&d->mutex);
+        static const double PI = 3.14159265358979323846;
         auto channelCount = readData.buffer->channelCount();
         auto pos = PositionableAudioSource::nextReadPosition();
+        auto sr = sampleRate();
         for (qint64 i = 0; i < readData.length; i++) {
-            double omega = 2 * 3.14159265358979323846 * d->freq(pos + i) / sampleRate();
-            float sample = sin(omega * (pos + i));
+            float sample = sin(2 * PI * d->freq(pos + i) / sr);
             for (int ch = 0; ch < channelCount; ch++) {
                 readData.buffer->sampleAt(ch, readData.startPos + i) = sample;
             }
@@ -40,14 +55,30 @@ namespace talcs {
         return std::numeric_limits<qint64>::max();
     }
 
+    /**
+     * @overload
+     *
+     * Sets a fixed frequency.
+     * @see SineWaveAudioSource(double)
+     */
     void SineWaveAudioSource::setFrequency(double frequency) {
-        setFrequency([frequency](qint64 _){ return frequency; });
+        setFrequency([frequency](qint64 pos) { return frequency * pos; });
     }
-    void SineWaveAudioSource::setFrequency(const std::function<double(qint64)> &getFreq) {
+
+    /**
+     * Sets a frequency that changes over time.
+     * @see SineWaveAudioSource(const std::function<double(qint64)> &)
+     */
+    void SineWaveAudioSource::setFrequency(const std::function<double(qint64)> &frequencyIntegration) {
         Q_D(SineWaveAudioSource);
         QMutexLocker locker(&d->mutex);
-        d->freq = getFreq;
+        d->freq = frequencyIntegration;
     }
+
+    /**
+     * Gets the frequency integration function.
+     * @see SineWaveAudioSource(const std::function<double(qint64)> &)
+     */
     std::function<double(qint64)> SineWaveAudioSource::frequency() const {
         Q_D(const SineWaveAudioSource);
         return d->freq;

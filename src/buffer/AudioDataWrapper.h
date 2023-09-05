@@ -12,7 +12,7 @@ namespace talcs {
         Q_DECLARE_PRIVATE(AudioDataWrapper)
     public:
         AudioDataWrapper(float *const *data, int channelCount, qint64 sampleCount, qint64 startPos = 0);
-        ~AudioDataWrapper();
+        ~AudioDataWrapper() override;
 
         float &sampleAt(int channel, qint64 pos) override;
         float constSampleAt(int channel, qint64 pos) const override;

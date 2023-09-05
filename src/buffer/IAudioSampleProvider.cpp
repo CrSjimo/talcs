@@ -17,7 +17,7 @@ namespace talcs {
     }
 
     /**
-     * @class IAudioSampleProvider
+     * @interface IAudioSampleProvider
      * @brief Base class for object containing audio data for read
      */
 

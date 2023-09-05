@@ -13,7 +13,7 @@ namespace talcs {
         Q_OBJECT
         Q_DECLARE_PRIVATE(ASIOAudioDevice)
     public:
-        ~ASIOAudioDevice();
+        ~ASIOAudioDevice() override;
         bool start(AudioDeviceCallback *audioDeviceCallback) override;
         void stop() override;
         bool open(qint64 bufferSize, double sampleRate) override;

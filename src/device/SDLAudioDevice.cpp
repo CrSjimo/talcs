@@ -92,7 +92,7 @@ namespace talcs {
             return false;
         }
         reinterpret_cast<SDLAudioDriver *>(d->driver)->addOpenedDevice(d->devId, this);
-        return IAudioStream::open(bufferSize, sampleRate);
+        return AudioStreamBase::open(bufferSize, sampleRate);
     }
     void SDLAudioDevice::close() {
         Q_D(SDLAudioDevice);

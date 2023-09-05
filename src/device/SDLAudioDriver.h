@@ -15,7 +15,7 @@ namespace talcs {
 
     public:
         explicit SDLAudioDriver(QObject *parent = nullptr);
-        ~SDLAudioDriver();
+        ~SDLAudioDriver() override;
 
         bool initialize() override;
         void finalize() override;
@@ -31,7 +31,5 @@ namespace talcs {
         void removeOpenedDevice(quint32 devId);
     };
 }
-
-
 
 #endif // TALCS_SDLAUDIODRIVER_H
