@@ -1,2 +1,3 @@
 # TALCS
-**T**ALCS: **A**udio **L**ibrary of **C**r**S**jimo
+
+<b>T</b>ALCS: <b>Au</b>dio <b>L</b>ibrary of <b>C</b>r<b>S</b>jimo

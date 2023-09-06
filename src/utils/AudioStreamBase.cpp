@@ -11,7 +11,7 @@ namespace talcs {
      *
      * All reimplemented functions should call this function.
      *
-     * @note The function might be called when the stream is already open, in this case, the stream
+     * @note The function might be called when the stream is already open. In this case, the stream
      * should be closed first and then opened.
      * @param bufferSize the size of each block to process
      * @param sampleRate the sample rate of audio
@@ -35,6 +35,9 @@ namespace talcs {
      * Closes the stream.
      *
      * All reimplemented functions should call this function.
+     *
+     * @note The function might be called when the stream is close. In this case, derived classes should handle it
+     * properly.
      */
     void AudioStreamBase::close() {
         m_bufferSize = 0;
