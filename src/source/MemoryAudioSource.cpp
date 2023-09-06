@@ -2,17 +2,27 @@
 #include "MemoryAudioSource_p.h"
 
 #include "buffer/IAudioSampleContainer.h"
-#include <algorithm>
 
 namespace talcs {
-    MemoryAudioSource::MemoryAudioSource(IAudioSampleProvider * buffer, bool takeOwnership)
+
+    /**
+     * @class MemoryAudioSource
+     * @brief Produces audio from an IAudioSampleProvider object.
+     */
+
+    /**
+     * Constructor.
+     * @param buffer the IAudioSampleProvider object to get audio from
+     * @param takeOwnership if set to @c true, the object will be deleted on deconstruction.
+     */
+    MemoryAudioSource::MemoryAudioSource(IAudioSampleProvider *buffer, bool takeOwnership)
         : MemoryAudioSource(*new MemoryAudioSourcePrivate) {
         Q_D(MemoryAudioSource);
         d->buffer = buffer;
         d->takeOwnership = takeOwnership;
     }
 
-    MemoryAudioSource::MemoryAudioSource(MemoryAudioSourcePrivate & d) : PositionableAudioSource(d) {
+    MemoryAudioSource::MemoryAudioSource(MemoryAudioSourcePrivate &d) : PositionableAudioSource(d) {
     }
 
     MemoryAudioSource::~MemoryAudioSource() {
@@ -22,12 +32,21 @@ namespace talcs {
         }
     }
 
+    /**
+     * Gets the IAudioSampleProvider object used.
+     */
     IAudioSampleProvider *MemoryAudioSource::buffer() const {
         Q_D(const MemoryAudioSource);
         return d->buffer;
     }
 
-    IAudioSampleProvider *MemoryAudioSource::setBuffer(IAudioSampleProvider * newBuffer, bool takeOwnership) {
+    /**
+     * Sets a new IAudioSampleProvider to use.
+     *
+     * The ownership of the previous object is no longer taken and the read position will be set to zero.
+     * @see MemoryAudioSource()
+     */
+    IAudioSampleProvider *MemoryAudioSource::setBuffer(IAudioSampleProvider *newBuffer, bool takeOwnership) {
         Q_D(MemoryAudioSource);
         QMutexLocker locker(&d->mutex);
         auto oldBuffer = d->buffer;

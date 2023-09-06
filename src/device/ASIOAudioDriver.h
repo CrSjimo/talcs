@@ -11,7 +11,7 @@ namespace talcs {
         Q_DECLARE_PRIVATE(ASIOAudioDriver)
     public:
         ASIOAudioDriver(QObject *parent = nullptr);
-        ~ASIOAudioDriver();
+        ~ASIOAudioDriver() override;
         bool initialize() override;
         void finalize() override;
         QStringList devices() const override;

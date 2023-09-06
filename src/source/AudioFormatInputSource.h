@@ -18,7 +18,7 @@ namespace talcs {
             Linear,
         };
         explicit AudioFormatInputSource(AudioFormatIO *audioFormatIo = nullptr);
-        ~AudioFormatInputSource();
+        ~AudioFormatInputSource() override;
 
         qint64 read(const AudioSourceReadData &readData) override;
         qint64 length() const override;

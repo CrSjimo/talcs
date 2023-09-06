@@ -12,7 +12,7 @@ namespace talcs {
         Q_DECLARE_PRIVATE(MemoryAudioSource)
     public:
         explicit MemoryAudioSource(IAudioSampleProvider *buffer = nullptr, bool takeOwnership = false);
-        ~MemoryAudioSource();
+        ~MemoryAudioSource() override;
 
         IAudioSampleProvider *buffer() const;
         IAudioSampleProvider *setBuffer(IAudioSampleProvider *newBuffer, bool takeOwnership = false);
@@ -26,7 +26,5 @@ namespace talcs {
         explicit MemoryAudioSource(MemoryAudioSourcePrivate &d);
     };
 }
-
-
 
 #endif // TALCS_MEMORYAUDIOSOURCE_H

@@ -29,5 +29,4 @@ namespace talcs {
     };
 }
 
-
 #endif // AUDIOSOURCEPLAYBACK_H

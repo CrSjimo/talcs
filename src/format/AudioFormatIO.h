@@ -3,7 +3,7 @@
 
 #include <QIODevice>
 
-#include "utils/IErrorStringProvider.h"
+#include "utils/ErrorStringProvider.h"
 
 class SndfileHandle;
 class QIODevice;
@@ -11,7 +11,7 @@ class QIODevice;
 namespace talcs {
     class AudioFormatIOPrivate;
 
-    class TALCS_EXPORT AudioFormatIO : public IErrorStringProvider {
+    class TALCS_EXPORT AudioFormatIO : public ErrorStringProvider {
         Q_DECLARE_PRIVATE(AudioFormatIO)
     public:
         explicit AudioFormatIO(QIODevice *stream = nullptr);

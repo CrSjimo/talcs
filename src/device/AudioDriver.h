@@ -3,19 +3,19 @@
 
 #include <QObject>
 
-#include "utils/IErrorStringProvider.h"
-#include "utils/INameProvider.h"
+#include "utils/ErrorStringProvider.h"
+#include "utils/NameProvider.h"
 
 namespace talcs {
     class AudioDriverPrivate;
     class AudioDevice;
 
-    class TALCS_EXPORT AudioDriver : public QObject, public INameProvider, public IErrorStringProvider {
+    class TALCS_EXPORT AudioDriver : public QObject, public NameProvider, public ErrorStringProvider {
         Q_OBJECT
         Q_DECLARE_PRIVATE(AudioDriver)
     public:
         explicit AudioDriver(QObject *parent = nullptr);
-        virtual ~AudioDriver();
+        ~AudioDriver() override;
 
         virtual bool initialize();
         virtual void finalize();

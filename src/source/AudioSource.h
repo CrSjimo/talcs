@@ -4,7 +4,7 @@
 #include <QScopedPointer>
 
 #include "buffer/IAudioSampleContainer.h"
-#include "utils/IAudioStream.h"
+#include "utils/AudioStreamBase.h"
 
 namespace talcs {
     class TALCS_EXPORT AudioSourceReadData {
@@ -18,7 +18,7 @@ namespace talcs {
 
     class AudioSourcePrivate;
 
-    class TALCS_EXPORT AudioSource : public IAudioStream {
+    class TALCS_EXPORT AudioSource : public AudioStreamBase {
         Q_DECLARE_PRIVATE(AudioSource)
     public:
         AudioSource();

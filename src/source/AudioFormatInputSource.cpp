@@ -106,7 +106,7 @@ namespace talcs {
             d->resizeInDataBuffers(bufferSize);
             d->resizeOutDataBuffers(bufferSize);
             d->io->seek(d->position / d->ratio);
-            return IAudioStream::open(bufferSize, sampleRate);
+            return AudioStreamBase::open(bufferSize, sampleRate);
         } else
             return false;
     }
@@ -138,7 +138,8 @@ namespace talcs {
         d->io = audioFormatIo;
         if (d->io && d->io->openMode())
             d->io->seek(d->inPosition);
-        flush();
+        if (d->srcState)
+            src_reset(d->srcState);
     }
 
     /**

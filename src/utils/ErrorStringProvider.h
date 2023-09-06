@@ -1,12 +1,12 @@
-#ifndef IERRORSTRINGPROVIDER_H
-#define IERRORSTRINGPROVIDER_H
+#ifndef TALCS_ERRORSTRINGPROVIDER_H
+#define TALCS_ERRORSTRINGPROVIDER_H
 
 #include <QString>
 
 #include "global/TalcsGlobal.h"
 
 namespace talcs {
-    class TALCS_EXPORT IErrorStringProvider {
+    class TALCS_EXPORT ErrorStringProvider {
     public:
         QString errorString() const;
 
@@ -21,4 +21,4 @@ namespace talcs {
 
 
 
-#endif // IERRORSTRINGPROVIDER_H
+#endif // TALCS_ERRORSTRINGPROVIDER_H

@@ -8,6 +8,8 @@
 namespace talcs {
     class TALCS_EXPORT IAudioSampleProvider {
     public:
+        virtual ~IAudioSampleProvider() = default;
+
         virtual float constSampleAt(int channel, qint64 pos) const = 0;
         virtual bool isContinuous() const;
         virtual const float *readPointerTo(int channel, qint64 startPos) const;

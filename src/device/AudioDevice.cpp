@@ -222,7 +222,7 @@ namespace talcs {
     }
 
     void AudioDevice::close() {
-        IAudioStream::close();
+        AudioStreamBase::close();
         emit closed();
     }
 
