@@ -1,8 +1,8 @@
 #ifndef TALCS_TRANSPORTAUDIOSOURCE_P_H
 #define TALCS_TRANSPORTAUDIOSOURCE_P_H
 
-#include "TransportAudioSource.h"
 #include "AudioSource_p.h"
+#include "TransportAudioSource.h"
 
 #include <QMutex>
 
