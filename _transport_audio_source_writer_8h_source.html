@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=11" />
     <meta name="generator" content="Doxygen 1.9.7" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TALCS: C:/Users/Crs_1/diffscope/libs/talcs/src/format/TransportAudioSourceWriter.h Source File</title>
+    <title>TALCS: format/TransportAudioSourceWriter.h Source File</title>
     <link href="tabs.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -34,7 +34,7 @@
                         <tr id="projectrow">
                             <td id="projectalign">
                                 <div id="projectname">TALCS
-                                    <span id="projectnumber">&#160;0.0.1</span>
+                                    <span id="projectnumber">&#160;0.0.1.1</span>
                                 </div>
                                 <div id="projectbrief">TALCS: Audio Library of CrSjimo</div>
                             </td>
@@ -117,8 +117,8 @@ $(document).ready(function(){initNavTree('_transport_audio_source_writer_8h_sour
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        Q_OBJECT</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        Q_DECLARE_PRIVATE(<a class="code hl_class" href="classtalcs_1_1_transport_audio_source_writer.html">TransportAudioSourceWriter</a>)</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <a class="code hl_class" href="classtalcs_1_1_transport_audio_source_writer.html">TransportAudioSourceWriter</a>(TransportAudioSource *src, <a class="code hl_class" href="classtalcs_1_1_audio_format_i_o.html">AudioFormatIO</a> *outFile, qint64 startPos, qint64 length);</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <a class="code hl_class" href="classtalcs_1_1_transport_audio_source_writer.html">~TransportAudioSourceWriter</a>();</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <a class="code hl_class" href="classtalcs_1_1_transport_audio_source_writer.html">TransportAudioSourceWriter</a>(<a class="code hl_class" href="classtalcs_1_1_transport_audio_source.html">TransportAudioSource</a> *src, <a class="code hl_class" href="classtalcs_1_1_audio_format_i_o.html">AudioFormatIO</a> *outFile, qint64 startPos, qint64 length);</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        <a class="code hl_class" href="classtalcs_1_1_transport_audio_source_writer.html">~TransportAudioSourceWriter</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">public</span> slots:</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="keywordtype">void</span> start();</div>
@@ -141,6 +141,7 @@ $(document).ready(function(){initNavTree('_transport_audio_source_writer_8h_sour
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#endif </span><span class="comment">// TALCS_TRANSPORTAUDIOSOURCEWRITER_H</span></div>
 <div class="ttc" id="aclasstalcs_1_1_audio_format_i_o_html"><div class="ttname"><a href="classtalcs_1_1_audio_format_i_o.html">talcs::AudioFormatIO</a></div><div class="ttdoc">The AudioFormatIO class provides interfaces to access audio files based on libsndfile.</div><div class="ttdef"><b>Definition</b> AudioFormatIO.h:14</div></div>
+<div class="ttc" id="aclasstalcs_1_1_transport_audio_source_html"><div class="ttname"><a href="classtalcs_1_1_transport_audio_source.html">talcs::TransportAudioSource</a></div><div class="ttdoc">The object takes a PositionableAudioSource object and supports playing and pausing.</div><div class="ttdef"><b>Definition</b> TransportAudioSource.h:13</div></div>
 <div class="ttc" id="aclasstalcs_1_1_transport_audio_source_writer_html"><div class="ttname"><a href="classtalcs_1_1_transport_audio_source_writer.html">talcs::TransportAudioSourceWriter</a></div><div class="ttdoc">The TransportAudioSourceWriter class provides interfaces to write audio.</div><div class="ttdef"><b>Definition</b> TransportAudioSourceWriter.h:13</div></div>
 <div class="ttc" id="aclasstalcs_1_1_transport_audio_source_writer_html_a283503eeeb4ffb6970e6b14da3dc0aaf"><div class="ttname"><a href="classtalcs_1_1_transport_audio_source_writer.html#a283503eeeb4ffb6970e6b14da3dc0aaf">talcs::TransportAudioSourceWriter::percentageUpdated</a></div><div class="ttdeci">void percentageUpdated(float percentage)</div></div>
 <div class="ttc" id="aclasstalcs_1_1_transport_audio_source_writer_html_a2b759a28905ecdd4aed1b6311c53f070"><div class="ttname"><a href="classtalcs_1_1_transport_audio_source_writer.html#a2b759a28905ecdd4aed1b6311c53f070">talcs::TransportAudioSourceWriter::interrupted</a></div><div class="ttdeci">void interrupted()</div></div>
@@ -151,7 +152,7 @@ $(document).ready(function(){initNavTree('_transport_audio_source_writer_8h_sour
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_ec1b7ce311228e378620b0bf6ca6f61a.html">talcs</a></li><li class="navelem"><a class="el" href="dir_9b704adfa81c370357d1d2f71f107fc5.html">src</a></li><li class="navelem"><a class="el" href="dir_a405bbff3d2746a7deb4772ee514562a.html">format</a></li><li class="navelem"><b>TransportAudioSourceWriter.h</b></li>
+    <li class="navelem"><a class="el" href="dir_24c049936c2e162b277227e4c6675044.html">format</a></li><li class="navelem"><b>TransportAudioSourceWriter.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

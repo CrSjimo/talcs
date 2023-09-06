@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=11" />
     <meta name="generator" content="Doxygen 1.9.7" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TALCS: C:/Users/Crs_1/diffscope/libs/talcs/src/buffer/AudioBuffer.h Source File</title>
+    <title>TALCS: buffer/AudioBuffer.h Source File</title>
     <link href="tabs.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -34,7 +34,7 @@
                         <tr id="projectrow">
                             <td id="projectalign">
                                 <div id="projectname">TALCS
-                                    <span id="projectnumber">&#160;0.0.1</span>
+                                    <span id="projectnumber">&#160;0.0.1.1</span>
                                 </div>
                                 <div id="projectbrief">TALCS: Audio Library of CrSjimo</div>
                             </td>
@@ -109,7 +109,7 @@ $(document).ready(function(){initNavTree('_audio_buffer_8h_source.html',''); ini
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;IAudioSampleContainer.h&quot;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">namespace </span>talcs {</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="classtalcs_1_1_audio_buffer.html">    9</a></span>    <span class="keyword">class </span>TALCS_EXPORT <a class="code hl_class" href="classtalcs_1_1_audio_buffer.html">AudioBuffer</a> : <span class="keyword">public</span> <a class="code hl_class" href="classtalcs_1_1_i_audio_sample_container.html">IAudioSampleContainer</a> {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="classtalcs_1_1_audio_buffer.html">    9</a></span>    <span class="keyword">class </span>TALCS_EXPORT <a class="code hl_class" href="classtalcs_1_1_audio_buffer.html">AudioBuffer</a> : <span class="keyword">public</span> <a class="code hl_interface" href="classtalcs_1_1_i_audio_sample_container.html">IAudioSampleContainer</a> {</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        <a class="code hl_class" href="classtalcs_1_1_audio_buffer.html">AudioBuffer</a>();</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <a class="code hl_class" href="classtalcs_1_1_audio_buffer.html">AudioBuffer</a>(<span class="keywordtype">int</span> channelCount, qint64 sampleCount);</div>
@@ -135,7 +135,7 @@ $(document).ready(function(){initNavTree('_audio_buffer_8h_source.html',''); ini
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <a class="code hl_class" href="classtalcs_1_1_audio_buffer.html">AudioBuffer</a> slice(<span class="keywordtype">int</span> startChannelIndex, qint64 startSampleCount, <span class="keywordtype">int</span> channelSize = -1,</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>                          qint64 length = -1) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keyword">static</span> <a class="code hl_class" href="classtalcs_1_1_audio_buffer.html">AudioBuffer</a> from(<span class="keyword">const</span> <a class="code hl_class" href="classtalcs_1_1_i_audio_sample_provider.html">IAudioSampleProvider</a> &amp;src);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keyword">static</span> <a class="code hl_class" href="classtalcs_1_1_audio_buffer.html">AudioBuffer</a> from(<span class="keyword">const</span> <a class="code hl_interface" href="classtalcs_1_1_i_audio_sample_provider.html">IAudioSampleProvider</a> &amp;src);</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        QVector&lt;QVector&lt;float&gt;&gt; m_buffer;</div>
@@ -151,7 +151,7 @@ $(document).ready(function(){initNavTree('_audio_buffer_8h_source.html',''); ini
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_ec1b7ce311228e378620b0bf6ca6f61a.html">talcs</a></li><li class="navelem"><a class="el" href="dir_9b704adfa81c370357d1d2f71f107fc5.html">src</a></li><li class="navelem"><a class="el" href="dir_083913ed33d5b3df2cc8204b0ce96b06.html">buffer</a></li><li class="navelem"><b>AudioBuffer.h</b></li>
+    <li class="navelem"><a class="el" href="dir_bb677b0aa0cb8f6cf37e5f61e8bc8b6d.html">buffer</a></li><li class="navelem"><b>AudioBuffer.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

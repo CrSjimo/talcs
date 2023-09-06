@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=11" />
     <meta name="generator" content="Doxygen 1.9.7" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TALCS: C:/Users/Crs_1/diffscope/libs/talcs/src/source/AudioSource.h Source File</title>
+    <title>TALCS: source/AudioSource.h Source File</title>
     <link href="tabs.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -34,7 +34,7 @@
                         <tr id="projectrow">
                             <td id="projectalign">
                                 <div id="projectname">TALCS
-                                    <span id="projectnumber">&#160;0.0.1</span>
+                                    <span id="projectnumber">&#160;0.0.1.1</span>
                                 </div>
                                 <div id="projectbrief">TALCS: Audio Library of CrSjimo</div>
                             </td>
@@ -107,21 +107,21 @@ $(document).ready(function(){initNavTree('_audio_source_8h_source.html',''); ini
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;QScopedPointer&gt;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;buffer/IAudioSampleContainer.h&quot;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;utils/IAudioStream.h&quot;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;utils/AudioStreamBase.h&quot;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span>talcs {</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="classtalcs_1_1_audio_source_read_data.html">   10</a></span>    <span class="keyword">class </span>TALCS_EXPORT <a class="code hl_class" href="classtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> {</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <a class="code hl_class" href="classtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a>(<a class="code hl_class" href="classtalcs_1_1_i_audio_sample_container.html">IAudioSampleContainer</a> *buffer);</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        <a class="code hl_class" href="classtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a>(<a class="code hl_class" href="classtalcs_1_1_i_audio_sample_container.html">IAudioSampleContainer</a> *buffer, qint64 startPos, qint64 length);</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="classtalcs_1_1_audio_source_read_data.html#a38acb51b2a63fccbafac9c0afca0c1b9">   14</a></span>        <a class="code hl_class" href="classtalcs_1_1_i_audio_sample_container.html">IAudioSampleContainer</a> *<a class="code hl_variable" href="classtalcs_1_1_audio_source_read_data.html#a38acb51b2a63fccbafac9c0afca0c1b9">buffer</a>;</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        <a class="code hl_class" href="classtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a>(<a class="code hl_interface" href="classtalcs_1_1_i_audio_sample_container.html">IAudioSampleContainer</a> *buffer);</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        <a class="code hl_class" href="classtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a>(<a class="code hl_interface" href="classtalcs_1_1_i_audio_sample_container.html">IAudioSampleContainer</a> *buffer, qint64 startPos, qint64 length);</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="classtalcs_1_1_audio_source_read_data.html#a38acb51b2a63fccbafac9c0afca0c1b9">   14</a></span>        <a class="code hl_interface" href="classtalcs_1_1_i_audio_sample_container.html">IAudioSampleContainer</a> *<a class="code hl_variable" href="classtalcs_1_1_audio_source_read_data.html#a38acb51b2a63fccbafac9c0afca0c1b9">buffer</a>;</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="classtalcs_1_1_audio_source_read_data.html#ab57103658ea08830681122eff763046d">   15</a></span>        qint64 <a class="code hl_variable" href="classtalcs_1_1_audio_source_read_data.html#ab57103658ea08830681122eff763046d">startPos</a>;</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="classtalcs_1_1_audio_source_read_data.html#af9d495c1655d813d553030485d00fea7">   16</a></span>        qint64 <a class="code hl_variable" href="classtalcs_1_1_audio_source_read_data.html#af9d495c1655d813d553030485d00fea7">length</a>;</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    };</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">class </span>AudioSourcePrivate;</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classtalcs_1_1_audio_source.html">   21</a></span>    <span class="keyword">class </span>TALCS_EXPORT <a class="code hl_class" href="classtalcs_1_1_audio_source.html">AudioSource</a> : <span class="keyword">public</span> IAudioStream {</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classtalcs_1_1_audio_source.html">   21</a></span>    <span class="keyword">class </span>TALCS_EXPORT <a class="code hl_class" href="classtalcs_1_1_audio_source.html">AudioSource</a> : <span class="keyword">public</span> <a class="code hl_class" href="classtalcs_1_1_audio_stream_base.html">AudioStreamBase</a> {</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        Q_DECLARE_PRIVATE(<a class="code hl_class" href="classtalcs_1_1_audio_source.html">AudioSource</a>)</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <a class="code hl_class" href="classtalcs_1_1_audio_source.html">AudioSource</a>();</div>
@@ -141,13 +141,14 @@ $(document).ready(function(){initNavTree('_audio_source_8h_source.html',''); ini
 <div class="ttc" id="aclasstalcs_1_1_audio_source_read_data_html_a38acb51b2a63fccbafac9c0afca0c1b9"><div class="ttname"><a href="classtalcs_1_1_audio_source_read_data.html#a38acb51b2a63fccbafac9c0afca0c1b9">talcs::AudioSourceReadData::buffer</a></div><div class="ttdeci">IAudioSampleContainer * buffer</div><div class="ttdef"><b>Definition</b> AudioSource.h:14</div></div>
 <div class="ttc" id="aclasstalcs_1_1_audio_source_read_data_html_ab57103658ea08830681122eff763046d"><div class="ttname"><a href="classtalcs_1_1_audio_source_read_data.html#ab57103658ea08830681122eff763046d">talcs::AudioSourceReadData::startPos</a></div><div class="ttdeci">qint64 startPos</div><div class="ttdef"><b>Definition</b> AudioSource.h:15</div></div>
 <div class="ttc" id="aclasstalcs_1_1_audio_source_read_data_html_af9d495c1655d813d553030485d00fea7"><div class="ttname"><a href="classtalcs_1_1_audio_source_read_data.html#af9d495c1655d813d553030485d00fea7">talcs::AudioSourceReadData::length</a></div><div class="ttdeci">qint64 length</div><div class="ttdef"><b>Definition</b> AudioSource.h:16</div></div>
+<div class="ttc" id="aclasstalcs_1_1_audio_stream_base_html"><div class="ttname"><a href="classtalcs_1_1_audio_stream_base.html">talcs::AudioStreamBase</a></div><div class="ttdoc">Base class for audio streams.</div><div class="ttdef"><b>Definition</b> AudioStreamBase.h:9</div></div>
 <div class="ttc" id="aclasstalcs_1_1_i_audio_sample_container_html"><div class="ttname"><a href="classtalcs_1_1_i_audio_sample_container.html">talcs::IAudioSampleContainer</a></div><div class="ttdoc">Base class for object containing audio data for read and write.</div><div class="ttdef"><b>Definition</b> IAudioSampleContainer.h:7</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_ec1b7ce311228e378620b0bf6ca6f61a.html">talcs</a></li><li class="navelem"><a class="el" href="dir_9b704adfa81c370357d1d2f71f107fc5.html">src</a></li><li class="navelem"><a class="el" href="dir_f9d0aa9c02cd1f070748190133963af3.html">source</a></li><li class="navelem"><b>AudioSource.h</b></li>
+    <li class="navelem"><a class="el" href="dir_94e7a0fbe7f8eaf7f05ee7b02c647e9f.html">source</a></li><li class="navelem"><b>AudioSource.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

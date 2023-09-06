@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['extension_0',['extension',['../structtalcs_1_1_audio_format_i_o_1_1_format_info.html#aae455e6a275e74741a0193b8cf59457c',1,'talcs::AudioFormatIO::FormatInfo']]]
+  ['content_0',['content',['../structtalcs_1_1_audio_clip_base.html#a6858851eee0e05f318897984757b59dc',1,'talcs::AudioClipBase']]]
 ];

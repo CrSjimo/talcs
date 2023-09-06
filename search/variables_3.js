@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['majorformat_0',['majorFormat',['../structtalcs_1_1_audio_format_i_o_1_1_format_info.html#aef241578b6eddced6c2b18e5929c8d21',1,'talcs::AudioFormatIO::FormatInfo']]]
+  ['length_0',['length',['../classtalcs_1_1_audio_source_read_data.html#af9d495c1655d813d553030485d00fea7',1,'talcs::AudioSourceReadData::length'],['../structtalcs_1_1_audio_clip_base.html#af9d495c1655d813d553030485d00fea7',1,'talcs::AudioClipBase::length']]]
 ];

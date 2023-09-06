@@ -34,7 +34,7 @@
                         <tr id="projectrow">
                             <td id="projectalign">
                                 <div id="projectname">TALCS
-                                    <span id="projectnumber">&#160;0.0.1</span>
+                                    <span id="projectnumber">&#160;0.0.1.1</span>
                                 </div>
                                 <div id="projectbrief">TALCS: Audio Library of CrSjimo</div>
                             </td>
@@ -110,8 +110,15 @@ $(document).ready(function(){initNavTree('classtalcs_1_1_audio_format_i_o.html',
 
 <p>The <a class="el" href="classtalcs_1_1_audio_format_i_o.html" title="The AudioFormatIO class provides interfaces to access audio files based on libsndfile.">AudioFormatIO</a> class provides interfaces to access audio files based on libsndfile.  
  <a href="classtalcs_1_1_audio_format_i_o.html#details">More...</a></p>
-
-<p>Inherits IErrorStringProvider.</p>
+<div class="dynheader">
+Inheritance diagram for AudioFormatIO:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classtalcs_1_1_audio_format_i_o.png" usemap="#AudioFormatIO_map" alt=""/>
+  <map id="AudioFormatIO_map" name="AudioFormatIO_map">
+<area href="classtalcs_1_1_error_string_provider.html" title="Base class that supports setting and getting the error string." alt="ErrorStringProvider" shape="rect" coords="0,0,124,24"/>
+  </map>
+</div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -249,14 +256,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a39abebe2d7e3af93ebe9e61c16a87b37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a546483779df60d8af81261a1b2f85dee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_i_o.html#a546483779df60d8af81261a1b2f85dee">open</a> (QIODevice::OpenMode <a class="el" href="classtalcs_1_1_audio_format_i_o.html#a73b021d15ddee159366d790cd07a4345">openMode</a>)</td></tr>
 <tr class="separator:a546483779df60d8af81261a1b2f85dee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afaf6b3107d2d74ca367f1e85315de108"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_i_o.html#afaf6b3107d2d74ca367f1e85315de108">open</a> (QIODevice::OpenMode <a class="el" href="classtalcs_1_1_audio_format_i_o.html#a73b021d15ddee159366d790cd07a4345">openMode</a>, int <a class="el" href="classtalcs_1_1_audio_format_i_o.html#a6e18dc9d42394e895072542a3b0cce72">format</a>, int <a class="el" href="classtalcs_1_1_audio_format_i_o.html#a5b3516fe40da3e5ff7d703490b7160ee">channels</a>, double <a class="el" href="classtalcs_1_1_audio_format_i_o.html#aa6ff92bd4ac20b88b83bda4d7f96d48c">sampleRate</a>)</td></tr>
+<tr class="memitem:afaf6b3107d2d74ca367f1e85315de108"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_i_o.html#afaf6b3107d2d74ca367f1e85315de108">open</a> (QIODevice::OpenMode <a class="el" href="classtalcs_1_1_audio_format_i_o.html#a73b021d15ddee159366d790cd07a4345">openMode</a>, int <a class="el" href="classtalcs_1_1_audio_format_i_o.html#a6e18dc9d42394e895072542a3b0cce72">format</a>, int channels, double <a class="el" href="classtalcs_1_1_audio_format_i_o.html#aa6ff92bd4ac20b88b83bda4d7f96d48c">sampleRate</a>)</td></tr>
 <tr class="separator:afaf6b3107d2d74ca367f1e85315de108"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73b021d15ddee159366d790cd07a4345"><td class="memItemLeft" align="right" valign="top">QIODevice::OpenMode&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_i_o.html#a73b021d15ddee159366d790cd07a4345">openMode</a> () const</td></tr>
 <tr class="separator:a73b021d15ddee159366d790cd07a4345"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ae591df94fc66ccb85cbb6565368bca"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_i_o.html#a5ae591df94fc66ccb85cbb6565368bca">close</a> ()</td></tr>
 <tr class="separator:a5ae591df94fc66ccb85cbb6565368bca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b3516fe40da3e5ff7d703490b7160ee"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_i_o.html#a5b3516fe40da3e5ff7d703490b7160ee">channels</a> () const</td></tr>
-<tr class="separator:a5b3516fe40da3e5ff7d703490b7160ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad805cd75615b6a1f2af8a9c4041e5e2b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_i_o.html#ad805cd75615b6a1f2af8a9c4041e5e2b">channelCount</a> () const</td></tr>
+<tr class="separator:ad805cd75615b6a1f2af8a9c4041e5e2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6ff92bd4ac20b88b83bda4d7f96d48c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_i_o.html#aa6ff92bd4ac20b88b83bda4d7f96d48c">sampleRate</a> () const</td></tr>
 <tr class="separator:aa6ff92bd4ac20b88b83bda4d7f96d48c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e18dc9d42394e895072542a3b0cce72"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_i_o.html#a6e18dc9d42394e895072542a3b0cce72">format</a> () const</td></tr>
@@ -281,11 +288,22 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a687c135829d4a9df5e979cc462281681"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4c042f336bba3883699414c1d37f085"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_i_o.html#ab4c042f336bba3883699414c1d37f085">pos</a> ()</td></tr>
 <tr class="separator:ab4c042f336bba3883699414c1d37f085"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classtalcs_1_1_error_string_provider"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtalcs_1_1_error_string_provider')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtalcs_1_1_error_string_provider.html">ErrorStringProvider</a></td></tr>
+<tr class="memitem:a2b57b4573bb46f76a828c18e435bea0b inherit pub_methods_classtalcs_1_1_error_string_provider"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_error_string_provider.html#a2b57b4573bb46f76a828c18e435bea0b">errorString</a> () const</td></tr>
+<tr class="separator:a2b57b4573bb46f76a828c18e435bea0b inherit pub_methods_classtalcs_1_1_error_string_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:aee5aaab0dffc35c2fe3e49e0984c8d54"><td class="memItemLeft" align="right" valign="top">static QList&lt; <a class="el" href="structtalcs_1_1_audio_format_i_o_1_1_format_info.html">FormatInfo</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_i_o.html#aee5aaab0dffc35c2fe3e49e0984c8d54">availableFormats</a> ()</td></tr>
 <tr class="separator:aee5aaab0dffc35c2fe3e49e0984c8d54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_methods_classtalcs_1_1_error_string_provider"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classtalcs_1_1_error_string_provider')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classtalcs_1_1_error_string_provider.html">ErrorStringProvider</a></td></tr>
+<tr class="memitem:acd1d216f7c9fca3ff3e794e8c483524f inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_error_string_provider.html#acd1d216f7c9fca3ff3e794e8c483524f">setErrorString</a> (const QString &amp;error)</td></tr>
+<tr class="separator:acd1d216f7c9fca3ff3e794e8c483524f inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90e222fb6b083bfe00869ed7f4bfa5d0 inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_error_string_provider.html#a90e222fb6b083bfe00869ed7f4bfa5d0">clearErrorString</a> ()</td></tr>
+<tr class="separator:a90e222fb6b083bfe00869ed7f4bfa5d0 inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="classtalcs_1_1_audio_format_i_o.html" title="The AudioFormatIO class provides interfaces to access audio files based on libsndfile.">AudioFormatIO</a> class provides interfaces to access audio files based on libsndfile. </p>
@@ -617,14 +635,14 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5b3516fe40da3e5ff7d703490b7160ee" name="a5b3516fe40da3e5ff7d703490b7160ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b3516fe40da3e5ff7d703490b7160ee">&#9670;&#160;</a></span>channels()</h2>
+<a id="ad805cd75615b6a1f2af8a9c4041e5e2b" name="ad805cd75615b6a1f2af8a9c4041e5e2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad805cd75615b6a1f2af8a9c4041e5e2b">&#9670;&#160;</a></span>channelCount()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int channels </td>
+          <td class="memname">int channelCount </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -1032,8 +1050,8 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>C:/Users/Crs_1/diffscope/libs/talcs/src/format/<a class="el" href="_audio_format_i_o_8h_source.html">AudioFormatIO.h</a></li>
-<li>C:/Users/Crs_1/diffscope/libs/talcs/src/format/AudioFormatIO.cpp</li>
+<li>format/<a class="el" href="_audio_format_i_o_8h_source.html">AudioFormatIO.h</a></li>
+<li>format/AudioFormatIO.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

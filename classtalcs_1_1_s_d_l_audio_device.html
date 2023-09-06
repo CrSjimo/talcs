@@ -34,7 +34,7 @@
                         <tr id="projectrow">
                             <td id="projectalign">
                                 <div id="projectname">TALCS
-                                    <span id="projectnumber">&#160;0.0.1</span>
+                                    <span id="projectnumber">&#160;0.0.1.1</span>
                                 </div>
                                 <div id="projectbrief">TALCS: Audio Library of CrSjimo</div>
                             </td>
@@ -114,7 +114,10 @@ Inheritance diagram for SDLAudioDevice:</div>
  <div class="center">
   <img src="classtalcs_1_1_s_d_l_audio_device.png" usemap="#SDLAudioDevice_map" alt=""/>
   <map id="SDLAudioDevice_map" name="SDLAudioDevice_map">
-<area href="classtalcs_1_1_audio_device.html" title="Base class for audio devices." alt="AudioDevice" shape="rect" coords="0,0,109,24"/>
+<area href="classtalcs_1_1_audio_device.html" title="Base class for audio devices." alt="AudioDevice" shape="rect" coords="134,56,258,80"/>
+<area href="classtalcs_1_1_audio_stream_base.html" title="Base class for audio streams." alt="AudioStreamBase" shape="rect" coords="0,0,124,24"/>
+<area href="classtalcs_1_1_name_provider.html" title="Base class that supports setting and getting the name." alt="NameProvider" shape="rect" coords="134,0,258,24"/>
+<area href="classtalcs_1_1_error_string_provider.html" title="Base class that supports setting and getting the error string." alt="ErrorStringProvider" shape="rect" coords="268,0,392,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -126,6 +129,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3bfff58e0004c2b1e1cd88f80568618d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3536e22848ce87b16a9b96d6d824d45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#ab3536e22848ce87b16a9b96d6d824d45">stop</a> () override</td></tr>
 <tr class="separator:ab3536e22848ce87b16a9b96d6d824d45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e9ca28b2e704ade50e7324ae4418a1d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#a0e9ca28b2e704ade50e7324ae4418a1d">open</a> (qint64 <a class="el" href="classtalcs_1_1_audio_stream_base.html#a874ea3d5cd0fd10576a6139d0000cf07">bufferSize</a>, double <a class="el" href="classtalcs_1_1_audio_stream_base.html#aa6ff92bd4ac20b88b83bda4d7f96d48c">sampleRate</a>) override</td></tr>
+<tr class="separator:a0e9ca28b2e704ade50e7324ae4418a1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7008bca493d69ea65f12e0940f3a6886"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#a7008bca493d69ea65f12e0940f3a6886">close</a> () override</td></tr>
+<tr class="separator:a7008bca493d69ea65f12e0940f3a6886"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad81318257fd78328c5c86fa6a3a861dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#ad81318257fd78328c5c86fa6a3a861dd">lock</a> () override</td></tr>
 <tr class="separator:ad81318257fd78328c5c86fa6a3a861dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a333677ac769a10df2775f24893e07c21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#a333677ac769a10df2775f24893e07c21">unlock</a> () override</td></tr>
@@ -163,6 +170,25 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9278be8203e1c42e2619179882ae4403 inherit pub_methods_classtalcs_1_1_audio_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d452221981b043bd939269a2227d676 inherit pub_methods_classtalcs_1_1_audio_device"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device.html#a4d452221981b043bd939269a2227d676">openControlPanel</a> ()</td></tr>
 <tr class="separator:a4d452221981b043bd939269a2227d676 inherit pub_methods_classtalcs_1_1_audio_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7008bca493d69ea65f12e0940f3a6886 inherit pub_methods_classtalcs_1_1_audio_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device.html#a7008bca493d69ea65f12e0940f3a6886">close</a> () override</td></tr>
+<tr class="separator:a7008bca493d69ea65f12e0940f3a6886 inherit pub_methods_classtalcs_1_1_audio_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classtalcs_1_1_audio_stream_base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtalcs_1_1_audio_stream_base')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtalcs_1_1_audio_stream_base.html">AudioStreamBase</a></td></tr>
+<tr class="memitem:afa00541698e5024942ad99e2c2b8375f inherit pub_methods_classtalcs_1_1_audio_stream_base"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_stream_base.html#afa00541698e5024942ad99e2c2b8375f">open</a> (qint64 <a class="el" href="classtalcs_1_1_audio_stream_base.html#a874ea3d5cd0fd10576a6139d0000cf07">bufferSize</a>, double <a class="el" href="classtalcs_1_1_audio_stream_base.html#aa6ff92bd4ac20b88b83bda4d7f96d48c">sampleRate</a>)</td></tr>
+<tr class="separator:afa00541698e5024942ad99e2c2b8375f inherit pub_methods_classtalcs_1_1_audio_stream_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a002ed331862370f434b7befe331b5a0b inherit pub_methods_classtalcs_1_1_audio_stream_base"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_stream_base.html#a002ed331862370f434b7befe331b5a0b">isOpen</a> () const</td></tr>
+<tr class="separator:a002ed331862370f434b7befe331b5a0b inherit pub_methods_classtalcs_1_1_audio_stream_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ae591df94fc66ccb85cbb6565368bca inherit pub_methods_classtalcs_1_1_audio_stream_base"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_stream_base.html#a5ae591df94fc66ccb85cbb6565368bca">close</a> ()</td></tr>
+<tr class="separator:a5ae591df94fc66ccb85cbb6565368bca inherit pub_methods_classtalcs_1_1_audio_stream_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a874ea3d5cd0fd10576a6139d0000cf07 inherit pub_methods_classtalcs_1_1_audio_stream_base"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_stream_base.html#a874ea3d5cd0fd10576a6139d0000cf07">bufferSize</a> () const</td></tr>
+<tr class="separator:a874ea3d5cd0fd10576a6139d0000cf07 inherit pub_methods_classtalcs_1_1_audio_stream_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6ff92bd4ac20b88b83bda4d7f96d48c inherit pub_methods_classtalcs_1_1_audio_stream_base"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_stream_base.html#aa6ff92bd4ac20b88b83bda4d7f96d48c">sampleRate</a> () const</td></tr>
+<tr class="separator:aa6ff92bd4ac20b88b83bda4d7f96d48c inherit pub_methods_classtalcs_1_1_audio_stream_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classtalcs_1_1_name_provider"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtalcs_1_1_name_provider')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtalcs_1_1_name_provider.html">NameProvider</a></td></tr>
+<tr class="memitem:a85e6ea749496bfaa328adc586fe00c87 inherit pub_methods_classtalcs_1_1_name_provider"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_name_provider.html#a85e6ea749496bfaa328adc586fe00c87">name</a> () const</td></tr>
+<tr class="separator:a85e6ea749496bfaa328adc586fe00c87 inherit pub_methods_classtalcs_1_1_name_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classtalcs_1_1_error_string_provider"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtalcs_1_1_error_string_provider')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtalcs_1_1_error_string_provider.html">ErrorStringProvider</a></td></tr>
+<tr class="memitem:a2b57b4573bb46f76a828c18e435bea0b inherit pub_methods_classtalcs_1_1_error_string_provider"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_error_string_provider.html#a2b57b4573bb46f76a828c18e435bea0b">errorString</a> () const</td></tr>
+<tr class="separator:a2b57b4573bb46f76a828c18e435bea0b inherit pub_methods_classtalcs_1_1_error_string_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -179,12 +205,20 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:a9b16c05f12b7b37e623624c0bf081f39 inherit pro_methods_classtalcs_1_1_audio_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a464c27054682b8a36c954e0ddcf54df4 inherit pro_methods_classtalcs_1_1_audio_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device.html#a464c27054682b8a36c954e0ddcf54df4">setAvailableBufferSizes</a> (const QList&lt; qint64 &gt; &amp;bufferSizes)</td></tr>
 <tr class="separator:a464c27054682b8a36c954e0ddcf54df4 inherit pro_methods_classtalcs_1_1_audio_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa0ef149a57ec2e99b203d853b66c716 inherit pro_methods_classtalcs_1_1_audio_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device.html#aaa0ef149a57ec2e99b203d853b66c716">setPreferredBufferSize</a> (qint64 bufferSize)</td></tr>
+<tr class="memitem:aaa0ef149a57ec2e99b203d853b66c716 inherit pro_methods_classtalcs_1_1_audio_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device.html#aaa0ef149a57ec2e99b203d853b66c716">setPreferredBufferSize</a> (qint64 <a class="el" href="classtalcs_1_1_audio_stream_base.html#a874ea3d5cd0fd10576a6139d0000cf07">bufferSize</a>)</td></tr>
 <tr class="separator:aaa0ef149a57ec2e99b203d853b66c716 inherit pro_methods_classtalcs_1_1_audio_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3a569b3242ce3afa03611fe61b3f8e71 inherit pro_methods_classtalcs_1_1_audio_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device.html#a3a569b3242ce3afa03611fe61b3f8e71">setAvailableSampleRates</a> (const QList&lt; double &gt; &amp;sampleRates)</td></tr>
 <tr class="separator:a3a569b3242ce3afa03611fe61b3f8e71 inherit pro_methods_classtalcs_1_1_audio_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf4d9667a102ec00f2d6d763dff78095 inherit pro_methods_classtalcs_1_1_audio_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device.html#adf4d9667a102ec00f2d6d763dff78095">setPreferredSampleRate</a> (double sampleRate)</td></tr>
+<tr class="memitem:adf4d9667a102ec00f2d6d763dff78095 inherit pro_methods_classtalcs_1_1_audio_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device.html#adf4d9667a102ec00f2d6d763dff78095">setPreferredSampleRate</a> (double <a class="el" href="classtalcs_1_1_audio_stream_base.html#aa6ff92bd4ac20b88b83bda4d7f96d48c">sampleRate</a>)</td></tr>
 <tr class="separator:adf4d9667a102ec00f2d6d763dff78095 inherit pro_methods_classtalcs_1_1_audio_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classtalcs_1_1_name_provider"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classtalcs_1_1_name_provider')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classtalcs_1_1_name_provider.html">NameProvider</a></td></tr>
+<tr class="memitem:ab01f7d9d65c3e6a6b7889a51ad2bb487 inherit pro_methods_classtalcs_1_1_name_provider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_name_provider.html#ab01f7d9d65c3e6a6b7889a51ad2bb487">setName</a> (const QString &amp;<a class="el" href="classtalcs_1_1_name_provider.html#a85e6ea749496bfaa328adc586fe00c87">name</a>)</td></tr>
+<tr class="separator:ab01f7d9d65c3e6a6b7889a51ad2bb487 inherit pro_methods_classtalcs_1_1_name_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classtalcs_1_1_error_string_provider"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classtalcs_1_1_error_string_provider')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classtalcs_1_1_error_string_provider.html">ErrorStringProvider</a></td></tr>
+<tr class="memitem:acd1d216f7c9fca3ff3e794e8c483524f inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_error_string_provider.html#acd1d216f7c9fca3ff3e794e8c483524f">setErrorString</a> (const QString &amp;error)</td></tr>
+<tr class="separator:acd1d216f7c9fca3ff3e794e8c483524f inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90e222fb6b083bfe00869ed7f4bfa5d0 inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_error_string_provider.html#a90e222fb6b083bfe00869ed7f4bfa5d0">clearErrorString</a> ()</td></tr>
+<tr class="separator:a90e222fb6b083bfe00869ed7f4bfa5d0 inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -261,6 +295,36 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a7008bca493d69ea65f12e0940f3a6886" name="a7008bca493d69ea65f12e0940f3a6886"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7008bca493d69ea65f12e0940f3a6886">&#9670;&#160;</a></span>close()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void close </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Closes the stream.</p>
+<p>All reimplemented functions should call this function.</p>
+<dl class="section note"><dt>Note</dt><dd>The function might be called when the stream is close. In this case, derived classes should handle it properly. </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classtalcs_1_1_audio_device.html#a7008bca493d69ea65f12e0940f3a6886">AudioDevice</a>.</p>
+
+</div>
+</div>
 <a id="ad81318257fd78328c5c86fa6a3a861dd" name="ad81318257fd78328c5c86fa6a3a861dd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad81318257fd78328c5c86fa6a3a861dd">&#9670;&#160;</a></span>lock()</h2>
 
@@ -288,6 +352,56 @@ Additional Inherited Members</h2></td></tr>
 <p>The audio device must be unlocked when it is going to stop or close, otherwise these functions will be blocked. </p>
 
 <p>Reimplemented from <a class="el" href="classtalcs_1_1_audio_device.html#aa81aed607133209dade63a226818224d">AudioDevice</a>.</p>
+
+</div>
+</div>
+<a id="a0e9ca28b2e704ade50e7324ae4418a1d" name="a0e9ca28b2e704ade50e7324ae4418a1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e9ca28b2e704ade50e7324ae4418a1d">&#9670;&#160;</a></span>open()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool open </td>
+          <td>(</td>
+          <td class="paramtype">qint64&#160;</td>
+          <td class="paramname"><em>bufferSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>sampleRate</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Opens the stream.</p>
+<p>All reimplemented functions should call this function.</p>
+<dl class="section note"><dt>Note</dt><dd>The function might be called when the stream is already open. In this case, the stream should be closed first and then opened. </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bufferSize</td><td>the size of each block to process </td></tr>
+    <tr><td class="paramname">sampleRate</td><td>the sample rate of audio </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if success </dd></dl>
+<p>&lt; 32-bit floating point samples</p>
+
+<p>Reimplemented from <a class="el" href="classtalcs_1_1_audio_stream_base.html#afa00541698e5024942ad99e2c2b8375f">AudioStreamBase</a>.</p>
 
 </div>
 </div>
@@ -413,8 +527,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>C:/Users/Crs_1/diffscope/libs/talcs/src/device/<a class="el" href="_s_d_l_audio_device_8h_source.html">SDLAudioDevice.h</a></li>
-<li>C:/Users/Crs_1/diffscope/libs/talcs/src/device/SDLAudioDevice.cpp</li>
+<li>device/<a class="el" href="_s_d_l_audio_device_8h_source.html">SDLAudioDevice.h</a></li>
+<li>device/SDLAudioDevice.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

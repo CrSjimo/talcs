@@ -25,14 +25,15 @@
 var NAVTREE =
 [
   [ "TALCS", "index.html", [
-    [ "TALCS", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2_r_e_a_d_m_e.html", null ],
+    [ "Tutorial: Using audio devices with TALCS", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_201__tutorial__using__audio__devices__with__talcs.html", null ],
+    [ "Tutorial: Access audio files with TALCS", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_202__tutorial__access__audio__files__with__talcs.html", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", null ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
         [ "Enumerator", "functions_eval.html", null ]
@@ -47,7 +48,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_a_s_i_o_audio_device_8h_source.html",
-"classtalcs_1_1_audio_format_input_source.html#a9717b432c7df2b2d2238df81cd33c40b"
+"classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7dadac327650059a3f7ab7445d87c7bfdc4",
+"md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_201__tutorial__using__audio__devices__with__talcs.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

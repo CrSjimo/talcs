@@ -1,15 +1,20 @@
 var searchData=
 [
   ['paf_0',['PAF',['../classtalcs_1_1_audio_format_i_o.html#a91e9756e83443fbd1fa3a129c3c34b4ca2e61760fb0d9ac96c8b601f99f16887e',1,'talcs::AudioFormatIO']]],
-  ['pcm_5f16_1',['PCM_16',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da1890a2e2d1688aa18117e10de19306e6',1,'talcs::AudioFormatIO']]],
-  ['pcm_5f24_2',['PCM_24',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da9c61ad9a71cce3059248a92daef447dc',1,'talcs::AudioFormatIO']]],
-  ['pcm_5f32_3',['PCM_32',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7dac45a33dcdc3cac02bfa214ec49a0fea9',1,'talcs::AudioFormatIO']]],
-  ['pcm_5fs8_4',['PCM_S8',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da4f4347c080f7dcfc63a03fb998f539d2',1,'talcs::AudioFormatIO']]],
-  ['pcm_5fu8_5',['PCM_U8',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7dacb2f5705b12171cbd8c9907bdd396163',1,'talcs::AudioFormatIO']]],
-  ['percentageupdated_6',['percentageUpdated',['../classtalcs_1_1_transport_audio_source_writer.html#a283503eeeb4ffb6970e6b14da3dc0aaf',1,'talcs::TransportAudioSourceWriter']]],
-  ['pos_7',['pos',['../classtalcs_1_1_audio_format_i_o.html#ab4c042f336bba3883699414c1d37f085',1,'talcs::AudioFormatIO']]],
-  ['positionableaudiosource_8',['PositionableAudioSource',['../classtalcs_1_1_positionable_audio_source.html#a2507ecc3065aa3f1b958a11915bdb38f',1,'talcs::PositionableAudioSource::PositionableAudioSource()'],['../classtalcs_1_1_positionable_audio_source.html',1,'PositionableAudioSource']]],
-  ['preferredbuffersize_9',['preferredBufferSize',['../classtalcs_1_1_audio_device.html#a3976892f726a4bd4eb0c4c779815f8da',1,'talcs::AudioDevice']]],
-  ['preferredsamplerate_10',['preferredSampleRate',['../classtalcs_1_1_audio_device.html#aacefa7a784378f90197d7d1846812e3d',1,'talcs::AudioDevice']]],
-  ['pvf_11',['PVF',['../classtalcs_1_1_audio_format_i_o.html#a91e9756e83443fbd1fa3a129c3c34b4caa7a0a7242391526b42f25588555a0d82',1,'talcs::AudioFormatIO']]]
+  ['pan_1',['pan',['../structtalcs_1_1_i_mixer.html#af180cd5f206d76dd543521d08b34bc79',1,'talcs::IMixer::pan()'],['../classtalcs_1_1_mixer_audio_source.html#a31acb246d31c392759b69f5de7f1298a',1,'talcs::MixerAudioSource::pan()'],['../classtalcs_1_1_positionable_mixer_audio_source.html#a31acb246d31c392759b69f5de7f1298a',1,'talcs::PositionableMixerAudioSource::pan()']]],
+  ['pause_2',['pause',['../classtalcs_1_1_transport_audio_source.html#a7167f5c196fc5e167bfabde1a730e81d',1,'talcs::TransportAudioSource']]],
+  ['pcm_5f16_3',['PCM_16',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da1890a2e2d1688aa18117e10de19306e6',1,'talcs::AudioFormatIO']]],
+  ['pcm_5f24_4',['PCM_24',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da9c61ad9a71cce3059248a92daef447dc',1,'talcs::AudioFormatIO']]],
+  ['pcm_5f32_5',['PCM_32',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7dac45a33dcdc3cac02bfa214ec49a0fea9',1,'talcs::AudioFormatIO']]],
+  ['pcm_5fs8_6',['PCM_S8',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da4f4347c080f7dcfc63a03fb998f539d2',1,'talcs::AudioFormatIO']]],
+  ['pcm_5fu8_7',['PCM_U8',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7dacb2f5705b12171cbd8c9907bdd396163',1,'talcs::AudioFormatIO']]],
+  ['percentageupdated_8',['percentageUpdated',['../classtalcs_1_1_transport_audio_source_writer.html#a283503eeeb4ffb6970e6b14da3dc0aaf',1,'talcs::TransportAudioSourceWriter']]],
+  ['play_9',['play',['../classtalcs_1_1_transport_audio_source.html#a6d58098c6cf63c241ed03bc797256bb1',1,'talcs::TransportAudioSource']]],
+  ['pos_10',['pos',['../classtalcs_1_1_audio_format_i_o.html#ab4c042f336bba3883699414c1d37f085',1,'talcs::AudioFormatIO']]],
+  ['position_11',['position',['../structtalcs_1_1_audio_clip_base.html#a7130b1618285588513fd1ff97884b9d9',1,'talcs::AudioClipBase::position'],['../classtalcs_1_1_transport_audio_source.html#ae97f379361eedc353acca4b088f74b3e',1,'talcs::TransportAudioSource::position()']]],
+  ['positionableaudiosource_12',['PositionableAudioSource',['../classtalcs_1_1_positionable_audio_source.html#a2507ecc3065aa3f1b958a11915bdb38f',1,'talcs::PositionableAudioSource::PositionableAudioSource()'],['../classtalcs_1_1_positionable_audio_source.html',1,'PositionableAudioSource']]],
+  ['positionablemixeraudiosource_13',['PositionableMixerAudioSource',['../classtalcs_1_1_positionable_mixer_audio_source.html#a5f4c490b43e82010578b23c706065708',1,'talcs::PositionableMixerAudioSource::PositionableMixerAudioSource()'],['../classtalcs_1_1_positionable_mixer_audio_source.html',1,'PositionableMixerAudioSource']]],
+  ['preferredbuffersize_14',['preferredBufferSize',['../classtalcs_1_1_audio_device.html#a3976892f726a4bd4eb0c4c779815f8da',1,'talcs::AudioDevice']]],
+  ['preferredsamplerate_15',['preferredSampleRate',['../classtalcs_1_1_audio_device.html#aacefa7a784378f90197d7d1846812e3d',1,'talcs::AudioDevice']]],
+  ['pvf_16',['PVF',['../classtalcs_1_1_audio_format_i_o.html#a91e9756e83443fbd1fa3a129c3c34b4caa7a0a7242391526b42f25588555a0d82',1,'talcs::AudioFormatIO']]]
 ];

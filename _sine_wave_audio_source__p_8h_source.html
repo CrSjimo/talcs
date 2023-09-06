@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=11" />
     <meta name="generator" content="Doxygen 1.9.7" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TALCS: C:/Users/Crs_1/diffscope/libs/talcs/src/source/SineWaveAudioSource_p.h Source File</title>
+    <title>TALCS: source/SineWaveAudioSource_p.h Source File</title>
     <link href="tabs.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -34,7 +34,7 @@
                         <tr id="projectrow">
                             <td id="projectalign">
                                 <div id="projectname">TALCS
-                                    <span id="projectnumber">&#160;0.0.1</span>
+                                    <span id="projectnumber">&#160;0.0.1.1</span>
                                 </div>
                                 <div id="projectbrief">TALCS: Audio Library of CrSjimo</div>
                             </td>
@@ -104,27 +104,28 @@ $(document).ready(function(){initNavTree('_sine_wave_audio_source__p_8h_source.h
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef TALCS_SINEWAVEAUDIOSOURCE_P_H</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define TALCS_SINEWAVEAUDIOSOURCE_P_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;SineWaveAudioSource.h&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;PositionableAudioSource_p.h&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;PositionableAudioSource_p.h&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;SineWaveAudioSource.h&quot;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;QMutex&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span>talcs {</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keyword">class </span>SineWaveAudioSourcePrivate : <span class="keyword">public</span> PositionableAudioSourcePrivate {</div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        Q_DECLARE_PUBLIC(SineWaveAudioSource);</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        std::function&lt;double(qint64)&gt; freq = [](qint64 _){ <span class="keywordflow">return</span> 0.0; };</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        QMutex mutex;</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    };</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>}</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#endif </span><span class="comment">// TALCS_SINEWAVEAUDIOSOURCE_P_H</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        std::function&lt;double(qint64)&gt; freq = [](qint64 _) { <span class="keywordflow">return</span> 0.0; };</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        QMutex mutex;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    };</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>}</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#endif </span><span class="comment">// TALCS_SINEWAVEAUDIOSOURCE_P_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_ec1b7ce311228e378620b0bf6ca6f61a.html">talcs</a></li><li class="navelem"><a class="el" href="dir_9b704adfa81c370357d1d2f71f107fc5.html">src</a></li><li class="navelem"><a class="el" href="dir_f9d0aa9c02cd1f070748190133963af3.html">source</a></li><li class="navelem"><b>SineWaveAudioSource_p.h</b></li>
+    <li class="navelem"><a class="el" href="dir_94e7a0fbe7f8eaf7f05ee7b02c647e9f.html">source</a></li><li class="navelem"><b>SineWaveAudioSource_p.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

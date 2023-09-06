@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['iaudiosamplecontainer_0',['IAudioSampleContainer',['../classtalcs_1_1_i_audio_sample_container.html',1,'talcs']]],
-  ['iaudiosampleprovider_1',['IAudioSampleProvider',['../classtalcs_1_1_i_audio_sample_provider.html',1,'talcs']]],
-  ['interleavedaudiodatawrapper_2',['InterleavedAudioDataWrapper',['../classtalcs_1_1_interleaved_audio_data_wrapper.html',1,'talcs']]]
+  ['formatinfo_0',['FormatInfo',['../structtalcs_1_1_audio_format_i_o_1_1_format_info.html',1,'talcs::AudioFormatIO']]]
 ];

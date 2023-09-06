@@ -92,7 +92,7 @@ var classtalcs_1_1_audio_format_i_o =
     [ "AudioFormatIO", "classtalcs_1_1_audio_format_i_o.html#aff0460aa2de1375718ddb83185c05f44", null ],
     [ "~AudioFormatIO", "classtalcs_1_1_audio_format_i_o.html#a62aa906d91e4fc339206800e6ae5b9c0", null ],
     [ "byteOrder", "classtalcs_1_1_audio_format_i_o.html#adc9ae0da727e6d910f674cc1bfccea89", null ],
-    [ "channels", "classtalcs_1_1_audio_format_i_o.html#a5b3516fe40da3e5ff7d703490b7160ee", null ],
+    [ "channelCount", "classtalcs_1_1_audio_format_i_o.html#ad805cd75615b6a1f2af8a9c4041e5e2b", null ],
     [ "close", "classtalcs_1_1_audio_format_i_o.html#a5ae591df94fc66ccb85cbb6565368bca", null ],
     [ "format", "classtalcs_1_1_audio_format_i_o.html#a6e18dc9d42394e895072542a3b0cce72", null ],
     [ "getMetaData", "classtalcs_1_1_audio_format_i_o.html#ae6e7cf65607d967b5ad2dfe32edb3c65", null ],

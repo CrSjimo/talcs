@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=11" />
     <meta name="generator" content="Doxygen 1.9.7" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TALCS: IAudioSampleProvider Class Reference</title>
+    <title>TALCS: IAudioSampleProvider Interface Reference</title>
     <link href="tabs.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -34,7 +34,7 @@
                         <tr id="projectrow">
                             <td id="projectalign">
                                 <div id="projectname">TALCS
-                                    <span id="projectnumber">&#160;0.0.1</span>
+                                    <span id="projectnumber">&#160;0.0.1.1</span>
                                 </div>
                                 <div id="projectbrief">TALCS: Audio Library of CrSjimo</div>
                             </td>
@@ -101,7 +101,7 @@ $(document).ready(function(){initNavTree('classtalcs_1_1_i_audio_sample_provider
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classtalcs_1_1_i_audio_sample_provider-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">IAudioSampleProvider Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
+  <div class="headertitle"><div class="title">IAudioSampleProvider Interface Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -236,7 +236,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Gets whether the sample data is stored continuously or not. If so, the pointer can be used to read data directly. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtalcs_1_1_i_audio_sample_provider.html#adf55b7ba96f6c927427d173efff6088f">readPointerTo()</a> </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classtalcs_1_1_audio_buffer.html#a2be41fd838ef34bb2faa3563980357d7">AudioBuffer</a>, <a class="el" href="classtalcs_1_1_audio_data_wrapper.html#a2be41fd838ef34bb2faa3563980357d7">AudioDataWrapper</a>, and <a class="el" href="classtalcs_1_1_interleaved_audio_data_wrapper.html#a2be41fd838ef34bb2faa3563980357d7">InterleavedAudioDataWrapper</a>.</p>
+<p>Implemented in <a class="el" href="classtalcs_1_1_audio_buffer.html#a2be41fd838ef34bb2faa3563980357d7">AudioBuffer</a>, <a class="el" href="classtalcs_1_1_audio_data_wrapper.html#a2be41fd838ef34bb2faa3563980357d7">AudioDataWrapper</a>, and <a class="el" href="classtalcs_1_1_interleaved_audio_data_wrapper.html#a2be41fd838ef34bb2faa3563980357d7">InterleavedAudioDataWrapper</a>.</p>
 
 </div>
 </div>
@@ -331,7 +331,7 @@ Public Member Functions</h2></td></tr>
 <p>Gets the read pointer to a specified position of a specified channel.</p>
 <p>Note that his function should return <code>nullptr</code> if the sample data is not stored continuously. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="classtalcs_1_1_i_audio_sample_provider.html#a8bad496e530b253752fc935cf428297d">isContinuous()</a> </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classtalcs_1_1_audio_buffer.html#a3eb03fdabeb72dd334cb358e6f3a226c">AudioBuffer</a>, <a class="el" href="classtalcs_1_1_audio_data_wrapper.html#a3eb03fdabeb72dd334cb358e6f3a226c">AudioDataWrapper</a>, and <a class="el" href="classtalcs_1_1_interleaved_audio_data_wrapper.html#a3eb03fdabeb72dd334cb358e6f3a226c">InterleavedAudioDataWrapper</a>.</p>
+<p>Implemented in <a class="el" href="classtalcs_1_1_audio_buffer.html#a3eb03fdabeb72dd334cb358e6f3a226c">AudioBuffer</a>, <a class="el" href="classtalcs_1_1_audio_data_wrapper.html#a3eb03fdabeb72dd334cb358e6f3a226c">AudioDataWrapper</a>, and <a class="el" href="classtalcs_1_1_interleaved_audio_data_wrapper.html#a3eb03fdabeb72dd334cb358e6f3a226c">InterleavedAudioDataWrapper</a>.</p>
 
 </div>
 </div>
@@ -417,9 +417,9 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>C:/Users/Crs_1/diffscope/libs/talcs/src/buffer/<a class="el" href="_i_audio_sample_provider_8h_source.html">IAudioSampleProvider.h</a></li>
-<li>C:/Users/Crs_1/diffscope/libs/talcs/src/buffer/IAudioSampleProvider.cpp</li>
+<hr/>The documentation for this interface was generated from the following files:<ul>
+<li>buffer/<a class="el" href="_i_audio_sample_provider_8h_source.html">IAudioSampleProvider.h</a></li>
+<li>buffer/IAudioSampleProvider.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -34,7 +34,7 @@
                         <tr id="projectrow">
                             <td id="projectalign">
                                 <div id="projectname">TALCS
-                                    <span id="projectnumber">&#160;0.0.1</span>
+                                    <span id="projectnumber">&#160;0.0.1.1</span>
                                 </div>
                                 <div id="projectbrief">TALCS: Audio Library of CrSjimo</div>
                             </td>
@@ -113,7 +113,9 @@ Inheritance diagram for ASIOAudioDriver:</div>
  <div class="center">
   <img src="classtalcs_1_1_a_s_i_o_audio_driver.png" usemap="#ASIOAudioDriver_map" alt=""/>
   <map id="ASIOAudioDriver_map" name="ASIOAudioDriver_map">
-<area href="classtalcs_1_1_audio_driver.html" title="Base class for audio drivers that underlay audio devices." alt="AudioDriver" shape="rect" coords="0,0,111,24"/>
+<area href="classtalcs_1_1_audio_driver.html" title="Base class for audio drivers that underlay audio devices." alt="AudioDriver" shape="rect" coords="67,56,191,80"/>
+<area href="classtalcs_1_1_name_provider.html" title="Base class that supports setting and getting the name." alt="NameProvider" shape="rect" coords="0,0,124,24"/>
+<area href="classtalcs_1_1_error_string_provider.html" title="Base class that supports setting and getting the error string." alt="ErrorStringProvider" shape="rect" coords="134,0,258,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -121,8 +123,8 @@ Inheritance diagram for ASIOAudioDriver:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a9076a76890caab2a9699a0c75de97a80"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_a_s_i_o_audio_driver.html#a9076a76890caab2a9699a0c75de97a80">ASIOAudioDriver</a> (QObject *parent=nullptr)</td></tr>
 <tr class="separator:a9076a76890caab2a9699a0c75de97a80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a473945e55a459cfe26586501e8b9aff4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_a_s_i_o_audio_driver.html#a473945e55a459cfe26586501e8b9aff4">~ASIOAudioDriver</a> ()</td></tr>
-<tr class="separator:a473945e55a459cfe26586501e8b9aff4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af32f2846076e7a43ca15021954f2c757"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_a_s_i_o_audio_driver.html#af32f2846076e7a43ca15021954f2c757">~ASIOAudioDriver</a> () override</td></tr>
+<tr class="separator:af32f2846076e7a43ca15021954f2c757"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6703ab833b59818b719bb7524b002b94"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_a_s_i_o_audio_driver.html#a6703ab833b59818b719bb7524b002b94">initialize</a> () override</td></tr>
 <tr class="separator:a6703ab833b59818b719bb7524b002b94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a32bafa8064e666aed52486c4af4144"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_a_s_i_o_audio_driver.html#a6a32bafa8064e666aed52486c4af4144">finalize</a> () override</td></tr>
@@ -131,7 +133,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:adb770f3c9d16b938e8a90771a58818e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afaa9455cda5f4ee3b0c083dab65b7585"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_a_s_i_o_audio_driver.html#afaa9455cda5f4ee3b0c083dab65b7585">defaultDevice</a> () const override</td></tr>
 <tr class="separator:afaa9455cda5f4ee3b0c083dab65b7585"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68f7cea8e320557773e4170d497d651e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtalcs_1_1_audio_device.html">AudioDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_a_s_i_o_audio_driver.html#a68f7cea8e320557773e4170d497d651e">createDevice</a> (const QString &amp;name) override</td></tr>
+<tr class="memitem:a68f7cea8e320557773e4170d497d651e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtalcs_1_1_audio_device.html">AudioDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_a_s_i_o_audio_driver.html#a68f7cea8e320557773e4170d497d651e">createDevice</a> (const QString &amp;<a class="el" href="classtalcs_1_1_name_provider.html#a85e6ea749496bfaa328adc586fe00c87">name</a>) override</td></tr>
 <tr class="separator:a68f7cea8e320557773e4170d497d651e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtalcs_1_1_audio_driver"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtalcs_1_1_audio_driver')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtalcs_1_1_audio_driver.html">AudioDriver</a></td></tr>
 <tr class="memitem:a586be5bced6aa4561261f152561cb13b inherit pub_methods_classtalcs_1_1_audio_driver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_driver.html#a586be5bced6aa4561261f152561cb13b">AudioDriver</a> (QObject *parent=nullptr)</td></tr>
@@ -146,8 +148,25 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a899639516fe47a3c3412142973a3de63 inherit pub_methods_classtalcs_1_1_audio_driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae256974eb1eb6a35b09a58c382b4e403 inherit pub_methods_classtalcs_1_1_audio_driver"><td class="memItemLeft" align="right" valign="top">virtual QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_driver.html#ae256974eb1eb6a35b09a58c382b4e403">defaultDevice</a> () const</td></tr>
 <tr class="separator:ae256974eb1eb6a35b09a58c382b4e403 inherit pub_methods_classtalcs_1_1_audio_driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04760c6af675c6236217b094b357edeb inherit pub_methods_classtalcs_1_1_audio_driver"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtalcs_1_1_audio_device.html">AudioDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_driver.html#a04760c6af675c6236217b094b357edeb">createDevice</a> (const QString &amp;name)=0</td></tr>
+<tr class="memitem:a04760c6af675c6236217b094b357edeb inherit pub_methods_classtalcs_1_1_audio_driver"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classtalcs_1_1_audio_device.html">AudioDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_driver.html#a04760c6af675c6236217b094b357edeb">createDevice</a> (const QString &amp;<a class="el" href="classtalcs_1_1_name_provider.html#a85e6ea749496bfaa328adc586fe00c87">name</a>)=0</td></tr>
 <tr class="separator:a04760c6af675c6236217b094b357edeb inherit pub_methods_classtalcs_1_1_audio_driver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classtalcs_1_1_name_provider"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtalcs_1_1_name_provider')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtalcs_1_1_name_provider.html">NameProvider</a></td></tr>
+<tr class="memitem:a85e6ea749496bfaa328adc586fe00c87 inherit pub_methods_classtalcs_1_1_name_provider"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_name_provider.html#a85e6ea749496bfaa328adc586fe00c87">name</a> () const</td></tr>
+<tr class="separator:a85e6ea749496bfaa328adc586fe00c87 inherit pub_methods_classtalcs_1_1_name_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classtalcs_1_1_error_string_provider"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtalcs_1_1_error_string_provider')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtalcs_1_1_error_string_provider.html">ErrorStringProvider</a></td></tr>
+<tr class="memitem:a2b57b4573bb46f76a828c18e435bea0b inherit pub_methods_classtalcs_1_1_error_string_provider"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_error_string_provider.html#a2b57b4573bb46f76a828c18e435bea0b">errorString</a> () const</td></tr>
+<tr class="separator:a2b57b4573bb46f76a828c18e435bea0b inherit pub_methods_classtalcs_1_1_error_string_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_methods_classtalcs_1_1_name_provider"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classtalcs_1_1_name_provider')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classtalcs_1_1_name_provider.html">NameProvider</a></td></tr>
+<tr class="memitem:ab01f7d9d65c3e6a6b7889a51ad2bb487 inherit pro_methods_classtalcs_1_1_name_provider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_name_provider.html#ab01f7d9d65c3e6a6b7889a51ad2bb487">setName</a> (const QString &amp;<a class="el" href="classtalcs_1_1_name_provider.html#a85e6ea749496bfaa328adc586fe00c87">name</a>)</td></tr>
+<tr class="separator:ab01f7d9d65c3e6a6b7889a51ad2bb487 inherit pro_methods_classtalcs_1_1_name_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classtalcs_1_1_error_string_provider"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classtalcs_1_1_error_string_provider')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classtalcs_1_1_error_string_provider.html">ErrorStringProvider</a></td></tr>
+<tr class="memitem:acd1d216f7c9fca3ff3e794e8c483524f inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_error_string_provider.html#acd1d216f7c9fca3ff3e794e8c483524f">setErrorString</a> (const QString &amp;error)</td></tr>
+<tr class="separator:acd1d216f7c9fca3ff3e794e8c483524f inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90e222fb6b083bfe00869ed7f4bfa5d0 inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_error_string_provider.html#a90e222fb6b083bfe00869ed7f4bfa5d0">clearErrorString</a> ()</td></tr>
+<tr class="separator:a90e222fb6b083bfe00869ed7f4bfa5d0 inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The audio driver using ASIO. </p>
@@ -172,11 +191,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a473945e55a459cfe26586501e8b9aff4" name="a473945e55a459cfe26586501e8b9aff4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a473945e55a459cfe26586501e8b9aff4">&#9670;&#160;</a></span>~ASIOAudioDriver()</h2>
+<a id="af32f2846076e7a43ca15021954f2c757" name="af32f2846076e7a43ca15021954f2c757"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af32f2846076e7a43ca15021954f2c757">&#9670;&#160;</a></span>~ASIOAudioDriver()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">~<a class="el" href="classtalcs_1_1_a_s_i_o_audio_driver.html">ASIOAudioDriver</a> </td>
@@ -185,6 +207,11 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>Destructor.</p>
 <p>If the driver is still running, it will be terminated now. </p>
@@ -338,8 +365,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>C:/Users/Crs_1/diffscope/libs/talcs/src/device/<a class="el" href="_a_s_i_o_audio_driver_8h_source.html">ASIOAudioDriver.h</a></li>
-<li>C:/Users/Crs_1/diffscope/libs/talcs/src/device/ASIOAudioDriver.cpp</li>
+<li>device/<a class="el" href="_a_s_i_o_audio_driver_8h_source.html">ASIOAudioDriver.h</a></li>
+<li>device/ASIOAudioDriver.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

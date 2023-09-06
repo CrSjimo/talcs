@@ -5,6 +5,7 @@ var classtalcs_1_1_audio_device =
     [ "availableBufferSizes", "classtalcs_1_1_audio_device.html#a6454f0356469ff9e5cb8dcb6d02949da", null ],
     [ "availableSampleRates", "classtalcs_1_1_audio_device.html#af33716a97a7f069cb74a4dad49de7453", null ],
     [ "channelCount", "classtalcs_1_1_audio_device.html#ad805cd75615b6a1f2af8a9c4041e5e2b", null ],
+    [ "close", "classtalcs_1_1_audio_device.html#a7008bca493d69ea65f12e0940f3a6886", null ],
     [ "closed", "classtalcs_1_1_audio_device.html#a6abb0e45eb340a477edd8b892b37373e", null ],
     [ "driver", "classtalcs_1_1_audio_device.html#aa8da643fc050e2b239f9558b013ed561", null ],
     [ "isInitialized", "classtalcs_1_1_audio_device.html#a161d75a220f87c68d6975112f0bff3f6", null ],
