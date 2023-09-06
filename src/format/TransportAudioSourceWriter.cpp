@@ -57,7 +57,7 @@ namespace talcs {
 
             qint64 curPos = d->pSrc->position;
             qint64 blockSize = d->src->bufferSize();
-            int chCnt = d->outFile->channels();
+            int chCnt = d->outFile->channelCount();
 
             auto *p = new float[blockSize * chCnt];
             memset(p, 0, sizeof(float) * blockSize * chCnt);

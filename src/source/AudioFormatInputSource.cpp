@@ -31,10 +31,10 @@ namespace talcs {
     }
 
     void AudioFormatInputSourcePrivate::resizeInDataBuffers(qint64 bufferSize) {
-        inData.resize(io->channels() * (qint64) (bufferSize / ratio));
+        inData.resize(io->channelCount() * (qint64) (bufferSize / ratio));
     }
     void AudioFormatInputSourcePrivate::resizeOutDataBuffers(qint64 bufferSize) {
-        outData.resize(io->channels() * bufferSize);
+        outData.resize(io->channelCount() * bufferSize);
     }
     long AudioFormatInputSourcePrivate::fetchInData(float **data) {
         Q_Q(AudioFormatInputSource);
@@ -53,12 +53,12 @@ namespace talcs {
         if (readLength > bufferSize())
             d->resizeOutDataBuffers(readLength);
         src_callback_read(d->srcState, d->ratio, readLength, d->outData.data());
-        InterleavedAudioDataWrapper outBuf(d->outData.data(), d->io->channels(), readLength);
-        int channelCount = std::min(d->io->channels(), readData.buffer->channelCount());
+        InterleavedAudioDataWrapper outBuf(d->outData.data(), d->io->channelCount(), readLength);
+        int channelCount = std::min(d->io->channelCount(), readData.buffer->channelCount());
         for (int ch = 0; ch < channelCount; ch++) {
             readData.buffer->setSampleRange(ch, readData.startPos, readLength, outBuf, ch, 0);
         }
-        if (d->doStereoize && d->io->channels() == 1 && readData.buffer->channelCount() > 1) {
+        if (d->doStereoize && d->io->channelCount() == 1 && readData.buffer->channelCount() > 1) {
             readData.buffer->setSampleRange(1, readData.startPos, readLength, outBuf, 0, 0);
         }
         d->position += readLength;
@@ -93,7 +93,7 @@ namespace talcs {
                 [](void *cbData, float **data) {
                     return reinterpret_cast<AudioFormatInputSourcePrivate *>(cbData)->fetchInData(data);
                 },
-                d->resampleMode, d->io->channels(), &srcError, d);
+                d->resampleMode, d->io->channelCount(), &srcError, d);
             if (srcError) {
                 qWarning() << src_strerror(srcError);
                 return false;

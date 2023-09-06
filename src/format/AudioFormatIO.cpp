@@ -180,7 +180,7 @@ namespace talcs {
      *
      * Note that this function should be called after the AudioFormatIO object is opened.
      */
-    int AudioFormatIO::channels() const {
+    int AudioFormatIO::channelCount() const {
         Q_D(const AudioFormatIO);
         TEST_IS_OPEN(0)
         return d->sf->channels();

@@ -107,7 +107,7 @@ namespace talcs {
         QIODevice::OpenMode openMode() const;
         void close();
 
-        int channels() const;
+        int channelCount() const;
         double sampleRate() const;
 
         int format() const;

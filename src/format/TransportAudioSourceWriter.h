@@ -15,7 +15,7 @@ namespace talcs {
         Q_DECLARE_PRIVATE(TransportAudioSourceWriter)
     public:
         TransportAudioSourceWriter(TransportAudioSource *src, AudioFormatIO *outFile, qint64 startPos, qint64 length);
-        ~TransportAudioSourceWriter();
+        ~TransportAudioSourceWriter() override;
 
     public slots:
         void start();
