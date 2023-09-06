@@ -9,7 +9,8 @@ namespace talcs {
 
     class AudioSourceClipSeriesPrivate;
 
-    class TALCS_EXPORT AudioSourceClipSeries : public PositionableAudioSource {
+    class TALCS_EXPORT AudioSourceClipSeries : public PositionableAudioSource,
+                                               public AudioClipSeriesBase<PositionableAudioSource> {
         Q_DECLARE_PRIVATE(AudioSourceClipSeries)
     public:
         AudioSourceClipSeries();
@@ -21,12 +22,9 @@ namespace talcs {
         bool open(qint64 bufferSize, double sampleRate) override;
         void close() override;
 
-        bool addClip(const AudioSourceClip &clip);
-        virtual bool removeClipAt(qint64 pos);
-        void clearClips();
-        AudioSourceClip findClipAt(qint64 pos) const;
-        QList<AudioSourceClip> clips() const;
-        qint64 effectiveLength() const;
+        bool addClip(const AudioSourceClip &clip) override;
+        virtual bool removeClipAt(qint64 pos) override;
+        void clearClips() override;
 
     protected:
         explicit AudioSourceClipSeries(AudioSourceClipSeriesPrivate &d);

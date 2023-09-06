@@ -6,8 +6,9 @@
 #include <QMutex>
 
 namespace talcs {
-    class AudioSourceClipSeriesPrivate : public PositionableAudioSourcePrivate, public AudioClipSeriesBase<PositionableAudioSource> {
+    class AudioSourceClipSeriesPrivate : public PositionableAudioSourcePrivate {
         Q_DECLARE_PUBLIC(AudioSourceClipSeries);
+
     public:
         QMutex mutex;
     };

@@ -4,20 +4,33 @@
 #include <QDebug>
 
 namespace talcs {
+    /**
+     * @class AudioSourceClipSeries
+     * @brief An AudioClipsSeries that uses PositionableAudioSource
+     */
+
+    /**
+     * Default constructor.
+     */
     AudioSourceClipSeries::AudioSourceClipSeries() : AudioSourceClipSeries(*new AudioSourceClipSeriesPrivate) {
     }
-    AudioSourceClipSeries::AudioSourceClipSeries(AudioSourceClipSeriesPrivate & d) : PositionableAudioSource(d) {
+    AudioSourceClipSeries::AudioSourceClipSeries(AudioSourceClipSeriesPrivate &d) : PositionableAudioSource(d) {
     }
 
+    /**
+     * Destructor.
+     *
+     * If the object is not close, it will be close now.
+     */
     AudioSourceClipSeries::~AudioSourceClipSeries() {
         AudioSourceClipSeries::close();
     }
     qint64 AudioSourceClipSeries::read(const AudioSourceReadData &readData) {
         Q_D(AudioSourceClipSeries);
         bool overlapPrev = false;
-        auto nextClipIt = d->m_clips.lower_bound({d->position});
+        auto nextClipIt = m_clips.lower_bound({d->position});
         decltype(nextClipIt) prevClipIt;
-        if (nextClipIt != d->m_clips.begin()) {
+        if (nextClipIt != m_clips.begin()) {
             prevClipIt = nextClipIt;
             prevClipIt--;
             if (prevClipIt->position + prevClipIt->length > d->position)
@@ -35,7 +48,7 @@ namespace talcs {
                 {readData.buffer, readData.startPos,
                  std::min(readData.length, prevClipIt->length - (d->position - prevClipIt->position))});
         }
-        for (; nextClipIt != d->m_clips.end() && d->position + readData.length > nextClipIt->position &&
+        for (; nextClipIt != m_clips.end() && d->position + readData.length > nextClipIt->position &&
                d->position + readData.length <= nextClipIt->position + nextClipIt->length;
              nextClipIt++) {
             if (nextClipIt->content->nextReadPosition() != nextClipIt->startPos) {
@@ -60,16 +73,28 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         d->position = pos;
     }
+
+    /**
+     * @copydoc PositionableAudioSource::open()
+     *
+     * This function also opens all sources in clips.
+     */
     bool AudioSourceClipSeries::open(qint64 bufferSize, double sampleRate) {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        return std::all_of(d->m_clips.begin(), d->m_clips.end(),
+        return std::all_of(m_clips.begin(), m_clips.end(),
                            [=](const AudioSourceClip &clip) { return clip.content->open(bufferSize, sampleRate); });
     }
+
+    /**
+     * @copydoc PositionableAudioSource::close()
+     *
+     * This function also closes all sources in clips.
+     */
     void AudioSourceClipSeries::close() {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        std::for_each(d->m_clips.begin(), d->m_clips.end(),
+        std::for_each(m_clips.begin(), m_clips.end(),
                       [=](const AudioSourceClip &clip) { return clip.content->close(); });
     }
 
@@ -81,35 +106,23 @@ namespace talcs {
                 return false;
             }
         }
-        return d->addClip(clip);
+        return AudioClipSeriesBase::addClip(clip);
     }
     bool AudioSourceClipSeries::removeClipAt(qint64 pos) {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        auto it = d->findClipIt(pos);
-        if (it == d->m_clips.end())
+        auto it = findClipIt(pos);
+        if (it == m_clips.end())
             return false;
         it->content->close();
-        d->m_clips.erase(it);
+        AudioClipSeriesBase::removeClipAt(pos);
         return true;
     }
     void AudioSourceClipSeries::clearClips() {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        for (const auto &clip : d->m_clips)
+        for (const auto &clip : m_clips)
             clip.content->close();
-        d->m_clips.clear();
-    }
-    AudioSourceClip AudioSourceClipSeries::findClipAt(qint64 pos) const {
-        Q_D(const AudioSourceClipSeries);
-        return d->findClipAt(pos);
-    }
-    QList<AudioSourceClip> AudioSourceClipSeries::clips() const {
-        Q_D(const AudioSourceClipSeries);
-        return d->clips();
-    }
-    qint64 AudioSourceClipSeries::effectiveLength() const {
-        Q_D(const AudioSourceClipSeries);
-        return d->effectiveLength();
+        AudioClipSeriesBase::clearClips();
     }
 }

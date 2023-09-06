@@ -20,9 +20,9 @@ namespace talcs {
         }
     };
     template <class T>
-    struct AudioClipSeriesBase {
+    class AudioClipSeriesBase {
     public:
-        bool addClip(const AudioClipBase<T> &clip) {
+        virtual bool addClip(const AudioClipBase<T> &clip) {
             int clipL = clip.position;
             int clipR = clip.position + clip.length;
             auto it = m_clips.lower_bound({clipL});
@@ -45,14 +45,14 @@ namespace talcs {
         QList<AudioClipBase<T>> clips() const {
             return QList<AudioClipBase<T>>(m_clips.begin(), m_clips.end());
         }
-        bool removeClipAt(qint64 pos) {
+        virtual bool removeClipAt(qint64 pos) {
             auto it = findClipIt(pos);
             if (it == m_clips.end())
                 return false;
             m_clips.erase(it);
             return true;
         }
-        void clearClips() {
+        virtual void clearClips() {
             m_clips.clear();
         }
         qint64 effectiveLength() const {
@@ -61,6 +61,8 @@ namespace talcs {
                 return 0;
             return it->position + it->length;
         }
+
+    protected:
         typename std::set<AudioClipBase<T>>::const_iterator findClipIt(qint64 pos) const {
             auto it = m_clips.upper_bound({pos});
             if (it == m_clips.begin())
