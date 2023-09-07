@@ -61,7 +61,7 @@ namespace talcs {
      *
      * If set to @c true, 2 channels will be read from each input source, and each 2 channels will be produced by combination.
      *
-     * For example, if 4 channels is read from this object, and this object owns 3 input sources, the first and the second
+     * For example, if 4 channels are read from this object, and this object owns 3 input sources, the first and the second
      * channels are read from the first input source, the third and the fourth channels are read from the second source,
      * and the third source is not read.
      *
