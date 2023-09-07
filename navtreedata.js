@@ -27,6 +27,7 @@ var NAVTREE =
   [ "TALCS", "index.html", [
     [ "Tutorial: Using audio devices with TALCS", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_201__tutorial__using__audio__devices__with__talcs.html", null ],
     [ "Tutorial: Access audio files with TALCS", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_202__tutorial__access__audio__files__with__talcs.html", null ],
+    [ "Tutorial: Combining Audio Clips and Mixing Multi-track Audio with TALCS", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_203__tutorial__combining__audio__clips__an3566f6b6c2fab87cbd8a50f5b869b2bf.html", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
