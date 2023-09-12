@@ -236,34 +236,34 @@ namespace talcs {
     static void convertBuffer(void *dest, const float *src, qint64 length, ASIOSampleType type) {
         switch (type) {
             case ASIOSTInt16LSB:
-                AudioSampleConverter::convertFloatToInt16(dest, src, length, true);
+                AudioSampleConverter::convertToInt16(dest, src, length, true);
                 break;
             case ASIOSTInt16MSB:
-                AudioSampleConverter::convertFloatToInt16(dest, src, length, false);
+                AudioSampleConverter::convertToInt16(dest, src, length, false);
                 break;
             case ASIOSTInt24LSB:
-                AudioSampleConverter::convertFloatToInt24(dest, src, length, true);
+                AudioSampleConverter::convertToInt24(dest, src, length, true);
                 break;
             case ASIOSTInt24MSB:
-                AudioSampleConverter::convertFloatToInt24(dest, src, length, false);
+                AudioSampleConverter::convertToInt24(dest, src, length, false);
                 break;
             case ASIOSTInt32LSB:
-                AudioSampleConverter::convertFloatToInt32(dest, src, length, true);
+                AudioSampleConverter::convertToInt32(dest, src, length, true);
                 break;
             case ASIOSTInt32MSB:
-                AudioSampleConverter::convertFloatToInt32(dest, src, length, false);
+                AudioSampleConverter::convertToInt32(dest, src, length, false);
                 break;
             case ASIOSTFloat32LSB:
-                AudioSampleConverter::convertFloatToFloat32(dest, src, length, true);
+                AudioSampleConverter::convertToFloat32(dest, src, length, true);
                 break;
             case ASIOSTFloat32MSB:
-                AudioSampleConverter::convertFloatToFloat32(dest, src, length, false);
+                AudioSampleConverter::convertToFloat32(dest, src, length, false);
                 break;
             case ASIOSTFloat64LSB:
-                AudioSampleConverter::convertFloatToFloat64(dest, src, length, true);
+                AudioSampleConverter::convertToFloat64(dest, src, length, true);
                 break;
             case ASIOSTFloat64MSB:
-                AudioSampleConverter::convertFloatToFloat64(dest, src, length, false);
+                AudioSampleConverter::convertToFloat64(dest, src, length, false);
                 break;
             default:
                 // unsupported sample type

@@ -20,7 +20,7 @@ namespace talcs {
      * @param length the number of samples
      * @param isLittleEndian whether the destination values are little-endian
      */
-    void AudioSampleConverter::convertFloatToInt16(void *dest, const float *src, qint64 length, bool isLittleEndian) {
+    void AudioSampleConverter::convertToInt16(void *dest, const float *src, qint64 length, bool isLittleEndian) {
         auto p = reinterpret_cast<qint16 *>(dest);
         while (--length >= 0)
             *p++ = isLittleEndian ? (qint16) qToLittleEndian((double) (*src++) * factor16)
@@ -34,7 +34,7 @@ namespace talcs {
      * @param length the number of samples
      * @param isLittleEndian whether the destination values are little-endian
      */
-    void AudioSampleConverter::convertFloatToInt24(void *dest, const float *src, qint64 length, bool isLittleEndian) {
+    void AudioSampleConverter::convertToInt24(void *dest, const float *src, qint64 length, bool isLittleEndian) {
         long a;
         char *b = (char *) dest;
         char *aa = (char *) &a;
@@ -60,7 +60,7 @@ namespace talcs {
      * @param length the number of samples
      * @param isLittleEndian whether the destination values are little-endian
      */
-    void AudioSampleConverter::convertFloatToInt32(void *dest, const float *src, qint64 length, bool isLittleEndian) {
+    void AudioSampleConverter::convertToInt32(void *dest, const float *src, qint64 length, bool isLittleEndian) {
         auto p = reinterpret_cast<qint32 *>(dest);
         while (--length >= 0)
             *p++ = isLittleEndian ? (qint32) qToLittleEndian((double) (*src++) * factor32)
@@ -74,7 +74,7 @@ namespace talcs {
      * @param length the number of samples
      * @param isLittleEndian whether the destination values are little-endian
      */
-    void AudioSampleConverter::convertFloatToFloat32(void *dest, const float *src, qint64 length, bool isLittleEndian) {
+    void AudioSampleConverter::convertToFloat32(void *dest, const float *src, qint64 length, bool isLittleEndian) {
         if (isLittleEndian) {
             qToLittleEndian<float>(src, length, dest);
         } else {
@@ -89,7 +89,7 @@ namespace talcs {
      * @param length the number of samples
      * @param isLittleEndian whether the destination values are little-endian
      */
-    void AudioSampleConverter::convertFloatToFloat64(void *dest, const float *src, qint64 length, bool isLittleEndian) {
+    void AudioSampleConverter::convertToFloat64(void *dest, const float *src, qint64 length, bool isLittleEndian) {
         auto p = reinterpret_cast<double *>(dest);
         while (--length >= 0)
             *p++ = isLittleEndian ? qToLittleEndian(*src++) : qToBigEndian(*src++);
