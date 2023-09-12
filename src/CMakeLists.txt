@@ -109,6 +109,12 @@ endif()
 # Configure target
 file(GLOB_RECURSE _src *.h *.hpp *.cpp *.cc)
 
+if(WIN32 AND TALCS_ENABLE_ASIO)
+
+else()
+    list(FILTER _src EXCLUDE REGEX "ASIO*")
+endif()
+
 talcs_add_library(${PROJECT_NAME} SHARED ${_src})
 
 if(WIN32 AND TALCS_ENABLE_ASIO)
@@ -117,8 +123,6 @@ if(WIN32 AND TALCS_ENABLE_ASIO)
     endif()
     target_compile_definitions(${PROJECT_NAME} PUBLIC TALCS_USE_FEATURE_ASIO)
     target_include_directories(${PROJECT_NAME} PRIVATE ${TALCS_ASIOSDK_DIR}/common)
-else()
-    list(FILTER _src EXCLUDE REGEX "ASIO*")
 endif()
 
 set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME Talcs)

@@ -3,11 +3,11 @@
 
 #include "AudioDevice.h"
 
+struct IASIO;
+
 namespace talcs {
     class ASIOAudioDevicePrivate;
     class ASIOAudioDriver;
-
-    struct IASIO;
 
     class TALCS_EXPORT ASIOAudioDevice : public AudioDevice {
         Q_OBJECT

@@ -5,7 +5,7 @@
 
 #include "ASIOAudioDriver.h"
 #include "buffer/AudioBuffer.h"
-#include "utils/AudioSampleConverter.h"
+#include "tools/AudioSampleConverter.h"
 #include "source/AudioSource.h"
 
 namespace talcs {
@@ -117,7 +117,7 @@ namespace talcs {
         if (d->iasio->createBuffers(d->bufferInfoList.data(), activeChannelCount(), bufferSize, &d->callbacks) !=
             ASE_OK)
             return false;
-        return IAudioStream::open(bufferSize, sampleRate);
+        return AudioDevice::open(bufferSize, sampleRate);
     }
     void ASIOAudioDevice::close() {
         if (!isInitialized())
@@ -127,7 +127,7 @@ namespace talcs {
         d->iasio->disposeBuffers();
         d->bufferInfoList.clear();
         d->channelInfoList.clear();
-        IAudioStream::close();
+        AudioDevice::close();
     }
 
     static AudioDeviceCallback *m_audioDeviceCallback = nullptr;
