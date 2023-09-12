@@ -84,6 +84,7 @@ set(CMAKE_AUTORCC on)
 find_package(SDL2 REQUIRED)
 find_package(SndFile REQUIRED)
 find_package(SampleRate REQUIRED)
+find_package(SoundTouch REQUIRED)
 
 if(NOT TARGET qtmediate::Core)
     find_package(qtmediate REQUIRED)
@@ -129,7 +130,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC qtmediate::Core)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     ${_platform_libs}
-    SDL2::SDL2 SndFile::sndfile SampleRate::samplerate
+    SDL2::SDL2 SndFile::sndfile SampleRate::samplerate SoundTouch::SoundTouch
 )
 
 qtmediate_link_qt_libraries(${PROJECT_NAME} PUBLIC
