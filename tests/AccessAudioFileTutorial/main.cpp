@@ -15,7 +15,7 @@
 #include "device/AudioDriverManager.h"
 #include "device/AudioSourcePlayback.h"
 #include "format/AudioFormatIO.h"
-#include "format/TransportAudioSourceWriter.h"
+#include "format/AudioSourceWriter.h"
 #include "source/AudioFormatInputSource.h"
 #include "source/TransportAudioSource.h"
 
@@ -75,6 +75,8 @@ void exportAudio() {
     AudioFormatIO exportIO(&exportFile);
     exportIO.open(QFile::WriteOnly, AudioFormatIO::WAV | AudioFormatIO::PCM_24, 2, 44100);
     tpSrc->open(4096, 44100);
+    tpSrc->setPosition(0);
+    tpSrc->play();
 
     QDialog dlg;
     dlg.setWindowTitle("Exporting...");
@@ -84,15 +86,19 @@ void exportAudio() {
     dlg.setLayout(dlgLayout);
 
     QThread thread;
-    TransportAudioSourceWriter writer(tpSrc, &exportIO, 0, inputSource->length());
+    AudioSourceWriter writer(tpSrc, &exportIO, inputSource->length());
     writer.moveToThread(&thread);
-    QObject::connect(&thread, &QThread::started, &writer, &TransportAudioSourceWriter::start);
-    QObject::connect(&writer, &TransportAudioSourceWriter::percentageUpdated, exportProgressBar,
-                     &QProgressBar::setValue);
-    QObject::connect(&writer, &TransportAudioSourceWriter::completed, &dlg, &QDialog::accept);
+    QObject::connect(&thread, &QThread::started, &writer, &AudioSourceWriter::start);
+    QObject::connect(&writer, &AudioSourceWriter::blockProcessed, exportProgressBar, [=](qint64 sampleCountProcessed) {
+        exportProgressBar->setValue(sampleCountProcessed * 100 / inputSource->length());
+    });
     QObject::connect(&dlg, &QDialog::rejected, &thread, [&]() { writer.interrupt(); });
-    QObject::connect(&writer, &TransportAudioSourceWriter::interrupted,
-                     [=] { QMessageBox::warning(win, "Export", "Exporting is interrupted."); });
+    QObject::connect(&writer, &AudioSourceWriter::finished, &dlg,[&] {
+        if(writer.status() == talcs::AudioSourceProcessorBase::Completed)
+            dlg.accept();
+        else
+            QMessageBox::warning(win, "Export", "Exporting is interrupted.");
+    });
 
     thread.start();
     dlg.exec();

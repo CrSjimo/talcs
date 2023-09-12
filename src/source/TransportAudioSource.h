@@ -45,6 +45,18 @@ namespace talcs {
     protected:
         TransportAudioSource(TransportAudioSourcePrivate &d, QObject *parent);
     };
+
+    class TransportAudioSourceStateSaverPrivate;
+
+    class TALCS_EXPORT TransportAudioSourceStateSaver {
+    public:
+        explicit TransportAudioSourceStateSaver(TransportAudioSource *src);
+        ~TransportAudioSourceStateSaver();
+
+    private:
+        QScopedPointer<TransportAudioSourceStateSaverPrivate> d;
+    };
+
 }
 
 #endif // TRANSPORTAUDIOSOURCE_H

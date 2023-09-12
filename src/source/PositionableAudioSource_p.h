@@ -10,6 +10,12 @@ namespace talcs {
     public:
         qint64 position = 0;
     };
+
+    class PositionableAudioSourceStateSaverPrivate {
+    public:
+        PositionableAudioSource *src;
+        qint64 position;
+    };
 }
 
 #endif // TALCS_POSITIONABLEAUDIOSOURCE_P_H

@@ -227,4 +227,12 @@ namespace talcs {
         Q_Q(TransportAudioSource);
         emit q->positionAboutToChange(pos);
     }
+
+    TransportAudioSourceStateSaver::TransportAudioSourceStateSaver(TransportAudioSource *src): d(new TransportAudioSourceStateSaverPrivate{src, src->position(), src->loopingRange()}) {
+    }
+
+    TransportAudioSourceStateSaver::~TransportAudioSourceStateSaver() {
+        d->src->setPosition(d->position);
+        d->src->setLoopingRange(d->loopingRange.first, d->loopingRange.second);
+    }
 }

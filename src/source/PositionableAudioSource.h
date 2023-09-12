@@ -17,6 +17,17 @@ namespace talcs {
     protected:
         explicit PositionableAudioSource(PositionableAudioSourcePrivate &d);
     };
+
+    class PositionableAudioSourceStateSaverPrivate;
+
+    class TALCS_EXPORT PositionableAudioSourceStateSaver {
+    public:
+        explicit PositionableAudioSourceStateSaver(PositionableAudioSource *src);
+        ~PositionableAudioSourceStateSaver();
+
+    private:
+        QScopedPointer<PositionableAudioSourceStateSaverPrivate> d;
+    };
 }
 
 #endif // TALCS_POSITIONABLEAUDIOSOURCE_H

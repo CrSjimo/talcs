@@ -21,6 +21,13 @@ namespace talcs {
 
         void _q_positionAboutToChange(qint64 pos);
     };
+
+    class TransportAudioSourceStateSaverPrivate {
+    public:
+        TransportAudioSource *src;
+        qint64 position;
+        QPair<qint64, qint64> loopingRange;
+    };
 }
 
 #endif // TALCS_TRANSPORTAUDIOSOURCE_P_H

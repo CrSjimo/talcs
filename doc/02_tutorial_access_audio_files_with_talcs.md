@@ -35,7 +35,7 @@ auto audioFormatIO = new talcs::AudioFormatIO(&audioFile);
 auto audioFormatInputSource = new talcs::AudioFormatInputSource(audioFormatIO);
 ```
 
-[TransportAudioSourceWriter](@ref talcs::TransportAudioSourceWriter) can be used to write the audio data produced by [TransportAudioSource](@ref talcs::TransportAudioSource) to an [AudioFormatIO](@ref talcs::AudioFormatIO) object. Here is an example of how to use it:
+[AudioSourceWriter](@ref talcs::AudioSourceWriter) can be used to write the audio data produced by any [AudioSource](@ref talcs::AudioSource) objects to an [AudioFormatIO](@ref talcs::AudioFormatIO) object. Here is an example of how to use it:
 
 ```cpp
 QFile audioFile("path/to/audio/file.wav");
@@ -46,14 +46,12 @@ audioFormatIO->open(
     2,
     44100);
 auto src = new talcs::SineWaveAudioSource(440);
-audio tpSrc = new talcs::TransportAudioSource(src);
-tpSrc->open(4096, 44100);
-auto tpSrcWriter = new talcs::TransportAudioSourceWriter(
-    tpSrc,
+src->open(4096, 44100);
+auto srcWriter = new talcs::AudioSourceWriter(
+    src,
     audioFormatIO,
-    0,
     44100 * 4);
-tpSrcWriter->start();
+srcWriter->start();
 ```
 
 See the source code of the complete example program for a deeper understanding of how to access audio files with TALCS.

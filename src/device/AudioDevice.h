@@ -68,6 +68,21 @@ namespace talcs {
         void setAvailableSampleRates(const QList<double> &sampleRates);
         void setPreferredSampleRate(double sampleRate);
     };
+
+    class TALCS_EXPORT AudioDeviceLocker {
+    public:
+        inline explicit AudioDeviceLocker(talcs::AudioDevice *audioDevice) : m_dev(audioDevice) {
+            m_dev->lock();
+        }
+
+        inline ~AudioDeviceLocker() {
+            m_dev->unlock();
+        }
+
+    private:
+        Q_DISABLE_COPY(AudioDeviceLocker);
+        AudioDevice *m_dev;
+    };
 }
 
 #endif // TALCS_AUDIODEVICE_H
