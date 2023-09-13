@@ -12,7 +12,9 @@ namespace talcs {
 
     class AudioSourceBPMDetectorPrivate: public AudioSourceProcessorBasePrivate {
         Q_DECLARE_PUBLIC(AudioSourceBPMDetector);
-        QScopedPointer<soundtouch::BPMDetect> bpmDetect;
+    public:
+        AudioSourceBPMDetectorPrivate(AudioSource *src);
+        soundtouch::BPMDetect bpmDetect;
         AudioBuffer buf;
     };
 

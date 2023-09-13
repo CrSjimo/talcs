@@ -3,12 +3,18 @@
 
 #include "source/AudioSource.h"
 
+#include <QDebug>
+
 namespace talcs {
+
+    AudioSourceBPMDetectorPrivate::AudioSourceBPMDetectorPrivate(AudioSource *src)
+        : bpmDetect(1, src->sampleRate()),
+          buf(1, src->bufferSize()) {
+    }
+
     AudioSourceBPMDetector::AudioSourceBPMDetector(AudioSource *src, qint64 length, QObject *parent)
-        : AudioSourceProcessorBase(*new AudioSourceProcessorBasePrivate, src, length, parent) {
+        : AudioSourceProcessorBase(*new AudioSourceBPMDetectorPrivate(src), src, length, parent) {
         Q_D(AudioSourceBPMDetector);
-        d->bpmDetect.reset(new soundtouch::BPMDetect(1, src->sampleRate()));
-        d->buf.resize(1, src->bufferSize());
     }
 
     AudioSourceBPMDetector::~AudioSourceBPMDetector() = default;
@@ -19,7 +25,8 @@ namespace talcs {
     }
     bool AudioSourceBPMDetector::processBlock(qint64 processedSampleCount, qint64 samplesToProcess) {
         Q_D(AudioSourceBPMDetector);
-        d->bpmDetect->inputSamples(d->buf.constData(0), samplesToProcess);
+        d->bpmDetect.inputSamples(d->buf.constData(0), samplesToProcess);
+        qDebug() << bpm();
         return true;
     }
     void AudioSourceBPMDetector::processWillFinish() {
@@ -27,6 +34,6 @@ namespace talcs {
 
     float AudioSourceBPMDetector::bpm() const {
         Q_D(const AudioSourceBPMDetector);
-        return d->bpmDetect->getBpm();
+        return const_cast<AudioSourceBPMDetectorPrivate *>(d)->bpmDetect.getBpm();
     }
 } // talcs

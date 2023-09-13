@@ -1,3 +1,5 @@
 add_subdirectory(AudioDriverTutorial)
 
 add_subdirectory(AccessAudioFileTutorial)
+
+add_subdirectory(DetectBPM)
