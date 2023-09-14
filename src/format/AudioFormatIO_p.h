@@ -12,6 +12,8 @@ namespace talcs {
         QScopedPointer<SndfileHandle> sf;
         QIODevice::OpenMode openMode = QIODevice::NotOpen;
 
+        double compressionLevel = 0.0;
+
         int64_t sfVioGetFilelen() const;
         int64_t sfVioSeek(int64_t offset, int whence) const;
         int64_t sfVioRead(void *ptr, int64_t count) const;

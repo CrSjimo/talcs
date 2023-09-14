@@ -138,6 +138,12 @@ namespace talcs {
         qint64 seek(qint64 pos);
         qint64 pos();
 
+        void setAutoClip(bool autoClip);
+        bool autoClip() const;
+
+        void setCompressionLevel(double level);
+        double compressionLevel() const;
+
         struct SubtypeInfo {
             Subtype subtype;
             QString name;

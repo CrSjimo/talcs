@@ -567,6 +567,47 @@ namespace talcs {
     }
 
     /**
+     * Turn on or off auto clipping when converting float to int.
+     */
+    void AudioFormatIO::setAutoClip(bool autoClip) {
+        Q_D(AudioFormatIO);
+        TEST_IS_OPEN(void())
+        d->sf->command(SFC_SET_CLIPPING, nullptr, autoClip ? SF_TRUE : SF_FALSE);
+    }
+
+    /**
+     * Gets whether auto clipping is turned on.
+     */
+    bool AudioFormatIO::autoClip() const {
+        Q_D(const AudioFormatIO);
+        TEST_IS_OPEN(false)
+        return d->sf->command(SFC_GET_CLIPPING, nullptr, 0) == SF_TRUE;
+    }
+
+    /**
+     * Sets the compression level.
+     *
+     * This only takes effect when writing to specified formats.
+     * @see @link URL https://libsndfile.github.io/libsndfile/command.html#sfc_set_compression_level @endlink
+     */
+    void AudioFormatIO::setCompressionLevel(double level) {
+        Q_D(AudioFormatIO);
+        TEST_IS_OPEN(void())
+        Q_ASSERT(0.0 <= level && level <= 1.0);
+        d->sf->command(SFC_SET_COMPRESSION_LEVEL, &level, sizeof(double));
+        d->compressionLevel = level;
+    }
+
+    /**
+     * Gets the compression level.
+     */
+    double AudioFormatIO::compressionLevel() const {
+        Q_D(const AudioFormatIO);
+        TEST_IS_OPEN(0.0)
+        return d->compressionLevel;
+    }
+
+    /**
      * @struct AudioFormatIO::SubtypeInfo
      * @brief The specs of a subtype.
      * @var AudioFormatIO::SubtypeInfo::subtype
