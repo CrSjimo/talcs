@@ -7,13 +7,13 @@
 #include "utils/AudioStreamBase.h"
 
 namespace talcs {
-    class TALCS_EXPORT AudioSourceReadData {
-    public:
+    struct TALCS_EXPORT AudioSourceReadData {
         AudioSourceReadData(IAudioSampleContainer *buffer);
-        AudioSourceReadData(IAudioSampleContainer *buffer, qint64 startPos, qint64 length);
+        AudioSourceReadData(IAudioSampleContainer *buffer, qint64 startPos, qint64 length, int silentFlags = 0);
         IAudioSampleContainer *buffer;
         qint64 startPos;
         qint64 length;
+        int silentFlags;
     };
 
     class AudioSourcePrivate;

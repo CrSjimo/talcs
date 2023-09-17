@@ -120,16 +120,13 @@ namespace talcs {
     }
 
     bool PositionableMixerAudioSource::addSource(PositionableAudioSource * src, bool takeOwnership) {
-        Q_D(PositionableMixerAudioSource);
-        QMutexLocker locker(&d->mutex);
         if (src == this)
             return false;
-        if (d->sourceDict.contains(src))
+        Q_D(PositionableMixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        if (!d->addSource(src, takeOwnership, isOpen(), bufferSize(), sampleRate()))
             return false;
-        d->sourceDict.append(src, takeOwnership);
         if (isOpen()) {
-            if (!src->open(bufferSize(), sampleRate()))
-                return false;
             src->setNextReadPosition(nextReadPosition());
         }
         return true;
@@ -138,23 +135,29 @@ namespace talcs {
     bool PositionableMixerAudioSource::removeSource(PositionableAudioSource * src) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
-        if (d->sourceDict.remove(src)) {
-            src->close();
-            return true;
-        }
-        return false;
+        return d->removeSource(src);
     }
 
     void PositionableMixerAudioSource::removeAllSources() {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
-        d->stop();
-        d->sourceDict.clear();
+        d->removeAllSources();
     }
 
     QList<PositionableAudioSource *> PositionableMixerAudioSource::sources() const {
         Q_D(const PositionableMixerAudioSource);
-        return d->sourceDict.keys();
+        return d->sources();
+    }
+
+    void PositionableMixerAudioSource::setSourceSolo(PositionableAudioSource *src, bool isSolo) {
+        Q_D(PositionableMixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        d->setSourceSolo(src, isSolo);
+    }
+
+    bool PositionableMixerAudioSource::isSourceSolo(PositionableAudioSource *src) const {
+        Q_D(const PositionableMixerAudioSource);
+        return d->isSourceSolo(src);
     }
 
     void PositionableMixerAudioSource::setGain(float gain) {
@@ -162,26 +165,42 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         d->gain = gain;
     }
+
     float PositionableMixerAudioSource::gain() const {
         Q_D(const PositionableMixerAudioSource);
         return d->gain;
     }
+
     void PositionableMixerAudioSource::setPan(float pan) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
         d->pan = pan;
     }
+
     float PositionableMixerAudioSource::pan() const {
         Q_D(const PositionableMixerAudioSource);
         return d->pan;
     }
+
     void PositionableMixerAudioSource::setRouteChannels(bool routeChannels) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
         d->routeChannels = routeChannels;
     }
+
     bool PositionableMixerAudioSource::routeChannels() const {
         Q_D(const PositionableMixerAudioSource);
         return d->routeChannels;
+    }
+
+    void PositionableMixerAudioSource::setSilentFlags(int silentFlags) {
+        Q_D(PositionableMixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        d->silentFlags = silentFlags;
+    }
+
+    int PositionableMixerAudioSource::silentFlags() const {
+        Q_D(const PositionableMixerAudioSource);
+        return d->silentFlags;
     }
 }

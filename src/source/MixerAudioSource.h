@@ -27,6 +27,8 @@ namespace talcs {
         bool removeSource(AudioSource *src) override;
         void removeAllSources() override;
         QList<AudioSource *> sources() const override;
+        void setSourceSolo(AudioSource *src, bool isSolo) override;
+        bool isSourceSolo(AudioSource *src) const override;
 
         void setGain(float gain) override;
         float gain() const override;
@@ -36,6 +38,9 @@ namespace talcs {
 
         void setRouteChannels(bool routeChannels) override;
         bool routeChannels() const override;
+
+        void setSilentFlags(int silentFlags) override;
+        int silentFlags() const override;
 
     signals:
         void meterUpdated(float leftMagnitude, float rightMagnitude);

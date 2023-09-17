@@ -81,44 +81,43 @@ namespace talcs {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
         d->stop();
-        d->tmpBuf.resize(0, 0);
         AudioSource::close();
     }
 
     bool MixerAudioSource::addSource(AudioSource * src, bool takeOwnership) {
-        Q_D(MixerAudioSource);
-        QMutexLocker locker(&d->mutex);
         if (src == this)
             return false;
-        if (d->sourceDict.contains(src))
-            return false;
-        d->sourceDict.append(src, takeOwnership);
-        if (isOpen()) {
-            return src->open(bufferSize(), sampleRate());
-        }
-        return true;
+        Q_D(MixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        return d->addSource(src, takeOwnership, isOpen(), bufferSize(), sampleRate());
     }
 
     bool MixerAudioSource::removeSource(AudioSource * src) {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
-        if (d->sourceDict.remove(src)) {
-            src->close();
-            return true;
-        }
-        return false;
+        return d->removeSource(src);
     }
 
     void MixerAudioSource::removeAllSources() {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
-        d->stop();
-        d->sourceDict.clear();
+        d->removeAllSources();
     }
 
     QList<AudioSource *> MixerAudioSource::sources() const {
         Q_D(const MixerAudioSource);
-        return d->sourceDict.keys();
+        return d->sources();
+    }
+
+    void MixerAudioSource::setSourceSolo(AudioSource *src, bool isSolo) {
+        Q_D(MixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        d->setSourceSolo(src, isSolo);
+    }
+
+    bool MixerAudioSource::isSourceSolo(AudioSource *src) const {
+        Q_D(const MixerAudioSource);
+        return d->isSourceSolo(src);
     }
 
     void MixerAudioSource::setGain(float gain) {
@@ -152,5 +151,16 @@ namespace talcs {
     bool MixerAudioSource::routeChannels() const {
         Q_D(const MixerAudioSource);
         return d->routeChannels;
+    }
+
+    void MixerAudioSource::setSilentFlags(int silentFlags) {
+        Q_D(MixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        d->silentFlags = silentFlags;
+    }
+
+    int MixerAudioSource::silentFlags() const {
+        Q_D(const MixerAudioSource);
+        return d->silentFlags;
     }
 }
