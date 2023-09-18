@@ -23,6 +23,8 @@ namespace talcs {
         void setFrequency(const std::function<double(qint64)> &frequencyIntegration);
         std::function<double(qint64)> frequency() const;
 
+        void setNextReadPosition(qint64 pos) override;
+
     protected:
         explicit SineWaveAudioSource(SineWaveAudioSourcePrivate &d);
     };

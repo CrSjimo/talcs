@@ -40,15 +40,23 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         static const double PI = 3.14159265358979323846;
         auto channelCount = readData.buffer->channelCount();
-        auto pos = PositionableAudioSource::nextReadPosition();
+        auto pos = d->position;
         auto sr = sampleRate();
-        for (qint64 i = 0; i < readData.length; i++) {
-            float sample = sin(2 * PI * d->freq(pos + i) / sr);
-            for (int ch = 0; ch < channelCount; ch++) {
-                readData.buffer->sampleAt(ch, readData.startPos + i) = sample;
+        for (int ch = 0; ch < channelCount; ch++) {
+            if ((1 << ch) & readData.silentFlags)
+                readData.buffer->clear(ch, readData.startPos, readData.length);
+        }
+        if (readData.silentFlags != -1) {
+            for (qint64 i = 0; i < readData.length; i++) {
+                float sample = sin(2 * PI * d->freq(pos + i) / sr);
+                for (int ch = 0; ch < channelCount; ch++) {
+                    if ((1 << ch) & readData.silentFlags)
+                        continue;
+                    readData.buffer->sampleAt(ch, readData.startPos + i) = sample;
+                }
             }
         }
-        setNextReadPosition(pos + readData.length);
+        d->position += readData.length;
         return readData.length;
     }
     qint64 SineWaveAudioSource::length() const {
@@ -82,5 +90,11 @@ namespace talcs {
     std::function<double(qint64)> SineWaveAudioSource::frequency() const {
         Q_D(const SineWaveAudioSource);
         return d->freq;
+    }
+
+    void SineWaveAudioSource::setNextReadPosition(qint64 pos) {
+        Q_D(SineWaveAudioSource);
+        QMutexLocker locker(&d->mutex);
+        PositionableAudioSource::setNextReadPosition(pos);
     }
 }
