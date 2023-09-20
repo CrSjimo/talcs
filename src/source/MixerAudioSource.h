@@ -12,9 +12,7 @@ namespace talcs {
 
     class TALCS_EXPORT MixerAudioSource : public QObject, public AudioSource, public IMixer<AudioSource> {
         Q_OBJECT
-#define d_ptr AudioSource::d_ptr
-        Q_DECLARE_PRIVATE(MixerAudioSource)
-#undef d_ptr
+        Q_DECLARE_PRIVATE_D(AudioSource::d_ptr, MixerAudioSource)
     public:
         explicit MixerAudioSource(QObject *parent = nullptr);
         ~MixerAudioSource() override;

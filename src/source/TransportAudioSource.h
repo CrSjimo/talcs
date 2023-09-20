@@ -12,9 +12,7 @@ namespace talcs {
 
     class TALCS_EXPORT TransportAudioSource : public QObject, public AudioSource {
         Q_OBJECT
-#define d_ptr AudioSource::d_ptr
-        Q_DECLARE_PRIVATE(TransportAudioSource)
-#undef d_ptr
+        Q_DECLARE_PRIVATE_D(AudioSource::d_ptr, TransportAudioSource)
         friend class TransportAudioSourceWriter;
 
     public:

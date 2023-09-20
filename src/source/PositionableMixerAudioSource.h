@@ -12,9 +12,7 @@ namespace talcs {
 
     class TALCS_EXPORT PositionableMixerAudioSource : public QObject, public PositionableAudioSource, public IMixer<PositionableAudioSource> {
         Q_OBJECT
-#define d_ptr PositionableAudioSource::d_ptr
-        Q_DECLARE_PRIVATE(PositionableMixerAudioSource)
-#undef d_ptr
+        Q_DECLARE_PRIVATE_D(PositionableAudioSource::d_ptr, PositionableMixerAudioSource)
     public:
         explicit PositionableMixerAudioSource(QObject *parent = nullptr);
         ~PositionableMixerAudioSource() override;
