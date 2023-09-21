@@ -14,7 +14,7 @@ namespace talcs {
      *
      * Constructor that initialize the generator with a fixed frequency (Hz).
      */
-    SineWaveAudioSource::SineWaveAudioSource(double frequency) {
+    SineWaveAudioSource::SineWaveAudioSource(double frequency): PositionableAudioSource(*new SineWaveAudioSourcePrivate) {
         Q_D(SineWaveAudioSource);
         setFrequency(frequency);
     }
@@ -24,11 +24,9 @@ namespace talcs {
      * @param frequencyIntegration @f$\mathtt{frequencyIntegration}(x) = \int_{0}^{x}f(\tau)\mathrm{d}\tau@f$,
      * where @f$f(\tau)@f$ represents the frequency (Hz) at time @f$\tau@f$ (measured in samples).
      */
-    SineWaveAudioSource::SineWaveAudioSource(const std::function<double(qint64)> &frequencyIntegration) {
+    SineWaveAudioSource::SineWaveAudioSource(const std::function<double(qint64)> &frequencyIntegration): PositionableAudioSource(*new SineWaveAudioSourcePrivate) {
         Q_D(SineWaveAudioSource);
         setFrequency(frequencyIntegration);
-    }
-    SineWaveAudioSource::SineWaveAudioSource(SineWaveAudioSourcePrivate &d) : PositionableAudioSource(d) {
     }
 
     bool SineWaveAudioSource::open(qint64 bufferSize, double sampleRate) {
