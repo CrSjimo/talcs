@@ -8,18 +8,17 @@
 namespace talcs {
 
     struct FutureAudioSourceCallbacks {
-        qint64 length;
-        std::function<bool (qint64, double)> preloadingOpen;
+        std::function<bool (qint64, double)> preloadingOpen = [](qint64, double){ return true; };
         std::function<void ()> preloadingClose;
     };
 
     class FutureAudioSourcePrivate;
 
-    class FutureAudioSource:public QObject, public PositionableAudioSource {
+    class TALCS_EXPORT FutureAudioSource: public QObject, public PositionableAudioSource {
         Q_OBJECT
         Q_DECLARE_PRIVATE_D(PositionableAudioSource::d_ptr, FutureAudioSource)
     public:
-        explicit FutureAudioSource(const QFuture<PositionableAudioSource *> &future, const FutureAudioSourceCallbacks &callbacks);
+        explicit FutureAudioSource(const QFuture<PositionableAudioSource *> &future, const FutureAudioSourceCallbacks &callbacks = {}, QObject *parent = nullptr);
         ~FutureAudioSource() override;
 
         QFuture<PositionableAudioSource *> future() const;

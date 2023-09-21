@@ -12,7 +12,7 @@ namespace talcs {
 
     class FutureAudioSourceClipSeriesPrivate;
 
-    class FutureAudioSourceClipSeries : public QObject,
+    class TALCS_EXPORT FutureAudioSourceClipSeries : public QObject,
                                         public PositionableAudioSource,
                                         public AudioClipSeriesBase<FutureAudioSource> {
         Q_OBJECT

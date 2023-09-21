@@ -7,7 +7,7 @@ namespace talcs {
         Q_Q(FutureAudioSource);
         if (status == FutureAudioSource::Ready) {
             src = futureWatcher.result();
-            if(q->isOpen()) {
+            if (q->isOpen()) {
                 Q_ASSERT(src->open(q->bufferSize(), q->sampleRate()));
                 src->setNextReadPosition(position);
             }
@@ -16,25 +16,18 @@ namespace talcs {
     }
 
     FutureAudioSource::FutureAudioSource(const QFuture<PositionableAudioSource *> &future,
-                                         const FutureAudioSourceCallbacks &callbacks): PositionableAudioSource(*new FutureAudioSourcePrivate) {
+                                         const FutureAudioSourceCallbacks &callbacks, QObject *parent)
+        : QObject(parent), PositionableAudioSource(*new FutureAudioSourcePrivate) {
         Q_D(FutureAudioSource);
-        d->futureWatcher.setFuture(future);
         d->callbacks = callbacks;
-        connect(&d->futureWatcher, &decltype(d->futureWatcher)::paused, this, [=](){
-            d->_q_statusChanged(Paused);
-        });
-        connect(&d->futureWatcher, &decltype(d->futureWatcher)::resumed, this, [=](){
-            d->_q_statusChanged(Running);
-        });
-        connect(&d->futureWatcher, &decltype(d->futureWatcher)::canceled, this, [=](){
-            d->_q_statusChanged(Cancelled);
-        });
-        connect(&d->futureWatcher, &decltype(d->futureWatcher)::finished, this, [=](){
-            d->_q_statusChanged(Ready);
-        });
-        connect(&d->futureWatcher, &decltype(d->futureWatcher)::progressValueChanged, this, [=](int progressValue){
-            emit progressChanged(progressValue);
-        });
+        connect(&d->futureWatcher, &decltype(d->futureWatcher)::paused, this, [=]() { d->_q_statusChanged(Paused); });
+        connect(&d->futureWatcher, &decltype(d->futureWatcher)::resumed, this, [=]() { d->_q_statusChanged(Running); });
+        connect(&d->futureWatcher, &decltype(d->futureWatcher)::canceled, this,
+                [=]() { d->_q_statusChanged(Cancelled); });
+        connect(&d->futureWatcher, &decltype(d->futureWatcher)::finished, this, [=]() { d->_q_statusChanged(Ready); });
+        connect(&d->futureWatcher, &decltype(d->futureWatcher)::progressValueChanged, this,
+                [=](int progressValue) { emit progressChanged(progressValue); });
+        d->futureWatcher.setFuture(future);
     }
 
     FutureAudioSource::~FutureAudioSource() {
@@ -83,16 +76,20 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         switch (status()) {
             case Running:
-                return d->callbacks.preloadingOpen(bufferSize, sampleRate) && AudioStreamBase::open(bufferSize, sampleRate);
+                return d->callbacks.preloadingOpen(bufferSize, sampleRate) &&
+                       AudioStreamBase::open(bufferSize, sampleRate);
             case Paused:
-                return d->callbacks.preloadingOpen(bufferSize, sampleRate) && AudioStreamBase::open(bufferSize, sampleRate);
+                return d->callbacks.preloadingOpen(bufferSize, sampleRate) &&
+                       AudioStreamBase::open(bufferSize, sampleRate);
             case Cancelled:
                 return false;
             case Ready:
-                if(d->src->open(bufferSize, sampleRate)) {
+                if (d->src->open(bufferSize, sampleRate)) {
                     d->src->setNextReadPosition(d->position);
                     return AudioStreamBase::open(bufferSize, sampleRate);
                 }
+                return false;
+            default:
                 return false;
         }
     }
@@ -138,13 +135,13 @@ namespace talcs {
 
     FutureAudioSource::Status FutureAudioSource::status() const {
         Q_D(const FutureAudioSource);
-        if(d->futureWatcher.isRunning())
-            return Running;
-        if(d->futureWatcher.isPaused())
+        if (d->futureWatcher.isCanceled())
+            return Cancelled;
+        if (d->futureWatcher.isPaused())
             return Paused;
-        if(d->futureWatcher.isFinished())
+        if (d->futureWatcher.isFinished())
             return Ready;
-        return Cancelled;
+        return Running;
     }
 
     void FutureAudioSource::wait() {
