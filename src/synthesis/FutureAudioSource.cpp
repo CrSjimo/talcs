@@ -20,7 +20,6 @@ namespace talcs {
         Q_D(FutureAudioSource);
         d->futureWatcher.setFuture(future);
         d->callbacks = callbacks;
-        d->mutex = future.d.mutex();
         connect(&d->futureWatcher, &decltype(d->futureWatcher)::paused, this, [=](){
             d->_q_statusChanged(Paused);
         });
@@ -38,7 +37,9 @@ namespace talcs {
         });
     }
 
-    FutureAudioSource::~FutureAudioSource() = default;
+    FutureAudioSource::~FutureAudioSource() {
+        FutureAudioSource::close();
+    }
 
     QFuture<PositionableAudioSource *> FutureAudioSource::future() const {
         Q_D(const FutureAudioSource);
@@ -47,7 +48,7 @@ namespace talcs {
 
     qint64 FutureAudioSource::read(const AudioSourceReadData &readData) {
         Q_D(FutureAudioSource);
-        QMutexLocker locker(d->mutex);
+        QMutexLocker locker(&d->mutex);
         if (d->src) {
             auto readLength = d->src->read(readData);
             d->position += readLength;
@@ -73,13 +74,13 @@ namespace talcs {
 
     void FutureAudioSource::setNextReadPosition(qint64 pos) {
         Q_D(FutureAudioSource);
-        QMutexLocker locker(d->mutex);
+        QMutexLocker locker(&d->mutex);
         PositionableAudioSource::setNextReadPosition(pos);
     }
 
     bool FutureAudioSource::open(qint64 bufferSize, double sampleRate) {
         Q_D(FutureAudioSource);
-        QMutexLocker locker(d->mutex);
+        QMutexLocker locker(&d->mutex);
         switch (status()) {
             case Running:
                 return d->callbacks.preloadingOpen(bufferSize, sampleRate) && AudioStreamBase::open(bufferSize, sampleRate);
@@ -98,7 +99,7 @@ namespace talcs {
 
     void FutureAudioSource::close() {
         Q_D(FutureAudioSource);
-        QMutexLocker locker(d->mutex);
+        QMutexLocker locker(&d->mutex);
         switch (status()) {
             case Running:
                 d->callbacks.preloadingClose();

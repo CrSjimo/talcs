@@ -13,7 +13,7 @@ namespace talcs {
         FutureAudioSourceCallbacks callbacks;
         void _q_statusChanged(FutureAudioSource::Status status);
         PositionableAudioSource *src = nullptr;
-        QMutex *mutex;
+        QMutex mutex;
     };
 }
 
