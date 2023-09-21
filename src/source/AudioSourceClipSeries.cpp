@@ -28,29 +28,27 @@ namespace talcs {
     qint64 AudioSourceClipSeries::read(const AudioSourceReadData &readData) {
         Q_D(AudioSourceClipSeries);
         AudioSourceClip readDataInterval(d->position, readData.length);
-        for(int ch = 0; ch < readData.buffer->channelCount(); ch++) {
+        for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
             readData.buffer->clear(ch, readData.startPos, readData.length);
         }
-        qAsConst(m_clips).overlap_find_all(readDataInterval, [=, &readDataInterval](const decltype(m_clips)::const_iterator& it){
-            auto clip = it->interval();
-            auto headCut = std::max(0ll, readDataInterval.position() - clip.position());
-            auto tailCut = std::max(0ll, clip.endPosition() - readDataInterval.endPosition());
-            auto readStart = std::max(0ll, clip.position() - readDataInterval.position()) + readData.startPos;
-            clip.content()->setNextReadPosition(headCut + clip.contentStartPosition());
-            clip.content()->read({
-                readData.buffer,
-                readStart,
-                clip.length() - headCut - tailCut,
-                readData.silentFlags,
+        qAsConst(m_clips).overlap_find_all(
+            readDataInterval, [=, &readDataInterval](const decltype(m_clips)::const_iterator &it) {
+                auto clip = it->interval();
+                auto [clipReadPosition, clipReadInterval] = calculateClipReadData(clip, readDataInterval);
+                clip.content()->setNextReadPosition(clipReadPosition);
+                clip.content()->read({
+                    readData.buffer,
+                    clipReadInterval.position() + readData.startPos,
+                    clipReadInterval.length(),
+                    readData.silentFlags,
+                });
+                return true;
             });
-            return true;
-        });
         d->position += readData.length;
         return readData.length;
     }
     qint64 AudioSourceClipSeries::length() const {
         return std::numeric_limits<qint64>::max();
-
     }
     qint64 AudioSourceClipSeries::nextReadPosition() const {
         Q_D(const AudioSourceClipSeries);
