@@ -27,42 +27,30 @@ namespace talcs {
     }
     qint64 AudioSourceClipSeries::read(const AudioSourceReadData &readData) {
         Q_D(AudioSourceClipSeries);
-        bool overlapPrev = false;
-        auto nextClipIt = m_clips.lower_bound({d->position});
-        decltype(nextClipIt) prevClipIt;
-        if (nextClipIt != m_clips.begin()) {
-            prevClipIt = nextClipIt;
-            prevClipIt--;
-            if (prevClipIt->position + prevClipIt->length > d->position)
-                overlapPrev = true;
-        }
-        int chCnt = readData.buffer->channelCount();
-        for (int ch = 0; ch < chCnt; ch++) {
+        AudioSourceClip readDataInterval(d->position, readData.length);
+        for(int ch = 0; ch < readData.buffer->channelCount(); ch++) {
             readData.buffer->clear(ch, readData.startPos, readData.length);
         }
-        if (overlapPrev) {
-            if (prevClipIt->content->nextReadPosition() != prevClipIt->startPos + d->position - prevClipIt->position) {
-                prevClipIt->content->setNextReadPosition(prevClipIt->startPos + d->position - prevClipIt->position);
-            }
-            prevClipIt->content->read(
-                {readData.buffer, readData.startPos,
-                 std::min(readData.length, prevClipIt->length - (d->position - prevClipIt->position))});
-        }
-        for (; nextClipIt != m_clips.end() && d->position + readData.length > nextClipIt->position &&
-               d->position + readData.length <= nextClipIt->position + nextClipIt->length;
-             nextClipIt++) {
-            if (nextClipIt->content->nextReadPosition() != nextClipIt->startPos) {
-                nextClipIt->content->setNextReadPosition(nextClipIt->startPos);
-            }
-            nextClipIt->content->read(
-                {readData.buffer, readData.startPos + nextClipIt->position - d->position,
-                 std::min(nextClipIt->length, d->position + readData.length - nextClipIt->position)});
-        }
+        qAsConst(m_clips).overlap_find_all(readDataInterval, [=, &readDataInterval](const decltype(m_clips)::const_iterator& it){
+            auto clip = it->interval();
+            auto headCut = std::max(0ll, readDataInterval.position() - clip.position());
+            auto tailCut = std::max(0ll, clip.endPosition() - readDataInterval.endPosition());
+            auto readStart = std::max(0ll, clip.position() - readDataInterval.position()) + readData.startPos;
+            clip.content()->setNextReadPosition(headCut + clip.contentStartPosition());
+            clip.content()->read({
+                readData.buffer,
+                readStart,
+                clip.length() - headCut - tailCut,
+                readData.silentFlags,
+            });
+            return true;
+        });
         d->position += readData.length;
         return readData.length;
     }
     qint64 AudioSourceClipSeries::length() const {
         return std::numeric_limits<qint64>::max();
+
     }
     qint64 AudioSourceClipSeries::nextReadPosition() const {
         Q_D(const AudioSourceClipSeries);
@@ -112,7 +100,7 @@ namespace talcs {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         auto it = findClipIt(pos);
-        if (it == m_clips.cend())
+        if (it == m_clips.end())
             return false;
         it->interval().content()->close();
         AudioClipSeriesBase::removeClipAt(pos);

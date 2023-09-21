@@ -16,12 +16,14 @@ namespace talcs {
 
     template <class T>
     struct AudioClipBase : public AudioClipBaseInterval_ {
-        explicit AudioClipBase(qint64 position = -1, T *content = nullptr, qint64 startPos = 0, qint64 length = 0)
+        AudioClipBase(qint64 position, T *content, qint64 startPos, qint64 length)
             : AudioClipBaseInterval_(position, position + length - 1), m_content(content),
               m_startPos(startPos) {
         }
-        T *m_content;
-        qint64 m_startPos;
+        AudioClipBase(qint64 position, qint64 length): AudioClipBase(position, nullptr, 0, length) {
+        }
+        AudioClipBase(): AudioClipBase(-1, 0) {
+        }
 
         qint64 position() const {
             return low_;
@@ -31,17 +33,20 @@ namespace talcs {
             return m_content;
         }
 
-        qint64 startPos() const {
+        qint64 contentStartPosition() const {
             return m_startPos;
         }
 
-        qint64 endPos() const {
+        qint64 endPosition() const {
             return high_ + 1;
         }
 
         qint64 length() const {
             return high_ - low_ + 1;
         }
+    protected:
+        T *m_content;
+        qint64 m_startPos{};
     };
 
     template <class T>
@@ -49,10 +54,10 @@ namespace talcs {
         using AudioClipBaseIntervalTree_ = lib_interval_tree::interval_tree<AudioClipBase<T>>;
     public:
         virtual bool addClip(const AudioClipBase<T> &clip) {
-            if(qAsConst(m_clips).overlap_find(clip) != m_clips.end())
+            if(qAsConst(m_clips).overlap_find(clip) != m_clips.cend())
                 return false;
             m_clips.insert(clip);
-            m_endSet.insert(clip.endPos());
+            m_endSet.insert(clip.endPosition());
             return true;
         }
         AudioClipBase<T> findClipAt(qint64 pos) const {
@@ -62,14 +67,18 @@ namespace talcs {
             return *it;
         }
         QList<AudioClipBase<T>> clips() const {
-            return QList<AudioClipBase<T>>(m_clips.begin(), m_clips.end());
+            QList<AudioClipBase<T>> l;
+            for(const auto &v: m_clips) {
+                l.push_back(v);
+            }
+            return l;
         }
         virtual bool removeClipAt(qint64 pos) {
             auto it = findClipIt(pos);
             if (it == m_clips.end())
                 return false;
             m_clips.erase(it);
-            m_endSet.erase(it->interval().endPos());
+            m_endSet.erase(it->interval().endPosition());
             return true;
         }
         virtual void clearClips() {
@@ -82,8 +91,11 @@ namespace talcs {
         }
 
     protected:
+        typename AudioClipBaseIntervalTree_::iterator findClipIt(qint64 pos) {
+            return m_clips.overlap_find({pos, pos + 1});
+        }
         typename AudioClipBaseIntervalTree_::const_iterator findClipIt(qint64 pos) const {
-            return m_clips.overlap_find({pos, nullptr, 0, pos + 1});
+            return m_clips.overlap_find({pos, pos + 1});
         }
         AudioClipBaseIntervalTree_ m_clips;
         std::set<qint64> m_endSet;

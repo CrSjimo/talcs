@@ -4,25 +4,56 @@ namespace talcs {
     /**
      * @struct AudioClipBase
      * @brief Generic struct for audio clips
-     * @var AudioClipBase::position
-     * The position where the start of clip locates in the clip series. A value of -1 represent the
-     * object is null.
-     *
-     * @var AudioClipBase::content
-     * The content of audio clip
-     *
-     * @var AudioClipBase::startPos
-     * The start of range within the content of audio clip
-     *
-     * @var AudioClipBase::length
-     * The length of range within the content of audio clip
      */
 
     /**
-     * @fn bool AudioClipBase::operator<(const AudioClipBase<T> &other) const
-     * Compare two audio clips by their positions.
+     * @fn AudioClipBase::AudioClipBase(qint64 position, T *content, qint64 startPos, qint64 length)
+     * Constructor.
+     * @param position The position where the start of clip locates in the clip series. A value of -1 represent the
+     * object is null.
+     * @param content The content of audio clip
+     * @param startPos The start of range within the content of audio clip
+     * @param length The length of range within the content of audio clip
+     */
+
+    /**
+     * @fn AudioClipBase::AudioClipBase(qint64 position, qint64 length)
+     * Constructor. This is used to create a clip with no content, used for overlapping searching.
      *
-     * This is used for sorting audio clips in an audio clip series.
+     * @overload
+     */
+
+    /**
+     * @fn AudioClipBase::AudioClipBase()
+     * Default constructor. Creates a null clip.
+     *
+     * @overload
+     */
+
+    /**
+     * @fn qint64 AudioClipBase::position() const
+     * Gets the position where the start of clip locates in the clip series. A value of -1 represent the
+     * object is null.
+     */
+
+    /**
+     * @fn T *AudioClipBase::content() const
+     * Gets the content of audio clip.
+     */
+
+    /**
+     * @fn qint64 AudioClipBase::contentStartPosition() const
+     * Gets the start of range within the content of audio clip.
+     */
+
+    /**
+     * @fn qint64 AudioClipBase::endPosition() const
+     * Gets the position where the end of clip locates in the clip series. Equal to position() + length().
+     */
+
+    /**
+     * @fn qint64 AudioClipBase::length() const
+     * Gets the length of audio clip.
      */
 
     /**
@@ -68,12 +99,5 @@ namespace talcs {
      * Gets the effective length of the series.
      *
      * This represents the maximum end position among all clips.
-     */
-
-    /**
-     * @fn typename std::set<AudioClipBase<T>>::const_iterator AudioClipSeriesBase::findClipIt(qint64 pos) const
-     * Gets the iterator that points to the clip at a specified position.
-     *
-     * This is useful for derived class to implement their functions.
      */
 }

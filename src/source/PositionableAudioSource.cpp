@@ -27,6 +27,8 @@ namespace talcs {
     /**
      * Sets the next read position.
      *
+     * The new position might be identical to the current position. Such cases should be handled properly.
+     *
      * Note that for derived class that reimplement this function, it should be synchronized with read() function.
      */
     void PositionableAudioSource::setNextReadPosition(qint64 pos) {
