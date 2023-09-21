@@ -83,7 +83,7 @@ namespace talcs {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         return std::all_of(m_clips.begin(), m_clips.end(),
-                           [=](const AudioSourceClip &clip) { return clip.content->open(bufferSize, sampleRate); });
+                           [=](const AudioSourceClip &clip) { return clip.content()->open(bufferSize, sampleRate); });
     }
 
     /**
@@ -95,14 +95,14 @@ namespace talcs {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         std::for_each(m_clips.begin(), m_clips.end(),
-                      [=](const AudioSourceClip &clip) { return clip.content->close(); });
+                      [=](const AudioSourceClip &clip) { return clip.content()->close(); });
     }
 
     bool AudioSourceClipSeries::addClip(const AudioSourceClip &clip) {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         if (isOpen()) {
-            if (!clip.content->open(bufferSize(), sampleRate())) {
+            if (!clip.content()->open(bufferSize(), sampleRate())) {
                 return false;
             }
         }
@@ -112,9 +112,9 @@ namespace talcs {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         auto it = findClipIt(pos);
-        if (it == m_clips.end())
+        if (it == m_clips.cend())
             return false;
-        it->content->close();
+        it->interval().content()->close();
         AudioClipSeriesBase::removeClipAt(pos);
         return true;
     }
@@ -122,7 +122,7 @@ namespace talcs {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         for (const auto &clip : m_clips)
-            clip.content->close();
+            clip.content()->close();
         AudioClipSeriesBase::clearClips();
     }
 }
