@@ -15,8 +15,44 @@ namespace talcs {
         emit q->statusChanged(status);
     }
 
+    /**
+     * @class FutureAudioSource
+     * @brief The class takes an PositionableAudioSource object as the result of a asynchronous process.
+     *
+     * The PositionableAudioSource is the result of a asynchronous process (i.e. synthesizing, loading from the Internet) and
+     * will be ready at a later point of time. [QFuture](https://doc.qt.io/qt-5/qfuture.html) is used for the implementation
+     * of this class. (But the Qt Concurrent framework is not used, only [QFuture](https://doc.qt.io/qt-5/qfuture.html)
+     * and other relevant classes are used)
+     *
+     * This object requires some restrictions for the [QFuture](https://doc.qt.io/qt-5/qfuture.html) object:
+     *
+     * - The [QFuture::progressMinimum](https://doc.qt.io/qt-5/qfuture.html#progressMinimum)() should be set to 0 and the
+     * [QFuture::progressMaximum](https://doc.qt.io/qt-5/qfuture.html#progressMaximum)() should be set to the length of
+     * the source.
+     *
+     * - It should be started by QFutureInterface::reportStarted() before used by this object.
+     *
+     * - There should be only one result in it. Before finished, the [QFuture::progressValue](https://doc.qt.io/qt-5/qfuture.html#progressValue)()
+     * should be set to the maximum and the result should be reported.
+     *
+     * @see [QFuture](https://doc.qt.io/qt-5/qfuture.html), [QFutureWatcher](https://doc.qt.io/qt-5/qfuturewatcher.html), QFutureInterface
+     */
+
+    /**
+     * @class FutureAudioSource::Callbacks
+     * @brief The callback functions for the FutureAudioSource object.
+     *
+     * @var FutureAudioSource::Callbacks::preloadingOpen
+     * This function is invoked when open() is called before the source is ready.
+     */
+
+    /**
+     * Constructor.
+     * @param future the [QFuture](https://doc.qt.io/qt-5/qfuture.html) object to be used.
+     * @param callbacks the callbacks to be invoked when the object is being prepared.
+     */
     FutureAudioSource::FutureAudioSource(const QFuture<PositionableAudioSource *> &future,
-                                         const FutureAudioSourceCallbacks &callbacks, QObject *parent)
+                                         const Callbacks &callbacks, QObject *parent)
         : QObject(parent), PositionableAudioSource(*new FutureAudioSourcePrivate) {
         Q_D(FutureAudioSource);
         d->callbacks = callbacks;
@@ -30,10 +66,16 @@ namespace talcs {
         d->futureWatcher.setFuture(future);
     }
 
+    /**
+     * Destructor.
+     */
     FutureAudioSource::~FutureAudioSource() {
         FutureAudioSource::close();
     }
 
+    /**
+     * Gets the [QFuture](https://doc.qt.io/qt-5/qfuture.html) object that is used.
+     */
     QFuture<PositionableAudioSource *> FutureAudioSource::future() const {
         Q_D(const FutureAudioSource);
         return d->futureWatcher.future();
@@ -113,26 +155,55 @@ namespace talcs {
         AudioStreamBase::close();
     }
 
+    /**
+     * Gets the progress of preparation.
+     */
     int FutureAudioSource::progress() const {
         Q_D(const FutureAudioSource);
         return d->futureWatcher.progressValue();
     }
 
+    /**
+     * Pauses the preparation.
+     */
     void FutureAudioSource::pause() {
         Q_D(FutureAudioSource);
         d->futureWatcher.pause();
     }
 
+    /**
+     * Resumes the preparation.
+     */
     void FutureAudioSource::resume() {
         Q_D(FutureAudioSource);
         d->futureWatcher.resume();
     }
 
+    /**
+     * Cancels the preparation.
+     */
     void FutureAudioSource::cancel() {
         Q_D(FutureAudioSource);
         d->futureWatcher.cancel();
     }
 
+    /**
+     * @enum FutureAudioSource::Status
+     * The status of preparation.
+     *
+     * @var FutureAudioSource::Running
+     * The preparation is being processed.
+     * @var FutureAudioSource::Paused
+     * The preparation is paused.
+     * @var FutureAudioSource::Cancelled
+     * The preparation is cancelled.
+     * @var FutureAudioSource::Ready
+     * The source is ready for read.
+     */
+
+    /**
+     * Gets the status.
+     */
     FutureAudioSource::Status FutureAudioSource::status() const {
         Q_D(const FutureAudioSource);
         if (d->futureWatcher.isCanceled())
@@ -144,13 +215,31 @@ namespace talcs {
         return Running;
     }
 
+    /**
+     * Waits for the preparation to finish.
+     */
     void FutureAudioSource::wait() {
         Q_D(FutureAudioSource);
         d->futureWatcher.waitForFinished();
     }
 
+    /**
+     * Gets the source object.
+     *
+     * If the source is not ready, @c nullptr will be returned.
+     */
     PositionableAudioSource *FutureAudioSource::source() const {
         Q_D(const FutureAudioSource);
         return d->src;
     }
+
+    /**
+     * @fn void FutureAudioSource::statusChanged(Status status)
+     * Emitted when the status is changed.
+     */
+
+    /**
+     * @fn void FutureAudioSource::progressChanged(int progress)
+     * Emitted when the progress value is changed.
+     */
 } // talcs

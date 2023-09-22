@@ -4,15 +4,18 @@
 #include <QDebug>
 
 namespace talcs {
+    AudioSourceClipSeriesPrivate::AudioSourceClipSeriesPrivate(AudioSourceClipSeries *q): AudioSourceClipSeriesImpl(q) {
+    }
+
     /**
      * @class AudioSourceClipSeries
-     * @brief An AudioClipsSeries that uses PositionableAudioSource
+     * @brief An AudioClipsSeriesBase object that uses PositionableAudioSource
      */
 
     /**
      * Default constructor.
      */
-    AudioSourceClipSeries::AudioSourceClipSeries() : AudioSourceClipSeries(*new AudioSourceClipSeriesPrivate) {
+    AudioSourceClipSeries::AudioSourceClipSeries() : AudioSourceClipSeries(*new AudioSourceClipSeriesPrivate(this)) {
     }
     AudioSourceClipSeries::AudioSourceClipSeries(AudioSourceClipSeriesPrivate &d) : PositionableAudioSource(d) {
     }
@@ -68,8 +71,9 @@ namespace talcs {
     bool AudioSourceClipSeries::open(qint64 bufferSize, double sampleRate) {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        return std::all_of(m_clips.begin(), m_clips.end(),
-                           [=](const AudioSourceClip &clip) { return clip.content()->open(bufferSize, sampleRate); });
+        if(d->open(bufferSize, sampleRate))
+            return AudioStreamBase::open(bufferSize, sampleRate);
+        return false;
     }
 
     /**
@@ -80,35 +84,31 @@ namespace talcs {
     void AudioSourceClipSeries::close() {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        std::for_each(m_clips.begin(), m_clips.end(),
-                      [=](const AudioSourceClip &clip) { return clip.content()->close(); });
+        d->close();
+        AudioStreamBase::close();
     }
 
     bool AudioSourceClipSeries::addClip(const AudioSourceClip &clip) {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        if (isOpen()) {
-            if (!clip.content()->open(bufferSize(), sampleRate())) {
-                return false;
-            }
-        }
-        return AudioClipSeriesBase::addClip(clip);
+        if(AudioClipSeriesBase::addClip(clip))
+            return d->addClip(clip);
+        return false;
     }
     bool AudioSourceClipSeries::removeClipAt(qint64 pos) {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        auto it = findClipIt(pos);
-        if (it == m_clips.end())
-            return false;
-        it->interval().content()->close();
-        AudioClipSeriesBase::removeClipAt(pos);
-        return true;
+        auto clip = AudioClipSeriesBase::findClipAt(pos);
+        if(AudioClipSeriesBase::removeClipAt(pos)){
+            d->removeClip(clip);
+            return true;
+        }
+        return false;
     }
     void AudioSourceClipSeries::clearClips() {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        for (const auto &clip : m_clips)
-            clip.content()->close();
+        d->clearClips();
         AudioClipSeriesBase::clearClips();
     }
 }

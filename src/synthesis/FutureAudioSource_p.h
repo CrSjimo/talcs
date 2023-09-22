@@ -10,7 +10,7 @@ namespace talcs {
         Q_DECLARE_PUBLIC(FutureAudioSource)
     public:
         QFutureWatcher<PositionableAudioSource *> futureWatcher;
-        FutureAudioSourceCallbacks callbacks;
+        FutureAudioSource::Callbacks callbacks;
         void _q_statusChanged(FutureAudioSource::Status status);
         PositionableAudioSource *src = nullptr;
         QMutex mutex;

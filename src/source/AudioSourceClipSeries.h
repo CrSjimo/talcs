@@ -9,9 +9,13 @@ namespace talcs {
 
     class AudioSourceClipSeriesPrivate;
 
+    template <class ClipClass, class SeriesClass>
+    class AudioSourceClipSeriesImpl;
+
     class TALCS_EXPORT AudioSourceClipSeries : public PositionableAudioSource,
                                                public AudioClipSeriesBase<PositionableAudioSource> {
         Q_DECLARE_PRIVATE(AudioSourceClipSeries)
+        friend class AudioSourceClipSeriesImpl<AudioSourceClip, AudioSourceClipSeries>;
     public:
         AudioSourceClipSeries();
         ~AudioSourceClipSeries() override;
@@ -23,7 +27,7 @@ namespace talcs {
         void close() override;
 
         bool addClip(const AudioSourceClip &clip) override;
-        virtual bool removeClipAt(qint64 pos) override;
+        bool removeClipAt(qint64 pos) override;
         void clearClips() override;
 
     protected:

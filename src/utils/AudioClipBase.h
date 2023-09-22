@@ -94,6 +94,7 @@ namespace talcs {
             return *m_endSet.rbegin();
         }
 
+    protected:
         static QPair<qint64, AudioClipBase<T>> calculateClipReadData(const AudioClipBase<T> &clip,
                                                                      const AudioClipBase<T> &readDataInterval) {
             auto headCut = std::max(0ll, readDataInterval.position() - clip.position());
@@ -103,8 +104,6 @@ namespace talcs {
             AudioClipBase<T> clipReadInterval(readStart, clip.length() - headCut - tailCut);
             return {clipReadPosition, clipReadInterval};
         }
-
-    protected:
         typename AudioClipBaseIntervalTree_::iterator findClipIt(qint64 pos) {
             return m_clips.overlap_find({pos, pos + 1});
         }

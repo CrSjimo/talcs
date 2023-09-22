@@ -11,12 +11,15 @@ namespace talcs {
     using FutureAudioSourceClip = AudioClipBase<FutureAudioSource>;
 
     class FutureAudioSourceClipSeriesPrivate;
+    template <class ClipClass, class SeriesClass>
+    class AudioSourceClipSeriesImpl;
 
     class TALCS_EXPORT FutureAudioSourceClipSeries : public QObject,
-                                        public PositionableAudioSource,
-                                        public AudioClipSeriesBase<FutureAudioSource> {
+                                                     public PositionableAudioSource,
+                                                     public AudioClipSeriesBase<FutureAudioSource> {
         Q_OBJECT
         Q_DECLARE_PRIVATE_D(PositionableAudioSource::d_ptr, FutureAudioSourceClipSeries)
+        friend class AudioSourceClipSeriesImpl<FutureAudioSourceClip, FutureAudioSourceClipSeries>;
     public:
         explicit FutureAudioSourceClipSeries(QObject *parent = nullptr);
         ~FutureAudioSourceClipSeries() override;
@@ -31,8 +34,11 @@ namespace talcs {
         bool open(qint64 bufferSize, double sampleRate) override;
         void close() override;
 
-        qint64 lengthAvailableInTotal() const;
-        qint64 lengthAvailableFrom(qint64 pos) const;
+        qint64 lengthAvailable() const;
+        qint64 lengthLoaded() const;
+        qint64 lengthOfAllClips() const;
+
+        bool canRead(qint64 from, qint64 length) const;
 
         enum ReadMode {
             Notify,
@@ -41,10 +47,9 @@ namespace talcs {
         };
         void setReadMode(ReadMode readMode);
         ReadMode readMode() const;
-        bool isCurrentPositionReady() const;
 
     signals:
-        void progressChanged(qint64 lengthAvailableInTotal, qint64 effectiveLength);
+        void progressChanged(qint64 lengthAvailable, qint64 lengthLoaded, qint64 lengthOfAllClips, qint64 effectiveLength);
         void pauseRequired();
         void resumeRequired();
     };
