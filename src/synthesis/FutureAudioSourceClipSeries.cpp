@@ -8,27 +8,27 @@ namespace talcs {
         : AudioSourceClipSeriesImpl(q) {
     }
     bool FutureAudioSourceClipSeriesPrivate::addClip(const FutureAudioSourceClip &clip) {
-        // TODO emit signals
         Q_Q(FutureAudioSourceClipSeries);
         if (AudioSourceClipSeriesImpl::addClip(clip)) {
             cachedClipsLength += clip.length();
+            emit q->progressChanged(cachedLengthAvailable, cachedLengthLoaded, cachedClipsLength, q->effectiveLength());
             QObject::connect(clip.content(), &FutureAudioSource::progressChanged, q, [=](int value) {
                 cachedLengthLoaded += (value - clipLengthLoadedDict[clip.position()]);
                 clipLengthLoadedDict[clip.position()] = value;
+                emit q->progressChanged(cachedLengthAvailable, cachedLengthLoaded, cachedClipsLength, q->effectiveLength());
             });
-            QObject::connect(clip.content(), &FutureAudioSource::statusChanged, q,
-                             [=](FutureAudioSource::Status status) {
-                                 if (status == FutureAudioSource::Ready) {
-                                     cachedLengthAvailable += clip.length();
-                                     clipLengthCachedDict[clip.position()] = true;
-                                 }
-                             });
+            QObject::connect(clip.content(), &FutureAudioSource::statusChanged, q, [=](FutureAudioSource::Status status) {
+                if (status == FutureAudioSource::Ready) {
+                    cachedLengthAvailable += clip.length();
+                    clipLengthCachedDict[clip.position()] = true;
+                    emit q->progressChanged(cachedLengthAvailable, cachedLengthLoaded, cachedClipsLength, q->effectiveLength());
+                }
+            });
             return true;
         }
         return false;
     }
     void FutureAudioSourceClipSeriesPrivate::removeClip(const FutureAudioSourceClip &clip) {
-        // TODO emit signals
         Q_Q(FutureAudioSourceClipSeries);
         AudioSourceClipSeriesImpl::removeClip(clip);
         QObject::disconnect(clip.content(), nullptr, q, nullptr);
@@ -39,6 +39,7 @@ namespace talcs {
         }
         clipLengthLoadedDict.remove(clip.position());
         clipLengthCachedDict.remove(clip.position());
+        emit q->progressChanged(cachedLengthAvailable, cachedLengthLoaded, cachedClipsLength, q->effectiveLength());
     }
     void FutureAudioSourceClipSeriesPrivate::clearClips() {
         Q_Q(FutureAudioSourceClipSeries);
@@ -77,6 +78,7 @@ namespace talcs {
                     emit pauseRequired();
                 }
             } else {
+                // TODO the logic seems to be wrong...
                 if (d->isPauseRequiredEmitted) {
                     d->isPauseRequiredEmitted = false;
                     emit resumeRequired();
