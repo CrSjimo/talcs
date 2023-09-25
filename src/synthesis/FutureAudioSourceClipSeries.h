@@ -14,6 +14,8 @@ namespace talcs {
     template <class ClipClass, class SeriesClass>
     class AudioSourceClipSeriesImpl;
 
+    class TransportAudioSource;
+
     class TALCS_EXPORT FutureAudioSourceClipSeries : public QObject,
                                                      public PositionableAudioSource,
                                                      public AudioClipSeriesBase<FutureAudioSource> {
@@ -47,11 +49,11 @@ namespace talcs {
         };
         void setReadMode(ReadMode readMode);
         ReadMode readMode() const;
+        void setBufferingTarget(TransportAudioSource *target);
+        TransportAudioSource *bufferingTarget() const;
 
     signals:
         void progressChanged(qint64 lengthAvailable, qint64 lengthLoaded, qint64 lengthOfAllClips, qint64 effectiveLength);
-        void pauseRequired();
-        void resumeRequired();
     };
 
 } // talcs

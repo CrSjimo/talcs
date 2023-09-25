@@ -26,9 +26,7 @@ namespace talcs {
         void setSource(PositionableAudioSource *src, bool takeOwnership = false);
         PositionableAudioSource *source() const;
 
-        void play();
         bool isPlaying() const;
-        void pause();
 
         qint64 position() const;
         void setPosition(qint64 position);
@@ -37,8 +35,17 @@ namespace talcs {
         QPair<qint64, qint64> loopingRange() const;
         void setLoopingRange(qint64 l, qint64 r);
 
+        int bufferingCounter() const;
+
+    public slots:
+        void play();
+        void pause();
+        void acquireBuffering();
+        void releaseBuffering();
+
     signals:
         void positionAboutToChange(qint64 nextPosition);
+        void bufferingCounterChanged(int counter);
 
     protected:
         TransportAudioSource(TransportAudioSourcePrivate &d, QObject *parent);

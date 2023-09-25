@@ -2,6 +2,7 @@
 #include "FutureAudioSourceClipSeries_p.h"
 
 #include "FutureAudioSource.h"
+#include "source/TransportAudioSource.h"
 
 namespace talcs {
     FutureAudioSourceClipSeriesPrivate::FutureAudioSourceClipSeriesPrivate(FutureAudioSourceClipSeries *q)
@@ -47,6 +48,34 @@ namespace talcs {
             removeClip(clip);
         }
     }
+    void FutureAudioSourceClipSeriesPrivate::notifyPause() {
+        if (bufferingTarget && !isPauseRequiredEmitted) {
+            bufferingTarget->acquireBuffering();
+            isPauseRequiredEmitted = true;
+        }
+    }
+    void FutureAudioSourceClipSeriesPrivate::notifyResume() {
+        if (bufferingTarget && isPauseRequiredEmitted) {
+            bufferingTarget->releaseBuffering();
+            isPauseRequiredEmitted = false;
+        }
+    }
+    void FutureAudioSourceClipSeriesPrivate::checkAndNotify(qint64 position, qint64 length) {
+        Q_Q(FutureAudioSourceClipSeries);
+        if (readMode == FutureAudioSourceClipSeries::Notify) {
+            if (!q->canRead(position + length, length)) {
+                notifyPause();
+            } else {
+                notifyResume();
+            }
+        }
+    }
+    void FutureAudioSourceClipSeriesPrivate::checkAndNotify() {
+        Q_Q(FutureAudioSourceClipSeries);
+        checkAndNotify(position, q->bufferSize());
+    }
+
+
 
     /**
      * @class FutureAudioSourceClipSeries
@@ -71,20 +100,7 @@ namespace talcs {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         FutureAudioSourceClip readDataInterval(d->position, readData.length);
-        if (d->readMode == Notify) {
-            if (!canRead(d->position + readData.length, readData.length)) {
-                if (!d->isPauseRequiredEmitted) {
-                    d->isPauseRequiredEmitted = true;
-                    emit pauseRequired();
-                }
-            } else {
-                // TODO the logic seems to be wrong...
-                if (d->isPauseRequiredEmitted) {
-                    d->isPauseRequiredEmitted = false;
-                    emit resumeRequired();
-                }
-            }
-        }
+        d->checkAndNotify(d->position + readData.length, readData.length);
         for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
             readData.buffer->clear(ch, readData.startPos, readData.length);
         }
@@ -119,14 +135,18 @@ namespace talcs {
     void FutureAudioSourceClipSeries::setNextReadPosition(qint64 pos) {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        PositionableAudioSource::setNextReadPosition(pos);
+        if (d->position != pos) {
+            d->position = pos;
+            d->checkAndNotify();
+        }
     }
 
     bool FutureAudioSourceClipSeries::addClip(const AudioClipBase<FutureAudioSource> &clip) {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        if (AudioClipSeriesBase::addClip(clip)) {
-            return d->addClip(clip);
+        if (AudioClipSeriesBase::addClip(clip) && d->addClip(clip)) {
+            d->checkAndNotify();
+            return true;
         }
         return false;
     }
@@ -137,6 +157,7 @@ namespace talcs {
         auto clip = AudioClipSeriesBase::findClipAt(pos);
         if (AudioClipSeriesBase::removeClipAt(pos)) {
             d->removeClip(clip);
+            d->checkAndNotify();
             return true;
         }
         return false;
@@ -146,6 +167,7 @@ namespace talcs {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         d->clearClips();
+        d->checkAndNotify();
         AudioClipSeriesBase::clearClips();
     }
 
@@ -240,19 +262,21 @@ namespace talcs {
         return d->readMode;
     }
 
+    void FutureAudioSourceClipSeries::setBufferingTarget(TransportAudioSource *target) {
+        Q_D(FutureAudioSourceClipSeries);
+        QMutexLocker locker(&d->mutex);
+        d->bufferingTarget = target;
+    }
+
+    TransportAudioSource *FutureAudioSourceClipSeries::bufferingTarget() const {
+        Q_D(const FutureAudioSourceClipSeries);
+        return d->bufferingTarget;
+    }
+
     /**
      * @fn void FutureAudioSourceClipSeries::progressChanged(qint64 lengthAvailable, qint64 lengthLoaded, qint64 lengthOfAllClips, qint64 effectiveLength)
      * Emitted when one of these parameters are changed.
      */
 
-    /**
-     * @fn void FutureAudioSourceClipSeries::pauseRequired()
-     * Emitted when pause is required in notify mode.
-     */
-
-    /**
-     * @fn void FutureAudioSourceClipSeries::resumeRequired()
-     * Emitted when resume is required in notify mode.
-     */
 
 } // talcs

@@ -18,6 +18,7 @@ namespace talcs {
         qint64 loopingStart = -1;
         qint64 loopingEnd = -1;
         QMutex mutex;
+        QAtomicInt bufferingCounter = 0;
 
         void _q_positionAboutToChange(qint64 pos);
     };

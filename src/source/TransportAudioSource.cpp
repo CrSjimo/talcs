@@ -60,6 +60,8 @@ namespace talcs {
         }
         if (!d->isPlaying)
             return readData.length;
+        if (d->bufferingCounter)
+            return readData.length;
         if (d->src) {
             qint64 curBufPos = readData.startPos;
             qint64 lengthToRead = readData.length;
@@ -162,6 +164,31 @@ namespace talcs {
         Q_D(TransportAudioSource);
         QMutexLocker locker(&d->mutex);
         d->isPlaying = false;
+    }
+
+    /**
+     * Acquires one buffering counter.
+     */
+    void TransportAudioSource::acquireBuffering() {
+        Q_D(TransportAudioSource);
+        emit bufferingCounterChanged(++d->bufferingCounter);
+    }
+
+    /**
+     * Releases one buffering counter.
+     */
+    void TransportAudioSource::releaseBuffering() {
+        Q_D(TransportAudioSource);
+        assert(d->bufferingCounter > 0);
+        emit bufferingCounterChanged(--d->bufferingCounter);
+    }
+
+    /**
+     * Gets the value of the buffering counter.
+     */
+    int TransportAudioSource::bufferingCounter() const {
+        Q_D(const TransportAudioSource);
+        return d->bufferingCounter;
     }
 
     /**

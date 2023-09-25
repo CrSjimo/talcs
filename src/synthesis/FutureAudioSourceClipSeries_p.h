@@ -24,9 +24,16 @@ namespace talcs {
 
         bool isPauseRequiredEmitted = false;
 
+        TransportAudioSource *bufferingTarget = nullptr;
+
         bool addClip(const FutureAudioSourceClip &clip);
         void removeClip(const FutureAudioSourceClip &clip);
         void clearClips();
+
+        void notifyPause();
+        void notifyResume();
+        void checkAndNotify(qint64 position, qint64 length);
+        void checkAndNotify();
     };
 }
 
