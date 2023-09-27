@@ -10,6 +10,7 @@ namespace talcs {
         Q_DECLARE_PRIVATE(PositionableAudioSource)
     public:
         PositionableAudioSource();
+        ~PositionableAudioSource() override;
         virtual qint64 length() const = 0;
         virtual qint64 nextReadPosition() const;
         virtual void setNextReadPosition(qint64 pos);

@@ -23,6 +23,7 @@ namespace talcs {
                     cachedLengthAvailable += clip.length();
                     clipLengthCachedDict[clip.position()] = true;
                     emit q->progressChanged(cachedLengthAvailable, cachedLengthLoaded, cachedClipsLength, q->effectiveLength());
+                    checkAndNotify();
                 }
             });
             return true;

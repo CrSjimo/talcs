@@ -19,26 +19,26 @@ namespace talcs {
         }
         AudioClipBase(qint64 position, qint64 length) : AudioClipBase(position, nullptr, 0, length) {
         }
-        AudioClipBase() : AudioClipBase(-1, 0) {
+        AudioClipBase() : AudioClipBase(-1, 1) {
         }
 
-        qint64 position() const {
+        inline qint64 position() const {
             return low_;
         }
 
-        T *content() const {
+        inline T *content() const {
             return m_content;
         }
 
-        qint64 contentStartPosition() const {
+        inline qint64 contentStartPosition() const {
             return m_startPos;
         }
 
-        qint64 endPosition() const {
+        inline qint64 endPosition() const {
             return high_ + 1;
         }
 
-        qint64 length() const {
+        inline qint64 length() const {
             return high_ - low_ + 1;
         }
 

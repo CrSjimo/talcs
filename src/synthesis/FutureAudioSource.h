@@ -14,7 +14,7 @@ namespace talcs {
         Q_DECLARE_PRIVATE_D(PositionableAudioSource::d_ptr, FutureAudioSource)
     public:
         struct Callbacks {
-            Callbacks() : preloadingOpen([](qint64, double){ return true; }) {
+            Callbacks() : preloadingOpen([](qint64, double){ return true; }), preloadingClose([](){}) {
             }
             std::function<bool (qint64, double)> preloadingOpen;
             std::function<void ()> preloadingClose;

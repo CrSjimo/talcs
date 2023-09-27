@@ -16,6 +16,8 @@ namespace talcs {
     PositionableAudioSource::PositionableAudioSource(PositionableAudioSourcePrivate &d) : AudioSource(d) {
     }
 
+    PositionableAudioSource::~PositionableAudioSource() = default;
+
     /**
      * Gets the next read position.
      */
