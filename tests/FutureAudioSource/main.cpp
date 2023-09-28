@@ -1,8 +1,5 @@
-#include <list>
-
 #include <QApplication>
 #include <QFuture>
-#include <QThread>
 #include <QFutureWatcher>
 #include <QGroupBox>
 #include <QLabel>
@@ -10,6 +7,7 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QThread>
 #include <QTreeWidget>
 #include <QVBoxLayout>
 
@@ -18,6 +16,7 @@
 #include <QDialog>
 #include <QDoubleSpinBox>
 #include <QFormLayout>
+#include <QProgressBar>
 #include <device/AudioDevice.h>
 #include <device/AudioDriver.h>
 #include <device/AudioDriverManager.h>
@@ -95,7 +94,7 @@ ClipSpec showClipEditDialog(const ClipSpec &in = {}) {
     layout->addRow(submitButton);
 
     ClipSpec spec;
-    QObject::connect(submitButton, &QPushButton::clicked, &dlg, [=, &dlg, &spec](){
+    QObject::connect(submitButton, &QPushButton::clicked, &dlg, [=, &dlg, &spec]() {
         if (idEdit->text().isEmpty())
             return;
         if (SVS::LongTime::fromString(lengthEdit->text()).totalMsec() == 0)
@@ -118,7 +117,7 @@ ClipSpec showClipEditDialog(const ClipSpec &in = {}) {
         };
         dlg.accept();
     });
-    if(dlg.exec() == QDialog::Accepted) {
+    if (dlg.exec() == QDialog::Accepted) {
         return spec;
     } else {
         return {};
@@ -129,19 +128,20 @@ std::set<ClipSpec> futureList;
 
 QMutex progressMutex;
 [[noreturn]] void runProgress() {
-    for(;;) {
+    for (;;) {
         QMutexLocker locker(&progressMutex);
         QList<std::set<ClipSpec>::iterator> itToErase;
-        for(auto it = futureList.begin(); it != futureList.end(); it++) {
+        for (auto it = futureList.begin(); it != futureList.end(); it++) {
             auto futureInterface = it->clip.content()->future().d;
             auto increment = msecToSample(1.0 * it->rate * 100.0);
-            futureInterface.setProgressValue(std::min<int>(futureInterface.progressValue() + increment, futureInterface.progressMaximum()));
-            if(futureInterface.progressValue() >= futureInterface.progressMaximum()) {
+            futureInterface.setProgressValue(
+                std::min<int>(futureInterface.progressValue() + increment, futureInterface.progressMaximum()));
+            if (futureInterface.progressValue() >= futureInterface.progressMaximum()) {
                 futureInterface.reportFinished(reinterpret_cast<PositionableAudioSource *const *>(&it->source));
                 itToErase.append(it);
             }
         }
-        for(const auto &it: itToErase) {
+        for (const auto &it : itToErase) {
             futureList.erase(it);
         }
         QThread::msleep(100);
@@ -150,7 +150,7 @@ QMutex progressMutex;
 
 bool addClipToSeries(const ClipSpec &clipSpec) {
     QMutexLocker locker(&progressMutex);
-    if(!series->addClip(clipSpec.clip))
+    if (!series->addClip(clipSpec.clip))
         return false;
     futureList.insert(clipSpec);
     return true;
@@ -170,7 +170,7 @@ void removeClipFromSeries(const ClipSpec &clipSpec) {
 }
 
 void addClip() {
-    for(;;) {
+    for (;;) {
         auto clipSpec = showClipEditDialog();
         if (clipSpec.id.isEmpty())
             break;
@@ -183,14 +183,16 @@ void addClip() {
                 QString::number(clipSpec.rate),
             });
             item->setData(0, Qt::UserRole, QVariant::fromValue(clipSpec));
-            QObject::connect(clipSpec.clip.content(), &FutureAudioSource::progressChanged, clipsList, [=](int progress){
-                item->setText(5, QString::number(100.0 * progress / clipSpec.clip.length()) + "%");
-            });
-            QObject::connect(clipSpec.clip.content(), &FutureAudioSource::statusChanged, clipsList, [=](FutureAudioSource::Status status){
-                if(status == talcs::FutureAudioSource::Ready) {
-                    item->setText(5, "Ready");
-                }
-            });
+            QObject::connect(clipSpec.clip.content(), &FutureAudioSource::progressChanged, clipsList,
+                             [=](int progress) {
+                                 item->setText(5, QString::number(100.0 * progress / clipSpec.clip.length()) + "%");
+                             });
+            QObject::connect(clipSpec.clip.content(), &FutureAudioSource::statusChanged, clipsList,
+                             [=](FutureAudioSource::Status status) {
+                                 if (status == talcs::FutureAudioSource::Ready) {
+                                     item->setText(5, "Ready");
+                                 }
+                             });
             clipsList->addTopLevelItem(item);
             break;
         } else {
@@ -201,13 +203,14 @@ void addClip() {
 }
 
 void modifyClip(QTreeWidgetItem *oldItem) {
-    if(!oldItem)
+    if (!oldItem)
         return;
     auto oldClipSpec = oldItem->data(0, Qt::UserRole).value<ClipSpec>();
-    for(;;) {
+    for (;;) {
         auto clipSpec = showClipEditDialog(oldClipSpec);
-        if(clipSpec.id.isEmpty())
+        if (clipSpec.id.isEmpty())
             break;
+        AudioDeviceLocker devLocker(dev);
         clipsList->takeTopLevelItem(clipsList->indexOfTopLevelItem(oldItem));
         removeClipFromSeries(oldClipSpec);
         delete oldItem;
@@ -220,14 +223,16 @@ void modifyClip(QTreeWidgetItem *oldItem) {
                 QString::number(clipSpec.rate),
             });
             item->setData(0, Qt::UserRole, QVariant::fromValue(clipSpec));
-            QObject::connect(clipSpec.clip.content(), &FutureAudioSource::progressChanged, clipsList, [=](int progress){
-                item->setText(5, QString::number(100.0 * progress / clipSpec.clip.length()) + "%");
-            });
-            QObject::connect(clipSpec.clip.content(), &FutureAudioSource::statusChanged, clipsList, [=](FutureAudioSource::Status status){
-                if(status == talcs::FutureAudioSource::Ready) {
-                    item->setText(5, "Ready");
-                }
-            });
+            QObject::connect(clipSpec.clip.content(), &FutureAudioSource::progressChanged, clipsList,
+                             [=](int progress) {
+                                 item->setText(5, QString::number(100.0 * progress / clipSpec.clip.length()) + "%");
+                             });
+            QObject::connect(clipSpec.clip.content(), &FutureAudioSource::statusChanged, clipsList,
+                             [=](FutureAudioSource::Status status) {
+                                 if (status == talcs::FutureAudioSource::Ready) {
+                                     item->setText(5, "Ready");
+                                 }
+                             });
             clipsList->addTopLevelItem(item);
             break;
         } else {
@@ -247,10 +252,11 @@ void deleteClip(QTreeWidgetItem *item) {
 }
 
 void reloadClip(QTreeWidgetItem *item) {
-    if(!item)
+    if (!item)
         return;
     auto clipSpec = item->data(0, Qt::UserRole).value<ClipSpec>();
     auto freq = clipSpec.source->frequency()(1);
+    AudioDeviceLocker devLocker(dev);
     removeClipFromSeries(clipSpec);
     clipSpec.source = new SineWaveAudioSource(freq);
     QFutureInterface<PositionableAudioSource *> futureInterface;
@@ -264,14 +270,15 @@ void reloadClip(QTreeWidgetItem *item) {
     };
     addClipToSeries(clipSpec);
     item->setData(0, Qt::UserRole, QVariant::fromValue(clipSpec));
-    QObject::connect(clipSpec.clip.content(), &FutureAudioSource::progressChanged, clipsList, [=](int progress){
+    QObject::connect(clipSpec.clip.content(), &FutureAudioSource::progressChanged, clipsList, [=](int progress) {
         item->setText(5, QString::number(100.0 * progress / clipSpec.clip.length()) + "%");
     });
-    QObject::connect(clipSpec.clip.content(), &FutureAudioSource::statusChanged, clipsList, [=](FutureAudioSource::Status status){
-        if(status == talcs::FutureAudioSource::Ready) {
-            item->setText(5, "Ready");
-        }
-    });
+    QObject::connect(clipSpec.clip.content(), &FutureAudioSource::statusChanged, clipsList,
+                     [=](FutureAudioSource::Status status) {
+                         if (status == talcs::FutureAudioSource::Ready) {
+                             item->setText(5, "Ready");
+                         }
+                     });
 }
 
 int main(int argc, char **argv) {
@@ -289,42 +296,48 @@ int main(int argc, char **argv) {
     auto clipsGroupBoxLayout = new QVBoxLayout;
     clipsList = new QTreeWidget;
     clipsList->setColumnCount(6);
-    clipsList->setHeaderLabels({"Id", "Position", "Length", "Frequency", "Rate", "Progress"});
+    clipsList->setHeaderLabels({"ID", "Position", "Length", "Frequency", "Rate", "Progress"});
     clipsList->setSortingEnabled(true);
     clipsList->sortItems(1, Qt::AscendingOrder);
     auto clipsActionsLayout = new QHBoxLayout;
     auto addButton = new QPushButton("Add");
     QObject::connect(addButton, &QPushButton::clicked, clipsList, &addClip);
     auto modifyButton = new QPushButton("Modify");
-    QObject::connect(modifyButton, &QPushButton::clicked, clipsList, [=](){
-        modifyClip(clipsList->currentItem());
-    });
+    QObject::connect(modifyButton, &QPushButton::clicked, clipsList, [=]() { modifyClip(clipsList->currentItem()); });
     auto deleteButton = new QPushButton("Delete");
-    QObject::connect(deleteButton, &QPushButton::clicked, clipsList, [=](){
-        deleteClip(clipsList->currentItem());
-    });
+    QObject::connect(deleteButton, &QPushButton::clicked, clipsList, [=]() { deleteClip(clipsList->currentItem()); });
     auto reloadButton = new QPushButton("Reload");
-    QObject::connect(reloadButton, &QPushButton::clicked, clipsList, [=](){
-        reloadClip(clipsList->currentItem());
-    });
+    QObject::connect(reloadButton, &QPushButton::clicked, clipsList, [=]() { reloadClip(clipsList->currentItem()); });
+    auto loadingProgressBar = new QProgressBar;
+    auto availableProgressBar = new QProgressBar;
+    QObject::connect(series, &FutureAudioSourceClipSeries::progressChanged, win,
+                     [=](int lengthAvailable, int lengthLoaded, int lengthOfAllClips) {
+                         loadingProgressBar->setMaximum(lengthOfAllClips);
+                         availableProgressBar->setMaximum(lengthOfAllClips);
+                         loadingProgressBar->setValue(lengthLoaded);
+                         availableProgressBar->setValue(lengthAvailable);
+                     });
+    auto progressBarLayout = new QFormLayout;
+    progressBarLayout->addRow("Loading", loadingProgressBar);
+    progressBarLayout->addRow("Available", availableProgressBar);
     clipsActionsLayout->addWidget(addButton);
     clipsActionsLayout->addWidget(modifyButton);
     clipsActionsLayout->addWidget(deleteButton);
     clipsActionsLayout->addWidget(reloadButton);
     clipsGroupBoxLayout->addWidget(clipsList);
     clipsGroupBoxLayout->addLayout(clipsActionsLayout);
+    clipsGroupBoxLayout->addLayout(progressBarLayout);
     clipsGroupBox->setLayout(clipsGroupBoxLayout);
 
     auto transportGroupBox = new QGroupBox("Transport");
     auto transportGroupBoxLayout = new QVBoxLayout;
     auto timeLayout = new QHBoxLayout;
     auto timeLabel = new QLabel("00:00.000");
-    QObject::connect(src, &TransportAudioSource::positionAboutToChange, timeLabel, [=](qint64 pos){
-        timeLabel->setText(SVS::LongTime(sampleToMsec(pos)).toString());
-    });
+    QObject::connect(src, &TransportAudioSource::positionAboutToChange, timeLabel,
+                     [=](qint64 pos) { timeLabel->setText(SVS::LongTime(sampleToMsec(pos)).toString()); });
     auto loadingLabel = new QLabel;
-    QObject::connect(src, &TransportAudioSource::bufferingCounterChanged, loadingLabel, [=](int counter){
-        if(counter)
+    QObject::connect(src, &TransportAudioSource::bufferingCounterChanged, loadingLabel, [=](int counter) {
+        if (counter)
             loadingLabel->setText("Loading...");
         else
             loadingLabel->setText("");
@@ -335,15 +348,15 @@ int main(int argc, char **argv) {
     auto setTimeEdit = new QLineEdit;
     setTimeEdit->setPlaceholderText("Position");
     auto setTimeButton = new QPushButton("Set");
-    QObject::connect(setTimeButton, &QPushButton::clicked, src, [=](){
+    QObject::connect(setTimeButton, &QPushButton::clicked, src, [=]() {
         src->setPosition(msecToSample(SVS::LongTime::fromString(setTimeEdit->text()).totalMsec()));
         setTimeEdit->clear();
     });
     setTimeLayout->addWidget(setTimeEdit);
     setTimeLayout->addWidget(setTimeButton);
     auto playPauseButton = new QPushButton("Play");
-    QObject::connect(playPauseButton, &QPushButton::clicked, src, [=](){
-        if(src->isPlaying()) {
+    QObject::connect(playPauseButton, &QPushButton::clicked, src, [=]() {
+        if (src->isPlaying()) {
             src->pause();
             playPauseButton->setText("Play");
         } else {

@@ -183,7 +183,7 @@ namespace talcs {
     void FutureAudioSourceClipSeries::close() {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        d->close();
+        FutureAudioSourceClipSeries::clearClips();
         AudioStreamBase::close();
     }
 
