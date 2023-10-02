@@ -25,7 +25,6 @@ namespace talcs {
     protected:
         friend class ASIOAudioDriver;
         ASIOAudioDevice(const QString &name, IASIO *iasio, ASIOAudioDriver *driver);
-        ASIOAudioDevice(ASIOAudioDevicePrivate &d, QObject *parent);
     };
 }
 

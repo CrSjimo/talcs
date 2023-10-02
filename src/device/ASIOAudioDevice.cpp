@@ -25,7 +25,7 @@ namespace talcs {
      * Only ASIOAudioDevice can access this constructor.
      */
     ASIOAudioDevice::ASIOAudioDevice(const QString &name, IASIO *iasio, ASIOAudioDriver *driver)
-        : ASIOAudioDevice(*new ASIOAudioDevicePrivate, driver) {
+        : AudioDevice(*new ASIOAudioDevicePrivate, driver) {
         Q_D(ASIOAudioDevice);
         if (m_device) {
             qWarning() << "ASIOAudioDevice: Duplicated instance is not supported.";
@@ -77,9 +77,6 @@ namespace talcs {
         d->postOutput = (d->iasio->outputReady() == ASE_OK);
 
         d->isInitialized = true;
-    }
-
-    ASIOAudioDevice::ASIOAudioDevice(ASIOAudioDevicePrivate & d, QObject * parent) : AudioDevice(d, parent) {
     }
 
     /**

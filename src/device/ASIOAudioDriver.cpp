@@ -17,7 +17,7 @@ namespace talcs {
     /**
      * Constructor.
      */
-    ASIOAudioDriver::ASIOAudioDriver(QObject * parent) : ASIOAudioDriver(*new ASIOAudioDriverPrivate, parent) {
+    ASIOAudioDriver::ASIOAudioDriver(QObject * parent) : AudioDriver(*new ASIOAudioDriverPrivate, parent) {
         setName("ASIO");
     }
 
@@ -28,8 +28,6 @@ namespace talcs {
      */
     ASIOAudioDriver::~ASIOAudioDriver() {
         ASIOAudioDriver::finalize();
-    }
-    ASIOAudioDriver::ASIOAudioDriver(ASIOAudioDriverPrivate & d, QObject * parent) : AudioDriver(d, parent) {
     }
 
     static bool checkDriverCOMClass(char *clsidStr) {

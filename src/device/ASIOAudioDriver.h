@@ -17,9 +17,6 @@ namespace talcs {
         QStringList devices() const override;
         QString defaultDevice() const override;
         AudioDevice *createDevice(const QString &name) override;
-
-    protected:
-        ASIOAudioDriver(ASIOAudioDriverPrivate &d, QObject *parent);
     };
 }
 

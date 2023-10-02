@@ -18,7 +18,6 @@ namespace talcs {
                                      public ErrorStringProvider {
         Q_OBJECT
         Q_DECLARE_PRIVATE(AudioDevice)
-        friend class AudioDriver;
 
     public:
         ~AudioDevice() override;
@@ -53,6 +52,7 @@ namespace talcs {
         void closed();
 
     protected:
+        friend class AudioDriver;
         explicit AudioDevice(QObject *parent = nullptr);
         AudioDevice(AudioDevicePrivate &d, QObject *parent);
         QScopedPointer<AudioDevicePrivate> d_ptr;

@@ -10,8 +10,6 @@ namespace talcs {
     class TALCS_EXPORT SDLAudioDevice : public AudioDevice {
         Q_OBJECT
         Q_DECLARE_PRIVATE(SDLAudioDevice)
-        friend class SDLAudioDriver;
-
     public:
         ~SDLAudioDevice() override;
         bool start(AudioDeviceCallback *audioDeviceCallback) override;
@@ -23,8 +21,8 @@ namespace talcs {
         bool openControlPanel() override;
 
     protected:
+        friend class SDLAudioDriver;
         SDLAudioDevice(const QString &name, SDLAudioDriver *driver);
-        SDLAudioDevice(SDLAudioDevicePrivate &d, QObject *parent);
     };
 }
 

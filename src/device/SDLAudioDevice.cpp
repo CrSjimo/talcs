@@ -25,7 +25,7 @@ namespace talcs {
      */
 
     SDLAudioDevice::SDLAudioDevice(const QString &name, SDLAudioDriver *driver)
-        : SDLAudioDevice(*new SDLAudioDevicePrivate, driver) {
+        : AudioDevice(*new SDLAudioDevicePrivate, driver) {
         Q_D(SDLAudioDevice);
         setName(name);
         setDriver(driver);
@@ -54,12 +54,6 @@ namespace talcs {
         setAvailableSampleRates(COMMON_SAMPLE_RATES);
 
         setIsInitialized(true);
-    }
-
-    /**
-     * Only SDLAudioDriver can access this constructor.
-     */
-    SDLAudioDevice::SDLAudioDevice(SDLAudioDevicePrivate & d, QObject * parent) : AudioDevice(d, parent) {
     }
 
     /**
