@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QComboBox>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QGroupBox>
@@ -10,13 +11,13 @@
 #include <QThread>
 #include <QTreeWidget>
 #include <QVBoxLayout>
-
-#include <SVSBasic/LongTime.h>
-
 #include <QDialog>
 #include <QDoubleSpinBox>
 #include <QFormLayout>
 #include <QProgressBar>
+
+#include <SVSBasic/LongTime.h>
+
 #include <device/AudioDevice.h>
 #include <device/AudioDriver.h>
 #include <device/AudioDriverManager.h>
@@ -344,6 +345,11 @@ int main(int argc, char **argv) {
     });
     timeLayout->addWidget(timeLabel);
     timeLayout->addWidget(loadingLabel);
+    auto setModeComboBox = new QComboBox;
+    setModeComboBox->addItems({"Notify", "Skip", "Block"});
+    QObject::connect(setModeComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged), series, [=](int index){
+        series->setReadMode((FutureAudioSourceClipSeries::ReadMode)index);
+    });
     auto setTimeLayout = new QHBoxLayout;
     auto setTimeEdit = new QLineEdit;
     setTimeEdit->setPlaceholderText("Position");
@@ -365,6 +371,7 @@ int main(int argc, char **argv) {
         }
     });
     transportGroupBoxLayout->addLayout(timeLayout);
+    transportGroupBoxLayout->addWidget(setModeComboBox);
     transportGroupBoxLayout->addLayout(setTimeLayout);
     transportGroupBoxLayout->addWidget(playPauseButton);
     transportGroupBox->setLayout(transportGroupBoxLayout);
