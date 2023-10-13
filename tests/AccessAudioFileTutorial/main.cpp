@@ -53,7 +53,7 @@ void stopPlay() {
 }
 
 void selectFile() {
-    auto filename = QFileDialog::getOpenFileName(win, {}, {}, "*.wav");
+    auto filename = QFileDialog::getOpenFileName(win, {}, {}, "*.flac");
     if (filename.isEmpty())
         return;
 

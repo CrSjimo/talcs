@@ -85,6 +85,7 @@ find_package(SDL2 REQUIRED)
 find_package(SndFile REQUIRED)
 find_package(SampleRate REQUIRED)
 find_package(SoundTouch REQUIRED)
+find_package(rpclib REQUIRED)
 
 if(NOT TARGET qtmediate::Core)
     find_package(qtmediate REQUIRED)
@@ -132,9 +133,12 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE TALCS_LIBRARY)
 # Link
 target_link_libraries(${PROJECT_NAME} PUBLIC qtmediate::Core)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    ${_platform_libs}
-    SDL2::SDL2 SndFile::sndfile SampleRate::samplerate SoundTouch::SoundTouch
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+        ${_platform_libs}
+        SDL2::SDL2 SndFile::sndfile SampleRate::samplerate SoundTouch::SoundTouch
+    PUBLIC
+        rpclib::rpc
 )
 
 qtmediate_link_qt_libraries(${PROJECT_NAME} PUBLIC
