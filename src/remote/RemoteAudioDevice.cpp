@@ -22,6 +22,11 @@ namespace talcs {
                         });
         d->socket->bind("audio", "closeRequired", [d] { d->remoteCloseRequired(); });
         d->socket->bind("audio", "prepareBuffer", [d]() { d->remotePrepareBuffer(); });
+        connect(socket, &RemoteSocket::socketStatusChanged, this, [=](int newStatus) {
+            if (newStatus != talcs::RemoteSocket::Connected && this->isOpen()) {
+                this->close();
+            }
+        });
     }
 
     RemoteAudioDevice::~RemoteAudioDevice() {
@@ -74,6 +79,10 @@ namespace talcs {
 
     void RemoteAudioDevicePrivate::remotePrepareBuffer() {
         QMutexLocker locker(&mutex);
+        Q_Q(RemoteAudioDevice);
+        if (!q->isOpen()) {
+            throw std::runtime_error("Remote audio device not opened.");
+        }
         if (audioDeviceCallback) {
             audioDeviceCallback->workCallback(buffer);
         }

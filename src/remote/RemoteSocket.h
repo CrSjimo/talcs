@@ -113,7 +113,7 @@ namespace talcs {
         bool hasFeature(const QString &feature) const;
 
     signals:
-        void socketStatusChanged(Status newStatus, Status oldStatus);
+        void socketStatusChanged(int newStatus, int oldStatus);
 
     private:
         QScopedPointer<rpc::server> m_server;

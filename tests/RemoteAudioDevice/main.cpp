@@ -26,11 +26,8 @@ int main(int argc, char **argv) {
 
 
 
-    QObject::connect(&socket, &RemoteSocket::socketStatusChanged, [&](RemoteSocket::Status newStatus) {
+    QObject::connect(&socket, &RemoteSocket::socketStatusChanged, [&](int newStatus) {
         qDebug() << "Socket status:" << newStatus;
-        if (newStatus != talcs::RemoteSocket::Connected && device.isOpen()) {
-            device.close();
-        }
     });
 
     QObject::connect(&device, &RemoteAudioDevice::remoteOpened, &device, [&](){

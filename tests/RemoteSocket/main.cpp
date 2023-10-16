@@ -8,7 +8,7 @@ RemoteSocket *rs;
 
 int main() {
     rs = new RemoteSocket(28082, 28081);
-    QObject::connect(rs, &RemoteSocket::socketStatusChanged, [](RemoteSocket::Status newStatus) {
+    QObject::connect(rs, &RemoteSocket::socketStatusChanged, [](int newStatus) {
         qDebug() << newStatus;
     });
     std::cout << rs->startServer() << std::endl;
