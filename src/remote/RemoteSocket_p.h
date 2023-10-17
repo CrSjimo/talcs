@@ -1,5 +1,5 @@
-#ifndef TALCS_REMOTESOCKETPRIVATE_H
-#define TALCS_REMOTESOCKETPRIVATE_H
+#ifndef TALCS_REMOTESOCKET_P_H
+#define TALCS_REMOTESOCKET_P_H
 
 #include "RemoteSocket.h"
 
@@ -19,4 +19,4 @@ namespace talcs {
 
 } // talcs
 
-#endif // TALCS_REMOTESOCKETPRIVATE_H
+#endif // TALCS_REMOTESOCKET_P_H
