@@ -16,7 +16,30 @@ namespace talcs {
         Q_OBJECT
         Q_DECLARE_PRIVATE(RemoteAudioDevice)
     public:
-        explicit RemoteAudioDevice(RemoteSocket *socket, const QString &name, QObject *parent = nullptr);
+        struct ProcessInfo {
+            int containsInfo;
+
+            //== Playback Status Info ==//
+            enum PlaybackStatus {
+                NotPlaying,
+                Playing,
+                RealtimePlaying,
+            };
+            PlaybackStatus status;
+
+            //== Timeline Info ==//
+            int timeSignatureNumerator;
+            int timeSignatureDenominator;
+            double tempo;
+
+            int64_t position;
+        };
+
+    private:
+        using ProcessInfoCallback = std::function<void (const ProcessInfo &)>;
+
+    public:
+        explicit RemoteAudioDevice(RemoteSocket *socket, const QString &name, const ProcessInfoCallback &callback = {}, QObject *parent = nullptr);
         ~RemoteAudioDevice() override;
 
         bool open(qint64 bufferSize, double sampleRate) override;

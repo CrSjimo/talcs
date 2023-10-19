@@ -10,7 +10,7 @@
 
 namespace talcs {
 
-    RemoteAudioDevice::RemoteAudioDevice(RemoteSocket *socket, const QString &name, QObject *parent)
+    RemoteAudioDevice::RemoteAudioDevice(RemoteSocket *socket, const QString &name, const ProcessInfoCallback &callback, QObject *parent)
         : AudioDevice(*new RemoteAudioDevicePrivate, parent) {
         Q_D(RemoteAudioDevice);
         d->socket = socket;
@@ -27,6 +27,7 @@ namespace talcs {
                 this->close();
             }
         });
+        d->callback = callback;
     }
 
     RemoteAudioDevice::~RemoteAudioDevice() {
@@ -45,9 +46,12 @@ namespace talcs {
         if (sharedMemory.attach()) {
             remoteIsOpened = true;
             sharedAudioData.resize(maxChannelCount);
+            auto *sharedMemoryPtr = reinterpret_cast<char *>(sharedMemory.data());
             for (int i = 0; i < maxChannelCount; i++) {
-                sharedAudioData[i] = reinterpret_cast<float *>(sharedMemory.data()) + bufferSize * i;
+                sharedAudioData[i] = reinterpret_cast<float *>(sharedMemoryPtr);
+                sharedMemoryPtr += bufferSize * sizeof(float);
             }
+            processInfo = reinterpret_cast<RemoteAudioDevice::ProcessInfo *>(sharedMemoryPtr);
             buffer = new AudioDataWrapper(sharedAudioData.data(), maxChannelCount, bufferSize);
 
             q->setAvailableBufferSizes({bufferSize});
@@ -68,6 +72,7 @@ namespace talcs {
         delete buffer;
         buffer = nullptr;
         sharedAudioData.clear();
+        processInfo = nullptr;
         sharedMemory.detach();
 
         q->setAvailableBufferSizes({});
@@ -75,6 +80,7 @@ namespace talcs {
         q->setAvailableSampleRates({});
         q->setPreferredSampleRate(0);
         remoteIsOpened = false;
+        q->close();
     }
 
     void RemoteAudioDevicePrivate::remotePrepareBuffer() {
@@ -83,9 +89,10 @@ namespace talcs {
         if (!q->isOpen()) {
             throw std::runtime_error("Remote audio device not opened.");
         }
-        if (audioDeviceCallback) {
+        if (callback)
+            callback(*processInfo);
+        if (audioDeviceCallback)
             audioDeviceCallback->workCallback(buffer);
-        }
     }
 
     bool RemoteAudioDevice::open(qint64 bufferSize, double sampleRate) {
@@ -103,6 +110,7 @@ namespace talcs {
     void RemoteAudioDevice::close() {
         Q_D(RemoteAudioDevice);
         QMutexLocker locker(&d->mutex);
+        stop();
         AudioDevice::close();
     }
 
