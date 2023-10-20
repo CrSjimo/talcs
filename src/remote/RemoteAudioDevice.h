@@ -35,15 +35,20 @@ namespace talcs {
             int64_t position;
         };
 
-    private:
-        using ProcessInfoCallback = std::function<void (const ProcessInfo &)>;
+        class ProcessInfoCallback {
+        public:
+            virtual void onThisBlockProcessInfo(const ProcessInfo &processInfo) = 0;
+        };
 
     public:
-        explicit RemoteAudioDevice(RemoteSocket *socket, const QString &name, const ProcessInfoCallback &callback = {}, QObject *parent = nullptr);
+        explicit RemoteAudioDevice(RemoteSocket *socket, const QString &name, QObject *parent = nullptr);
         ~RemoteAudioDevice() override;
 
         bool open(qint64 bufferSize, double sampleRate) override;
         void close() override;
+
+        void addProcessInfoCallback(ProcessInfoCallback *callback);
+        void removeProcessInfoCallback(ProcessInfoCallback *callback);
 
         bool start(AudioDeviceCallback *audioDeviceCallback) override;
         void stop() override;

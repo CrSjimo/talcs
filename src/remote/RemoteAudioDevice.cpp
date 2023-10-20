@@ -10,7 +10,7 @@
 
 namespace talcs {
 
-    RemoteAudioDevice::RemoteAudioDevice(RemoteSocket *socket, const QString &name, const ProcessInfoCallback &callback, QObject *parent)
+    RemoteAudioDevice::RemoteAudioDevice(RemoteSocket *socket, const QString &name, QObject *parent)
         : AudioDevice(*new RemoteAudioDevicePrivate, parent) {
         Q_D(RemoteAudioDevice);
         d->socket = socket;
@@ -27,7 +27,6 @@ namespace talcs {
                 this->close();
             }
         });
-        d->callback = callback;
     }
 
     RemoteAudioDevice::~RemoteAudioDevice() {
@@ -89,8 +88,11 @@ namespace talcs {
         if (!q->isOpen()) {
             throw std::runtime_error("Remote audio device not opened.");
         }
-        if (callback)
-            callback(*processInfo);
+        if (processInfo->containsInfo) {
+            for (auto processInfoCallback: processInfoCallbackList) {
+                processInfoCallback->onThisBlockProcessInfo(*processInfo);
+            }
+        }
         if (audioDeviceCallback)
             audioDeviceCallback->workCallback(buffer);
     }
@@ -112,6 +114,16 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         stop();
         AudioDevice::close();
+    }
+
+    void RemoteAudioDevice::addProcessInfoCallback(RemoteAudioDevice::ProcessInfoCallback *callback) {
+        Q_D(RemoteAudioDevice);
+        d->processInfoCallbackList.append(callback);
+    }
+
+    void RemoteAudioDevice::removeProcessInfoCallback(RemoteAudioDevice::ProcessInfoCallback *callback) {
+        Q_D(RemoteAudioDevice);
+        d->processInfoCallbackList.removeOne(callback);
     }
 
     bool RemoteAudioDevice::start(AudioDeviceCallback *audioDeviceCallback) {

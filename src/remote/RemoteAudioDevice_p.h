@@ -25,7 +25,7 @@ namespace talcs {
 
         AudioDeviceCallback *audioDeviceCallback = nullptr;
 
-        RemoteAudioDevice::ProcessInfoCallback callback;
+        QList<RemoteAudioDevice::ProcessInfoCallback *> processInfoCallbackList;
 
         void remoteOpenRequired(qint64 bufferSize, double sampleRate, const QString &sharedMemoryKey, int maxChannelCount);
         void remoteCloseRequired();
