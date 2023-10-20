@@ -71,7 +71,7 @@ namespace talcs {
         void clientHeartbeat();
         void socketGreet();
 
-        bool startServer();
+        bool startServer(int threadCount = 1);
         bool startClient();
         void stop();
 

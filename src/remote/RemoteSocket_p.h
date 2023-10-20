@@ -13,6 +13,7 @@ namespace talcs {
         uint16_t clientPort;
         RemoteSocket::AliveMonitor *aliveMonitor;
         std::atomic<RemoteSocket::Status> status = RemoteSocket::NotConnected;
+        QList<QThread *>serverThreads;
 
         void setStatus(RemoteSocket::Status status);
     };

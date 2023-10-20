@@ -1,6 +1,8 @@
 #include "RemoteSocket.h"
 #include "RemoteSocket_p.h"
 
+#include <QThread>
+
 namespace talcs {
 
     void RemoteSocket::AliveMonitor::run() {
@@ -56,7 +58,7 @@ namespace talcs {
     }
 
 
-    bool RemoteSocket::startServer() {
+    bool RemoteSocket::startServer(int threadCount) {
         try {
             m_server.reset(new rpc::server("127.0.0.1", d->serverPort));
             m_server->suppress_exceptions(true);
@@ -69,7 +71,11 @@ namespace talcs {
                 return vec;
             });
             bind("socket", "greet", [this] { socketGreet(); });
-            m_server->async_run(2);
+            for (int i = 0; i < threadCount; i++) {
+                auto t = QThread::create([=] { m_server->run(); });
+                d->serverThreads.append(t);
+                t->start(QThread::TimeCriticalPriority);
+            }
         } catch (std::exception &e) {
             qWarning() << "Exception at RemoteSocket::startServer:" << e.what();
             return false;
@@ -98,6 +104,14 @@ namespace talcs {
         d->aliveMonitor->requestInterruption();
         d->aliveMonitor->quit();
         d->aliveMonitor->wait();
+        if (m_server) {
+            m_server->stop();
+            for (auto t: d->serverThreads) {
+                t->wait();
+                delete t;
+            }
+            d->serverThreads.clear();
+        }
         m_server.reset();
         m_client.reset();
     }
@@ -119,7 +133,8 @@ namespace talcs {
     }
 
     void RemoteSocket::unbind(const QString &feature, const QString &name) {
-        m_server->bind((feature + "." + name).toStdString(), &replyUnboundError);
+        /* we temporarily do nothing with the rpc server */
+        // m_server->bind((feature + "." + name).toStdString(), &replyUnboundError);
         m_features[feature]--;
         if (m_features[feature] == 0)
             m_features.remove(feature);
