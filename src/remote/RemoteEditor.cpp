@@ -28,4 +28,8 @@ namespace talcs {
         d->socket->unbind("editor", "show");
         d->socket->unbind("editor", "hide");
     }
+
+    void RemoteEditor::setDirty() {
+        d->socket->call("editor", "requestMarkDirty");
+    }
 } // talcs
