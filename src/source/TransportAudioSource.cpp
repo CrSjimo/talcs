@@ -96,10 +96,9 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         d->isPlaying = false;
         if (d->src && d->src->open(bufferSize, sampleRate)) {
-            d->isPlaying = false;
             return AudioStreamBase::open(bufferSize, sampleRate);
         }
-        return false;
+        return AudioStreamBase::open(bufferSize, sampleRate);
     }
 
     /**
