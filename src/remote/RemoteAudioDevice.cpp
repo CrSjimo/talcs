@@ -6,7 +6,7 @@
 #include "RemoteAudioDevice_p.h"
 
 #include "RemoteSocket.h"
-#include "source/AudioSource.h"
+#include "core/source/AudioSource.h"
 
 namespace talcs {
 

@@ -6,8 +6,8 @@
 #include <QMutex>
 #include <QMap>
 
-#include "source/PositionableAudioSource_p.h"
-#include "source/AudioSourceClipSeries_p.h"
+#include "core/source/PositionableAudioSource_p.h"
+#include "core/source/AudioSourceClipSeries_p.h"
 
 namespace talcs {
     class FutureAudioSourceClipSeriesPrivate: public PositionableAudioSourcePrivate, public AudioSourceClipSeriesImpl<FutureAudioSourceClip, FutureAudioSourceClipSeries> {

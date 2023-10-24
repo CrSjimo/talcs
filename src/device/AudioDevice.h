@@ -4,9 +4,9 @@
 #include <QObject>
 
 #include "AudioDeviceCallback.h"
-#include "utils/AudioStreamBase.h"
-#include "utils/ErrorStringProvider.h"
-#include "utils/NameProvider.h"
+#include "core/base/AudioStreamBase.h"
+#include "core/base/ErrorStringProvider.h"
+#include "core/base/NameProvider.h"
 
 namespace talcs {
     class AudioDevicePrivate;

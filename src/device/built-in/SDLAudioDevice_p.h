@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "AudioDevice_p.h"
+#include "../AudioDevice_p.h"
 #include "SDLAudioDevice.h"
 
 namespace talcs {

@@ -2,7 +2,7 @@
 #define TALCS_ASIOAUDIODEVICE_P_H
 
 #include "ASIOAudioDevice.h"
-#include "AudioDevice_p.h"
+#include "../AudioDevice_p.h"
 
 #include <qt_windows.h>
 #include <combaseapi.h>

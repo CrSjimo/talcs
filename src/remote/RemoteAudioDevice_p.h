@@ -6,7 +6,7 @@
 #include <QMutex>
 #include <QSharedMemory>
 
-#include "buffer/AudioDataWrapper.h"
+#include "core/buffer/AudioDataWrapper.h"
 #include "device/AudioDevice_p.h"
 
 namespace talcs {

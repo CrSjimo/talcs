@@ -2,7 +2,7 @@
 #include "FutureAudioSourceClipSeries_p.h"
 
 #include "FutureAudioSource.h"
-#include "source/TransportAudioSource.h"
+#include "core/source/TransportAudioSource.h"
 
 namespace talcs {
     FutureAudioSourceClipSeriesPrivate::FutureAudioSourceClipSeriesPrivate(FutureAudioSourceClipSeries *q)

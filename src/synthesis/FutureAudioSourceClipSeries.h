@@ -1,8 +1,8 @@
 #ifndef TALCS_FUTUREAUDIOSOURCECLIPSERIES_H
 #define TALCS_FUTUREAUDIOSOURCECLIPSERIES_H
 
-#include "source/PositionableAudioSource.h"
-#include "utils/AudioClipBase.h"
+#include "core/source/PositionableAudioSource.h"
+#include "core/base/AudioClipBase.h"
 #include <QObject>
 
 namespace talcs {

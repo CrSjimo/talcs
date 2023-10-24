@@ -2,7 +2,7 @@
 #include "AudioSourcePlayback_p.h"
 
 #include "AudioDevice.h"
-#include "source/AudioSource.h"
+#include "core/source/AudioSource.h"
 
 namespace talcs {
     /**

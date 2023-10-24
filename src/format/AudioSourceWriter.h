@@ -1,7 +1,7 @@
 #ifndef TALCS_AUDIOSOURCEWRITER_H
 #define TALCS_AUDIOSOURCEWRITER_H
 
-#include "utils/AudioSourceProcessorBase.h"
+#include "core/base/AudioSourceProcessorBase.h"
 
 namespace talcs {
     class AudioSourceWriterPrivate;

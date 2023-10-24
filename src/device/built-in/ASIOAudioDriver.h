@@ -1,7 +1,7 @@
 #ifndef TALCS_ASIOAUDIODRIVER_H
 #define TALCS_ASIOAUDIODRIVER_H
 
-#include "AudioDriver.h"
+#include "../AudioDriver.h"
 
 namespace talcs {
     class ASIOAudioDriverPrivate;

@@ -3,8 +3,8 @@
 
 #include <QObject>
 
-#include "utils/ErrorStringProvider.h"
-#include "utils/NameProvider.h"
+#include "core/base/ErrorStringProvider.h"
+#include "core/base/NameProvider.h"
 
 namespace talcs {
     class AudioDriverPrivate;

@@ -3,7 +3,7 @@
 
 #include <QFuture>
 
-#include "source/PositionableAudioSource.h"
+#include "core/source/PositionableAudioSource.h"
 
 namespace talcs {
 

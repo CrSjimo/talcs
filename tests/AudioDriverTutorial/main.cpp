@@ -4,7 +4,7 @@
 #include <device/AudioDriver.h>
 #include <device/AudioDevice.h>
 #include <device/AudioSourcePlayback.h>
-#include <source/SineWaveAudioSource.h>
+#include <core/source/SineWaveAudioSource.h>
 
 int main(int argc, char **argv) {
     QCoreApplication a(argc, argv);

@@ -2,7 +2,7 @@
 #define TALCS_FUTUREAUDIOSOURCE_P_H
 
 #include "FutureAudioSource.h"
-#include "source/PositionableAudioSource_p.h"
+#include "core/source/PositionableAudioSource_p.h"
 #include <QFutureWatcher>
 
 namespace talcs {

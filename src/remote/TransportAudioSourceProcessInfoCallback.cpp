@@ -1,6 +1,6 @@
 #include "TransportAudioSourceProcessInfoCallback.h"
 
-#include "source/TransportAudioSource.h"
+#include "core/source/TransportAudioSource.h"
 
 namespace talcs {
     TransportAudioSourceProcessInfoCallback::TransportAudioSourceProcessInfoCallback(TransportAudioSource *tpSrc) : m_tpSrc(tpSrc) {

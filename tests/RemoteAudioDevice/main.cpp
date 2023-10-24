@@ -14,8 +14,8 @@
 #include "remote/RemoteEditor.h"
 #include "remote/RemoteSocket.h"
 #include "remote/TransportAudioSourceProcessInfoCallback.h"
-#include "source/SineWaveAudioSource.h"
-#include "source/TransportAudioSource.h"
+#include "core/source/SineWaveAudioSource.h"
+#include "core/source/TransportAudioSource.h"
 
 using namespace talcs;
 

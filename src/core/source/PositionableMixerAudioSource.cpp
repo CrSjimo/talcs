@@ -1,7 +1,7 @@
 #include "PositionableMixerAudioSource.h"
 #include "PositionableMixerAudioSource_p.h"
 
-#include "buffer/AudioBuffer.h"
+#include "core/buffer/AudioBuffer.h"
 
 namespace talcs {
     /**

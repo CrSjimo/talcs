@@ -2,7 +2,7 @@
 #define TALCS_ASIOAUDIODRIVER_P_H
 
 #include "ASIOAudioDriver.h"
-#include "AudioDriver_p.h"
+#include "../AudioDriver_p.h"
 
 #include <qt_windows.h>
 

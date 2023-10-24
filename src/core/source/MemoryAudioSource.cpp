@@ -1,7 +1,7 @@
 #include "MemoryAudioSource.h"
 #include "MemoryAudioSource_p.h"
 
-#include "buffer/IAudioSampleContainer.h"
+#include "core/buffer/IAudioSampleContainer.h"
 
 namespace talcs {
 

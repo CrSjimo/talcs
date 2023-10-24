@@ -17,7 +17,7 @@
 #include "format/AudioFormatIO.h"
 #include "format/AudioFormatInputSource.h"
 #include "format/AudioSourceWriter.h"
-#include "source/TransportAudioSource.h"
+#include "core/source/TransportAudioSource.h"
 
 using namespace talcs;
 

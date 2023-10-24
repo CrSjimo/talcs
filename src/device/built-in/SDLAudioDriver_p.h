@@ -2,7 +2,7 @@
 #define TALCS_SDLAUDIODRIVER_P_H
 
 #include "SDLAudioDriver.h"
-#include "AudioDriver_p.h"
+#include "../AudioDriver_p.h"
 
 #include <QThread>
 #include <QMap>

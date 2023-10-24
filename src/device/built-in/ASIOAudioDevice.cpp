@@ -4,9 +4,9 @@
 #include <QDebug>
 
 #include "ASIOAudioDriver.h"
-#include "buffer/AudioBuffer.h"
-#include "tools/AudioSampleConverter.h"
-#include "source/AudioSource.h"
+#include "core/buffer/AudioBuffer.h"
+#include "core/utils/AudioSampleConverter.h"
+#include "core/source/AudioSource.h"
 
 namespace talcs {
     static ASIOAudioDevice *m_device = nullptr;

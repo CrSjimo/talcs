@@ -4,8 +4,8 @@
 #include <QMutex>
 
 #include "AudioFormatIO.h"
-#include "buffer/InterleavedAudioDataWrapper.h"
-#include "source/AudioSource.h"
+#include "core/buffer/InterleavedAudioDataWrapper.h"
+#include "core/source/AudioSource.h"
 
 namespace talcs {
 

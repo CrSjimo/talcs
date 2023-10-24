@@ -3,8 +3,8 @@
 
 #include <QScopedPointer>
 
-#include "buffer/IAudioSampleContainer.h"
-#include "utils/AudioStreamBase.h"
+#include "core/buffer/IAudioSampleContainer.h"
+#include "core/base/AudioStreamBase.h"
 
 namespace talcs {
     struct TALCS_EXPORT AudioSourceReadData {

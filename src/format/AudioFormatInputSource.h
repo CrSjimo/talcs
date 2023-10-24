@@ -1,7 +1,7 @@
 #ifndef TALCS_AUDIOFORMATINPUTSOURCE_H
 #define TALCS_AUDIOFORMATINPUTSOURCE_H
 
-#include "source/PositionableAudioSource.h"
+#include "core/source/PositionableAudioSource.h"
 
 namespace talcs {
     class AudioFormatInputSourcePrivate;

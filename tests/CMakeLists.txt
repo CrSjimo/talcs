@@ -4,8 +4,6 @@ add_subdirectory(AccessAudioFileTutorial)
 
 add_subdirectory(Decibels)
 
-add_subdirectory(DetectBPM)
-
 add_subdirectory(FutureAudioSource)
 
 add_subdirectory(RemoteSocket)

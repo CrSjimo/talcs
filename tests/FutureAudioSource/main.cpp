@@ -16,14 +16,12 @@
 #include <QFormLayout>
 #include <QProgressBar>
 
-#include <SVSBasic/LongTime.h>
-
 #include <device/AudioDevice.h>
 #include <device/AudioDriver.h>
 #include <device/AudioDriverManager.h>
 #include <device/AudioSourcePlayback.h>
-#include <source/SineWaveAudioSource.h>
-#include <source/TransportAudioSource.h>
+#include <core/source/SineWaveAudioSource.h>
+#include <core/source/TransportAudioSource.h>
 #include <synthesis/FutureAudioSource.h>
 #include <synthesis/FutureAudioSourceClipSeries.h>
 
@@ -79,8 +77,8 @@ ClipSpec showClipEditDialog(const ClipSpec &in = {}) {
 
     if (!in.id.isEmpty()) {
         idEdit->setText(in.id);
-        positionEdit->setText(SVS::LongTime(sampleToMsec(in.clip.position())).toString());
-        lengthEdit->setText(SVS::LongTime(sampleToMsec(in.clip.length())).toString());
+        positionEdit->setText(QString::number(double(sampleToMsec(in.clip.position())) * .001, 'f', 3));
+        lengthEdit->setText(QString::number(double(sampleToMsec(in.clip.length())) * .001, 'f', 3));
         freqEdit->setValue(in.source->frequency()(1));
         rateEdit->setValue(in.rate);
     }
@@ -98,7 +96,7 @@ ClipSpec showClipEditDialog(const ClipSpec &in = {}) {
     QObject::connect(submitButton, &QPushButton::clicked, &dlg, [=, &dlg, &spec]() {
         if (idEdit->text().isEmpty())
             return;
-        if (SVS::LongTime::fromString(lengthEdit->text()).totalMsec() == 0)
+        if (lengthEdit->text().toDouble() * 1000.0 == 0)
             return;
         if (freqEdit->value() == 0.0)
             return;
@@ -108,13 +106,13 @@ ClipSpec showClipEditDialog(const ClipSpec &in = {}) {
         spec.rate = rateEdit->value();
         spec.source = new SineWaveAudioSource(freqEdit->value());
         QFutureInterface<PositionableAudioSource *> futureInterface;
-        futureInterface.setProgressRange(0, msecToSample(SVS::LongTime::fromString(lengthEdit->text()).totalMsec()));
+        futureInterface.setProgressRange(0, msecToSample(lengthEdit->text().toDouble() * 1000.0));
         futureInterface.reportStarted();
         spec.clip = {
-            msecToSample(SVS::LongTime::fromString(positionEdit->text()).totalMsec()),
+            msecToSample(positionEdit->text().toDouble() * 1000.0),
             new FutureAudioSource(futureInterface.future()),
             0,
-            msecToSample(SVS::LongTime::fromString(lengthEdit->text()).totalMsec()),
+            msecToSample(lengthEdit->text().toDouble() * 1000.0),
         };
         dlg.accept();
     });
@@ -178,8 +176,8 @@ void addClip() {
         if (addClipToSeries(clipSpec)) {
             auto item = new QTreeWidgetItem({
                 clipSpec.id,
-                SVS::LongTime(sampleToMsec(clipSpec.clip.position())).toString(),
-                SVS::LongTime(sampleToMsec(clipSpec.clip.length())).toString(),
+                QString::number(double(sampleToMsec(clipSpec.clip.position())) * .001, 'f', 3),
+                QString::number(double(sampleToMsec(clipSpec.clip.length())) * .001, 'f', 3),
                 QString::number(clipSpec.source->frequency()(1)),
                 QString::number(clipSpec.rate),
             });
@@ -218,8 +216,8 @@ void modifyClip(QTreeWidgetItem *oldItem) {
         if (addClipToSeries(clipSpec)) {
             auto item = new QTreeWidgetItem({
                 clipSpec.id,
-                SVS::LongTime(sampleToMsec(clipSpec.clip.position())).toString(),
-                SVS::LongTime(sampleToMsec(clipSpec.clip.length())).toString(),
+                QString::number(double(sampleToMsec(clipSpec.clip.position())) * .001, 'f', 3),
+                QString::number(double(sampleToMsec(clipSpec.clip.length())) * .001, 'f', 3),
                 QString::number(clipSpec.source->frequency()(1)),
                 QString::number(clipSpec.rate),
             });
@@ -335,7 +333,7 @@ int main(int argc, char **argv) {
     auto timeLayout = new QHBoxLayout;
     auto timeLabel = new QLabel("00:00.000");
     QObject::connect(src, &TransportAudioSource::positionAboutToChange, timeLabel,
-                     [=](qint64 pos) { timeLabel->setText(SVS::LongTime(sampleToMsec(pos)).toString()); });
+                     [=](qint64 pos) { timeLabel->setText(QString::number(double(sampleToMsec(pos)) * .001, 'f', 3)); });
     auto loadingLabel = new QLabel;
     QObject::connect(src, &TransportAudioSource::bufferingCounterChanged, loadingLabel, [=](int counter) {
         if (counter)
@@ -355,7 +353,7 @@ int main(int argc, char **argv) {
     setTimeEdit->setPlaceholderText("Position");
     auto setTimeButton = new QPushButton("Set");
     QObject::connect(setTimeButton, &QPushButton::clicked, src, [=]() {
-        src->setPosition(msecToSample(SVS::LongTime::fromString(setTimeEdit->text()).totalMsec()));
+        src->setPosition(msecToSample(setTimeEdit->text().toDouble() * 1000.0));
         setTimeEdit->clear();
     });
     setTimeLayout->addWidget(setTimeEdit);

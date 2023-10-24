@@ -5,7 +5,7 @@
 
 #include <QMChronMap.h>
 
-#include "buffer/AudioBuffer.h"
+#include "core/buffer/AudioBuffer.h"
 
 namespace talcs {
     static inline QPair<float, float> applyGainAndPan(float gain, float pan) {

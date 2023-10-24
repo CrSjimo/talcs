@@ -3,7 +3,7 @@
 
 #include <QIODevice>
 
-#include "utils/ErrorStringProvider.h"
+#include "core/base/ErrorStringProvider.h"
 
 class SndfileHandle;
 class QIODevice;

@@ -2,7 +2,7 @@
 #define TALCS_AUDIOSOURCECLIPSERIES_H
 
 #include "PositionableAudioSource.h"
-#include "utils/AudioClipBase.h"
+#include "core/base/AudioClipBase.h"
 
 namespace talcs {
     typedef AudioClipBase<PositionableAudioSource> AudioSourceClip;

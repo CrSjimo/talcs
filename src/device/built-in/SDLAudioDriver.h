@@ -1,7 +1,7 @@
 #ifndef TALCS_SDLAUDIODRIVER_H
 #define TALCS_SDLAUDIODRIVER_H
 
-#include "AudioDriver.h"
+#include "../AudioDriver.h"
 
 namespace talcs {
     class SDLAudioDriverPrivate;

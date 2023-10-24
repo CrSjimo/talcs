@@ -14,11 +14,11 @@
 #include "device/AudioSourcePlayback.h"
 #include "format/AudioFormatIO.h"
 #include "format/AudioFormatInputSource.h"
-#include "source/MixerAudioSource.h"
-#include "source/PositionableMixerAudioSource.h"
-#include "source/TransportAudioSource.h"
-#include "tools/Decibels.h"
-#include "tools/SmoothedFloat.h"
+#include "core/source/MixerAudioSource.h"
+#include "core/source/PositionableMixerAudioSource.h"
+#include "core/source/TransportAudioSource.h"
+#include "core/utils/Decibels.h"
+#include "core/utils/SmoothedFloat.h"
 
 using namespace talcs;
 

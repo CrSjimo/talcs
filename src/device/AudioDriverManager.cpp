@@ -1,9 +1,9 @@
 #include "AudioDriverManager.h"
 #include "AudioDriverManager_p.h"
 
-#include "SDLAudioDriver.h"
+#include "built-in/SDLAudioDriver.h"
 #ifdef TALCS_USE_FEATURE_ASIO
-#    include "ASIOAudioDriver.h"
+#    include "built-in/ASIOAudioDriver.h"
 #endif
 
 namespace talcs {

@@ -1,7 +1,7 @@
 #ifndef TALCS_SDLAUDIODEVICE_H
 #define TALCS_SDLAUDIODEVICE_H
 
-#include "AudioDevice.h"
+#include "../AudioDevice.h"
 
 namespace talcs {
     class SDLAudioDevicePrivate;

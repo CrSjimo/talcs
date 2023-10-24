@@ -3,8 +3,8 @@
 
 #include "AudioSourceWriter.h"
 
-#include "buffer/InterleavedAudioDataWrapper.h"
-#include "utils/AudioSourceProcessorBase_p.h"
+#include "core/buffer/InterleavedAudioDataWrapper.h"
+#include "core/base/AudioSourceProcessorBase_p.h"
 
 namespace talcs {
     class AudioSourceWriterPrivate: public AudioSourceProcessorBasePrivate {

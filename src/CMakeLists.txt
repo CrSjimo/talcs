@@ -81,11 +81,12 @@ set(CMAKE_AUTOUIC on)
 set(CMAKE_AUTOMOC on)
 set(CMAKE_AUTORCC on)
 
-find_package(SDL2 REQUIRED)
-find_package(SndFile REQUIRED)
-find_package(SampleRate REQUIRED)
-find_package(SoundTouch REQUIRED)
-find_package(rpclib REQUIRED)
+find_package(SDL2 REQUIRED) # TODO: used by device
+find_package(SndFile REQUIRED) # TODO: used by format
+find_package(SampleRate REQUIRED) # TODO: used by format
+find_package(rpclib REQUIRED) # TODO: used by remote
+find_path(INTERVAL_TREE_INCLUDE_DIRS "interval-tree/interval_tree.hpp") # TODO: used by core
+
 
 if(NOT TARGET qtmediate::Core)
     find_package(qtmediate REQUIRED)
@@ -118,7 +119,7 @@ endif()
 
 talcs_add_library(${PROJECT_NAME} SHARED ${_src})
 
-if(WIN32 AND TALCS_ENABLE_ASIO)
+if(WIN32 AND TALCS_ENABLE_ASIO) # TODO: used by device
     if(NOT TALCS_ASIOSDK_DIR)
         message(FATAL_ERROR "TALCS: TALCS_ASIOSDK_DIR not specified.")
     endif()
@@ -136,10 +137,12 @@ target_link_libraries(${PROJECT_NAME} PUBLIC qtmediate::Core)
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         ${_platform_libs}
-        SDL2::SDL2 SndFile::sndfile SampleRate::samplerate SoundTouch::SoundTouch
+        SDL2::SDL2 SndFile::sndfile SampleRate::samplerate
     PUBLIC
         rpclib::rpc
 )
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${INTERVAL_TREE_INCLUDE_DIRS})
 
 qtmediate_link_qt_libraries(${PROJECT_NAME} PUBLIC
     Core
