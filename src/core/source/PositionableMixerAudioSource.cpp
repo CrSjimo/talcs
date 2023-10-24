@@ -105,9 +105,8 @@ namespace talcs {
     }
 
     void PositionableMixerAudioSourcePrivate::setNextReadPositionToAll(qint64 pos) {
-        auto sourceList = sourceDict.keys();
-        std::for_each(sourceList.constBegin(), sourceList.constEnd(),
-                      [=](PositionableAudioSource *src) { src->setNextReadPosition(pos); });
+        std::for_each(sourceDict.constBegin(), sourceDict.constEnd(),
+                      [=](const SourceInfo<PositionableAudioSource> &srcInfo) { srcInfo.src->setNextReadPosition(pos); });
     }
 
     /**

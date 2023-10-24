@@ -3,14 +3,14 @@
 
 #include <TalcsDevice/AudioDriverManager.h>
 
-#include <QMChronMap.h>
+#include <QList>
 
 namespace talcs {
     class AudioDriverManagerPrivate {
         Q_DECLARE_PUBLIC(AudioDriverManager)
     public:
         AudioDriverManager *q_ptr;
-        QMChronMap<QString, AudioDriver *> driverDict;
+        QList<QPair<QString, AudioDriver *>> driverDict;
     };
 }
 

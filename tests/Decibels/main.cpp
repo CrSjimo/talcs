@@ -8,17 +8,17 @@
 #include <QPushButton>
 #include <QTimer>
 
-#include "device/AudioDevice.h"
-#include "device/AudioDriver.h"
-#include "device/AudioDriverManager.h"
-#include "device/AudioSourcePlayback.h"
-#include "format/AudioFormatIO.h"
-#include "format/AudioFormatInputSource.h"
-#include "core/source/MixerAudioSource.h"
-#include "core/source/PositionableMixerAudioSource.h"
-#include "core/source/TransportAudioSource.h"
-#include "core/utils/Decibels.h"
-#include "core/utils/SmoothedFloat.h"
+#include <TalcsDevice/AudioDevice.h>
+#include <TalcsDevice/AudioDriver.h>
+#include <TalcsDevice/AudioDriverManager.h>
+#include <TalcsDevice/AudioSourcePlayback.h>
+#include <TalcsFormat/AudioFormatIO.h>
+#include <TalcsFormat/AudioFormatInputSource.h>
+#include <TalcsCore/MixerAudioSource.h>
+#include <TalcsCore/PositionableMixerAudioSource.h>
+#include <TalcsCore/TransportAudioSource.h>
+#include <TalcsCore/Decibels.h>
+#include <TalcsCore/SmoothedFloat.h>
 
 using namespace talcs;
 

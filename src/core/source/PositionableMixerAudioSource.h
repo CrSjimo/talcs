@@ -2,8 +2,7 @@
 #define TALCS_POSITIONABLEMIXERAUDIOSOURCE_H
 
 #include <QMutex>
-
-#include <QMChronMap.h>
+#include <QObject>
 
 #include <TalcsCore/IMixer.h>
 #include <TalcsCore/PositionableAudioSource.h>

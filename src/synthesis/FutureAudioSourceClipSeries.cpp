@@ -2,7 +2,7 @@
 #include "FutureAudioSourceClipSeries_p.h"
 
 #include "FutureAudioSource.h"
-#include "core/source/TransportAudioSource.h"
+#include <TalcsCore/TransportAudioSource.h>
 
 namespace talcs {
 

@@ -2,8 +2,7 @@
 #define TALCS_MIXERAUDIOSOURCE_P_H
 
 #include <QMutex>
-
-#include <QMChronMap.h>
+#include <QObject>
 
 #include <TalcsCore/MixerAudioSource.h>
 #include <TalcsCore/private/AudioSource_p.h>

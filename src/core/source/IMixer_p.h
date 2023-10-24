@@ -3,7 +3,7 @@
 
 #include <QMutex>
 
-#include <QMChronMap.h>
+#include <QList>
 
 #include <TalcsCore/AudioBuffer.h>
 
@@ -13,14 +13,20 @@ namespace talcs {
         return {gain * std::max(1.0f, 1.0f - pan), gain * std::max(1.0f, 1.0f + pan)};
     }
 
+    template <class T>
     struct SourceInfo {
+        T *src;
         bool takeOwnership = false;
         bool isSolo = false;
+
+        inline bool operator==(const SourceInfo<T> &other) const {
+            return src == other.src;
+        }
     };
 
     template <class T>
     struct IMixerPrivate {
-        QMChronMap<T *, SourceInfo> sourceDict;
+        QList<SourceInfo<T>> sourceDict;
         QMutex mutex;
 
         float gain = 1;
@@ -32,24 +38,22 @@ namespace talcs {
         bool routeChannels = false;
 
         void deleteOwnedSources() const {
-            for (auto src : sourceDict.keys()) {
-                if (sourceDict.value(src).takeOwnership) {
+            for (auto [src, takeOwnership, _] : sourceDict) {
+                if (takeOwnership) {
                     delete src;
                 }
             }
         }
 
         bool addSource(T *src, bool takeOwnership, bool isOpen, qint64 bufferSize, double sampleRate) {
-            if (sourceDict.contains(src))
-                return false;
             if (isOpen && !src->open(bufferSize, sampleRate))
                 return false;
-            sourceDict.append(src, {takeOwnership});
+            sourceDict.append({src, takeOwnership});
             return true;
         }
 
         bool removeSource(T *src) {
-            if (sourceDict.remove(src)) {
+            if (sourceDict.removeOne({src})) {
                 src->close();
                 return true;
             }
@@ -62,29 +66,35 @@ namespace talcs {
         }
 
         QList<T *> sources() const {
-            return sourceDict.keys();
+            QList<T *> list;
+            for (auto [src, _0, _1]: sourceDict) {
+                list.append(src);
+            }
+            return list;
         }
 
         int soloCounter = 0;
 
         void setSourceSolo(T *src, bool isSolo) {
-            auto it = sourceDict.find(src);
-            if (it == sourceDict.end())
+            auto i = sourceDict.indexOf({src});
+            if (i == -1)
                 return;
-            if (it->isSolo == isSolo)
+            if (sourceDict[i].isSolo == isSolo)
                 return;
-            it->isSolo = isSolo;
+            sourceDict[i].isSolo = isSolo;
             soloCounter += (isSolo ? 1 : -1);
         }
 
         bool isSourceSolo(T *src) const {
-            return sourceDict.value(src).isSolo;
+            auto i = sourceDict.indexOf({src});
+            if (i == -1)
+                return false;
+            return sourceDict[i].isSolo;
         }
 
         bool start(qint64 bufferSize, double sampleRate) {
-            auto sourceList = sourceDict.keys();
-            if (std::all_of(sourceList.constBegin(), sourceList.constEnd(),
-                            [=](AudioSource *src) { return src->open(bufferSize, sampleRate); })) {
+            if (std::all_of(sourceDict.constBegin(), sourceDict.constEnd(),
+                            [=](const SourceInfo<T> &srcInfo) { return srcInfo.src->open(bufferSize, sampleRate); })) {
                 tmpBuf.resize(2, bufferSize);
                 return true;
             } else {
@@ -93,8 +103,7 @@ namespace talcs {
         }
 
         void stop() {
-            auto sourceList = sourceDict.keys();
-            std::for_each(sourceList.constBegin(), sourceList.constEnd(), [=](AudioSource *src) { src->close(); });
+            std::for_each(sourceDict.constBegin(), sourceDict.constEnd(), [=](const SourceInfo<T> &srcInfo) { srcInfo.src->close(); });
             tmpBuf.resize(0, 0);
         }
 
@@ -103,8 +112,8 @@ namespace talcs {
             auto gainLeftRight = applyGainAndPan(gain, pan);
             int routeCnt = 0;
             // TODO tell QtMediate to use key value iterator
-            for (auto src : sourceDict.keys()) {
-                auto srcInfo = sourceDict.value(src);
+            for (auto &srcInfo : sourceDict) {
+                auto src = srcInfo.src;
                 bool isMutedBySoloSetting = (soloCounter && !srcInfo.isSolo);
                 readLength = std::min(
                     readLength,
