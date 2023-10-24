@@ -1,5 +1,5 @@
-#ifndef AUDIOSOURCEPLAYBACK_H
-#define AUDIOSOURCEPLAYBACK_H
+#ifndef TALCS_AUDIOSOURCEPLAYBACK_H
+#define TALCS_AUDIOSOURCEPLAYBACK_H
 
 #include <QScopedPointer>
 
@@ -29,4 +29,4 @@ namespace talcs {
     };
 }
 
-#endif // AUDIOSOURCEPLAYBACK_H
+#endif // TALCS_AUDIOSOURCEPLAYBACK_H

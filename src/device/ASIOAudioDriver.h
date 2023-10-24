@@ -1,5 +1,5 @@
-#ifndef ASIOAUDIODRIVER_H
-#define ASIOAUDIODRIVER_H
+#ifndef TALCS_ASIOAUDIODRIVER_H
+#define TALCS_ASIOAUDIODRIVER_H
 
 #include "AudioDriver.h"
 
@@ -20,4 +20,4 @@ namespace talcs {
     };
 }
 
-#endif // ASIOAUDIODRIVER_H
+#endif // TALCS_ASIOAUDIODRIVER_H

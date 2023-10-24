@@ -1,9 +1,5 @@
-//
-// Created by Crs_1 on 2023/10/9.
-//
-
-#ifndef DIFFSCOPE_REMOTEAUDIODEVICE_H
-#define DIFFSCOPE_REMOTEAUDIODEVICE_H
+#ifndef TALCS_REMOTEAUDIODEVICE_H
+#define TALCS_REMOTEAUDIODEVICE_H
 
 #include "device/AudioDevice.h"
 
@@ -62,4 +58,4 @@ namespace talcs {
 
 } // talcs
 
-#endif // DIFFSCOPE_REMOTEAUDIODEVICE_H
+#endif // TALCS_REMOTEAUDIODEVICE_H

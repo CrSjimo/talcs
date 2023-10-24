@@ -1,5 +1,5 @@
-#ifndef AUDIOFORMATINPUTSOURCE_H
-#define AUDIOFORMATINPUTSOURCE_H
+#ifndef TALCS_AUDIOFORMATINPUTSOURCE_H
+#define TALCS_AUDIOFORMATINPUTSOURCE_H
 
 #include "source/PositionableAudioSource.h"
 
@@ -42,4 +42,4 @@ namespace talcs {
     };
 }
 
-#endif // AUDIOFORMATINPUTSOURCE_H
+#endif // TALCS_AUDIOFORMATINPUTSOURCE_H

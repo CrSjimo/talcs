@@ -1,5 +1,5 @@
-#ifndef AUDIOSOURCECLIPSERIES_H
-#define AUDIOSOURCECLIPSERIES_H
+#ifndef TALCS_AUDIOSOURCECLIPSERIES_H
+#define TALCS_AUDIOSOURCECLIPSERIES_H
 
 #include "PositionableAudioSource.h"
 #include "utils/AudioClipBase.h"
@@ -35,4 +35,4 @@ namespace talcs {
     };
 }
 
-#endif // AUDIOSOURCECLIPSERIES_H
+#endif // TALCS_AUDIOSOURCECLIPSERIES_H

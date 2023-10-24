@@ -1,5 +1,5 @@
-#ifndef AUDIOSOURCE_H
-#define AUDIOSOURCE_H
+#ifndef TALCS_AUDIOSOURCE_H
+#define TALCS_AUDIOSOURCE_H
 
 #include <QScopedPointer>
 
@@ -31,4 +31,4 @@ namespace talcs {
     };
 }
 
-#endif // AUDIOSOURCE_H
+#endif // TALCS_AUDIOSOURCE_H
