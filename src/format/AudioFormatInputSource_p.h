@@ -2,7 +2,7 @@
 #define TALCS_AUDIOFORMATINPUTSOURCE_P_H
 
 #include "AudioFormatInputSource.h"
-#include "PositionableAudioSource_p.h"
+#include "source/PositionableAudioSource_p.h"
 
 #include <samplerate.h>
 

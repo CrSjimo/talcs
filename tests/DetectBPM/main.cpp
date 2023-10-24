@@ -9,7 +9,7 @@
 #include <QThread>
 
 #include "format/AudioFormatIO.h"
-#include "source/AudioFormatInputSource.h"
+#include "format/AudioFormatInputSource.h"
 #include "tools/AudioSourceBPMDetector.h"
 
 using namespace talcs;

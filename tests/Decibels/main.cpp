@@ -13,7 +13,7 @@
 #include "device/AudioDriverManager.h"
 #include "device/AudioSourcePlayback.h"
 #include "format/AudioFormatIO.h"
-#include "source/AudioFormatInputSource.h"
+#include "format/AudioFormatInputSource.h"
 #include "source/MixerAudioSource.h"
 #include "source/PositionableMixerAudioSource.h"
 #include "source/TransportAudioSource.h"

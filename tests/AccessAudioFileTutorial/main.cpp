@@ -15,8 +15,8 @@
 #include "device/AudioDriverManager.h"
 #include "device/AudioSourcePlayback.h"
 #include "format/AudioFormatIO.h"
+#include "format/AudioFormatInputSource.h"
 #include "format/AudioSourceWriter.h"
-#include "source/AudioFormatInputSource.h"
 #include "source/TransportAudioSource.h"
 
 using namespace talcs;

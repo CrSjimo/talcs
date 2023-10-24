@@ -9,11 +9,11 @@
 
 #include "device/AudioSourcePlayback.h"
 #include "format/AudioFormatIO.h"
+#include "format/AudioFormatInputSource.h"
 #include "remote/RemoteAudioDevice.h"
 #include "remote/RemoteEditor.h"
 #include "remote/RemoteSocket.h"
 #include "remote/TransportAudioSourceProcessInfoCallback.h"
-#include "source/AudioFormatInputSource.h"
 #include "source/SineWaveAudioSource.h"
 #include "source/TransportAudioSource.h"
 
