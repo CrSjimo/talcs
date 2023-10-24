@@ -23,6 +23,6 @@ namespace talcs {
         RemoteSocket *m_socket;
     };
 
-} // talcs
+}
 
 #endif // TALCS_REMOTETRANSPORTCONTROLLERINTERFACE_H

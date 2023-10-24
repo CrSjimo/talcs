@@ -1,9 +1,10 @@
 #include "PositionableMixerAudioSource.h"
 #include "PositionableMixerAudioSource_p.h"
 
-#include "core/buffer/AudioBuffer.h"
+#include "buffer/AudioBuffer.h"
 
 namespace talcs {
+
     /**
      * @class PositionableMixerAudioSource
      * @brief A class very similar to MixerAudioSource, but this one supports repositioning.
@@ -203,4 +204,5 @@ namespace talcs {
         Q_D(const PositionableMixerAudioSource);
         return d->silentFlags;
     }
+    
 }

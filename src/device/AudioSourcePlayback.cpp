@@ -5,6 +5,7 @@
 #include "core/source/AudioSource.h"
 
 namespace talcs {
+
     /**
      * @class AudioSourcePlayback
      * @brief Callback functions that starts, stops and reads data from an AudioSource
@@ -72,4 +73,5 @@ namespace talcs {
         Q_D(AudioSourcePlayback);
         d->src->read(readData);
     }
+    
 }

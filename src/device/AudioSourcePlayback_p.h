@@ -1,9 +1,10 @@
-#ifndef TALCS_AUDIOSOURCEPLAYBACK_P_H
-#define TALCS_AUDIOSOURCEPLAYBACK_P_H
+#ifndef AUDIOSOURCEPLAYBACK_P_H
+#define AUDIOSOURCEPLAYBACK_P_H
 
-#include "AudioSourcePlayback.h"
+#include <TalcsDevice/AudioSourcePlayback.h>
 
 namespace talcs {
+
     class AudioSourcePlaybackPrivate {
         Q_DECLARE_PUBLIC(AudioSourcePlayback)
     public:
@@ -11,6 +12,7 @@ namespace talcs {
         AudioSource *src;
         bool takeOwnership;
     };
+    
 }
 
-#endif // TALCS_AUDIOSOURCEPLAYBACK_P_H
+#endif // AUDIOSOURCEPLAYBACK_P_H

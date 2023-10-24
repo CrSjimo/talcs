@@ -1,9 +1,11 @@
 #ifndef TALCS_FUTUREAUDIOSOURCECLIPSERIES_H
 #define TALCS_FUTUREAUDIOSOURCECLIPSERIES_H
 
-#include "core/source/PositionableAudioSource.h"
-#include "core/base/AudioClipBase.h"
 #include <QObject>
+
+#include <TalcsCore/PositionableAudioSource.h>
+#include <TalcsCore/AudioClipBase.h>
+#include <TalcsSynthesis/TalcsSynthesisGlobal.h>
 
 namespace talcs {
 
@@ -16,12 +18,14 @@ namespace talcs {
 
     class TransportAudioSource;
 
-    class TALCS_EXPORT FutureAudioSourceClipSeries : public QObject,
-                                                     public PositionableAudioSource,
-                                                     public AudioClipSeriesBase<FutureAudioSource> {
+    class TALCSSYNTHESIS_EXPORT FutureAudioSourceClipSeries
+        : public QObject,
+          public PositionableAudioSource,
+          public AudioClipSeriesBase<FutureAudioSource> {
         Q_OBJECT
         Q_DECLARE_PRIVATE_D(PositionableAudioSource::d_ptr, FutureAudioSourceClipSeries)
         friend class AudioSourceClipSeriesImpl<FutureAudioSourceClip, FutureAudioSourceClipSeries>;
+
     public:
         explicit FutureAudioSourceClipSeries(QObject *parent = nullptr);
         ~FutureAudioSourceClipSeries() override;
@@ -53,9 +57,10 @@ namespace talcs {
         TransportAudioSource *bufferingTarget() const;
 
     signals:
-        void progressChanged(qint64 lengthAvailable, qint64 lengthLoaded, qint64 lengthOfAllClips, qint64 effectiveLength);
+        void progressChanged(qint64 lengthAvailable, qint64 lengthLoaded, qint64 lengthOfAllClips,
+                             qint64 effectiveLength);
     };
 
-} // talcs
+}
 
 #endif // TALCS_FUTUREAUDIOSOURCECLIPSERIES_H

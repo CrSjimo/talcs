@@ -1,6 +1,7 @@
 #include "IMixer.h"
 
 namespace talcs {
+
     /**
      * @interface IMixer
      * @brief Interface for objects that have a list of input sources and produces audio from them
@@ -72,4 +73,5 @@ namespace talcs {
      * @fn bool IMixer::routeChannels() const
      * Gets whether to route the input sources to output channels.
      */
+     
 }

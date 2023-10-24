@@ -4,6 +4,7 @@
 #include <cmath>
 
 namespace talcs {
+
     /**
      * @class SineWaveAudioSource
      * Generates sine wave.
@@ -95,4 +96,5 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         PositionableAudioSource::setNextReadPosition(pos);
     }
+    
 }

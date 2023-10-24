@@ -1,10 +1,11 @@
 #ifndef TALCS_IAUDIOSAMPLECONTAINER_H
 #define TALCS_IAUDIOSAMPLECONTAINER_H
 
-#include "IAudioSampleProvider.h"
+#include <TalcsCore/IAudioSampleProvider.h>
 
 namespace talcs {
-    class TALCS_EXPORT IAudioSampleContainer : public IAudioSampleProvider {
+
+    class TALCSCORE_EXPORT IAudioSampleContainer : public IAudioSampleProvider {
     public:
         virtual float &sampleAt(int channel, qint64 pos) = 0;
         virtual float *writePointerTo(int channel, qint64 startPos);
@@ -25,8 +26,7 @@ namespace talcs {
         void clear(int destChannel);
         void clear();
     };
+    
 }
-
-
 
 #endif // TALCS_IAUDIOSAMPLECONTAINER_H

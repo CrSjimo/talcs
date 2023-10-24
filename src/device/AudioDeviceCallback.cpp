@@ -1,6 +1,7 @@
 #include "AudioDeviceCallback.h"
 
 namespace talcs {
+
     /**
      * @class AudioDeviceCallback
      * @brief Callback functions of audio device
@@ -22,4 +23,5 @@ namespace talcs {
      * @fn void AudioDeviceCallback::workCallback(const AudioSourceReadData &readData)
      * Called on each frame of audio streaming.
      */
+     
 }

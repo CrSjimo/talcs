@@ -1,9 +1,9 @@
 #ifndef TALCS_AUDIOFORMATIO_P_H
 #define TALCS_AUDIOFORMATIO_P_H
 
-#include "AudioFormatIO.h"
-
+#include <TalcsFormat/AudioFormatIO.h>
 namespace talcs {
+
     class AudioFormatIOPrivate {
         Q_DECLARE_PUBLIC(AudioFormatIO)
     public:
@@ -20,6 +20,7 @@ namespace talcs {
         int64_t sfVioWrite(const void *ptr, int64_t count) const;
         int64_t sfVioTell() const;
     };
+    
 }
 
 #endif // TALCS_AUDIOFORMATIO_P_H

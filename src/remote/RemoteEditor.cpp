@@ -4,6 +4,7 @@
 #include "RemoteSocket.h"
 
 namespace talcs {
+
     RemoteEditor::RemoteEditor(RemoteSocket *socket, const RemoteEditor::GetFunc &getFunc,
                                const RemoteEditor::SetFunc &setFunc, QObject *parent)
         : QObject(parent), d(new RemoteEditorPrivate{socket, getFunc, setFunc}) {
@@ -32,4 +33,5 @@ namespace talcs {
     void RemoteEditor::setDirty() {
         d->socket->call("editor", "requestMarkDirty");
     }
-} // talcs
+    
+}

@@ -245,4 +245,5 @@ namespace talcs {
      * @fn void FutureAudioSource::progressChanged(int progress)
      * Emitted when the progress value is changed.
      */
-} // talcs
+     
+}

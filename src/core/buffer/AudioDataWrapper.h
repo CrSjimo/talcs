@@ -3,12 +3,13 @@
 
 #include <QScopedPointer>
 
-#include "IAudioSampleContainer.h"
+#include <TalcsCore/IAudioSampleContainer.h>
 
 namespace talcs {
+
     class AudioDataWrapperPrivate;
 
-    class TALCS_EXPORT AudioDataWrapper : public IAudioSampleContainer {
+    class TALCSCORE_EXPORT AudioDataWrapper : public IAudioSampleContainer {
         Q_DECLARE_PRIVATE(AudioDataWrapper)
     public:
         AudioDataWrapper(float *const *data, int channelCount, qint64 sampleCount, qint64 startPos = 0);
@@ -33,6 +34,7 @@ namespace talcs {
         QScopedPointer<AudioDataWrapperPrivate> d_ptr;
         AudioDataWrapper(AudioDataWrapperPrivate &d);
     };
+    
 }
 
 #endif // TALCS_AUDIODATAWRAPPER_H

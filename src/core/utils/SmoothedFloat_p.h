@@ -1,9 +1,9 @@
 #ifndef TALCS_SMOOTHEDFLOAT_P_H
 #define TALCS_SMOOTHEDFLOAT_P_H
 
-#include "SmoothedFloat.h"
-
 #include <QSharedData>
+
+#include <TalcsCore/SmoothedFloat.h>
 
 namespace talcs {
     class SmoothedFloatPrivate : public QSharedData {

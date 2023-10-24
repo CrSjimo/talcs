@@ -4,6 +4,7 @@
 #include <QList>
 
 namespace talcs {
+
     template <class T>
     struct IMixer {
         virtual bool addSource(T *src, bool takeOwnership) = 0;
@@ -25,6 +26,7 @@ namespace talcs {
         virtual void setSilentFlags(int silentFlags) = 0;
         virtual int silentFlags() const = 0;
     };
+    
 }
 
 #endif // TALCS_IMIXER_H

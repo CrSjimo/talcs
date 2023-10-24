@@ -1,9 +1,10 @@
-#ifndef TALCS_AUDIODEVICE_P_H
-#define TALCS_AUDIODEVICE_P_H
+#ifndef AUDIODEVICE_P_H
+#define AUDIODEVICE_P_H
 
-#include "AudioDevice.h"
+#include <TalcsDevice/AudioDevice.h>
 
 namespace talcs {
+
     class AudioDevicePrivate {
         Q_DECLARE_PUBLIC(AudioDevice)
     public:
@@ -18,6 +19,7 @@ namespace talcs {
         bool isStarted = false;
         bool isInitialized = false;
     };
+    
 }
 
-#endif // TALCS_AUDIODEVICE_P_H
+#endif // AUDIODEVICE_P_H

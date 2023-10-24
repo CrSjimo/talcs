@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "global/TalcsGlobal.h"
+#include <TalcsCore/TalcsCoreGlobal.h>
 
 namespace talcs {
 
@@ -11,7 +11,7 @@ namespace talcs {
     class AudioSource;
     class IAudioSampleContainer;
 
-    class TALCS_EXPORT AudioSourceProcessorBase: public QObject {
+    class TALCSCORE_EXPORT AudioSourceProcessorBase: public QObject {
         Q_OBJECT
         Q_DECLARE_PRIVATE(AudioSourceProcessorBase)
     public:
@@ -47,6 +47,6 @@ namespace talcs {
         QScopedPointer<AudioSourceProcessorBasePrivate> d_ptr;
     };
 
-} // talcs
+}
 
 #endif // TALCS_AUDIOSOURCEPROCESSORBASE_H

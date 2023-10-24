@@ -2,6 +2,7 @@
 #include "AudioDevice_p.h"
 
 namespace talcs {
+
     /**
      * @class AudioDevice
      * @brief Base class for audio devices
@@ -230,4 +231,5 @@ namespace talcs {
      * @fn void AudioDevice::closed()
      * Emitted when the audio device is closed automatically due to internal reasons or closed manually.
      */
+     
 }

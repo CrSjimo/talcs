@@ -2,6 +2,7 @@
 #include "PositionableAudioSource_p.h"
 
 namespace talcs {
+
     /**
      * @class PositionableAudioSource
      * @brief Base class for sources from which audio data can be streamly read, and the source can be repositioned
@@ -45,4 +46,5 @@ namespace talcs {
     PositionableAudioSourceStateSaver::~PositionableAudioSourceStateSaver() {
         d->src->setNextReadPosition(d->position);
     }
+    
 }

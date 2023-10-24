@@ -3,10 +3,11 @@
 
 #include <QString>
 
-#include "global/TalcsGlobal.h"
+#include <TalcsCore/TalcsCoreGlobal.h>
 
 namespace talcs {
-    class TALCS_EXPORT ErrorStringProvider {
+
+    class TALCSCORE_EXPORT ErrorStringProvider {
     public:
         QString errorString() const;
 
@@ -17,6 +18,7 @@ namespace talcs {
     private:
         QString m_error;
     };
+
 }
 
 

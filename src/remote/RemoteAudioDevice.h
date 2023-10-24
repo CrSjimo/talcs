@@ -1,14 +1,15 @@
 #ifndef TALCS_REMOTEAUDIODEVICE_H
 #define TALCS_REMOTEAUDIODEVICE_H
 
-#include "device/AudioDevice.h"
+#include <TalcsDevice/AudioDevice.h>
+#include <TalcsRemote/TalcsRemoteGlobal.h>
 
 namespace talcs {
 
     class RemoteAudioDevicePrivate;
     class RemoteSocket;
 
-    class TALCS_EXPORT RemoteAudioDevice : public AudioDevice {
+    class TALCSREMOTE_EXPORT RemoteAudioDevice : public AudioDevice {
         Q_OBJECT
         Q_DECLARE_PRIVATE(RemoteAudioDevice)
     public:
@@ -56,6 +57,6 @@ namespace talcs {
         void remoteOpened(qint64 bufferSize, double sampleRate, int maxChannelCount);
     };
 
-} // talcs
+}
 
 #endif // TALCS_REMOTEAUDIODEVICE_H

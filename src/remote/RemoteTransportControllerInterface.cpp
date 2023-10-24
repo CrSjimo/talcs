@@ -2,6 +2,7 @@
 #include "RemoteSocket.h"
 
 namespace talcs {
+
     RemoteTransportControllerInterface::RemoteTransportControllerInterface(RemoteSocket *socket) : m_socket(socket) {
     }
 
@@ -24,4 +25,5 @@ namespace talcs {
     void RemoteTransportControllerInterface::toggleLooping(bool enabled) {
         m_socket->call("transport", "toggleLooping", enabled);
     }
-} // talcs
+    
+}

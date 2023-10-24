@@ -7,6 +7,7 @@
 #endif
 
 namespace talcs {
+
     /**
      * @class AudioDriverManager
      * @brief A registry of audio drivers
@@ -115,4 +116,5 @@ namespace talcs {
      * Emitted when a new driver is removed from the manager.
      * @see removeAudioDriver()
      */
+     
 }

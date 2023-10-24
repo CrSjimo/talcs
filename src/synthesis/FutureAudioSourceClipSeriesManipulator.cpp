@@ -4,4 +4,4 @@
 
 #include "FutureAudioSourceClipSeriesManipulator.h"
 
-namespace talcs {} // talcs
+namespace talcs {}

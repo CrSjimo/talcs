@@ -1,8 +1,8 @@
 #ifndef TALCS_AUDIOFORMATINPUTSOURCE_P_H
 #define TALCS_AUDIOFORMATINPUTSOURCE_P_H
 
-#include "AudioFormatInputSource.h"
-#include "core/source/PositionableAudioSource_p.h"
+#include <TalcsCore/private/PositionableAudioSource_p.h>
+#include <TalcsFormat/AudioFormatInputSource.h>
 
 #include <samplerate.h>
 

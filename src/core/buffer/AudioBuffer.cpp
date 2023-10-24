@@ -1,6 +1,7 @@
 #include "AudioBuffer.h"
 
 namespace talcs {
+
     /**
      * @class AudioBuffer
      * @brief A container of audio sample data
@@ -153,4 +154,5 @@ namespace talcs {
     const float *AudioBuffer::readPointerTo(int channel, qint64 startPos) const {
         return m_buffer[channel].constData() + startPos;
     }
+    
 }

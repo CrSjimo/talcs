@@ -1,9 +1,10 @@
 #ifndef TALCS_AUDIODATAWRAPPER_P_H
 #define TALCS_AUDIODATAWRAPPER_P_H
 
-#include "AudioDataWrapper.h"
+#include <TalcsCore/AudioDataWrapper.h>
 
 namespace talcs {
+
     class AudioDataWrapperPrivate {
         Q_DECLARE_PUBLIC(AudioDataWrapper)
     public:
@@ -13,6 +14,7 @@ namespace talcs {
         qint64 sampleCount;
         qint64 startPos;
     };
+    
 }
 
 #endif // TALCS_AUDIODATAWRAPPER_P_H

@@ -1,7 +1,7 @@
 #ifndef TALCS_REMOTESOCKET_P_H
 #define TALCS_REMOTESOCKET_P_H
 
-#include "RemoteSocket.h"
+#include <TalcsRemote/RemoteSocket.h>
 
 namespace talcs {
 
@@ -18,6 +18,6 @@ namespace talcs {
         void setStatus(RemoteSocket::Status status);
     };
 
-} // talcs
+}
 
 #endif // TALCS_REMOTESOCKET_P_H

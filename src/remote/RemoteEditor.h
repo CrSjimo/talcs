@@ -3,14 +3,14 @@
 
 #include <QObject>
 
-#include "global/TalcsGlobal.h"
+#include <TalcsRemote/TalcsRemoteGlobal.h>
 
 namespace talcs {
     class RemoteSocket;
 
     class RemoteEditorPrivate;
 
-    class TALCS_EXPORT RemoteEditor : public QObject {
+    class TALCSREMOTE_EXPORT RemoteEditor : public QObject {
         Q_OBJECT
         friend class RemoteEditorPrivate;
         using GetFunc = std::function<QByteArray (bool *)>;
@@ -29,6 +29,6 @@ namespace talcs {
         QScopedPointer<RemoteEditorPrivate> d;
     };
 
-} // talcs
+}
 
 #endif // TALCS_REMOTEEDITOR_H

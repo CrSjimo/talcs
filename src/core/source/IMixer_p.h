@@ -5,9 +5,10 @@
 
 #include <QMChronMap.h>
 
-#include "core/buffer/AudioBuffer.h"
+#include <TalcsCore/AudioBuffer.h>
 
 namespace talcs {
+
     static inline QPair<float, float> applyGainAndPan(float gain, float pan) {
         return {gain * std::max(1.0f, 1.0f - pan), gain * std::max(1.0f, 1.0f + pan)};
     }
@@ -131,6 +132,7 @@ namespace talcs {
             return readLength;
         }
     };
+    
 }
 
 #endif // TALCS_IMIXER_P_H

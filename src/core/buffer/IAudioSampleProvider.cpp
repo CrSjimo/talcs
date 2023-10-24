@@ -5,6 +5,7 @@
 #include <numeric>
 
 namespace talcs {
+
     /**
      * @internal
      * Prevent the range accessed from exceeding the boundary.
@@ -110,4 +111,5 @@ namespace talcs {
     float IAudioSampleProvider::rms(int channel) const {
         return rms(channel, 0, sampleCount());
     }
+    
 }

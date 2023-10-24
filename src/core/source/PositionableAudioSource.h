@@ -1,12 +1,13 @@
 #ifndef TALCS_POSITIONABLEAUDIOSOURCE_H
 #define TALCS_POSITIONABLEAUDIOSOURCE_H
 
-#include "AudioSource.h"
+#include <TalcsCore/AudioSource.h>
 
 namespace talcs {
+
     class PositionableAudioSourcePrivate;
 
-    class TALCS_EXPORT PositionableAudioSource : public AudioSource {
+    class TALCSCORE_EXPORT PositionableAudioSource : public AudioSource {
         Q_DECLARE_PRIVATE(PositionableAudioSource)
     public:
         PositionableAudioSource();
@@ -21,7 +22,7 @@ namespace talcs {
 
     class PositionableAudioSourceStateSaverPrivate;
 
-    class TALCS_EXPORT PositionableAudioSourceStateSaver {
+    class TALCSCORE_EXPORT PositionableAudioSourceStateSaver {
     public:
         explicit PositionableAudioSourceStateSaver(PositionableAudioSource *src);
         ~PositionableAudioSourceStateSaver();
@@ -29,6 +30,7 @@ namespace talcs {
     private:
         QScopedPointer<PositionableAudioSourceStateSaverPrivate> d;
     };
+    
 }
 
 #endif // TALCS_POSITIONABLEAUDIOSOURCE_H

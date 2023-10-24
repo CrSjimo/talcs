@@ -1,11 +1,13 @@
 #ifndef TALCS_FUTUREAUDIOSOURCE_P_H
 #define TALCS_FUTUREAUDIOSOURCE_P_H
 
-#include "FutureAudioSource.h"
-#include "core/source/PositionableAudioSource_p.h"
 #include <QFutureWatcher>
 
+#include <TalcsCore/private/PositionableAudioSource_p.h>
+#include <TalcsSynthesis/FutureAudioSource.h>
+
 namespace talcs {
+
     class FutureAudioSourcePrivate: public PositionableAudioSourcePrivate {
         Q_DECLARE_PUBLIC(FutureAudioSource)
     public:
@@ -15,6 +17,7 @@ namespace talcs {
         PositionableAudioSource *src = nullptr;
         QMutex mutex;
     };
+    
 }
 
 #endif // TALCS_FUTUREAUDIOSOURCE_P_H

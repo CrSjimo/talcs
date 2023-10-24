@@ -1,7 +1,7 @@
-#ifndef TALCS_AUDIODRIVERMANAGER_P_H
-#define TALCS_AUDIODRIVERMANAGER_P_H
+#ifndef AUDIODRIVERMANAGER_P_H
+#define AUDIODRIVERMANAGER_P_H
 
-#include "AudioDriverManager.h"
+#include <TalcsDevice/AudioDriverManager.h>
 
 #include <QMChronMap.h>
 
@@ -14,4 +14,4 @@ namespace talcs {
     };
 }
 
-#endif // TALCS_AUDIODRIVERMANAGER_P_H
+#endif // AUDIODRIVERMANAGER_P_H

@@ -3,8 +3,8 @@
 
 #include <QDebug>
 
-#include "core/buffer/InterleavedAudioDataWrapper.h"
-#include "format/AudioFormatIO.h"
+#include <TalcsCore/InterleavedAudioDataWrapper.h>
+#include <TalcsFormat/AudioFormatIO.h>
 
 namespace talcs {
 

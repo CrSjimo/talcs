@@ -1,16 +1,16 @@
-#ifndef TALCS_AUDIOSOURCEPLAYBACK_H
-#define TALCS_AUDIOSOURCEPLAYBACK_H
+#ifndef AUDIOSOURCEPLAYBACK_H
+#define AUDIOSOURCEPLAYBACK_H
 
 #include <QScopedPointer>
 
-#include "AudioDeviceCallback.h"
-#include "global/TalcsGlobal.h"
+#include <TalcsDevice/AudioDeviceCallback.h>
 
 namespace talcs {
+
     class AudioSourcePlaybackPrivate;
     class AudioSource;
 
-    class TALCS_EXPORT AudioSourcePlayback : public AudioDeviceCallback {
+    class TALCSDEVICE_EXPORT AudioSourcePlayback : public AudioDeviceCallback {
         Q_DECLARE_PRIVATE(AudioSourcePlayback)
     public:
         explicit AudioSourcePlayback(AudioSource *src, bool takeOwnership = false);
@@ -27,6 +27,7 @@ namespace talcs {
         explicit AudioSourcePlayback(AudioSourcePlaybackPrivate &d);
         QScopedPointer<AudioSourcePlaybackPrivate> d_ptr;
     };
+    
 }
 
-#endif // TALCS_AUDIOSOURCEPLAYBACK_H
+#endif // AUDIOSOURCEPLAYBACK_H

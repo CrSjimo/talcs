@@ -1,6 +1,7 @@
 #include "AudioClipBase.h"
 
 namespace talcs {
+    
     /**
      * @struct AudioClipBase
      * @brief Generic struct for audio clips
@@ -100,4 +101,5 @@ namespace talcs {
      *
      * This represents the maximum end position among all clips.
      */
+
 }

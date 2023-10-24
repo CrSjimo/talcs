@@ -3,12 +3,13 @@
 
 #include <QScopedPointer>
 
-#include "PositionableAudioSource.h"
+#include <TalcsCore/PositionableAudioSource.h>
 
 namespace talcs {
+
     class MemoryAudioSourcePrivate;
 
-    class TALCS_EXPORT MemoryAudioSource : public PositionableAudioSource {
+    class TALCSCORE_EXPORT MemoryAudioSource : public PositionableAudioSource {
         Q_DECLARE_PRIVATE(MemoryAudioSource)
     public:
         explicit MemoryAudioSource(IAudioSampleProvider *buffer = nullptr, bool takeOwnership = false);
@@ -25,6 +26,7 @@ namespace talcs {
     protected:
         explicit MemoryAudioSource(MemoryAudioSourcePrivate &d);
     };
+
 }
 
 #endif // TALCS_MEMORYAUDIOSOURCE_H

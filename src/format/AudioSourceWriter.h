@@ -1,14 +1,16 @@
 #ifndef TALCS_AUDIOSOURCEWRITER_H
 #define TALCS_AUDIOSOURCEWRITER_H
 
-#include "core/base/AudioSourceProcessorBase.h"
+#include <TalcsCore/AudioSourceProcessorBase.h>
+#include <TalcsFormat/TalcsFormatGlobal.h>
 
 namespace talcs {
+
     class AudioSourceWriterPrivate;
     class AudioSource;
     class AudioFormatIO;
 
-    class TALCS_EXPORT AudioSourceWriter : public AudioSourceProcessorBase {
+    class TALCSFORMAT_EXPORT AudioSourceWriter : public AudioSourceProcessorBase {
         Q_OBJECT
         Q_DECLARE_PRIVATE(AudioSourceWriter)
     public:
@@ -20,6 +22,7 @@ namespace talcs {
         bool processBlock(qint64 processedSampleCount, qint64 samplesToProcess) override;
         void processWillFinish() override;
     };
+    
 }
 
 

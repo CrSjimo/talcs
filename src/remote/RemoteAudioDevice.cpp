@@ -152,4 +152,4 @@ namespace talcs {
         d->mutex.unlock();
     }
 
-} // talcs
+}

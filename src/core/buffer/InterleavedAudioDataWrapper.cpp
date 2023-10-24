@@ -1,6 +1,7 @@
 #include "InterleavedAudioDataWrapper.h"
 #include "InterleavedAudioDataWrapper_p.h"
 namespace talcs {
+
     /**
      * @class InterleavedAudioDataWrapper
      * @brief A Wrapper that points to a pre-allocated array of interleaved audio sample data.
@@ -88,4 +89,5 @@ namespace talcs {
             return d->data + startPos;
         return nullptr;
     }
+    
 }

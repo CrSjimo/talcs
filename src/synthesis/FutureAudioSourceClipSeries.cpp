@@ -5,6 +5,7 @@
 #include "core/source/TransportAudioSource.h"
 
 namespace talcs {
+
     FutureAudioSourceClipSeriesPrivate::FutureAudioSourceClipSeriesPrivate(FutureAudioSourceClipSeries *q)
         : AudioSourceClipSeriesImpl(q) {
     }
@@ -279,5 +280,4 @@ namespace talcs {
      * Emitted when one of these parameters are changed.
      */
 
-
-} // talcs
+}

@@ -1,16 +1,17 @@
-#ifndef TALCS_AUDIODRIVERMANAGER_H
-#define TALCS_AUDIODRIVERMANAGER_H
+#ifndef AUDIODRIVERMANAGER_H
+#define AUDIODRIVERMANAGER_H
 
 #include <QObject>
 
-#include "global/TalcsGlobal.h"
+#include <TalcsDevice/TalcsDeviceGlobal.h>
 
 namespace talcs {
+
     class AudioDriverManagerPrivate;
 
     class AudioDriver;
 
-    class TALCS_EXPORT AudioDriverManager : public QObject {
+    class TALCSDEVICE_EXPORT AudioDriverManager : public QObject {
         Q_OBJECT
         Q_DECLARE_PRIVATE(AudioDriverManager)
     public:
@@ -33,6 +34,7 @@ namespace talcs {
         AudioDriverManager(AudioDriverManagerPrivate &d, QObject *parent);
         QScopedPointer<AudioDriverManagerPrivate> d_ptr;
     };
+    
 }
 
-#endif // TALCS_AUDIODRIVERMANAGER_H
+#endif // AUDIODRIVERMANAGER_H
