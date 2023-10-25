@@ -1,7 +1,3 @@
-//
-// Created by Crs_1 on 2023/10/9.
-//
-
 #include "RemoteAudioDevice.h"
 #include "RemoteAudioDevice_p.h"
 
@@ -10,6 +6,77 @@
 
 namespace talcs {
 
+    /**
+     * @struct RemoteAudioDevice::ProcessInfo
+     * @brief The information of each process context
+     *
+     */
+
+    /**
+     * @var RemoteAudioDevice::ProcessInfo::containsInfo
+     * When this value equals zero, the ProcessInfo struct is null.
+     */
+
+    /**
+     * @enum RemoteAudioDevice::ProcessInfo::PlaybackStatus
+     * Current playback status
+     *
+     * @var RemoteAudioDevice::ProcessInfo::NotPlaying
+     * The remote audio context is not playing
+     *
+     * @var RemoteAudioDevice::ProcessInfo::Playing
+     * The remote audio context is playing
+     *
+     * @var RemoteAudioDevice::ProcessInfo::RealtimePlaying
+     * The remote audio context is playing in realtime
+     */
+
+    /**
+     * @var RemoteAudioDevice::ProcessInfo::status
+     * Current playback status
+     */
+
+    /**
+     * @var RemoteAudioDevice::ProcessInfo::timeSignatureNumerator
+     * The numerator of remote audio context. Equals zero when this field is not supported.
+     */
+
+    /**
+     * @var RemoteAudioDevice::ProcessInfo::timeSignatureDenominator
+     * The denominator of remote audio context. Equals zero when this field is not supported.
+     */
+
+    /**
+     * @var RemoteAudioDevice::ProcessInfo::tempo
+     * The tempo (bpm) of remote audio context. Equals zero when this field is not supported.
+     */
+
+    /**
+     * @var RemoteAudioDevice::ProcessInfo::position
+     * The position of remote audio context
+     */
+
+    /**
+     * @class RemoteAudioDevice::ProcessInfoCallback
+     * @brief The callback of ProcessInfo. Called before each audio block is processed.
+     */
+
+    /**
+     * @fn void RemoteAudioDevice::ProcessInfoCallback::onThisBlockProcessInfo(const RemoteAudioDevice::ProcessInfo &processInfo)
+     * The work function.
+     */
+
+    /**
+     * @class RemoteAudioDevice
+     * @brief The device that plays audio to a remote audio context.
+     */
+
+    /**
+     * Constructor.
+     * @param socket the remote socket where this device runs
+     * @param name the name of this device
+     * @param parent
+     */
     RemoteAudioDevice::RemoteAudioDevice(RemoteSocket *socket, const QString &name, QObject *parent)
         : AudioDevice(*new RemoteAudioDevicePrivate, parent) {
         Q_D(RemoteAudioDevice);
@@ -29,6 +96,11 @@ namespace talcs {
         });
     }
 
+    /**
+     * Destructor.
+     *
+     * Note that if the device is opened, it will be closed now.
+     */
     RemoteAudioDevice::~RemoteAudioDevice() {
         Q_D(RemoteAudioDevice);
         RemoteAudioDevice::close();
@@ -116,11 +188,17 @@ namespace talcs {
         AudioDevice::close();
     }
 
+    /**
+     * Adds a ProcessInfoCallback.
+     */
     void RemoteAudioDevice::addProcessInfoCallback(RemoteAudioDevice::ProcessInfoCallback *callback) {
         Q_D(RemoteAudioDevice);
         d->processInfoCallbackList.append(callback);
     }
 
+    /**
+     * Removes a ProcessInfoCallback.
+     */
     void RemoteAudioDevice::removeProcessInfoCallback(RemoteAudioDevice::ProcessInfoCallback *callback) {
         Q_D(RemoteAudioDevice);
         d->processInfoCallbackList.removeOne(callback);
@@ -151,5 +229,10 @@ namespace talcs {
         Q_D(RemoteAudioDevice);
         d->mutex.unlock();
     }
+
+    /**
+     * @fn void RemoteAudioDevice::remoteOpened(qint64 bufferSize, double sampleRate, int maxChannelCount)
+     * Emitted when the RemoteAudioSource prepares to play.
+     */
 
 }

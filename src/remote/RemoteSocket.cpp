@@ -14,10 +14,26 @@ namespace talcs {
         }
     }
 
+    /**
+     * @class RemoteSocket
+     * @brief A RemoteSocket object provides a duplex connection for RPC.
+     */
+
+    /**
+     * Constructor.
+     * @param serverPort the TCP port of server to listen
+     * @param clientPort the TCP port of client to connect
+     * @param parent
+     */
     RemoteSocket::RemoteSocket(uint16_t serverPort, uint16_t clientPort, QObject *parent)
         : QObject(parent), d(new RemoteSocketPrivate{this, serverPort, clientPort, new RemoteSocketPrivate::AliveMonitor(this, 1000)}) {
     }
 
+    /**
+     * Destructor.
+     *
+     * Note that if the socket is still connected, it will be closed now.
+     */
     RemoteSocket::~RemoteSocket() {
         RemoteSocket::stop();
     }
@@ -58,6 +74,11 @@ namespace talcs {
     }
 
 
+    /**
+     * Starts the socket server.
+     * @param threadCount the number of server dispatcher thread
+     * @return @c true if successful
+     */
     bool RemoteSocket::startServer(int threadCount) {
         try {
             m_server.reset(new rpc::server("127.0.0.1", d->serverPort));
@@ -85,6 +106,12 @@ namespace talcs {
         return true;
     }
 
+    /**
+     * Starts the socket client.
+     *
+     * Note that all bindings should be done before client starts.
+     * @return @c true if successful
+     */
     bool RemoteSocket::startClient() {
         try {
             m_client.reset(new rpc::client("127.0.0.1", d->clientPort));
@@ -99,6 +126,9 @@ namespace talcs {
         return true;
     }
 
+    /**
+     * Stops the server and the client.
+     */
     void RemoteSocket::stop() {
         QMutexLocker locker(&m_clientMutex);
         d->aliveMonitor->requestInterruption();
@@ -116,6 +146,26 @@ namespace talcs {
         m_client.reset();
     }
 
+    /**
+     * @enum RemoteSocket::Status
+     * Socket status.
+     *
+     * @var RemoteSocket::NotConnected
+     * Both server and client are not connected.
+     *
+     * @var RemoteSocket::ServerOnPending
+     * The client is connected to the remote server, but the server is still waiting for remote client connection.
+     *
+     * @var RemoteSocket::ClientOnPending.
+     * The remote client is connected to the server, but the client is still trying to connect to the remote server.
+     *
+     * @var RemoteSocket::Connected
+     * Both server and client is connected.
+     */
+
+    /**
+     * Gets the status.
+     */
     RemoteSocket::Status RemoteSocket::status() const {
         return d->status;
     }
@@ -132,6 +182,21 @@ namespace talcs {
         throw std::runtime_error("Target function unbound");
     }
 
+    /**
+     * @fn void RemoteSocket::Reply RemoteSocket::call(const QString &feature, const QString &name, Args... args)
+     * Calls a remote function.
+     */
+
+    /**
+     * @fn void RemoteSocket::bind(const QString &feature, const QString &name, Functor f)
+     * Binds a function.
+     */
+
+    /**
+     * Unbinds a function.
+     *
+     * Note that the same function should not be bound again after unbound, until the socket is stopped and restarted.
+     */
     void RemoteSocket::unbind(const QString &feature, const QString &name) {
         /* we temporarily do nothing with the rpc server */
         // m_server->bind((feature + "." + name).toStdString(), &replyUnboundError);
@@ -140,12 +205,23 @@ namespace talcs {
             m_features.remove(feature);
     }
 
+    /**
+     * Gets all available features.
+     */
     QList<QString> RemoteSocket::features() const {
         return m_features.keys();
     }
 
+    /**
+     * Checks whether a feature is available.
+     */
     bool RemoteSocket::hasFeature(const QString &feature) const {
         return m_features.contains(feature) != 0;
     }
+
+    /**
+     * @fn void RemoteSocket::socketStatusChanged(int newStatus, int oldStatus)
+     * Emitted when the socket status is changed.
+     */
     
 }
