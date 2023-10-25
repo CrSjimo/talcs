@@ -18,6 +18,7 @@ namespace talcs {
 
     class TALCSREMOTE_EXPORT RemoteSocket : public QObject {
         Q_OBJECT
+        friend class RemoteSocketPrivate;
     public:
         class Reply {
         public:
@@ -51,25 +52,8 @@ namespace talcs {
             clmdep_msgpack::object m_object;
         };
 
-        class AliveMonitor : public QThread {
-        public:
-            AliveMonitor(RemoteSocket *remoteSocket, int intervalMs)
-                : QThread(remoteSocket), m_remoteSocket(remoteSocket), m_intervalMs(intervalMs) {
-            }
-
-        protected:
-            void run() override;
-
-        private:
-            RemoteSocket *m_remoteSocket;
-            int m_intervalMs;
-        };
-
         explicit RemoteSocket(uint16_t serverPort, uint16_t clientPort, QObject *parent = nullptr);
         ~RemoteSocket() override;
-
-        void clientHeartbeat();
-        void socketGreet();
 
         bool startServer(int threadCount = 1);
         bool startClient();

@@ -5,55 +5,55 @@
 
 namespace talcs {
 
-    void RemoteSocket::AliveMonitor::run() {
+    void RemoteSocketPrivate::AliveMonitor::run() {
         for (;;) {
             if (this->isInterruptionRequested())
                 break;
-            m_remoteSocket->clientHeartbeat();
+            m_remoteSocket->d->clientHeartbeat();
             QThread::msleep(m_intervalMs);
         }
     }
 
     RemoteSocket::RemoteSocket(uint16_t serverPort, uint16_t clientPort, QObject *parent)
-        : QObject(parent), d(new RemoteSocketPrivate{this, serverPort, clientPort, new AliveMonitor(this, 1000)}) {
+        : QObject(parent), d(new RemoteSocketPrivate{this, serverPort, clientPort, new RemoteSocketPrivate::AliveMonitor(this, 1000)}) {
     }
 
     RemoteSocket::~RemoteSocket() {
         RemoteSocket::stop();
     }
 
-    void RemoteSocket::clientHeartbeat() {
-        auto connectionState = m_client->get_connection_state();
-        Status currentStatus = d->status;
+    void RemoteSocketPrivate::clientHeartbeat() {
+        auto connectionState = q->m_client->get_connection_state();
+        RemoteSocket::Status currentStatus = status;
         if (connectionState == rpc::client::connection_state::connected) {
-            if (currentStatus == ClientOnPending) {
-                if (!call("socket", "greet").isError())
-                    d->setStatus(Connected);
-            } else if (currentStatus == NotConnected) {
-                if (!call("socket", "greet").isError())
-                    d->setStatus(ServerOnPending);
+            if (currentStatus == RemoteSocket::ClientOnPending) {
+                if (!q->call("socket", "greet").isError())
+                    setStatus(RemoteSocket::Connected);
+            } else if (currentStatus == RemoteSocket::NotConnected) {
+                if (!q->call("socket", "greet").isError())
+                    setStatus(RemoteSocket::ServerOnPending);
             }
         } else {
-            if (currentStatus != ClientOnPending)
-                d->setStatus(NotConnected);
+            if (currentStatus != RemoteSocket::ClientOnPending)
+                setStatus(RemoteSocket::NotConnected);
             if (connectionState != rpc::client::connection_state::initial) {
-                QMutexLocker locker(&m_clientMutex);
-                m_client.reset(new rpc::client("127.0.0.1", d->clientPort));
-                m_client->set_timeout(1000);
+                QMutexLocker locker(&q->m_clientMutex);
+                q->m_client.reset(new rpc::client("127.0.0.1", clientPort));
+                q->m_client->set_timeout(1000);
             }
         }
     }
 
-    void RemoteSocket::socketGreet() {
-        QMutexLocker locker(&m_clientMutex);
-        Status currentStatus = d->status;
-        if (currentStatus == ServerOnPending)
-            d->setStatus(Connected);
-        else if (currentStatus == NotConnected)
-            d->setStatus(ClientOnPending);
-        else if (currentStatus == Connected)
+    void RemoteSocketPrivate::socketGreet() {
+        QMutexLocker locker(&q->m_clientMutex);
+        RemoteSocket::Status currentStatus = status;
+        if (currentStatus == RemoteSocket::ServerOnPending)
+            setStatus(RemoteSocket::Connected);
+        else if (currentStatus == RemoteSocket::NotConnected)
+            setStatus(RemoteSocket::ClientOnPending);
+        else if (currentStatus == RemoteSocket::Connected)
             throw std::runtime_error("Duplicated connection (current status is Connected)");
-        else if (currentStatus == ClientOnPending)
+        else if (currentStatus == RemoteSocket::ClientOnPending)
             throw std::runtime_error("Duplicated connection (current status is ClientOnPending)");
     }
 
@@ -70,7 +70,7 @@ namespace talcs {
                 }
                 return vec;
             });
-            bind("socket", "greet", [this] { socketGreet(); });
+            bind("socket", "greet", [this] { d->socketGreet(); });
             for (int i = 0; i < threadCount; i++) {
                 auto t = QThread::create([=] { m_server->run(); });
                 d->serverThreads.append(t);
