@@ -75,7 +75,6 @@ namespace talcs {
      * Constructor.
      * @param socket the remote socket where this device runs
      * @param name the name of this device
-     * @param parent
      */
     RemoteAudioDevice::RemoteAudioDevice(RemoteSocket *socket, const QString &name, QObject *parent)
         : AudioDevice(*new RemoteAudioDevicePrivate, parent) {

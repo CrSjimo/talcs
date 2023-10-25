@@ -150,5 +150,3 @@ AudioSourcePlayback playback(&tpSrc);
 tpSrc.play();
 device->start(&playback);
 ```
-
-

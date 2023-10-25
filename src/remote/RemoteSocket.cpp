@@ -23,7 +23,6 @@ namespace talcs {
      * Constructor.
      * @param serverPort the TCP port of server to listen
      * @param clientPort the TCP port of client to connect
-     * @param parent
      */
     RemoteSocket::RemoteSocket(uint16_t serverPort, uint16_t clientPort, QObject *parent)
         : QObject(parent), d(new RemoteSocketPrivate{this, serverPort, clientPort, new RemoteSocketPrivate::AliveMonitor(this, 1000)}) {
