@@ -1,7 +1,7 @@
 #ifndef TALCS_ASIOAUDIODEVICE_H
 #define TALCS_ASIOAUDIODEVICE_H
 
-#include "../AudioDevice.h"
+#include <TalcsDevice/AudioDevice.h>
 
 struct IASIO;
 
