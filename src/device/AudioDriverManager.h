@@ -1,5 +1,5 @@
-#ifndef AUDIODRIVERMANAGER_H
-#define AUDIODRIVERMANAGER_H
+#ifndef TALCS_AUDIODRIVERMANAGER_H
+#define TALCS_AUDIODRIVERMANAGER_H
 
 #include <QObject>
 
@@ -37,4 +37,4 @@ namespace talcs {
     
 }
 
-#endif // AUDIODRIVERMANAGER_H
+#endif // TALCS_AUDIODRIVERMANAGER_H

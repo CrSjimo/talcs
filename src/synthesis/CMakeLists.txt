@@ -4,7 +4,7 @@ set(CMAKE_AUTOUIC on)
 set(CMAKE_AUTOMOC on)
 set(CMAKE_AUTORCC on)
 
-file(GLOB_RECURSE _src *.h *.hpp *.cpp *.cc)
+file(GLOB_RECURSE _src *.h *.cpp)
 
 talcs_add_library(${PROJECT_NAME}
     SOURCES ${_src}

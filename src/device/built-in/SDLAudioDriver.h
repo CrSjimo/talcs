@@ -8,7 +8,7 @@ namespace talcs {
     class SDLAudioDriverEventPoller;
     class SDLAudioDevice;
 
-    class TALCS_EXPORT SDLAudioDriver : public AudioDriver {
+    class TALCSDEVICE_EXPORT SDLAudioDriver : public AudioDriver {
         Q_OBJECT
         Q_DECLARE_PRIVATE(SDLAudioDriver)
         friend class SDLAudioDevice;

@@ -6,7 +6,7 @@
 namespace talcs {
     class ASIOAudioDriverPrivate;
 
-    class TALCS_EXPORT ASIOAudioDriver : public AudioDriver {
+    class TALCSDEVICE_EXPORT ASIOAudioDriver : public AudioDriver {
         Q_OBJECT
         Q_DECLARE_PRIVATE(ASIOAudioDriver)
     public:

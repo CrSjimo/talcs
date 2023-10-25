@@ -90,6 +90,7 @@ namespace talcs {
         for (auto &[name, _]: d->driverDict) {
             list.append(name);
         }
+        return list;
     }
 
     AudioDriverManager::AudioDriverManager(AudioDriverManagerPrivate &d, QObject *parent) : QObject(parent), d_ptr(&d) {
