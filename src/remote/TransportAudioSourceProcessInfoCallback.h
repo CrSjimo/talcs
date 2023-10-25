@@ -1,13 +1,13 @@
 #ifndef TALCS_TRANSPORTAUDIOSOURCEPROCESSINFOCALLBACK_H
 #define TALCS_TRANSPORTAUDIOSOURCEPROCESSINFOCALLBACK_H
 
-#include "RemoteAudioDevice.h"
+#include <TalcsRemote/RemoteAudioDevice.h>
 
 namespace talcs {
 
     class TransportAudioSource;
 
-    class TALCS_EXPORT TransportAudioSourceProcessInfoCallback : public RemoteAudioDevice::ProcessInfoCallback {
+    class TALCSREMOTE_EXPORT TransportAudioSourceProcessInfoCallback : public RemoteAudioDevice::ProcessInfoCallback {
     public:
         explicit TransportAudioSourceProcessInfoCallback(TransportAudioSource *tpSrc);
         void onThisBlockProcessInfo(const RemoteAudioDevice::ProcessInfo &processInfo) override;
@@ -17,6 +17,6 @@ namespace talcs {
         bool m_isPaused = true;
     };
 
-} // talcs
+}
 
 #endif // TALCS_TRANSPORTAUDIOSOURCEPROCESSINFOCALLBACK_H

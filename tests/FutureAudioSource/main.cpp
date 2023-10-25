@@ -16,14 +16,14 @@
 #include <QFormLayout>
 #include <QProgressBar>
 
-#include <device/AudioDevice.h>
-#include <device/AudioDriver.h>
-#include <device/AudioDriverManager.h>
-#include <device/AudioSourcePlayback.h>
-#include <core/source/SineWaveAudioSource.h>
-#include <core/source/TransportAudioSource.h>
-#include <synthesis/FutureAudioSource.h>
-#include <synthesis/FutureAudioSourceClipSeries.h>
+#include <TalcsDevice//AudioDevice.h>
+#include <TalcsDevice//AudioDriver.h>
+#include <TalcsDevice//AudioDriverManager.h>
+#include <TalcsDevice//AudioSourcePlayback.h>
+#include <TalcsCore/SineWaveAudioSource.h>
+#include <TalcsCore/TransportAudioSource.h>
+#include <TalcsSynthesis/FutureAudioSource.h>
+#include <TalcsSynthesis/FutureAudioSourceClipSeries.h>
 
 using namespace talcs;
 

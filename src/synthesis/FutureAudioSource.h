@@ -3,24 +3,27 @@
 
 #include <QFuture>
 
-#include "core/source/PositionableAudioSource.h"
+#include <TalcsCore/PositionableAudioSource.h>
+#include <TalcsSynthesis/TalcsSynthesisGlobal.h>
 
 namespace talcs {
 
     class FutureAudioSourcePrivate;
 
-    class TALCS_EXPORT FutureAudioSource: public QObject, public PositionableAudioSource {
+    class TALCSSYNTHESIS_EXPORT FutureAudioSource : public QObject, public PositionableAudioSource {
         Q_OBJECT
         Q_DECLARE_PRIVATE_D(PositionableAudioSource::d_ptr, FutureAudioSource)
     public:
         struct Callbacks {
-            Callbacks() : preloadingOpen([](qint64, double){ return true; }), preloadingClose([](){}) {
+            Callbacks()
+                : preloadingOpen([](qint64, double) { return true; }), preloadingClose([]() {}) {
             }
-            std::function<bool (qint64, double)> preloadingOpen;
-            std::function<void ()> preloadingClose;
+            std::function<bool(qint64, double)> preloadingOpen;
+            std::function<void()> preloadingClose;
         };
 
-        explicit FutureAudioSource(const QFuture<PositionableAudioSource *> &future, const Callbacks &callbacks = {}, QObject *parent = nullptr);
+        explicit FutureAudioSource(const QFuture<PositionableAudioSource *> &future,
+                                   const Callbacks &callbacks = {}, QObject *parent = nullptr);
         ~FutureAudioSource() override;
 
         QFuture<PositionableAudioSource *> future() const;
@@ -54,6 +57,6 @@ namespace talcs {
         void progressChanged(int progress);
     };
 
-} // talcs
+}
 
 #endif // TALCS_FUTUREAUDIOSOURCE_H

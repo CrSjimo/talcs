@@ -2,6 +2,7 @@
 #include "AudioSource_p.h"
 
 namespace talcs {
+
     /**
      * @struct AudioSourceReadData
      * @brief The object that contains the target for AudioSource to fill data in
@@ -59,4 +60,5 @@ namespace talcs {
      * @param readData see docs in class AudioSourceReadData
      * @returns the actual length of audio read measured in samples
      */
+     
 }

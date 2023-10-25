@@ -1,0 +1,18 @@
+#ifndef TALCSSYNTHESISGLOBAL_H
+#define TALCSSYNTHESISGLOBAL_H
+
+#include <QtGlobal>
+
+#ifndef TALCSSYNTHESIS_EXPORT
+#  ifdef TALCSSYNTHESIS_STATIC
+#    define TALCSSYNTHESIS_EXPORT
+#  else
+#    ifdef TALCSSYNTHESIS_LIBRARY
+#      define TALCSSYNTHESIS_EXPORT Q_DECL_EXPORT
+#    else
+#      define TALCSSYNTHESIS_EXPORT Q_DECL_IMPORT
+#    endif
+#  endif
+#endif
+
+#endif // TALCSSYNTHESISGLOBAL_H

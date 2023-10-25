@@ -1,13 +1,12 @@
 #ifndef TALCS_REMOTEAUDIODEVICE_P_H
 #define TALCS_REMOTEAUDIODEVICE_P_H
 
-#include "RemoteAudioDevice.h"
-
 #include <QMutex>
 #include <QSharedMemory>
 
-#include "core/buffer/AudioDataWrapper.h"
-#include "device/AudioDevice_p.h"
+#include <TalcsCore/AudioDataWrapper.h>
+#include <TalcsDevice/private/AudioDevice_p.h>
+#include <TalcsRemote/RemoteAudioDevice.h>
 
 namespace talcs {
     class RemoteAudioDevicePrivate : public AudioDevicePrivate {

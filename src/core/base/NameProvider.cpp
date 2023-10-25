@@ -1,6 +1,7 @@
 #include "NameProvider.h"
 
 namespace talcs {
+
     /**
      * @class NameProvider
      * @brief Base class that supports setting and getting the name
@@ -19,4 +20,5 @@ namespace talcs {
     void NameProvider::setName(const QString &name) {
         this->m_name = name;
     }
+    
 }

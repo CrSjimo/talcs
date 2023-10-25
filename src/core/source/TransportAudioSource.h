@@ -3,14 +3,15 @@
 
 #include <QObject>
 
-#include "AudioSource.h"
-#include "PositionableAudioSource.h"
+#include <TalcsCore/AudioSource.h>
+#include <TalcsCore/PositionableAudioSource.h>
 
 namespace talcs {
+
     class TransportAudioSourcePrivate;
     class TransportAudioSourceWriter;
 
-    class TALCS_EXPORT TransportAudioSource : public QObject, public AudioSource {
+    class TALCSCORE_EXPORT TransportAudioSource : public QObject, public AudioSource {
         Q_OBJECT
         Q_DECLARE_PRIVATE_D(AudioSource::d_ptr, TransportAudioSource)
         friend class TransportAudioSourceWriter;
@@ -53,7 +54,7 @@ namespace talcs {
 
     class TransportAudioSourceStateSaverPrivate;
 
-    class TALCS_EXPORT TransportAudioSourceStateSaver {
+    class TALCSCORE_EXPORT TransportAudioSourceStateSaver {
     public:
         explicit TransportAudioSourceStateSaver(TransportAudioSource *src);
         ~TransportAudioSourceStateSaver();

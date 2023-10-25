@@ -1,15 +1,15 @@
 #ifndef TALCS_FUTUREAUDIOSOURCECLIPSERIES_P_H
 #define TALCS_FUTUREAUDIOSOURCECLIPSERIES_P_H
 
-#include "FutureAudioSourceClipSeries.h"
-
 #include <QMutex>
 #include <QMap>
 
-#include "core/source/PositionableAudioSource_p.h"
-#include "core/source/AudioSourceClipSeries_p.h"
+#include <TalcsCore/private/AudioSourceClipSeries_p.h>
+#include <TalcsCore/private/PositionableAudioSource_p.h>
+#include <TalcsSynthesis/FutureAudioSourceClipSeries.h>
 
 namespace talcs {
+
     class FutureAudioSourceClipSeriesPrivate: public PositionableAudioSourcePrivate, public AudioSourceClipSeriesImpl<FutureAudioSourceClip, FutureAudioSourceClipSeries> {
         Q_DECLARE_PUBLIC(FutureAudioSourceClipSeries)
     public:
@@ -35,6 +35,7 @@ namespace talcs {
         void checkAndNotify(qint64 position, qint64 length);
         void checkAndNotify();
     };
+    
 }
 
 #endif // TALCS_FUTUREAUDIOSOURCECLIPSERIES_P_H

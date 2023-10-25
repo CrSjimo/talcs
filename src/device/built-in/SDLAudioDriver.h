@@ -1,14 +1,14 @@
 #ifndef TALCS_SDLAUDIODRIVER_H
 #define TALCS_SDLAUDIODRIVER_H
 
-#include "../AudioDriver.h"
+#include <TalcsDevice/AudioDriver.h>
 
 namespace talcs {
     class SDLAudioDriverPrivate;
     class SDLAudioDriverEventPoller;
     class SDLAudioDevice;
 
-    class TALCS_EXPORT SDLAudioDriver : public AudioDriver {
+    class TALCSDEVICE_EXPORT SDLAudioDriver : public AudioDriver {
         Q_OBJECT
         Q_DECLARE_PRIVATE(SDLAudioDriver)
         friend class SDLAudioDevice;

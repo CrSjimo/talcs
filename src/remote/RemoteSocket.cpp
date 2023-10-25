@@ -147,4 +147,5 @@ namespace talcs {
     bool RemoteSocket::hasFeature(const QString &feature) const {
         return m_features.contains(feature) != 0;
     }
-} // talcs
+    
+}

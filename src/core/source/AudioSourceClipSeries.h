@@ -1,21 +1,24 @@
-#ifndef TALCS_AUDIOSOURCECLIPSERIES_H
-#define TALCS_AUDIOSOURCECLIPSERIES_H
+#ifndef AUDIOSOURCECLIPSERIES_H
+#define AUDIOSOURCECLIPSERIES_H
 
-#include "PositionableAudioSource.h"
-#include "core/base/AudioClipBase.h"
+#include <TalcsCore/PositionableAudioSource.h>
+#include <TalcsCore/AudioClipBase.h>
 
 namespace talcs {
-    typedef AudioClipBase<PositionableAudioSource> AudioSourceClip;
+
+    using AudioSourceClip = AudioClipBase<PositionableAudioSource>;
 
     class AudioSourceClipSeriesPrivate;
 
     template <class ClipClass, class SeriesClass>
     class AudioSourceClipSeriesImpl;
 
-    class TALCS_EXPORT AudioSourceClipSeries : public PositionableAudioSource,
-                                               public AudioClipSeriesBase<PositionableAudioSource> {
+    class TALCSCORE_EXPORT AudioSourceClipSeries
+        : public PositionableAudioSource,
+          public AudioClipSeriesBase<PositionableAudioSource> {
         Q_DECLARE_PRIVATE(AudioSourceClipSeries)
         friend class AudioSourceClipSeriesImpl<AudioSourceClip, AudioSourceClipSeries>;
+
     public:
         AudioSourceClipSeries();
         ~AudioSourceClipSeries() override;
@@ -33,6 +36,7 @@ namespace talcs {
     protected:
         explicit AudioSourceClipSeries(AudioSourceClipSeriesPrivate &d);
     };
+
 }
 
-#endif // TALCS_AUDIOSOURCECLIPSERIES_H
+#endif // AUDIOSOURCECLIPSERIES_H

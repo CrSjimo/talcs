@@ -4,7 +4,9 @@
 #include <QDebug>
 
 namespace talcs {
-    AudioSourceClipSeriesPrivate::AudioSourceClipSeriesPrivate(AudioSourceClipSeries *q): AudioSourceClipSeriesImpl(q) {
+
+    AudioSourceClipSeriesPrivate::AudioSourceClipSeriesPrivate(AudioSourceClipSeries *q)
+        : AudioSourceClipSeriesImpl(q) {
     }
 
     /**
@@ -15,9 +17,11 @@ namespace talcs {
     /**
      * Default constructor.
      */
-    AudioSourceClipSeries::AudioSourceClipSeries() : AudioSourceClipSeries(*new AudioSourceClipSeriesPrivate(this)) {
+    AudioSourceClipSeries::AudioSourceClipSeries()
+        : AudioSourceClipSeries(*new AudioSourceClipSeriesPrivate(this)) {
     }
-    AudioSourceClipSeries::AudioSourceClipSeries(AudioSourceClipSeriesPrivate &d) : PositionableAudioSource(d) {
+    AudioSourceClipSeries::AudioSourceClipSeries(AudioSourceClipSeriesPrivate &d)
+        : PositionableAudioSource(d) {
     }
 
     /**
@@ -37,7 +41,8 @@ namespace talcs {
         qAsConst(m_clips).overlap_find_all(
             readDataInterval, [=, &readDataInterval](const decltype(m_clips)::const_iterator &it) {
                 auto clip = it->interval();
-                auto [clipReadPosition, clipReadInterval] = calculateClipReadData(clip, readDataInterval);
+                auto [clipReadPosition, clipReadInterval] =
+                    calculateClipReadData(clip, readDataInterval);
                 clip.content()->setNextReadPosition(clipReadPosition);
                 clip.content()->read({
                     readData.buffer,
@@ -71,7 +76,7 @@ namespace talcs {
     bool AudioSourceClipSeries::open(qint64 bufferSize, double sampleRate) {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        if(d->open(bufferSize, sampleRate))
+        if (d->open(bufferSize, sampleRate))
             return AudioStreamBase::open(bufferSize, sampleRate);
         return false;
     }
@@ -91,7 +96,7 @@ namespace talcs {
     bool AudioSourceClipSeries::addClip(const AudioSourceClip &clip) {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        if(AudioClipSeriesBase::addClip(clip))
+        if (AudioClipSeriesBase::addClip(clip))
             return d->addClip(clip);
         return false;
     }
@@ -99,7 +104,7 @@ namespace talcs {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         auto clip = AudioClipSeriesBase::findClipAt(pos);
-        if(AudioClipSeriesBase::removeClipAt(pos)){
+        if (AudioClipSeriesBase::removeClipAt(pos)) {
             d->removeClip(clip);
             return true;
         }
@@ -111,4 +116,5 @@ namespace talcs {
         d->clearClips();
         AudioClipSeriesBase::clearClips();
     }
+    
 }

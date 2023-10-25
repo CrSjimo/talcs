@@ -1,10 +1,10 @@
 #include <QCoreApplication>
 #include <QDebug>
-#include <device/AudioDriverManager.h>
-#include <device/AudioDriver.h>
-#include <device/AudioDevice.h>
-#include <device/AudioSourcePlayback.h>
-#include <core/source/SineWaveAudioSource.h>
+#include <TalcsDevice/AudioDriverManager.h>
+#include <TalcsDevice/AudioDriver.h>
+#include <TalcsDevice/AudioDevice.h>
+#include <TalcsDevice/AudioSourcePlayback.h>
+#include <TalcsCore/SineWaveAudioSource.h>
 
 int main(int argc, char **argv) {
     QCoreApplication a(argc, argv);

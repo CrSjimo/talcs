@@ -1,12 +1,12 @@
 #ifndef TALCS_ASIOAUDIODRIVER_H
 #define TALCS_ASIOAUDIODRIVER_H
 
-#include "../AudioDriver.h"
+#include <TalcsDevice/AudioDriver.h>
 
 namespace talcs {
     class ASIOAudioDriverPrivate;
 
-    class TALCS_EXPORT ASIOAudioDriver : public AudioDriver {
+    class TALCSDEVICE_EXPORT ASIOAudioDriver : public AudioDriver {
         Q_OBJECT
         Q_DECLARE_PRIVATE(ASIOAudioDriver)
     public:

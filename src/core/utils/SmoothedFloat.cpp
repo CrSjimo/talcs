@@ -2,6 +2,7 @@
 #include "SmoothedFloat_p.h"
 
 namespace talcs {
+
     SmoothedFloat::SmoothedFloat() : d(new SmoothedFloatPrivate) {
     }
 
@@ -53,4 +54,5 @@ namespace talcs {
     bool SmoothedFloat::isSmoothing() const {
         return d->countdown > 0;
     }
-} // talcs
+    
+}

@@ -1,12 +1,11 @@
 #ifndef TALCS_IAUDIOSAMPLEPROVIDER_H
 #define TALCS_IAUDIOSAMPLEPROVIDER_H
 
-#include <QtGlobal>
-
-#include "global/TalcsGlobal.h"
+#include <TalcsCore/TalcsCoreGlobal.h>
 
 namespace talcs {
-    class TALCS_EXPORT IAudioSampleProvider {
+
+    class TALCSCORE_EXPORT IAudioSampleProvider {
     public:
         virtual ~IAudioSampleProvider() = default;
 
@@ -23,6 +22,7 @@ namespace talcs {
         float rms(int channel, qint64 startPos, qint64 length) const;
         float rms(int channel) const;
     };
+
 }
 
 #endif // TALCS_IAUDIOSAMPLEPROVIDER_H

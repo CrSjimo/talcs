@@ -3,15 +3,17 @@
 
 #include <QIODevice>
 
-#include "core/base/ErrorStringProvider.h"
+#include <TalcsCore/ErrorStringProvider.h>
+#include <TalcsFormat/TalcsFormatGlobal.h>
 
 class SndfileHandle;
 class QIODevice;
 
 namespace talcs {
+
     class AudioFormatIOPrivate;
 
-    class TALCS_EXPORT AudioFormatIO : public ErrorStringProvider {
+    class TALCSFORMAT_EXPORT AudioFormatIO : public ErrorStringProvider {
         Q_DECLARE_PRIVATE(AudioFormatIO)
     public:
         explicit AudioFormatIO(QIODevice *stream = nullptr);
@@ -163,6 +165,7 @@ namespace talcs {
         explicit AudioFormatIO(AudioFormatIOPrivate &d);
         QScopedPointer<AudioFormatIOPrivate> d_ptr;
     };
+
 }
 
 #endif // TALCS_AUDIOFORMATIO_H

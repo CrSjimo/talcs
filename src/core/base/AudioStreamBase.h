@@ -1,12 +1,11 @@
 #ifndef TALCS_AUDIOSTREAMBASE_H
 #define TALCS_AUDIOSTREAMBASE_H
 
-#include <QtGlobal>
-
-#include "global/TalcsGlobal.h"
+#include <TalcsCore/TalcsCoreGlobal.h>
 
 namespace talcs {
-    class TALCS_EXPORT AudioStreamBase {
+
+    class TALCSCORE_EXPORT AudioStreamBase {
     public:
         virtual bool open(qint64 bufferSize, double sampleRate);
         bool isOpen() const;
@@ -20,8 +19,7 @@ namespace talcs {
         double m_sampleRate = 0;
         bool m_isOpened = false;
     };
+
 }
-
-
 
 #endif // TALCS_AUDIOSTREAMBASE_H

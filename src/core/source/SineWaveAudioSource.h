@@ -1,14 +1,15 @@
 #ifndef TALCS_SINEWAVEAUDIOSOURCE_H
 #define TALCS_SINEWAVEAUDIOSOURCE_H
 
-#include "PositionableAudioSource.h"
+#include <TalcsCore/PositionableAudioSource.h>
 
 #include <functional>
 
 namespace talcs {
+
     class SineWaveAudioSourcePrivate;
 
-    class TALCS_EXPORT SineWaveAudioSource : public PositionableAudioSource {
+    class TALCSCORE_EXPORT SineWaveAudioSource : public PositionableAudioSource {
         Q_DECLARE_PRIVATE(SineWaveAudioSource)
     public:
         explicit SineWaveAudioSource(double frequency);
@@ -25,6 +26,7 @@ namespace talcs {
 
         void setNextReadPosition(qint64 pos) override;
     };
+    
 }
 
 #endif // TALCS_SINEWAVEAUDIOSOURCE_H

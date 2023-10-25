@@ -1,17 +1,17 @@
-#ifndef TALCS_AUDIODRIVERMANAGER_P_H
-#define TALCS_AUDIODRIVERMANAGER_P_H
+#ifndef AUDIODRIVERMANAGER_P_H
+#define AUDIODRIVERMANAGER_P_H
 
-#include "AudioDriverManager.h"
+#include <TalcsDevice/AudioDriverManager.h>
 
-#include <QMChronMap.h>
+#include <QList>
 
 namespace talcs {
     class AudioDriverManagerPrivate {
         Q_DECLARE_PUBLIC(AudioDriverManager)
     public:
         AudioDriverManager *q_ptr;
-        QMChronMap<QString, AudioDriver *> driverDict;
+        QList<QPair<QString, AudioDriver *>> driverDict;
     };
 }
 
-#endif // TALCS_AUDIODRIVERMANAGER_P_H
+#endif // AUDIODRIVERMANAGER_P_H

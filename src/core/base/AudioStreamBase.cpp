@@ -1,6 +1,7 @@
 #include "AudioStreamBase.h"
 
 namespace talcs {
+
     /**
      * @class AudioStreamBase
      * @brief Base class for audio streams
@@ -60,4 +61,5 @@ namespace talcs {
     double AudioStreamBase::sampleRate() const {
         return m_sampleRate;
     }
+    
 }

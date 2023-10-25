@@ -2,6 +2,7 @@
 #include "AudioDataWrapper_p.h"
 
 namespace talcs {
+
     /**
      * @class AudioDataWrapper
      * @brief A Wrapper that points to a set of pre-allocated arrays of sample data
@@ -91,4 +92,5 @@ namespace talcs {
         Q_D(const AudioDataWrapper);
         return d->data[channel] + startPos;
     }
+    
 }

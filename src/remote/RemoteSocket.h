@@ -10,13 +10,13 @@
 #include <rpc/server.h>
 #include <rpc/rpc_error.h>
 
-#include "global/TalcsGlobal.h"
+#include <TalcsRemote/TalcsRemoteGlobal.h>
 
 namespace talcs {
 
     class RemoteSocketPrivate;
 
-    class TALCS_EXPORT RemoteSocket : public QObject {
+    class TALCSREMOTE_EXPORT RemoteSocket : public QObject {
         Q_OBJECT
     public:
         class Reply {
@@ -124,6 +124,6 @@ namespace talcs {
         QScopedPointer<RemoteSocketPrivate> d;
     };
 
-} // talcs
+}
 
 #endif // TALCS_REMOTESOCKET_H

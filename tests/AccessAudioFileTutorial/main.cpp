@@ -10,14 +10,14 @@
 #include <QThread>
 #include <QVBoxLayout>
 
-#include "device/AudioDevice.h"
-#include "device/AudioDriver.h"
-#include "device/AudioDriverManager.h"
-#include "device/AudioSourcePlayback.h"
-#include "format/AudioFormatIO.h"
-#include "format/AudioFormatInputSource.h"
-#include "format/AudioSourceWriter.h"
-#include "core/source/TransportAudioSource.h"
+#include <TalcsDevice/AudioDevice.h>
+#include <TalcsDevice/AudioDriver.h>
+#include <TalcsDevice/AudioDriverManager.h>
+#include <TalcsDevice/AudioSourcePlayback.h>
+#include <TalcsFormat/AudioFormatIO.h>
+#include <TalcsFormat/AudioFormatInputSource.h>
+#include <TalcsFormat/AudioSourceWriter.h>
+#include <TalcsCore/TransportAudioSource.h>
 
 using namespace talcs;
 

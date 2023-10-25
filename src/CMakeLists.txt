@@ -1,13 +1,54 @@
+set(TALCS_PROJECT_DESCRIPTION "TALCS: Audio Library of CrSjimo")
+set(TALCS_PROJECT_COPYRIGHT "Copyright 2022-2023 CrSjimo")
+set(TALCS_GENERATED_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/../include)
+
 # ----------------------------------
 # CMake API
 # ----------------------------------
-function(talcs_add_library _target _type)
-    add_library(${_target} ${_type} ${ARGN})
+function(talcs_add_library _target)
+    set(options)
+    set(oneValueArgs PREFIX)
+    set(multiValueArgs)
+    cmake_parse_arguments(FUNC "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if(WIN32)
-        set(RC_VERSION_STRING ${TALCS_INSTALL_NAME})
-        include(${QTMEDIATE_MODULES_DIR}/winrc.cmake)
+    set(CMAKE_AUTOUIC on)
+    set(CMAKE_AUTOMOC on)
+    set(CMAKE_AUTORCC on)
+
+    if(TALCS_BUILD_STATIC)
+        set(_type STATIC)
+    else()
+        set(_type SHARED)
     endif()
+
+    add_library(${_target} ${_type})
+
+    if(WIN32 AND NOT TALCS_BUILD_STATIC)
+        qtmediate_add_win_rc(${_target}
+            DESCRIPTION ${TALCS_PROJECT_DESCRIPTION}
+            COPYRIGHT ${TALCS_PROJECT_COPYRIGHT}
+        )
+    endif()
+
+    if(FUNC_PREFIX)
+        set(_prefix_option PREFIX ${FUNC_PREFIX})
+    else()
+        set(_prefix_option)
+    endif()
+
+    # Set global definitions
+    qtmediate_export_defines(${_target} ${_prefix_option})
+
+    # Configure target
+    qtmediate_configure_target(${_target} ${FUNC_UNPARSED_ARGUMENTS})
+
+    # Library name
+    string(LENGTH "${_target}" _stringLength)
+    math(EXPR _startIndex "5")
+    math(EXPR _length "${_stringLength} - ${_startIndex}")
+    string(SUBSTRING "${_target}" ${_startIndex} ${_length} _name)
+    add_library(talcs::${_name} ALIAS ${_target})
+    set_target_properties(${_target} PROPERTIES EXPORT_NAME ${_name})
 
     if(TALCS_INSTALL)
         install(TARGETS ${_target}
@@ -18,154 +59,46 @@ function(talcs_add_library _target _type)
         )
 
         target_include_directories(${PROJECT_NAME} PUBLIC
-            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
             "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${TALCS_INSTALL_NAME}>"
         )
+
+        set(_gen_include_options INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/${TALCS_INSTALL_NAME}/${_target}")
+    else()
+        set(_gen_include_options)
     endif()
 
-    set_property(GLOBAL APPEND PROPERTY TALCS_TRANSLATE_TARGETS ${_target})
-endfunction()
-
-function(talcs_add_plugin _target _category)
-    add_library(${_target} SHARED ${ARGN})
-    add_library(talcs::${_target} ALIAS ${_target})
-
-    if(WIN32)
-        set(RC_VERSION_STRING ${TALCS_VERSION})
-        include(${TALCS_MODULES_DIR}/winrc.cmake)
-    endif()
-
-    set(_output_dir ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${TALCS_INSTALL_NAME}/plugins/${_category})
-    set_target_properties(${_target} PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${_output_dir}
-        ARCHIVE_OUTPUT_DIRECTORY ${_output_dir}
-        LIBRARY_OUTPUT_DIRECTORY ${_output_dir}
+    # Generate a standard include directory in build directory
+    qtmediate_sync_include(. "${TALCS_GENERATED_INCLUDE_DIR}/${_target}" ${_gen_include_options})
+    target_include_directories(${PROJECT_NAME} PUBLIC
+        "$<BUILD_INTERFACE:${TALCS_GENERATED_INCLUDE_DIR}>"
     )
 
-    if(TALCS_INSTALL)
-        install(TARGETS ${_target}
-            RUNTIME DESTINATION "${CMAKE_INSTALL_LIBDIR}/${TALCS_INSTALL_NAME}/plugins/${_category}" OPTIONAL
-            LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/${TALCS_INSTALL_NAME}/plugins/${_category}" OPTIONAL
-        )
-    endif()
+    target_include_directories(${PROJECT_NAME} PRIVATE .)
 
-    set_property(GLOBAL APPEND PROPERTY TRANSLATE_TARGETS ${_target})
+    # Add to translate targets
+    set_property(GLOBAL APPEND PROPERTY TALCS_TRANSLATE_TARGETS ${_target})
 endfunction()
-
-function(talcs_include_directories _target)
-    foreach(_dir ${ARGN})
-        get_filename_component(_abs_dir ${_dir} ABSOLUTE)
-        file(RELATIVE_PATH _rel_path ${TALCS_SOURCE_DIR} ${_abs_dir})
-        target_include_directories(${_target} PUBLIC
-            "$<BUILD_INTERFACE:${_abs_dir}>"
-            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${TALCS_INSTALL_NAME}/${_rel_path}>"
-        )
-    endforeach()
-endfunction()
-
-macro(talcs_install_headers _dir)
-    if(TALCS_INSTALL)
-        get_filename_component(_abs_dir ${_dir} ABSOLUTE)
-        file(RELATIVE_PATH _rel_path ${TALCS_SOURCE_DIR} ${_abs_dir})
-        install(DIRECTORY ${_abs_dir}/
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${TALCS_INSTALL_NAME}/${_rel_path}
-            FILES_MATCHING PATTERN "*.h"
-        )
-    endif()
-endmacro()
 
 # ----------------------------------
 # Main Project
 # ----------------------------------
-set(CMAKE_AUTOUIC on)
-set(CMAKE_AUTOMOC on)
-set(CMAKE_AUTORCC on)
+add_subdirectory(core)
 
-find_package(SDL2 REQUIRED) # TODO: used by device
-find_package(SndFile REQUIRED) # TODO: used by format
-find_package(SampleRate REQUIRED) # TODO: used by format
-find_package(rpclib REQUIRED) # TODO: used by remote
-find_path(INTERVAL_TREE_INCLUDE_DIRS "interval-tree/interval_tree.hpp") # TODO: used by core
+add_subdirectory(device)
 
+add_subdirectory(format)
 
-if(NOT TARGET qtmediate::Core)
-    find_package(qtmediate REQUIRED)
-endif()
+add_subdirectory(remote)
 
-include(${QTMEDIATE_MODULES_DIR}/qtmediateMacros.cmake)
+add_subdirectory(synthesis)
 
-set(RC_DESCRIPTION "TALCS: Audio Library of CrSjimo")
-set(RC_COPYRIGHT "Copyright 2022-2023 CrSjimo")
-
-# Platform libs
-set(_platform_libs)
-
-if(APPLE)
-    list(APPEND _platform_libs "-framework CoreFoundation")
-endif()
-
-if(NOT WIN32)
-    list(APPEND _platform_libs dl)
-endif()
-
-# Configure target
-file(GLOB_RECURSE _src *.h *.hpp *.cpp *.cc)
-
-if(WIN32 AND TALCS_ENABLE_ASIO)
-
-else()
-    list(FILTER _src EXCLUDE REGEX "ASIO*")
-endif()
-
-talcs_add_library(${PROJECT_NAME} SHARED ${_src})
-
-if(WIN32 AND TALCS_ENABLE_ASIO) # TODO: used by device
-    if(NOT TALCS_ASIOSDK_DIR)
-        message(FATAL_ERROR "TALCS: TALCS_ASIOSDK_DIR not specified.")
-    endif()
-    target_compile_definitions(${PROJECT_NAME} PUBLIC TALCS_USE_FEATURE_ASIO)
-    target_include_directories(${PROJECT_NAME} PRIVATE ${TALCS_ASIOSDK_DIR}/common)
-endif()
-
-set_target_properties(${PROJECT_NAME} PROPERTIES EXPORT_NAME Talcs)
-
-target_compile_definitions(${PROJECT_NAME} PRIVATE TALCS_LIBRARY)
-
-# Link
-target_link_libraries(${PROJECT_NAME} PUBLIC qtmediate::Core)
-
-target_link_libraries(${PROJECT_NAME}
-    PRIVATE
-        ${_platform_libs}
-        SDL2::SDL2 SndFile::sndfile SampleRate::samplerate
-    PUBLIC
-        rpclib::rpc
-)
-
-target_include_directories(${PROJECT_NAME} PRIVATE ${INTERVAL_TREE_INCLUDE_DIRS})
-
-qtmediate_link_qt_libraries(${PROJECT_NAME} PUBLIC
-    Core
-)
-
-# Include
-talcs_include_directories(${PROJECT_NAME}
-    .
-)
-
-qtmediate_include_qt_private(${PROJECT_NAME} PRIVATE
-    Core
-)
-
-# Extra
-talcs_install_headers(.)
-
+# ----------------------------------
+# Documentation
+# ----------------------------------
 if(TALCS_BUILD_DOCUMENTATIONS)
     if(NOT DOXYGEN_EXECUTABLE)
         find_package(Doxygen REQUIRED)
     endif()
-
-    include(${QTMEDIATE_MODULES_DIR}/doxygen/doxygen.cmake)
 
     set(_install_options)
 
@@ -177,14 +110,16 @@ if(TALCS_BUILD_DOCUMENTATIONS)
         CACHE FILEPATH "talcs doxygen tag file path" FORCE
     )
 
-    setup_doxygen_command(talcs_RunDoxygen
+    set(_doc_targets TalcsCore TalcsDevice TalcsFormat TalcsRemote TalcsSynthesis)
+
+    qtmediate_setup_doxygen(talcs_RunDoxygen
         NAME "TALCS"
         DESCRIPTION "TALCS: Audio Library of CrSjimo"
         MDFILE ../README.md
         OUTPUT_DIR ${CMAKE_BUILD_SHARE_DIR}/doc/${TALCS_INSTALL_NAME}
         INPUT . ../doc ../tests
-        TARGETS talcs
-        DEPENDS talcs
+        TARGETS ${_doc_targets}
+        DEPENDS ${_doc_targets}
         NO_EXPAND_MACROS Q_OBJECT Q_GADGET Q_DECLARE_TR_FUNCTIONS
         COMPILE_DEFINITIONS Q_SIGNALS=Q_SIGNALS Q_SLOTS=Q_SLOTS
         GENERATE_TAGFILE "${TALCS_DOXYGEN_TAGFILE}"

@@ -3,13 +3,13 @@
 
 #include <QSharedDataPointer>
 
-#include "global/TalcsGlobal.h"
+#include <TalcsCore/TalcsCoreGlobal.h>
 
 namespace talcs {
 
     class SmoothedFloatPrivate;
 
-    class TALCS_EXPORT SmoothedFloat {
+    class TALCSCORE_EXPORT SmoothedFloat {
     public:
         SmoothedFloat();
         SmoothedFloat(float initialValue);
@@ -34,6 +34,6 @@ namespace talcs {
         QSharedDataPointer<SmoothedFloatPrivate> d;
     };
 
-} // talcs
+}
 
 #endif // TALCS_SMOOTHEDFLOAT_H

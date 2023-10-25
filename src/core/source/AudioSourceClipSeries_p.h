@@ -1,9 +1,10 @@
 #ifndef TALCS_AUDIOSOURCECLIPSERIES_P_H
 #define TALCS_AUDIOSOURCECLIPSERIES_P_H
 
-#include "AudioSourceClipSeries.h"
-#include "PositionableAudioSource_p.h"
 #include <QMutex>
+
+#include <TalcsCore/AudioSourceClipSeries.h>
+#include <TalcsCore/private/PositionableAudioSource_p.h>
 
 namespace talcs {
 
@@ -51,6 +52,7 @@ namespace talcs {
         explicit AudioSourceClipSeriesPrivate(AudioSourceClipSeries *q);
         QMutex mutex;
     };
+    
 }
 
 #endif // TALCS_AUDIOSOURCECLIPSERIES_P_H

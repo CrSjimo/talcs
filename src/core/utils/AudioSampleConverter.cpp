@@ -4,6 +4,7 @@
 #include <QtEndian>
 
 namespace talcs {
+
     static const double factor16 = (double) 0x7fffL + 0.49999;
     static const double factor24 = (double) 0x7fffffL + 0.49999;
     static const double factor32 = (double) 0x7fffffffL + 0.49999;
@@ -94,4 +95,5 @@ namespace talcs {
         while (--length >= 0)
             *p++ = isLittleEndian ? qToLittleEndian(*src++) : qToBigEndian(*src++);
     }
+    
 }

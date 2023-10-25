@@ -1,21 +1,21 @@
-#ifndef TALCS_AUDIODEVICE_H
-#define TALCS_AUDIODEVICE_H
+#ifndef AUDIODEVICE_H
+#define AUDIODEVICE_H
 
 #include <QObject>
 
-#include "AudioDeviceCallback.h"
-#include "core/base/AudioStreamBase.h"
-#include "core/base/ErrorStringProvider.h"
-#include "core/base/NameProvider.h"
+#include <TalcsCore/AudioStreamBase.h>
+#include <TalcsCore/ErrorStringProvider.h>
+#include <TalcsCore/NameProvider.h>
+#include <TalcsDevice/AudioDeviceCallback.h>
 
 namespace talcs {
     class AudioDevicePrivate;
     class AudioDriver;
 
-    class TALCS_EXPORT AudioDevice : public QObject,
-                                     public AudioStreamBase,
-                                     public NameProvider,
-                                     public ErrorStringProvider {
+    class TALCSDEVICE_EXPORT AudioDevice : public QObject,
+                                           public AudioStreamBase,
+                                           public NameProvider,
+                                           public ErrorStringProvider {
         Q_OBJECT
         Q_DECLARE_PRIVATE(AudioDevice)
 
@@ -69,7 +69,7 @@ namespace talcs {
         void setPreferredSampleRate(double sampleRate);
     };
 
-    class TALCS_EXPORT AudioDeviceLocker {
+    class TALCSDEVICE_EXPORT AudioDeviceLocker {
     public:
         inline explicit AudioDeviceLocker(talcs::AudioDevice *audioDevice) : m_dev(audioDevice) {
             m_dev->lock();
@@ -85,4 +85,4 @@ namespace talcs {
     };
 }
 
-#endif // TALCS_AUDIODEVICE_H
+#endif // AUDIODEVICE_H

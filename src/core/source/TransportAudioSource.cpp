@@ -2,6 +2,7 @@
 #include "TransportAudioSource_p.h"
 
 namespace talcs {
+
     /**
      * @class TransportAudioSource
      * @brief The object takes a PositionableAudioSource object and supports playing and pausing.
@@ -261,4 +262,5 @@ namespace talcs {
         d->src->setPosition(d->position);
         d->src->setLoopingRange(d->loopingRange.first, d->loopingRange.second);
     }
+    
 }

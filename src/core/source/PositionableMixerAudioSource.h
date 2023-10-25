@@ -1,16 +1,17 @@
 #ifndef TALCS_POSITIONABLEMIXERAUDIOSOURCE_H
 #define TALCS_POSITIONABLEMIXERAUDIOSOURCE_H
 
-#include <QMChronMap.h>
 #include <QMutex>
+#include <QObject>
 
-#include "IMixer.h"
-#include "PositionableAudioSource.h"
+#include <TalcsCore/IMixer.h>
+#include <TalcsCore/PositionableAudioSource.h>
 
 namespace talcs {
+
     class PositionableMixerAudioSourcePrivate;
 
-    class TALCS_EXPORT PositionableMixerAudioSource : public QObject, public PositionableAudioSource, public IMixer<PositionableAudioSource> {
+    class TALCSCORE_EXPORT PositionableMixerAudioSource : public QObject, public PositionableAudioSource, public IMixer<PositionableAudioSource> {
         Q_OBJECT
         Q_DECLARE_PRIVATE_D(PositionableAudioSource::d_ptr, PositionableMixerAudioSource)
     public:
@@ -48,8 +49,7 @@ namespace talcs {
     protected:
         explicit PositionableMixerAudioSource(PositionableMixerAudioSourcePrivate &d, QObject *parent);
     };
+
 }
-
-
 
 #endif // TALCS_POSITIONABLEMIXERAUDIOSOURCE_H

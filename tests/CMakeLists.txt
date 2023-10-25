@@ -6,6 +6,8 @@ add_subdirectory(Decibels)
 
 add_subdirectory(FutureAudioSource)
 
+add_subdirectory(Integrated)
+
 add_subdirectory(RemoteSocket)
 
 add_subdirectory(RemoteAudioDevice)

@@ -5,6 +5,6 @@ namespace talcs {
 
     class FutureAudioSourceClipSeriesManipulator {};
 
-} // talcs
+}
 
 #endif // TALCS_FUTUREAUDIOSOURCECLIPSERIESMANIPULATOR_H

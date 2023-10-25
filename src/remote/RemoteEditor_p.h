@@ -1,7 +1,7 @@
 #ifndef TALCS_REMOTEEDITOR_P_H
 #define TALCS_REMOTEEDITOR_P_H
 
-#include "RemoteEditor.h"
+#include <TalcsRemote/RemoteEditor.h>
 
 namespace talcs {
 
@@ -12,6 +12,6 @@ namespace talcs {
         RemoteEditor::SetFunc setFunc;
     };
 
-} // talcs
+}
 
 #endif // TALCS_REMOTEEDITOR_P_H

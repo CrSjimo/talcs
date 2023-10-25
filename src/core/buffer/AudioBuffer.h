@@ -3,10 +3,11 @@
 
 #include <QVector>
 
-#include "IAudioSampleContainer.h"
+#include <TalcsCore/IAudioSampleContainer.h>
 
 namespace talcs {
-    class TALCS_EXPORT AudioBuffer : public IAudioSampleContainer {
+
+    class TALCSCORE_EXPORT AudioBuffer : public IAudioSampleContainer {
     public:
         AudioBuffer();
         AudioBuffer(int channelCount, qint64 sampleCount);

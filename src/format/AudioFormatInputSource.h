@@ -1,13 +1,15 @@
-#ifndef TALCS_AUDIOFORMATINPUTSOURCE_H
-#define TALCS_AUDIOFORMATINPUTSOURCE_H
+#ifndef AUDIOFORMATINPUTSOURCE_H
+#define AUDIOFORMATINPUTSOURCE_H
 
-#include "core/source/PositionableAudioSource.h"
+#include <TalcsCore/PositionableAudioSource.h>
+#include <TalcsFormat/TalcsFormatGlobal.h>
 
 namespace talcs {
+
     class AudioFormatInputSourcePrivate;
     class AudioFormatIO;
 
-    class TALCS_EXPORT AudioFormatInputSource : public PositionableAudioSource {
+    class TALCSFORMAT_EXPORT AudioFormatInputSource : public PositionableAudioSource {
         Q_DECLARE_PRIVATE(AudioFormatInputSource);
     public:
         enum ResampleMode {
@@ -40,6 +42,7 @@ namespace talcs {
     protected:
         explicit AudioFormatInputSource(AudioFormatInputSourcePrivate &d);
     };
+    
 }
 
-#endif // TALCS_AUDIOFORMATINPUTSOURCE_H
+#endif // AUDIOFORMATINPUTSOURCE_H

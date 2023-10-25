@@ -2,6 +2,7 @@
 #include "AudioDriver_p.h"
 
 namespace talcs {
+
     /**
      * @class AudioDriver
      * @brief Base class for audio drivers that underlay audio devices
@@ -78,4 +79,5 @@ namespace talcs {
      * @fn void AudioDevice::deviceChanged()
      * Emitted when the list of devices is changed. Not all drivers support this feature.
      */
+     
 }

@@ -1,7 +1,7 @@
 #include "AudioSourceProcessorBase.h"
 #include "AudioSourceProcessorBase_p.h"
 
-#include "core/source/AudioSource.h"
+#include "source/AudioSource.h"
 
 namespace talcs {
 
@@ -157,4 +157,4 @@ namespace talcs {
      * @see status()
      */
 
-} // talcs
+}

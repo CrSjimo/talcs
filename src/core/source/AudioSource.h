@@ -3,11 +3,12 @@
 
 #include <QScopedPointer>
 
-#include "core/buffer/IAudioSampleContainer.h"
-#include "core/base/AudioStreamBase.h"
+#include <TalcsCore/IAudioSampleContainer.h>
+#include <TalcsCore/AudioStreamBase.h>
 
 namespace talcs {
-    struct TALCS_EXPORT AudioSourceReadData {
+
+    struct TALCSCORE_EXPORT AudioSourceReadData {
         AudioSourceReadData(IAudioSampleContainer *buffer);
         AudioSourceReadData(IAudioSampleContainer *buffer, qint64 startPos, qint64 length, int silentFlags = 0);
         IAudioSampleContainer *buffer;
@@ -18,7 +19,7 @@ namespace talcs {
 
     class AudioSourcePrivate;
 
-    class TALCS_EXPORT AudioSource : public AudioStreamBase {
+    class TALCSCORE_EXPORT AudioSource : public AudioStreamBase {
         Q_DECLARE_PRIVATE(AudioSource)
     public:
         AudioSource();
@@ -29,6 +30,7 @@ namespace talcs {
         explicit AudioSource(AudioSourcePrivate &d);
         QScopedPointer<AudioSourcePrivate> d_ptr;
     };
+    
 }
 
 #endif // TALCS_AUDIOSOURCE_H

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <thread>
-#include "remote/RemoteSocket.h"
+#include <TalcsRemote/RemoteSocket.h>
 
 using namespace talcs;
 

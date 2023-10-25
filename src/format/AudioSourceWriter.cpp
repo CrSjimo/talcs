@@ -3,9 +3,10 @@
 
 #include <QMutex>
 
+#include <TalcsCore/InterleavedAudioDataWrapper.h>
+#include <TalcsCore/AudioSource.h>
+
 #include "AudioFormatIO.h"
-#include "core/buffer/InterleavedAudioDataWrapper.h"
-#include "core/source/AudioSource.h"
 
 namespace talcs {
 

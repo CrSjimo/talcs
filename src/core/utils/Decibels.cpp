@@ -3,6 +3,7 @@
 #include <cmath>
 
 namespace talcs {
+
     float Decibels::decibelsToGain(float decibels, float minusInfinityDb) {
         return decibels > minusInfinityDb ? std::pow (10.0f, decibels * .05f) : .0f;
     }
@@ -22,4 +23,5 @@ namespace talcs {
         s += " dB";
         return s;
     }
-} // talcs
+    
+}

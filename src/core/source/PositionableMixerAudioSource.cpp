@@ -1,9 +1,10 @@
 #include "PositionableMixerAudioSource.h"
 #include "PositionableMixerAudioSource_p.h"
 
-#include "core/buffer/AudioBuffer.h"
+#include "buffer/AudioBuffer.h"
 
 namespace talcs {
+
     /**
      * @class PositionableMixerAudioSource
      * @brief A class very similar to MixerAudioSource, but this one supports repositioning.
@@ -104,9 +105,8 @@ namespace talcs {
     }
 
     void PositionableMixerAudioSourcePrivate::setNextReadPositionToAll(qint64 pos) {
-        auto sourceList = sourceDict.keys();
-        std::for_each(sourceList.constBegin(), sourceList.constEnd(),
-                      [=](PositionableAudioSource *src) { src->setNextReadPosition(pos); });
+        std::for_each(sourceDict.constBegin(), sourceDict.constEnd(),
+                      [=](const SourceInfo<PositionableAudioSource> &srcInfo) { srcInfo.src->setNextReadPosition(pos); });
     }
 
     /**
@@ -203,4 +203,5 @@ namespace talcs {
         Q_D(const PositionableMixerAudioSource);
         return d->silentFlags;
     }
+    
 }

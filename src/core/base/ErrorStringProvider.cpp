@@ -1,6 +1,7 @@
 #include "ErrorStringProvider.h"
 
 namespace talcs {
+
     /**
      * @class ErrorStringProvider
      * @brief Base class that supports setting and getting the error string.
@@ -26,4 +27,5 @@ namespace talcs {
     void ErrorStringProvider::clearErrorString() {
         this->m_error.clear();
     }
+    
 }

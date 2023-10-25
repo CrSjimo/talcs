@@ -2,6 +2,7 @@
 #include "MixerAudioSource_p.h"
 
 namespace talcs {
+
     /**
      * @class MixerAudioSource
      * @brief The object that mixes the output of other AudioSource objects.
@@ -163,4 +164,5 @@ namespace talcs {
         Q_D(const MixerAudioSource);
         return d->silentFlags;
     }
+    
 }

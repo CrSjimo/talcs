@@ -1,7 +1,7 @@
 #ifndef TALCS_AUDIOSOURCEPROCESSORBASE_P_H
 #define TALCS_AUDIOSOURCEPROCESSORBASE_P_H
 
-#include "AudioSourceProcessorBase.h"
+#include <TalcsCore/AudioSourceProcessorBase.h>
 
 namespace talcs {
 

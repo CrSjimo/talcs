@@ -1,12 +1,15 @@
 #include "AudioDriverManager.h"
 #include "AudioDriverManager_p.h"
 
+#include <QDebug>
+
 #include "built-in/SDLAudioDriver.h"
 #ifdef TALCS_USE_FEATURE_ASIO
 #    include "built-in/ASIOAudioDriver.h"
 #endif
 
 namespace talcs {
+
     /**
      * @class AudioDriverManager
      * @brief A registry of audio drivers
@@ -36,12 +39,8 @@ namespace talcs {
             return false;
         }
         auto driverName = driver->name();
-        if (d->driverDict.contains(driverName)) {
-            qWarning() << QString("AudioDriverManager: driver '%1' is already added.").arg(driverName);
-            return false;
-        }
         driver->setParent(this);
-        d->driverDict.append(driverName, driver);
+        d->driverDict.append({driverName, driver});
         emit driverAdded(driver);
         return true;
     }
@@ -59,13 +58,13 @@ namespace talcs {
             return false;
         }
         auto driverName = driver->name();
-        auto it = d->driverDict.find(driverName);
-        if (it == d->driverDict.end()) {
+        auto i = d->driverDict.indexOf({driverName, driver});
+        if (i == -1) {
             qWarning() << QString("AudioDriverManager: driver '%1' does not exist.").arg(driverName);
             return false;
         }
         driver->setParent(nullptr);
-        d->driverDict.erase(it);
+        d->driverDict.removeAt(i);
         emit driverRemoved(driver);
         return true;
     }
@@ -75,7 +74,11 @@ namespace talcs {
      */
     AudioDriver *AudioDriverManager::driver(const QString &name) const {
         Q_D(const AudioDriverManager);
-        return d->driverDict.value(name, nullptr);
+        for (auto &[drvName, drv]: d->driverDict) {
+            if (drvName == name)
+                return drv;
+        }
+        return nullptr;
     }
 
     /**
@@ -83,7 +86,11 @@ namespace talcs {
      */
     QStringList AudioDriverManager::drivers() const {
         Q_D(const AudioDriverManager);
-        return d->driverDict.keys();
+        QStringList list;
+        for (auto &[name, _]: d->driverDict) {
+            list.append(name);
+        }
+        return list;
     }
 
     AudioDriverManager::AudioDriverManager(AudioDriverManagerPrivate &d, QObject *parent) : QObject(parent), d_ptr(&d) {
@@ -115,4 +122,5 @@ namespace talcs {
      * Emitted when a new driver is removed from the manager.
      * @see removeAudioDriver()
      */
+     
 }

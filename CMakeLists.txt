@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 # ----------------------------------
 # Build Options
 # ----------------------------------
+option(TALCS_BUILD_STATIC "Build static libraries" OFF)
 option(TALCS_BUILD_TRANSLATIONS "Build translations" ON)
 option(TALCS_BUILD_TESTS "Build test cases" ON)
 option(TALCS_BUILD_DOCUMENTATIONS "Build documentations" OFF)
@@ -59,6 +60,8 @@ set(TALCS_TRANSLATIONS zh_CN zh_HK ja_JP)
 # ----------------------------------
 # Main Project
 # ----------------------------------
+find_package(qtmediate-cmake-modules REQUIRED)
+
 add_subdirectory(src)
 
 if(TALCS_BUILD_TESTS)

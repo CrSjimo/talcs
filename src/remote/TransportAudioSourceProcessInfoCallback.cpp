@@ -1,6 +1,6 @@
 #include "TransportAudioSourceProcessInfoCallback.h"
 
-#include "core/source/TransportAudioSource.h"
+#include <TalcsCore/TransportAudioSource.h>
 
 namespace talcs {
     TransportAudioSourceProcessInfoCallback::TransportAudioSourceProcessInfoCallback(TransportAudioSource *tpSrc) : m_tpSrc(tpSrc) {
@@ -19,4 +19,4 @@ namespace talcs {
                 m_tpSrc->setPosition(processInfo.position);
         }
     }
-} // talcs
+}

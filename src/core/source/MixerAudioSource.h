@@ -4,13 +4,13 @@
 #include <QList>
 #include <QObject>
 
-#include "AudioSource.h"
-#include "IMixer.h"
+#include <TalcsCore/AudioSource.h>
+#include <TalcsCore/IMixer.h>
 
 namespace talcs {
     class MixerAudioSourcePrivate;
 
-    class TALCS_EXPORT MixerAudioSource : public QObject, public AudioSource, public IMixer<AudioSource> {
+    class TALCSCORE_EXPORT MixerAudioSource : public QObject, public AudioSource, public IMixer<AudioSource> {
         Q_OBJECT
         Q_DECLARE_PRIVATE_D(AudioSource::d_ptr, MixerAudioSource)
     public:

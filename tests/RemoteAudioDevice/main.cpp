@@ -7,15 +7,15 @@
 #include <QSlider>
 #include <QVBoxLayout>
 
-#include "device/AudioSourcePlayback.h"
-#include "format/AudioFormatIO.h"
-#include "format/AudioFormatInputSource.h"
-#include "remote/RemoteAudioDevice.h"
-#include "remote/RemoteEditor.h"
-#include "remote/RemoteSocket.h"
-#include "remote/TransportAudioSourceProcessInfoCallback.h"
-#include "core/source/SineWaveAudioSource.h"
-#include "core/source/TransportAudioSource.h"
+#include <TalcsDevice/AudioSourcePlayback.h>
+#include <TalcsFormat/AudioFormatIO.h>
+#include <TalcsFormat/AudioFormatInputSource.h>
+#include <TalcsRemote/RemoteAudioDevice.h>
+#include <TalcsRemote/RemoteEditor.h>
+#include <TalcsRemote/RemoteSocket.h>
+#include <TalcsRemote/TransportAudioSourceProcessInfoCallback.h>
+#include <TalcsCore/SineWaveAudioSource.h>
+#include <TalcsCore/TransportAudioSource.h>
 
 using namespace talcs;
 

@@ -1,7 +1,7 @@
 #ifndef TALCS_ASIOAUDIODEVICE_H
 #define TALCS_ASIOAUDIODEVICE_H
 
-#include "../AudioDevice.h"
+#include <TalcsDevice/AudioDevice.h>
 
 struct IASIO;
 
@@ -9,7 +9,7 @@ namespace talcs {
     class ASIOAudioDevicePrivate;
     class ASIOAudioDriver;
 
-    class TALCS_EXPORT ASIOAudioDevice : public AudioDevice {
+    class TALCSDEVICE_EXPORT ASIOAudioDevice : public AudioDevice {
         Q_OBJECT
         Q_DECLARE_PRIVATE(ASIOAudioDevice)
     public:

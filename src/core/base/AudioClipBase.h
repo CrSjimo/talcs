@@ -6,7 +6,7 @@
 #include <QPair>
 #include <QScopedPointer>
 
-#include "interval-tree/interval_tree.hpp"
+#include <interval-tree/interval_tree.hpp>
 
 namespace talcs {
 
