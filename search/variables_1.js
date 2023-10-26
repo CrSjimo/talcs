@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['content_0',['content',['../structtalcs_1_1_audio_clip_base.html#a6858851eee0e05f318897984757b59dc',1,'talcs::AudioClipBase']]]
+  ['containsinfo_0',['containsInfo',['../structtalcs_1_1_remote_audio_device_1_1_process_info.html#a2a280abbcc29ee3111c42aaf2620d9d4',1,'talcs::RemoteAudioDevice::ProcessInfo']]]
 ];

@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -99,6 +106,7 @@ $(document).ready(function(){initNavTree('classtalcs_1_1_transport_audio_source.
 
 <div class="header">
   <div class="summary">
+<a href="#pub-slots">Public Slots</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classtalcs_1_1_transport_audio_source-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">TransportAudioSource Class Reference</div></div>
@@ -118,6 +126,17 @@ Inheritance diagram for TransportAudioSource:</div>
   </map>
 </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-slots" name="pub-slots"></a>
+Public Slots</h2></td></tr>
+<tr class="memitem:a6d58098c6cf63c241ed03bc797256bb1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#a6d58098c6cf63c241ed03bc797256bb1">play</a> ()</td></tr>
+<tr class="separator:a6d58098c6cf63c241ed03bc797256bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7167f5c196fc5e167bfabde1a730e81d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#a7167f5c196fc5e167bfabde1a730e81d">pause</a> ()</td></tr>
+<tr class="separator:a7167f5c196fc5e167bfabde1a730e81d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a784b49828746c8f845503f612524f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#a4a784b49828746c8f845503f612524f1">acquireBuffering</a> ()</td></tr>
+<tr class="separator:a4a784b49828746c8f845503f612524f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a75832c87a7ef37ece9903ff3347f5342"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#a75832c87a7ef37ece9903ff3347f5342">releaseBuffering</a> ()</td></tr>
+<tr class="separator:a75832c87a7ef37ece9903ff3347f5342"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:adb76785f12debbb4c8c237667d89996b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#adb76785f12debbb4c8c237667d89996b">TransportAudioSource</a> (QObject *parent=nullptr)</td></tr>
@@ -126,7 +145,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7bae09639cd421fee8d94a6ca7eac419"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a940ba8ded18174e55daf4f2ad19c40a8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#a940ba8ded18174e55daf4f2ad19c40a8">~TransportAudioSource</a> () override</td></tr>
 <tr class="separator:a940ba8ded18174e55daf4f2ad19c40a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf4e0e1df0fe08aea0de05e6336a497a"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#adf4e0e1df0fe08aea0de05e6336a497a">read</a> (const <a class="el" href="classtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData) override</td></tr>
+<tr class="memitem:adf4e0e1df0fe08aea0de05e6336a497a"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#adf4e0e1df0fe08aea0de05e6336a497a">read</a> (const <a class="el" href="structtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData) override</td></tr>
 <tr class="separator:adf4e0e1df0fe08aea0de05e6336a497a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e9ca28b2e704ade50e7324ae4418a1d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#a0e9ca28b2e704ade50e7324ae4418a1d">open</a> (qint64 <a class="el" href="classtalcs_1_1_audio_stream_base.html#a874ea3d5cd0fd10576a6139d0000cf07">bufferSize</a>, double <a class="el" href="classtalcs_1_1_audio_stream_base.html#aa6ff92bd4ac20b88b83bda4d7f96d48c">sampleRate</a>) override</td></tr>
 <tr class="separator:a0e9ca28b2e704ade50e7324ae4418a1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -136,12 +155,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ace0b159c5d2265c43178c9a0d3649ab4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81eaa532d298b8f43fc579451548604f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtalcs_1_1_positionable_audio_source.html">PositionableAudioSource</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#a81eaa532d298b8f43fc579451548604f">source</a> () const</td></tr>
 <tr class="separator:a81eaa532d298b8f43fc579451548604f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d58098c6cf63c241ed03bc797256bb1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#a6d58098c6cf63c241ed03bc797256bb1">play</a> ()</td></tr>
-<tr class="separator:a6d58098c6cf63c241ed03bc797256bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a389ad71786b00ae81f69060f153509d2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#a389ad71786b00ae81f69060f153509d2">isPlaying</a> () const</td></tr>
 <tr class="separator:a389ad71786b00ae81f69060f153509d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7167f5c196fc5e167bfabde1a730e81d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#a7167f5c196fc5e167bfabde1a730e81d">pause</a> ()</td></tr>
-<tr class="separator:a7167f5c196fc5e167bfabde1a730e81d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae97f379361eedc353acca4b088f74b3e"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#ae97f379361eedc353acca4b088f74b3e">position</a> () const</td></tr>
 <tr class="separator:ae97f379361eedc353acca4b088f74b3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeafcb627a2ac5621ba2ca00446436190"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#aeafcb627a2ac5621ba2ca00446436190">setPosition</a> (qint64 <a class="el" href="classtalcs_1_1_transport_audio_source.html#ae97f379361eedc353acca4b088f74b3e">position</a>)</td></tr>
@@ -152,10 +167,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4f0078cd1c3db6089e43ed528c7ee760"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fb5f28888de742ee245471d35a916b9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#a0fb5f28888de742ee245471d35a916b9">setLoopingRange</a> (qint64 l, qint64 r)</td></tr>
 <tr class="separator:a0fb5f28888de742ee245471d35a916b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adff840453e43cbcf86053926fe3ffa61"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_transport_audio_source.html#adff840453e43cbcf86053926fe3ffa61">bufferingCounter</a> () const</td></tr>
+<tr class="separator:adff840453e43cbcf86053926fe3ffa61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtalcs_1_1_audio_source"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtalcs_1_1_audio_source')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtalcs_1_1_audio_source.html">AudioSource</a></td></tr>
 <tr class="memitem:add402d877760acea169534eca2aca92f inherit pub_methods_classtalcs_1_1_audio_source"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source.html#add402d877760acea169534eca2aca92f">AudioSource</a> ()</td></tr>
 <tr class="separator:add402d877760acea169534eca2aca92f inherit pub_methods_classtalcs_1_1_audio_source"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1659be10107765700e6d763e42a6dcff inherit pub_methods_classtalcs_1_1_audio_source"><td class="memItemLeft" align="right" valign="top">virtual qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source.html#a1659be10107765700e6d763e42a6dcff">read</a> (const <a class="el" href="classtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData)=0</td></tr>
+<tr class="memitem:a1659be10107765700e6d763e42a6dcff inherit pub_methods_classtalcs_1_1_audio_source"><td class="memItemLeft" align="right" valign="top">virtual qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source.html#a1659be10107765700e6d763e42a6dcff">read</a> (const <a class="el" href="structtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData)=0</td></tr>
 <tr class="separator:a1659be10107765700e6d763e42a6dcff inherit pub_methods_classtalcs_1_1_audio_source"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtalcs_1_1_audio_stream_base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtalcs_1_1_audio_stream_base')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtalcs_1_1_audio_stream_base.html">AudioStreamBase</a></td></tr>
 <tr class="memitem:afa00541698e5024942ad99e2c2b8375f inherit pub_methods_classtalcs_1_1_audio_stream_base"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_stream_base.html#afa00541698e5024942ad99e2c2b8375f">open</a> (qint64 <a class="el" href="classtalcs_1_1_audio_stream_base.html#a874ea3d5cd0fd10576a6139d0000cf07">bufferSize</a>, double <a class="el" href="classtalcs_1_1_audio_stream_base.html#aa6ff92bd4ac20b88b83bda4d7f96d48c">sampleRate</a>)</td></tr>
@@ -271,6 +288,50 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a4a784b49828746c8f845503f612524f1" name="a4a784b49828746c8f845503f612524f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a784b49828746c8f845503f612524f1">&#9670;&#160;</a></span>acquireBuffering</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void acquireBuffering </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Acquires one buffering counter. </p>
+
+</div>
+</div>
+<a id="adff840453e43cbcf86053926fe3ffa61" name="adff840453e43cbcf86053926fe3ffa61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adff840453e43cbcf86053926fe3ffa61">&#9670;&#160;</a></span>bufferingCounter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int bufferingCounter </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets the value of the buffering counter. </p>
+
+</div>
+</div>
 <a id="a7008bca493d69ea65f12e0940f3a6886" name="a7008bca493d69ea65f12e0940f3a6886"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7008bca493d69ea65f12e0940f3a6886">&#9670;&#160;</a></span>close()</h2>
 
@@ -412,10 +473,13 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a7167f5c196fc5e167bfabde1a730e81d" name="a7167f5c196fc5e167bfabde1a730e81d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7167f5c196fc5e167bfabde1a730e81d">&#9670;&#160;</a></span>pause()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7167f5c196fc5e167bfabde1a730e81d">&#9670;&#160;</a></span>pause</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void pause </td>
@@ -424,16 +488,24 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>Pauses playing. </p>
 
 </div>
 </div>
 <a id="a6d58098c6cf63c241ed03bc797256bb1" name="a6d58098c6cf63c241ed03bc797256bb1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d58098c6cf63c241ed03bc797256bb1">&#9670;&#160;</a></span>play()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d58098c6cf63c241ed03bc797256bb1">&#9670;&#160;</a></span>play</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void play </td>
@@ -442,6 +514,11 @@ Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <p>Starts playing. </p>
 
@@ -477,7 +554,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">qint64 read </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;&#160;</td>
           <td class="paramname"><em>readData</em></td><td>)</td>
           <td></td>
         </tr>
@@ -490,13 +567,39 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Reads audio data from the source. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">readData</td><td>see docs in class <a class="el" href="classtalcs_1_1_audio_source_read_data.html" title="The object that contains the target for AudioSource to fill data in.">AudioSourceReadData</a> </td></tr>
+    <tr><td class="paramname">readData</td><td>see docs in class <a class="el" href="structtalcs_1_1_audio_source_read_data.html" title="The object that contains the target for AudioSource to fill data in.">AudioSourceReadData</a> </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the actual length of audio read measured in samples </dd></dl>
 
 <p>Implements <a class="el" href="classtalcs_1_1_audio_source.html#a1659be10107765700e6d763e42a6dcff">AudioSource</a>.</p>
+
+</div>
+</div>
+<a id="a75832c87a7ef37ece9903ff3347f5342" name="a75832c87a7ef37ece9903ff3347f5342"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a75832c87a7ef37ece9903ff3347f5342">&#9670;&#160;</a></span>releaseBuffering</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void releaseBuffering </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Releases one buffering counter. </p>
 
 </div>
 </div>
@@ -604,8 +707,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>source/<a class="el" href="_transport_audio_source_8h_source.html">TransportAudioSource.h</a></li>
-<li>source/TransportAudioSource.cpp</li>
+<li>core/source/<a class="el" href="_transport_audio_source_8h_source.html">TransportAudioSource.h</a></li>
+<li>core/source/TransportAudioSource.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

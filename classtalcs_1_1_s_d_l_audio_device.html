@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -100,7 +107,6 @@ $(document).ready(function(){initNavTree('classtalcs_1_1_s_d_l_audio_device.html
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="classtalcs_1_1_s_d_l_audio_device-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">SDLAudioDevice Class Reference</div></div>
 </div><!--header-->
@@ -190,10 +196,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2b57b4573bb46f76a828c18e435bea0b inherit pub_methods_classtalcs_1_1_error_string_provider"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_error_string_provider.html#a2b57b4573bb46f76a828c18e435bea0b">errorString</a> () const</td></tr>
 <tr class="separator:a2b57b4573bb46f76a828c18e435bea0b inherit pub_methods_classtalcs_1_1_error_string_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:a34a1998c44e96bc19f2d3c7f5f5cd489"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#a34a1998c44e96bc19f2d3c7f5f5cd489">SDLAudioDevice</a> (SDLAudioDevicePrivate &amp;d, QObject *parent)</td></tr>
-<tr class="separator:a34a1998c44e96bc19f2d3c7f5f5cd489"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header signals_classtalcs_1_1_audio_device"><td colspan="2" onclick="javascript:toggleInherit('signals_classtalcs_1_1_audio_device')"><img src="closed.png" alt="-"/>&#160;Signals inherited from <a class="el" href="classtalcs_1_1_audio_device.html">AudioDevice</a></td></tr>
+<tr class="memitem:a6abb0e45eb340a477edd8b892b37373e inherit signals_classtalcs_1_1_audio_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device.html#a6abb0e45eb340a477edd8b892b37373e">closed</a> ()</td></tr>
+<tr class="separator:a6abb0e45eb340a477edd8b892b37373e inherit signals_classtalcs_1_1_audio_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classtalcs_1_1_audio_device"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classtalcs_1_1_audio_device')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classtalcs_1_1_audio_device.html">AudioDevice</a></td></tr>
 <tr class="memitem:a6895b2a94e9ca9750a931498143b9cab inherit pro_methods_classtalcs_1_1_audio_device"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device.html#a6895b2a94e9ca9750a931498143b9cab">AudioDevice</a> (QObject *parent=nullptr)</td></tr>
 <tr class="separator:a6895b2a94e9ca9750a931498143b9cab inherit pro_methods_classtalcs_1_1_audio_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -219,12 +226,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="separator:acd1d216f7c9fca3ff3e794e8c483524f inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90e222fb6b083bfe00869ed7f4bfa5d0 inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_error_string_provider.html#a90e222fb6b083bfe00869ed7f4bfa5d0">clearErrorString</a> ()</td></tr>
 <tr class="separator:a90e222fb6b083bfe00869ed7f4bfa5d0 inherit pro_methods_classtalcs_1_1_error_string_provider"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header signals_classtalcs_1_1_audio_device"><td colspan="2" onclick="javascript:toggleInherit('signals_classtalcs_1_1_audio_device')"><img src="closed.png" alt="-"/>&#160;Signals inherited from <a class="el" href="classtalcs_1_1_audio_device.html">AudioDevice</a></td></tr>
-<tr class="memitem:a6abb0e45eb340a477edd8b892b37373e inherit signals_classtalcs_1_1_audio_device"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device.html#a6abb0e45eb340a477edd8b892b37373e">closed</a> ()</td></tr>
-<tr class="separator:a6abb0e45eb340a477edd8b892b37373e inherit signals_classtalcs_1_1_audio_device"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The audio device using SDL2 Audio. </p>
@@ -254,43 +255,6 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <p>Destructor.</p>
 <p>If the device is not close, it will be closed now. </p>
-
-</div>
-</div>
-<a id="a34a1998c44e96bc19f2d3c7f5f5cd489" name="a34a1998c44e96bc19f2d3c7f5f5cd489"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a34a1998c44e96bc19f2d3c7f5f5cd489">&#9670;&#160;</a></span>SDLAudioDevice()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classtalcs_1_1_s_d_l_audio_device.html">SDLAudioDevice</a> </td>
-          <td>(</td>
-          <td class="paramtype">SDLAudioDevicePrivate &amp;&#160;</td>
-          <td class="paramname"><em>d</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">QObject *&#160;</td>
-          <td class="paramname"><em>parent</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Only <a class="el" href="classtalcs_1_1_s_d_l_audio_driver.html" title="The audio driver using SDL2 Audio.">SDLAudioDriver</a> can access this constructor. </p>
 
 </div>
 </div>
@@ -527,8 +491,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>device/<a class="el" href="_s_d_l_audio_device_8h_source.html">SDLAudioDevice.h</a></li>
-<li>device/SDLAudioDevice.cpp</li>
+<li>device/built-in/<a class="el" href="_s_d_l_audio_device_8h_source.html">SDLAudioDevice.h</a></li>
+<li>device/built-in/SDLAudioDevice.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

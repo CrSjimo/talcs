@@ -1,6 +1,12 @@
 var searchData=
 [
-  ['length_0',['length',['../classtalcs_1_1_audio_format_i_o.html#a2ab16cb605f71d18a02321a19d57adcd',1,'talcs::AudioFormatIO::length()'],['../classtalcs_1_1_positionable_mixer_audio_source.html#a6cd952696e4f84c6f1338a4e8d14727d',1,'talcs::PositionableMixerAudioSource::length()'],['../classtalcs_1_1_transport_audio_source.html#a2ab16cb605f71d18a02321a19d57adcd',1,'talcs::TransportAudioSource::length()']]],
-  ['lock_1',['lock',['../classtalcs_1_1_a_s_i_o_audio_device.html#ad81318257fd78328c5c86fa6a3a861dd',1,'talcs::ASIOAudioDevice::lock()'],['../classtalcs_1_1_audio_device.html#aa81aed607133209dade63a226818224d',1,'talcs::AudioDevice::lock()'],['../classtalcs_1_1_s_d_l_audio_device.html#ad81318257fd78328c5c86fa6a3a861dd',1,'talcs::SDLAudioDevice::lock()']]],
-  ['loopingrange_2',['loopingRange',['../classtalcs_1_1_transport_audio_source.html#a4f0078cd1c3db6089e43ed528c7ee760',1,'talcs::TransportAudioSource']]]
+  ['initialize_0',['initialize',['../classtalcs_1_1_audio_driver.html#ab3e7cc706c522b3231f9156bba461436',1,'talcs::AudioDriver::initialize()'],['../classtalcs_1_1_a_s_i_o_audio_driver.html#a6703ab833b59818b719bb7524b002b94',1,'talcs::ASIOAudioDriver::initialize()'],['../classtalcs_1_1_s_d_l_audio_driver.html#a6703ab833b59818b719bb7524b002b94',1,'talcs::SDLAudioDriver::initialize()']]],
+  ['interleavedaudiodatawrapper_1',['InterleavedAudioDataWrapper',['../classtalcs_1_1_interleaved_audio_data_wrapper.html#a4f3855e83faf782a1afb34977165670f',1,'talcs::InterleavedAudioDataWrapper']]],
+  ['interrupt_2',['interrupt',['../classtalcs_1_1_audio_source_processor_base.html#aebc9afd317d656680550a13818e71917',1,'talcs::AudioSourceProcessorBase']]],
+  ['iscontinuous_3',['isContinuous',['../classtalcs_1_1_audio_buffer.html#a2be41fd838ef34bb2faa3563980357d7',1,'talcs::AudioBuffer::isContinuous()'],['../classtalcs_1_1_audio_data_wrapper.html#a2be41fd838ef34bb2faa3563980357d7',1,'talcs::AudioDataWrapper::isContinuous()'],['../classtalcs_1_1_i_audio_sample_provider.html#a8bad496e530b253752fc935cf428297d',1,'talcs::IAudioSampleProvider::isContinuous()'],['../classtalcs_1_1_interleaved_audio_data_wrapper.html#a2be41fd838ef34bb2faa3563980357d7',1,'talcs::InterleavedAudioDataWrapper::isContinuous()']]],
+  ['isinitialized_4',['isInitialized',['../classtalcs_1_1_audio_device.html#a161d75a220f87c68d6975112f0bff3f6',1,'talcs::AudioDevice::isInitialized()'],['../classtalcs_1_1_audio_driver.html#a161d75a220f87c68d6975112f0bff3f6',1,'talcs::AudioDriver::isInitialized()']]],
+  ['isopen_5',['isOpen',['../classtalcs_1_1_audio_stream_base.html#a002ed331862370f434b7befe331b5a0b',1,'talcs::AudioStreamBase']]],
+  ['isplaying_6',['isPlaying',['../classtalcs_1_1_transport_audio_source.html#a389ad71786b00ae81f69060f153509d2',1,'talcs::TransportAudioSource']]],
+  ['issourcesolo_7',['isSourceSolo',['../structtalcs_1_1_i_mixer.html#a4cb753b5aab9de489ad5a3b85ef035b9',1,'talcs::IMixer']]],
+  ['isstarted_8',['isStarted',['../classtalcs_1_1_audio_device.html#ac1991ea0e286fbb461b60c8c9299d781',1,'talcs::AudioDevice']]]
 ];

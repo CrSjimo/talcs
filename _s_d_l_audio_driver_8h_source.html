@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=11" />
     <meta name="generator" content="Doxygen 1.9.7" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TALCS: device/SDLAudioDriver.h Source File</title>
+    <title>TALCS: device/built-in/SDLAudioDriver.h Source File</title>
     <link href="tabs.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -104,14 +111,14 @@ $(document).ready(function(){initNavTree('_s_d_l_audio_driver_8h_source.html',''
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef TALCS_SDLAUDIODRIVER_H</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define TALCS_SDLAUDIODRIVER_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;AudioDriver.h&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;TalcsDevice/AudioDriver.h&gt;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">namespace </span>talcs {</div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    <span class="keyword">class </span>SDLAudioDriverPrivate;</div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <span class="keyword">class </span>SDLAudioDriverEventPoller;</div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <span class="keyword">class </span>SDLAudioDevice;</div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="classtalcs_1_1_s_d_l_audio_driver.html">   11</a></span>    <span class="keyword">class </span>TALCS_EXPORT <a class="code hl_class" href="classtalcs_1_1_s_d_l_audio_driver.html">SDLAudioDriver</a> : <span class="keyword">public</span> <a class="code hl_class" href="classtalcs_1_1_audio_driver.html">AudioDriver</a> {</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="classtalcs_1_1_s_d_l_audio_driver.html">   11</a></span>    <span class="keyword">class </span>TALCSDEVICE_EXPORT <a class="code hl_class" href="classtalcs_1_1_s_d_l_audio_driver.html">SDLAudioDriver</a> : <span class="keyword">public</span> <a class="code hl_class" href="classtalcs_1_1_audio_driver.html">AudioDriver</a> {</div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>        Q_OBJECT</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>        Q_DECLARE_PRIVATE(<a class="code hl_class" href="classtalcs_1_1_s_d_l_audio_driver.html">SDLAudioDriver</a>)</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <span class="keyword">friend</span> <span class="keyword">class </span><a class="code hl_class" href="classtalcs_1_1_s_d_l_audio_device.html">SDLAudioDevice</a>;</div>
@@ -137,7 +144,7 @@ $(document).ready(function(){initNavTree('_s_d_l_audio_driver_8h_source.html',''
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#endif </span><span class="comment">// TALCS_SDLAUDIODRIVER_H</span></div>
 <div class="ttc" id="aclasstalcs_1_1_audio_device_html"><div class="ttname"><a href="classtalcs_1_1_audio_device.html">talcs::AudioDevice</a></div><div class="ttdoc">Base class for audio devices.</div><div class="ttdef"><b>Definition</b> AudioDevice.h:18</div></div>
-<div class="ttc" id="aclasstalcs_1_1_audio_driver_html"><div class="ttname"><a href="classtalcs_1_1_audio_driver.html">talcs::AudioDriver</a></div><div class="ttdoc">Base class for audio drivers that underlay audio devices.</div><div class="ttdef"><b>Definition</b> AudioDriver.h:13</div></div>
+<div class="ttc" id="aclasstalcs_1_1_audio_driver_html"><div class="ttname"><a href="classtalcs_1_1_audio_driver.html">talcs::AudioDriver</a></div><div class="ttdoc">Base class for audio drivers that underlay audio devices.</div><div class="ttdef"><b>Definition</b> AudioDriver.h:17</div></div>
 <div class="ttc" id="aclasstalcs_1_1_s_d_l_audio_device_html"><div class="ttname"><a href="classtalcs_1_1_s_d_l_audio_device.html">talcs::SDLAudioDevice</a></div><div class="ttdoc">The audio device using SDL2 Audio.</div><div class="ttdef"><b>Definition</b> SDLAudioDevice.h:10</div></div>
 <div class="ttc" id="aclasstalcs_1_1_s_d_l_audio_driver_html"><div class="ttname"><a href="classtalcs_1_1_s_d_l_audio_driver.html">talcs::SDLAudioDriver</a></div><div class="ttdoc">The audio driver using SDL2 Audio.</div><div class="ttdef"><b>Definition</b> SDLAudioDriver.h:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -145,7 +152,7 @@ $(document).ready(function(){initNavTree('_s_d_l_audio_driver_8h_source.html',''
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_16dc92632bab467dc50b01bd02b3341a.html">device</a></li><li class="navelem"><b>SDLAudioDriver.h</b></li>
+    <li class="navelem"><a class="el" href="dir_16dc92632bab467dc50b01bd02b3341a.html">device</a></li><li class="navelem"><a class="el" href="dir_a27273ed235de6ba8aef685071bdc50b.html">built-in</a></li><li class="navelem"><b>SDLAudioDriver.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

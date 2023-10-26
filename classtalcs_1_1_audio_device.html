@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -115,11 +122,12 @@ Inheritance diagram for AudioDevice:</div>
  <div class="center">
   <img src="classtalcs_1_1_audio_device.png" usemap="#AudioDevice_map" alt=""/>
   <map id="AudioDevice_map" name="AudioDevice_map">
-<area href="classtalcs_1_1_audio_stream_base.html" title="Base class for audio streams." alt="AudioStreamBase" shape="rect" coords="0,0,124,24"/>
-<area href="classtalcs_1_1_name_provider.html" title="Base class that supports setting and getting the name." alt="NameProvider" shape="rect" coords="134,0,258,24"/>
-<area href="classtalcs_1_1_error_string_provider.html" title="Base class that supports setting and getting the error string." alt="ErrorStringProvider" shape="rect" coords="268,0,392,24"/>
-<area href="classtalcs_1_1_a_s_i_o_audio_device.html" title="The audio device using ASIO." alt="ASIOAudioDevice" shape="rect" coords="67,112,191,136"/>
-<area href="classtalcs_1_1_s_d_l_audio_device.html" title="The audio device using SDL2 Audio." alt="SDLAudioDevice" shape="rect" coords="201,112,325,136"/>
+<area href="classtalcs_1_1_audio_stream_base.html" title="Base class for audio streams." alt="AudioStreamBase" shape="rect" coords="0,0,126,24"/>
+<area href="classtalcs_1_1_name_provider.html" title="Base class that supports setting and getting the name." alt="NameProvider" shape="rect" coords="136,0,262,24"/>
+<area href="classtalcs_1_1_error_string_provider.html" title="Base class that supports setting and getting the error string." alt="ErrorStringProvider" shape="rect" coords="272,0,398,24"/>
+<area href="classtalcs_1_1_a_s_i_o_audio_device.html" title="The audio device using ASIO." alt="ASIOAudioDevice" shape="rect" coords="0,112,126,136"/>
+<area href="classtalcs_1_1_remote_audio_device.html" title="The device that plays audio to a remote audio context." alt="RemoteAudioDevice" shape="rect" coords="136,112,262,136"/>
+<area href="classtalcs_1_1_s_d_l_audio_device.html" title="The audio device using SDL2 Audio." alt="SDLAudioDevice" shape="rect" coords="272,112,398,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -340,7 +348,7 @@ Protected Member Functions</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="classtalcs_1_1_audio_stream_base.html#a5ae591df94fc66ccb85cbb6565368bca">AudioStreamBase</a>.</p>
 
-<p>Reimplemented in <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#a7008bca493d69ea65f12e0940f3a6886">SDLAudioDevice</a>.</p>
+<p>Reimplemented in <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#a7008bca493d69ea65f12e0940f3a6886">SDLAudioDevice</a>, and <a class="el" href="classtalcs_1_1_remote_audio_device.html#a7008bca493d69ea65f12e0940f3a6886">RemoteAudioDevice</a>.</p>
 
 </div>
 </div>
@@ -451,7 +459,7 @@ Protected Member Functions</h2></td></tr>
 <p>Only lightweight work should be done while the audio device is locked. If any heavy work is going to be done, stop the audio device first, do the work, and start it again.</p>
 <p>The audio device must be unlocked when it is going to stop or close, otherwise these functions will be blocked. </p>
 
-<p>Reimplemented in <a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#ad81318257fd78328c5c86fa6a3a861dd">ASIOAudioDevice</a>, and <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#ad81318257fd78328c5c86fa6a3a861dd">SDLAudioDevice</a>.</p>
+<p>Reimplemented in <a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#ad81318257fd78328c5c86fa6a3a861dd">ASIOAudioDevice</a>, <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#ad81318257fd78328c5c86fa6a3a861dd">SDLAudioDevice</a>, and <a class="el" href="classtalcs_1_1_remote_audio_device.html#ad81318257fd78328c5c86fa6a3a861dd">RemoteAudioDevice</a>.</p>
 
 </div>
 </div>
@@ -761,7 +769,7 @@ Protected Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if started successfully </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#a3bfff58e0004c2b1e1cd88f80568618d">ASIOAudioDevice</a>, and <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#a3bfff58e0004c2b1e1cd88f80568618d">SDLAudioDevice</a>.</p>
+<p>Reimplemented in <a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#a3bfff58e0004c2b1e1cd88f80568618d">ASIOAudioDevice</a>, <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#a3bfff58e0004c2b1e1cd88f80568618d">SDLAudioDevice</a>, and <a class="el" href="classtalcs_1_1_remote_audio_device.html#a3bfff58e0004c2b1e1cd88f80568618d">RemoteAudioDevice</a>.</p>
 
 </div>
 </div>
@@ -789,7 +797,7 @@ Protected Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Stops the device. </p>
 
-<p>Reimplemented in <a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#ab3536e22848ce87b16a9b96d6d824d45">ASIOAudioDevice</a>, and <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#ab3536e22848ce87b16a9b96d6d824d45">SDLAudioDevice</a>.</p>
+<p>Reimplemented in <a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#ab3536e22848ce87b16a9b96d6d824d45">ASIOAudioDevice</a>, <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#ab3536e22848ce87b16a9b96d6d824d45">SDLAudioDevice</a>, and <a class="el" href="classtalcs_1_1_remote_audio_device.html#ab3536e22848ce87b16a9b96d6d824d45">RemoteAudioDevice</a>.</p>
 
 </div>
 </div>
@@ -817,7 +825,7 @@ Protected Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Unlock the audio callback. </p>
 
-<p>Reimplemented in <a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#a333677ac769a10df2775f24893e07c21">ASIOAudioDevice</a>, and <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#a333677ac769a10df2775f24893e07c21">SDLAudioDevice</a>.</p>
+<p>Reimplemented in <a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#a333677ac769a10df2775f24893e07c21">ASIOAudioDevice</a>, <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#a333677ac769a10df2775f24893e07c21">SDLAudioDevice</a>, and <a class="el" href="classtalcs_1_1_remote_audio_device.html#a333677ac769a10df2775f24893e07c21">RemoteAudioDevice</a>.</p>
 
 </div>
 </div>

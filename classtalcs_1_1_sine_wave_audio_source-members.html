@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -116,7 +123,7 @@ $(document).ready(function(){initNavTree('classtalcs_1_1_sine_wave_audio_source.
   <tr class="odd"><td class="entry"><a class="el" href="classtalcs_1_1_audio_stream_base.html#aa6ff92bd4ac20b88b83bda4d7f96d48c">sampleRate</a>() const</td><td class="entry"><a class="el" href="classtalcs_1_1_audio_stream_base.html">AudioStreamBase</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classtalcs_1_1_sine_wave_audio_source.html#a1b73bb28268c6cd46ae66317fdb9f907">setFrequency</a>(double frequency)</td><td class="entry"><a class="el" href="classtalcs_1_1_sine_wave_audio_source.html">SineWaveAudioSource</a></td><td class="entry"></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classtalcs_1_1_sine_wave_audio_source.html#ad9f3714565b2d6000b66f71cd3c96db7">setFrequency</a>(const std::function&lt; double(qint64)&gt; &amp;frequencyIntegration)</td><td class="entry"><a class="el" href="classtalcs_1_1_sine_wave_audio_source.html">SineWaveAudioSource</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classtalcs_1_1_positionable_audio_source.html#a14f57872667fd308a9e1785959989261">setNextReadPosition</a>(qint64 pos)</td><td class="entry"><a class="el" href="classtalcs_1_1_positionable_audio_source.html">PositionableAudioSource</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classtalcs_1_1_sine_wave_audio_source.html#aa9b6aa84f5f06fda7368a6c8636c6d9e">setNextReadPosition</a>(qint64 pos) override</td><td class="entry"><a class="el" href="classtalcs_1_1_sine_wave_audio_source.html">SineWaveAudioSource</a></td><td class="entry"><span class="mlabel">virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classtalcs_1_1_sine_wave_audio_source.html#a2d884802946ff3b9a093a4d77a547e81">SineWaveAudioSource</a>(double frequency)</td><td class="entry"><a class="el" href="classtalcs_1_1_sine_wave_audio_source.html">SineWaveAudioSource</a></td><td class="entry"><span class="mlabel">explicit</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classtalcs_1_1_sine_wave_audio_source.html#aff065b574043570eee947b857eef3f47">SineWaveAudioSource</a>(const std::function&lt; double(qint64)&gt; &amp;frequencyIntegration)</td><td class="entry"><a class="el" href="classtalcs_1_1_sine_wave_audio_source.html">SineWaveAudioSource</a></td><td class="entry"><span class="mlabel">explicit</span></td></tr>
 </table></div><!-- contents -->

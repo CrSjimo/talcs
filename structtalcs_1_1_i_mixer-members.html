@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -106,13 +113,17 @@ $(document).ready(function(){initNavTree('structtalcs_1_1_i_mixer.html',''); ini
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#a57a6cc6d4c7ac9fbb7b451ce1ba6504e">addSource</a>(T *src, bool takeOwnership)=0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#a31092f5b8dbb452d7c079f5c3bea695c">gain</a>() const =0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#af180cd5f206d76dd543521d08b34bc79">pan</a>() const =0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#ab2faeff6347371e8924f2f514e083325">removeAllSources</a>()=0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#ab9ee71f874d1ff6bc080b67287765561">removeSource</a>(T *src)=0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#a6aa5ac9fb04da7d30a3d65cd893ae8f4">routeChannels</a>() const =0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#af396f4281d34897782f1d3b01258fdf5">setGain</a>(float gain)=0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#a8c8965b95e99159091095057ff6c8f8a">setPan</a>(float pan)=0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#a2b98d9b247c44e9701512a33f17cf510">setRouteChannels</a>(bool routeChannels)=0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#a4cb753b5aab9de489ad5a3b85ef035b9">isSourceSolo</a>(T *src) const =0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#af180cd5f206d76dd543521d08b34bc79">pan</a>() const =0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#ab2faeff6347371e8924f2f514e083325">removeAllSources</a>()=0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#ab9ee71f874d1ff6bc080b67287765561">removeSource</a>(T *src)=0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#a6aa5ac9fb04da7d30a3d65cd893ae8f4">routeChannels</a>() const =0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#af396f4281d34897782f1d3b01258fdf5">setGain</a>(float gain)=0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#a8c8965b95e99159091095057ff6c8f8a">setPan</a>(float pan)=0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#a2b98d9b247c44e9701512a33f17cf510">setRouteChannels</a>(bool routeChannels)=0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#ad06492f0579f68f73a3a1632347fbf48">setSilentFlags</a>(int silentFlags)=0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#ae8137cd8018f723807ab1254fec863e3">setSourceSolo</a>(T *src, bool isSolo)=0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#ae270f8e61896c0c55cae85b74703dfaa">silentFlags</a>() const =0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html#addb585f14314916d3bb08e97a78b4c69">sources</a>() const =0</td><td class="entry"><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer&lt; T &gt;</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->

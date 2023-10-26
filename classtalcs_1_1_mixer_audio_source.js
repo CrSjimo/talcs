@@ -12,5 +12,7 @@ var classtalcs_1_1_mixer_audio_source =
     [ "setGain", "classtalcs_1_1_mixer_audio_source.html#add53219d04ff63b1e3bd0c70a0f2dfef", null ],
     [ "setPan", "classtalcs_1_1_mixer_audio_source.html#aceb0ad974dc5fdcb9db7d7045dfe0005", null ],
     [ "setRouteChannels", "classtalcs_1_1_mixer_audio_source.html#a10b6e81990091d6462e4ec3cdd221f4a", null ],
+    [ "setSilentFlags", "classtalcs_1_1_mixer_audio_source.html#a24064e6517b72cfc60d6cad2715c9efd", null ],
+    [ "silentFlags", "classtalcs_1_1_mixer_audio_source.html#a3c87521e5d896972a240f1fac1e74189", null ],
     [ "sources", "classtalcs_1_1_mixer_audio_source.html#aa09a1a9968e4e87ffcba363798cefaf5", null ]
 ];

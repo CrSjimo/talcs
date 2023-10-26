@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -101,14 +108,17 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 <div class="textblock">Here is a list of all documented functions with links to the class documentation for each member:</div>
 
 <h3><a id="index_a" name="index_a"></a>- a -</h3><ul>
+<li>acquireBuffering()&#160;:&#160;<a class="el" href="classtalcs_1_1_transport_audio_source.html#a4a784b49828746c8f845503f612524f1">TransportAudioSource</a></li>
 <li>activeChannelCount()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_device.html#a240677a4aa6bc4ed736aa3699987db3a">AudioDevice</a></li>
 <li>addAudioDriver()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_driver_manager.html#a06097596ea64254b40fb61d8730f73b7">AudioDriverManager</a></li>
 <li>addClip()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_clip_series_base.html#a15b7f4be8e6b14011fbdfd3a6d677f16">AudioClipSeriesBase&lt; T &gt;</a></li>
+<li>addProcessInfoCallback()&#160;:&#160;<a class="el" href="classtalcs_1_1_remote_audio_device.html#ac8c9b04b374fb8d7af05144083f5d8f6">RemoteAudioDevice</a></li>
 <li>addSampleRange()&#160;:&#160;<a class="el" href="classtalcs_1_1_i_audio_sample_container.html#aecf7fd8c50091d45b3fc1ac0075435b9">IAudioSampleContainer</a></li>
 <li>addSource()&#160;:&#160;<a class="el" href="structtalcs_1_1_i_mixer.html#a57a6cc6d4c7ac9fbb7b451ce1ba6504e">IMixer&lt; T &gt;</a></li>
 <li>ASIOAudioDevice()&#160;:&#160;<a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#ace117d94975d869b7289f5058cd60580">ASIOAudioDevice</a></li>
 <li>ASIOAudioDriver()&#160;:&#160;<a class="el" href="classtalcs_1_1_a_s_i_o_audio_driver.html#a9076a76890caab2a9699a0c75de97a80">ASIOAudioDriver</a></li>
 <li>AudioBuffer()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_buffer.html#a53af24182f3165ed15b4f434d7088b53">AudioBuffer</a></li>
+<li>AudioClipBase()&#160;:&#160;<a class="el" href="structtalcs_1_1_audio_clip_base.html#a98964f68bb01c3292bc0bbee47337af3">AudioClipBase&lt; T &gt;</a></li>
 <li>AudioDataWrapper()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_data_wrapper.html#a376e75f5aff8ac7cc8a3327fdd0f5776">AudioDataWrapper</a></li>
 <li>AudioDevice()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_device.html#a6895b2a94e9ca9750a931498143b9cab">AudioDevice</a></li>
 <li>AudioDriver()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_driver.html#a586be5bced6aa4561261f152561cb13b">AudioDriver</a></li>
@@ -119,7 +129,10 @@ $(document).ready(function(){initNavTree('functions_func.html',''); initResizabl
 <li>AudioSource()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_source.html#add402d877760acea169534eca2aca92f">AudioSource</a></li>
 <li>AudioSourceClipSeries()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_source_clip_series.html#ae7682e8d045a34539c34d1acbf9bd7fc">AudioSourceClipSeries</a></li>
 <li>AudioSourcePlayback()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_source_playback.html#adb10b5aa708f94c9bf667c81ec782c29">AudioSourcePlayback</a></li>
-<li>AudioSourceReadData()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_source_read_data.html#a4d6ab3cf53ac197dd5b9b03a16b0aca8">AudioSourceReadData</a></li>
+<li>AudioSourceProcessorBase()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_source_processor_base.html#a38c2a54f6ea019129de74006f7c2304f">AudioSourceProcessorBase</a></li>
+<li>AudioSourceReadData()&#160;:&#160;<a class="el" href="structtalcs_1_1_audio_source_read_data.html#a4d6ab3cf53ac197dd5b9b03a16b0aca8">AudioSourceReadData</a></li>
+<li>AudioSourceWriter()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_source_writer.html#a48ca15767a11dc6f5426d0c438e18f7f">AudioSourceWriter</a></li>
+<li>autoClip()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_format_i_o.html#a15cf96e7dd3dfdd658fc166cc3e3ca01">AudioFormatIO</a></li>
 <li>availableBufferSizes()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_device.html#a6454f0356469ff9e5cb8dcb6d02949da">AudioDevice</a></li>
 <li>availableFormats()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_format_i_o.html#aee5aaab0dffc35c2fe3e49e0984c8d54">AudioFormatIO</a></li>
 <li>availableSampleRates()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_device.html#af33716a97a7f069cb74a4dad49de7453">AudioDevice</a></li>

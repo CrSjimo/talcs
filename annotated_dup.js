@@ -17,9 +17,13 @@ var annotated_dup =
       [ "AudioSource", "classtalcs_1_1_audio_source.html", "classtalcs_1_1_audio_source" ],
       [ "AudioSourceClipSeries", "classtalcs_1_1_audio_source_clip_series.html", "classtalcs_1_1_audio_source_clip_series" ],
       [ "AudioSourcePlayback", "classtalcs_1_1_audio_source_playback.html", "classtalcs_1_1_audio_source_playback" ],
-      [ "AudioSourceReadData", "classtalcs_1_1_audio_source_read_data.html", "classtalcs_1_1_audio_source_read_data" ],
+      [ "AudioSourceProcessorBase", "classtalcs_1_1_audio_source_processor_base.html", "classtalcs_1_1_audio_source_processor_base" ],
+      [ "AudioSourceReadData", "structtalcs_1_1_audio_source_read_data.html", "structtalcs_1_1_audio_source_read_data" ],
+      [ "AudioSourceWriter", "classtalcs_1_1_audio_source_writer.html", "classtalcs_1_1_audio_source_writer" ],
       [ "AudioStreamBase", "classtalcs_1_1_audio_stream_base.html", "classtalcs_1_1_audio_stream_base" ],
       [ "ErrorStringProvider", "classtalcs_1_1_error_string_provider.html", "classtalcs_1_1_error_string_provider" ],
+      [ "FutureAudioSource", "classtalcs_1_1_future_audio_source.html", "classtalcs_1_1_future_audio_source" ],
+      [ "FutureAudioSourceClipSeries", "classtalcs_1_1_future_audio_source_clip_series.html", "classtalcs_1_1_future_audio_source_clip_series" ],
       [ "IAudioSampleContainer", "classtalcs_1_1_i_audio_sample_container.html", "classtalcs_1_1_i_audio_sample_container" ],
       [ "IAudioSampleProvider", "classtalcs_1_1_i_audio_sample_provider.html", "classtalcs_1_1_i_audio_sample_provider" ],
       [ "IMixer", "structtalcs_1_1_i_mixer.html", "structtalcs_1_1_i_mixer" ],
@@ -29,10 +33,14 @@ var annotated_dup =
       [ "NameProvider", "classtalcs_1_1_name_provider.html", "classtalcs_1_1_name_provider" ],
       [ "PositionableAudioSource", "classtalcs_1_1_positionable_audio_source.html", "classtalcs_1_1_positionable_audio_source" ],
       [ "PositionableMixerAudioSource", "classtalcs_1_1_positionable_mixer_audio_source.html", "classtalcs_1_1_positionable_mixer_audio_source" ],
+      [ "RemoteAudioDevice", "classtalcs_1_1_remote_audio_device.html", "classtalcs_1_1_remote_audio_device" ],
+      [ "RemoteEditor", "classtalcs_1_1_remote_editor.html", "classtalcs_1_1_remote_editor" ],
+      [ "RemoteSocket", "classtalcs_1_1_remote_socket.html", "classtalcs_1_1_remote_socket" ],
+      [ "RemoteTransportControllerInterface", "classtalcs_1_1_remote_transport_controller_interface.html", "classtalcs_1_1_remote_transport_controller_interface" ],
       [ "SDLAudioDevice", "classtalcs_1_1_s_d_l_audio_device.html", "classtalcs_1_1_s_d_l_audio_device" ],
       [ "SDLAudioDriver", "classtalcs_1_1_s_d_l_audio_driver.html", "classtalcs_1_1_s_d_l_audio_driver" ],
       [ "SineWaveAudioSource", "classtalcs_1_1_sine_wave_audio_source.html", "classtalcs_1_1_sine_wave_audio_source" ],
       [ "TransportAudioSource", "classtalcs_1_1_transport_audio_source.html", "classtalcs_1_1_transport_audio_source" ],
-      [ "TransportAudioSourceWriter", "classtalcs_1_1_transport_audio_source_writer.html", "classtalcs_1_1_transport_audio_source_writer" ]
+      [ "TransportAudioSourceProcessInfoCallback", "classtalcs_1_1_transport_audio_source_process_info_callback.html", "classtalcs_1_1_transport_audio_source_process_info_callback" ]
     ] ]
 ];

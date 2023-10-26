@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -118,6 +125,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ab2faeff6347371e8924f2f514e083325"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addb585f14314916d3bb08e97a78b4c69"><td class="memItemLeft" align="right" valign="top">virtual QList&lt; T * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_i_mixer.html#addb585f14314916d3bb08e97a78b4c69">sources</a> () const =0</td></tr>
 <tr class="separator:addb585f14314916d3bb08e97a78b4c69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8137cd8018f723807ab1254fec863e3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_i_mixer.html#ae8137cd8018f723807ab1254fec863e3">setSourceSolo</a> (T *src, bool isSolo)=0</td></tr>
+<tr class="separator:ae8137cd8018f723807ab1254fec863e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cb753b5aab9de489ad5a3b85ef035b9"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_i_mixer.html#a4cb753b5aab9de489ad5a3b85ef035b9">isSourceSolo</a> (T *src) const =0</td></tr>
+<tr class="separator:a4cb753b5aab9de489ad5a3b85ef035b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af396f4281d34897782f1d3b01258fdf5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_i_mixer.html#af396f4281d34897782f1d3b01258fdf5">setGain</a> (float <a class="el" href="structtalcs_1_1_i_mixer.html#a31092f5b8dbb452d7c079f5c3bea695c">gain</a>)=0</td></tr>
 <tr class="separator:af396f4281d34897782f1d3b01258fdf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31092f5b8dbb452d7c079f5c3bea695c"><td class="memItemLeft" align="right" valign="top">virtual float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_i_mixer.html#a31092f5b8dbb452d7c079f5c3bea695c">gain</a> () const =0</td></tr>
@@ -130,6 +141,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2b98d9b247c44e9701512a33f17cf510"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6aa5ac9fb04da7d30a3d65cd893ae8f4"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_i_mixer.html#a6aa5ac9fb04da7d30a3d65cd893ae8f4">routeChannels</a> () const =0</td></tr>
 <tr class="separator:a6aa5ac9fb04da7d30a3d65cd893ae8f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad06492f0579f68f73a3a1632347fbf48"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_i_mixer.html#ad06492f0579f68f73a3a1632347fbf48">setSilentFlags</a> (int <a class="el" href="structtalcs_1_1_i_mixer.html#ae270f8e61896c0c55cae85b74703dfaa">silentFlags</a>)=0</td></tr>
+<tr class="separator:ad06492f0579f68f73a3a1632347fbf48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae270f8e61896c0c55cae85b74703dfaa"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_i_mixer.html#ae270f8e61896c0c55cae85b74703dfaa">silentFlags</a> () const =0</td></tr>
+<tr class="separator:ae270f8e61896c0c55cae85b74703dfaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class T&gt;<br />
@@ -208,6 +223,35 @@ template&lt;class T &gt; </div>
 <p>Gets the output gain. </p>
 
 <p>Implemented in <a class="el" href="classtalcs_1_1_mixer_audio_source.html#a11e71f5a05ba61ac85b44db66140ee1e">MixerAudioSource</a>, and <a class="el" href="classtalcs_1_1_positionable_mixer_audio_source.html#a11e71f5a05ba61ac85b44db66140ee1e">PositionableMixerAudioSource</a>.</p>
+
+</div>
+</div>
+<a id="a4cb753b5aab9de489ad5a3b85ef035b9" name="a4cb753b5aab9de489ad5a3b85ef035b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4cb753b5aab9de489ad5a3b85ef035b9">&#9670;&#160;</a></span>isSourceSolo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isSourceSolo </td>
+          <td>(</td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>src</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Gets whether an input source is solo or not. </p>
 
 </div>
 </div>
@@ -428,6 +472,108 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
+<a id="ad06492f0579f68f73a3a1632347fbf48" name="ad06492f0579f68f73a3a1632347fbf48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad06492f0579f68f73a3a1632347fbf48">&#9670;&#160;</a></span>setSilentFlags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setSilentFlags </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>silentFlags</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Sets the silent flags of the source.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtalcs_1_1_audio_source_read_data.html#aa55a16b629bfaf95d6d7b931b06faf6e">AudioSourceReadData::silentFlags</a> </dd></dl>
+
+<p>Implemented in <a class="el" href="classtalcs_1_1_mixer_audio_source.html#a24064e6517b72cfc60d6cad2715c9efd">MixerAudioSource</a>, and <a class="el" href="classtalcs_1_1_positionable_mixer_audio_source.html#a24064e6517b72cfc60d6cad2715c9efd">PositionableMixerAudioSource</a>.</p>
+
+</div>
+</div>
+<a id="ae8137cd8018f723807ab1254fec863e3" name="ae8137cd8018f723807ab1254fec863e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8137cd8018f723807ab1254fec863e3">&#9670;&#160;</a></span>setSourceSolo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setSourceSolo </td>
+          <td>(</td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isSolo</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Sets an input source to be solo or not-solo. </p>
+
+</div>
+</div>
+<a id="ae270f8e61896c0c55cae85b74703dfaa" name="ae270f8e61896c0c55cae85b74703dfaa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae270f8e61896c0c55cae85b74703dfaa">&#9670;&#160;</a></span>silentFlags()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int silentFlags </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Gets the silent flags of the source.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structtalcs_1_1_audio_source_read_data.html#aa55a16b629bfaf95d6d7b931b06faf6e">AudioSourceReadData::silentFlags</a> </dd></dl>
+
+<p>Implemented in <a class="el" href="classtalcs_1_1_mixer_audio_source.html#a3c87521e5d896972a240f1fac1e74189">MixerAudioSource</a>, and <a class="el" href="classtalcs_1_1_positionable_mixer_audio_source.html#a3c87521e5d896972a240f1fac1e74189">PositionableMixerAudioSource</a>.</p>
+
+</div>
+</div>
 <a id="addb585f14314916d3bb08e97a78b4c69" name="addb585f14314916d3bb08e97a78b4c69"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#addb585f14314916d3bb08e97a78b4c69">&#9670;&#160;</a></span>sources()</h2>
 
@@ -459,8 +605,8 @@ template&lt;class T &gt; </div>
 </div>
 </div>
 <hr/>The documentation for this interface was generated from the following files:<ul>
-<li>source/<a class="el" href="_i_mixer_8h_source.html">IMixer.h</a></li>
-<li>source/IMixer.cpp</li>
+<li>core/source/<a class="el" href="_i_mixer_8h_source.html">IMixer.h</a></li>
+<li>core/source/IMixer.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

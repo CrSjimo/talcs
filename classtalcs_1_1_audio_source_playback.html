@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -131,13 +138,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa5090955a1b83019613c00e0d6e9a896"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7cfd12caaf7a03d0e126a47668a3c356"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source_playback.html#a7cfd12caaf7a03d0e126a47668a3c356">deviceStoppedCallback</a> () override</td></tr>
 <tr class="separator:a7cfd12caaf7a03d0e126a47668a3c356"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a728fed130028e5ef635a06fe3b9724d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source_playback.html#a728fed130028e5ef635a06fe3b9724d8">workCallback</a> (const <a class="el" href="classtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData) override</td></tr>
+<tr class="memitem:a728fed130028e5ef635a06fe3b9724d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source_playback.html#a728fed130028e5ef635a06fe3b9724d8">workCallback</a> (const <a class="el" href="structtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData) override</td></tr>
 <tr class="separator:a728fed130028e5ef635a06fe3b9724d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28b05518d0575a142240842ebb378f0e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device_callback.html#a28b05518d0575a142240842ebb378f0e">deviceWillStartCallback</a> (<a class="el" href="classtalcs_1_1_audio_device.html">AudioDevice</a> *device)=0</td></tr>
 <tr class="separator:a28b05518d0575a142240842ebb378f0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad318de250d90f23d8b05ef1e27b2c351"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device_callback.html#ad318de250d90f23d8b05ef1e27b2c351">deviceStoppedCallback</a> ()=0</td></tr>
 <tr class="separator:ad318de250d90f23d8b05ef1e27b2c351"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5c518b2d1eb4f9953e4a439afa30edf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device_callback.html#ac5c518b2d1eb4f9953e4a439afa30edf">workCallback</a> (const <a class="el" href="classtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData)=0</td></tr>
+<tr class="memitem:ac5c518b2d1eb4f9953e4a439afa30edf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_device_callback.html#ac5c518b2d1eb4f9953e4a439afa30edf">workCallback</a> (const <a class="el" href="structtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData)=0</td></tr>
 <tr class="separator:ac5c518b2d1eb4f9953e4a439afa30edf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -328,7 +335,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void workCallback </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;&#160;</td>
           <td class="paramname"><em>readData</em></td><td>)</td>
           <td></td>
         </tr>

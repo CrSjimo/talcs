@@ -25,9 +25,17 @@
 var NAVTREE =
 [
   [ "TALCS", "index.html", [
+    [ "Dependencies", "index.html#autotoc_md10", null ],
     [ "Tutorial: Using audio devices with TALCS", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_201__tutorial__using__audio__devices__with__talcs.html", null ],
     [ "Tutorial: Access audio files with TALCS", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_202__tutorial__access__audio__files__with__talcs.html", null ],
     [ "Tutorial: Combining Audio Clips and Mixing Multi-track Audio with TALCS", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_203__tutorial__combining__audio__clips__an3566f6b6c2fab87cbd8a50f5b869b2bf.html", null ],
+    [ "Introducing TALCS into Audio Applications", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_204__introducing__talcs__into__audio__applications.html", [
+      [ "Dealing with drivers and devices", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_204__introducing__talcs__into__audio__applications.html#autotoc_md4", null ],
+      [ "Combining different components within a project scope", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_204__introducing__talcs__into__audio__applications.html#autotoc_md5", null ],
+      [ "Arranging Clips in a Track", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_204__introducing__talcs__into__audio__applications.html#autotoc_md6", null ],
+      [ "Exporting Audio to File", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_204__introducing__talcs__into__audio__applications.html#autotoc_md7", null ],
+      [ "VST Mode Audio Playback", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_204__introducing__talcs__into__audio__applications.html#autotoc_md8", null ]
+    ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -49,8 +57,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_a_s_i_o_audio_device_8h_source.html",
-"classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7dadac327650059a3f7ab7445d87c7bfdc4",
-"md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_201__tutorial__using__audio__devices__with__talcs.html"
+"classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da32df7821dde2d58044b5763aa0a452d3",
+"classtalcs_1_1_remote_editor.html#a22890317d6cca785c3e9371d513ab79d"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

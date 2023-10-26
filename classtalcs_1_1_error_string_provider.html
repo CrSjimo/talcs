@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -114,13 +121,14 @@ Inheritance diagram for ErrorStringProvider:</div>
  <div class="center">
   <img src="classtalcs_1_1_error_string_provider.png" usemap="#ErrorStringProvider_map" alt=""/>
   <map id="ErrorStringProvider_map" name="ErrorStringProvider_map">
-<area href="classtalcs_1_1_audio_device.html" title="Base class for audio devices." alt="AudioDevice" shape="rect" coords="67,56,191,80"/>
-<area href="classtalcs_1_1_audio_driver.html" title="Base class for audio drivers that underlay audio devices." alt="AudioDriver" shape="rect" coords="335,56,459,80"/>
-<area href="classtalcs_1_1_audio_format_i_o.html" title="The AudioFormatIO class provides interfaces to access audio files based on libsndfile." alt="AudioFormatIO" shape="rect" coords="469,56,593,80"/>
-<area href="classtalcs_1_1_a_s_i_o_audio_device.html" title="The audio device using ASIO." alt="ASIOAudioDevice" shape="rect" coords="0,112,124,136"/>
-<area href="classtalcs_1_1_s_d_l_audio_device.html" title="The audio device using SDL2 Audio." alt="SDLAudioDevice" shape="rect" coords="134,112,258,136"/>
-<area href="classtalcs_1_1_a_s_i_o_audio_driver.html" title="The audio driver using ASIO." alt="ASIOAudioDriver" shape="rect" coords="268,112,392,136"/>
-<area href="classtalcs_1_1_s_d_l_audio_driver.html" title="The audio driver using SDL2 Audio." alt="SDLAudioDriver" shape="rect" coords="402,112,526,136"/>
+<area href="classtalcs_1_1_audio_device.html" title="Base class for audio devices." alt="AudioDevice" shape="rect" coords="136,56,262,80"/>
+<area href="classtalcs_1_1_audio_driver.html" title="Base class for audio drivers that underlay audio devices." alt="AudioDriver" shape="rect" coords="476,56,602,80"/>
+<area href="classtalcs_1_1_audio_format_i_o.html" title="The AudioFormatIO class provides interfaces to access audio files based on libsndfile." alt="AudioFormatIO" shape="rect" coords="612,56,738,80"/>
+<area href="classtalcs_1_1_a_s_i_o_audio_device.html" title="The audio device using ASIO." alt="ASIOAudioDevice" shape="rect" coords="0,112,126,136"/>
+<area href="classtalcs_1_1_remote_audio_device.html" title="The device that plays audio to a remote audio context." alt="RemoteAudioDevice" shape="rect" coords="136,112,262,136"/>
+<area href="classtalcs_1_1_s_d_l_audio_device.html" title="The audio device using SDL2 Audio." alt="SDLAudioDevice" shape="rect" coords="272,112,398,136"/>
+<area href="classtalcs_1_1_a_s_i_o_audio_driver.html" title="The audio driver using ASIO." alt="ASIOAudioDriver" shape="rect" coords="408,112,534,136"/>
+<area href="classtalcs_1_1_s_d_l_audio_driver.html" title="The audio driver using SDL2 Audio." alt="SDLAudioDriver" shape="rect" coords="544,112,670,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -211,8 +219,8 @@ Protected Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>utils/<a class="el" href="_error_string_provider_8h_source.html">ErrorStringProvider.h</a></li>
-<li>utils/ErrorStringProvider.cpp</li>
+<li>core/base/<a class="el" href="_error_string_provider_8h_source.html">ErrorStringProvider.h</a></li>
+<li>core/base/ErrorStringProvider.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

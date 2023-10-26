@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -101,8 +108,11 @@ $(document).ready(function(){initNavTree('functions_func_l.html',''); initResiza
 <div class="textblock">Here is a list of all documented functions with links to the class documentation for each member:</div>
 
 <h3><a id="index_l" name="index_l"></a>- l -</h3><ul>
-<li>length()&#160;:&#160;<a class="el" href="classtalcs_1_1_audio_format_i_o.html#a2ab16cb605f71d18a02321a19d57adcd">AudioFormatIO</a>, <a class="el" href="classtalcs_1_1_positionable_mixer_audio_source.html#a6cd952696e4f84c6f1338a4e8d14727d">PositionableMixerAudioSource</a>, <a class="el" href="classtalcs_1_1_transport_audio_source.html#a2ab16cb605f71d18a02321a19d57adcd">TransportAudioSource</a></li>
-<li>lock()&#160;:&#160;<a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#ad81318257fd78328c5c86fa6a3a861dd">ASIOAudioDevice</a>, <a class="el" href="classtalcs_1_1_audio_device.html#aa81aed607133209dade63a226818224d">AudioDevice</a>, <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#ad81318257fd78328c5c86fa6a3a861dd">SDLAudioDevice</a></li>
+<li>length()&#160;:&#160;<a class="el" href="structtalcs_1_1_audio_clip_base.html#a2ab16cb605f71d18a02321a19d57adcd">AudioClipBase&lt; T &gt;</a>, <a class="el" href="classtalcs_1_1_audio_format_i_o.html#a2ab16cb605f71d18a02321a19d57adcd">AudioFormatIO</a>, <a class="el" href="classtalcs_1_1_audio_source_processor_base.html#a2ab16cb605f71d18a02321a19d57adcd">AudioSourceProcessorBase</a>, <a class="el" href="classtalcs_1_1_positionable_mixer_audio_source.html#a6cd952696e4f84c6f1338a4e8d14727d">PositionableMixerAudioSource</a>, <a class="el" href="classtalcs_1_1_transport_audio_source.html#a2ab16cb605f71d18a02321a19d57adcd">TransportAudioSource</a></li>
+<li>lengthAvailable()&#160;:&#160;<a class="el" href="classtalcs_1_1_future_audio_source_clip_series.html#a4966edf1a909ac48882db20129da207a">FutureAudioSourceClipSeries</a></li>
+<li>lengthLoaded()&#160;:&#160;<a class="el" href="classtalcs_1_1_future_audio_source_clip_series.html#af69f0f6087b465fe9fb23a53d1970481">FutureAudioSourceClipSeries</a></li>
+<li>lengthOfAllClips()&#160;:&#160;<a class="el" href="classtalcs_1_1_future_audio_source_clip_series.html#a7e89f6cbce9199f2e6e8b14cc5626a86">FutureAudioSourceClipSeries</a></li>
+<li>lock()&#160;:&#160;<a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#ad81318257fd78328c5c86fa6a3a861dd">ASIOAudioDevice</a>, <a class="el" href="classtalcs_1_1_audio_device.html#aa81aed607133209dade63a226818224d">AudioDevice</a>, <a class="el" href="classtalcs_1_1_remote_audio_device.html#ad81318257fd78328c5c86fa6a3a861dd">RemoteAudioDevice</a>, <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#ad81318257fd78328c5c86fa6a3a861dd">SDLAudioDevice</a></li>
 <li>loopingRange()&#160;:&#160;<a class="el" href="classtalcs_1_1_transport_audio_source.html#a4f0078cd1c3db6089e43ed528c7ee760">TransportAudioSource</a></li>
 </ul>
 </div><!-- contents -->

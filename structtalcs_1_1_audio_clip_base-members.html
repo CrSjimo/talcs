@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -104,11 +111,14 @@ $(document).ready(function(){initNavTree('structtalcs_1_1_audio_clip_base.html',
 
 <p>This is the complete list of members for <a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase&lt; T &gt;</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html#a6858851eee0e05f318897984757b59dc">content</a></td><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase&lt; T &gt;</a></td><td class="entry"></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html#af9d495c1655d813d553030485d00fea7">length</a></td><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase&lt; T &gt;</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html#a849a61da9c06105a508c7a2139b982a7">operator&lt;</a>(const AudioClipBase&lt; T &gt; &amp;other) const</td><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html#a7130b1618285588513fd1ff97884b9d9">position</a></td><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase&lt; T &gt;</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html#ab57103658ea08830681122eff763046d">startPos</a></td><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase&lt; T &gt;</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html#a98964f68bb01c3292bc0bbee47337af3">AudioClipBase</a>(qint64 position, T *content, qint64 startPos, qint64 length)</td><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html#a6d00022eb63d665f168db6ae833a369e">AudioClipBase</a>(qint64 position, qint64 length)</td><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html#afaf8955dab2bde887e346dfdeaac91b9">AudioClipBase</a>()</td><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html#abcd61bae54b3185354ba33e41ca3e91c">content</a>() const</td><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html#aa10321192277cab0eb9d4315aa08a231">contentStartPosition</a>() const</td><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html#a78eed81302d91048d9b5013990399762">endPosition</a>() const</td><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html#a2ab16cb605f71d18a02321a19d57adcd">length</a>() const</td><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html#ae97f379361eedc353acca4b088f74b3e">position</a>() const</td><td class="entry"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase&lt; T &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

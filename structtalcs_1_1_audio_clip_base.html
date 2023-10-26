@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -100,7 +107,6 @@ $(document).ready(function(){initNavTree('structtalcs_1_1_audio_clip_base.html',
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structtalcs_1_1_audio_clip_base-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">AudioClipBase&lt; T &gt; Struct Template Reference</div></div>
 </div><!--header-->
@@ -108,29 +114,34 @@ $(document).ready(function(){initNavTree('structtalcs_1_1_audio_clip_base.html',
 
 <p>Generic struct for audio clips.  
  <a href="structtalcs_1_1_audio_clip_base.html#details">More...</a></p>
+
+<p>Inherits AudioClipBaseInterval_.</p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a849a61da9c06105a508c7a2139b982a7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_audio_clip_base.html#a849a61da9c06105a508c7a2139b982a7">operator&lt;</a> (const <a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase</a>&lt; T &gt; &amp;other) const</td></tr>
-<tr class="separator:a849a61da9c06105a508c7a2139b982a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a7130b1618285588513fd1ff97884b9d9"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_audio_clip_base.html#a7130b1618285588513fd1ff97884b9d9">position</a> = -1</td></tr>
-<tr class="separator:a7130b1618285588513fd1ff97884b9d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6858851eee0e05f318897984757b59dc"><td class="memItemLeft" align="right" valign="top">T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_audio_clip_base.html#a6858851eee0e05f318897984757b59dc">content</a></td></tr>
-<tr class="separator:a6858851eee0e05f318897984757b59dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab57103658ea08830681122eff763046d"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_audio_clip_base.html#ab57103658ea08830681122eff763046d">startPos</a></td></tr>
-<tr class="separator:ab57103658ea08830681122eff763046d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9d495c1655d813d553030485d00fea7"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_audio_clip_base.html#af9d495c1655d813d553030485d00fea7">length</a></td></tr>
-<tr class="separator:af9d495c1655d813d553030485d00fea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a98964f68bb01c3292bc0bbee47337af3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_audio_clip_base.html#a98964f68bb01c3292bc0bbee47337af3">AudioClipBase</a> (qint64 <a class="el" href="structtalcs_1_1_audio_clip_base.html#ae97f379361eedc353acca4b088f74b3e">position</a>, T *<a class="el" href="structtalcs_1_1_audio_clip_base.html#abcd61bae54b3185354ba33e41ca3e91c">content</a>, qint64 startPos, qint64 <a class="el" href="structtalcs_1_1_audio_clip_base.html#a2ab16cb605f71d18a02321a19d57adcd">length</a>)</td></tr>
+<tr class="separator:a98964f68bb01c3292bc0bbee47337af3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d00022eb63d665f168db6ae833a369e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_audio_clip_base.html#a6d00022eb63d665f168db6ae833a369e">AudioClipBase</a> (qint64 <a class="el" href="structtalcs_1_1_audio_clip_base.html#ae97f379361eedc353acca4b088f74b3e">position</a>, qint64 <a class="el" href="structtalcs_1_1_audio_clip_base.html#a2ab16cb605f71d18a02321a19d57adcd">length</a>)</td></tr>
+<tr class="separator:a6d00022eb63d665f168db6ae833a369e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afaf8955dab2bde887e346dfdeaac91b9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_audio_clip_base.html#afaf8955dab2bde887e346dfdeaac91b9">AudioClipBase</a> ()</td></tr>
+<tr class="separator:afaf8955dab2bde887e346dfdeaac91b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae97f379361eedc353acca4b088f74b3e"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_audio_clip_base.html#ae97f379361eedc353acca4b088f74b3e">position</a> () const</td></tr>
+<tr class="separator:ae97f379361eedc353acca4b088f74b3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcd61bae54b3185354ba33e41ca3e91c"><td class="memItemLeft" align="right" valign="top">T *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_audio_clip_base.html#abcd61bae54b3185354ba33e41ca3e91c">content</a> () const</td></tr>
+<tr class="separator:abcd61bae54b3185354ba33e41ca3e91c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa10321192277cab0eb9d4315aa08a231"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_audio_clip_base.html#aa10321192277cab0eb9d4315aa08a231">contentStartPosition</a> () const</td></tr>
+<tr class="separator:aa10321192277cab0eb9d4315aa08a231"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78eed81302d91048d9b5013990399762"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_audio_clip_base.html#a78eed81302d91048d9b5013990399762">endPosition</a> () const</td></tr>
+<tr class="separator:a78eed81302d91048d9b5013990399762"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ab16cb605f71d18a02321a19d57adcd"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_audio_clip_base.html#a2ab16cb605f71d18a02321a19d57adcd">length</a> () const</td></tr>
+<tr class="separator:a2ab16cb605f71d18a02321a19d57adcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class T&gt;<br />
 struct talcs::AudioClipBase&lt; T &gt;</div><p>Generic struct for audio clips. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a849a61da9c06105a508c7a2139b982a7" name="a849a61da9c06105a508c7a2139b982a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a849a61da9c06105a508c7a2139b982a7">&#9670;&#160;</a></span>operator&lt;()</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a98964f68bb01c3292bc0bbee47337af3" name="a98964f68bb01c3292bc0bbee47337af3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98964f68bb01c3292bc0bbee47337af3">&#9670;&#160;</a></span>AudioClipBase() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -141,10 +152,138 @@ template&lt;class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool operator&lt; </td>
+          <td class="memname"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase</a> </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase</a>&lt; T &gt; &amp;&#160;</td>
-          <td class="paramname"><em>other</em></td><td>)</td>
+          <td class="paramtype">qint64&#160;</td>
+          <td class="paramname"><em>position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T *&#160;</td>
+          <td class="paramname"><em>content</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qint64&#160;</td>
+          <td class="paramname"><em>startPos</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qint64&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Constructor. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">position</td><td>The position where the start of clip locates in the clip series. A value of -1 represent the object is null. </td></tr>
+    <tr><td class="paramname">content</td><td>The content of audio clip </td></tr>
+    <tr><td class="paramname">startPos</td><td>The start of range within the content of audio clip </td></tr>
+    <tr><td class="paramname">length</td><td>The length of range within the content of audio clip </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6d00022eb63d665f168db6ae833a369e" name="a6d00022eb63d665f168db6ae833a369e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d00022eb63d665f168db6ae833a369e">&#9670;&#160;</a></span>AudioClipBase() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase</a> </td>
+          <td>(</td>
+          <td class="paramtype">qint64&#160;</td>
+          <td class="paramname"><em>position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">qint64&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Constructor. This is used to create a clip with no content, used for overlapping searching.</p>
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
+
+</div>
+</div>
+<a id="afaf8955dab2bde887e346dfdeaac91b9" name="afaf8955dab2bde887e346dfdeaac91b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afaf8955dab2bde887e346dfdeaac91b9">&#9670;&#160;</a></span>AudioClipBase() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Default constructor. Creates a null clip.</p>
+<p>This is an overloaded member function, provided for convenience. It differs from the above function only in what argument(s) it accepts. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="abcd61bae54b3185354ba33e41ca3e91c" name="abcd61bae54b3185354ba33e41ca3e91c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcd61bae54b3185354ba33e41ca3e91c">&#9670;&#160;</a></span>content()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T * content </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -154,83 +293,125 @@ template&lt;class T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Compare two audio clips by their positions.</p>
-<p>This is used for sorting audio clips in an audio clip series. </p>
+<p>Gets the content of audio clip. </p>
 
 </div>
 </div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a6858851eee0e05f318897984757b59dc" name="a6858851eee0e05f318897984757b59dc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6858851eee0e05f318897984757b59dc">&#9670;&#160;</a></span>content</h2>
+<a id="aa10321192277cab0eb9d4315aa08a231" name="aa10321192277cab0eb9d4315aa08a231"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa10321192277cab0eb9d4315aa08a231">&#9670;&#160;</a></span>contentStartPosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">content</td>
+          <td class="memname">qint64 contentStartPosition </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
-<p>The content of audio clip </p>
+<p>Gets the start of range within the content of audio clip. </p>
 
 </div>
 </div>
-<a id="af9d495c1655d813d553030485d00fea7" name="af9d495c1655d813d553030485d00fea7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af9d495c1655d813d553030485d00fea7">&#9670;&#160;</a></span>length</h2>
+<a id="a78eed81302d91048d9b5013990399762" name="a78eed81302d91048d9b5013990399762"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78eed81302d91048d9b5013990399762">&#9670;&#160;</a></span>endPosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">length</td>
+          <td class="memname">qint64 endPosition </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
-<p>The length of range within the content of audio clip </p>
+<p>Gets the position where the end of clip locates in the clip series. Equal to <a class="el" href="structtalcs_1_1_audio_clip_base.html#ae97f379361eedc353acca4b088f74b3e">position()</a> + <a class="el" href="structtalcs_1_1_audio_clip_base.html#a2ab16cb605f71d18a02321a19d57adcd">length()</a>. </p>
 
 </div>
 </div>
-<a id="a7130b1618285588513fd1ff97884b9d9" name="a7130b1618285588513fd1ff97884b9d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7130b1618285588513fd1ff97884b9d9">&#9670;&#160;</a></span>position</h2>
+<a id="a2ab16cb605f71d18a02321a19d57adcd" name="a2ab16cb605f71d18a02321a19d57adcd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ab16cb605f71d18a02321a19d57adcd">&#9670;&#160;</a></span>length()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">position = -1</td>
+          <td class="memname">qint64 length </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
-<p>The position where the start of clip locates in the clip series. A value of -1 represent the object is null. </p>
+<p>Gets the length of audio clip. </p>
 
 </div>
 </div>
-<a id="ab57103658ea08830681122eff763046d" name="ab57103658ea08830681122eff763046d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab57103658ea08830681122eff763046d">&#9670;&#160;</a></span>startPos</h2>
+<a id="ae97f379361eedc353acca4b088f74b3e" name="ae97f379361eedc353acca4b088f74b3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae97f379361eedc353acca4b088f74b3e">&#9670;&#160;</a></span>position()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">startPos</td>
+          <td class="memname">qint64 position </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
-<p>The start of range within the content of audio clip </p>
+<p>Gets the position where the start of clip locates in the clip series. A value of -1 represent the object is null. </p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following files:<ul>
-<li>utils/<a class="el" href="_audio_clip_base_8h_source.html">AudioClipBase.h</a></li>
-<li>utils/AudioClipBase.cpp</li>
+<li>core/base/<a class="el" href="_audio_clip_base_8h_source.html">AudioClipBase.h</a></li>
+<li>core/base/AudioClipBase.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

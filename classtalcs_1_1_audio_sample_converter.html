@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -110,22 +117,22 @@ $(document).ready(function(){initNavTree('classtalcs_1_1_audio_sample_converter.
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:adf630cbee7561038c47e6876d5c3bc7a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#adf630cbee7561038c47e6876d5c3bc7a">convertFloatToInt16</a> (void *dest, const float *src, qint64 length, bool isLittleEndian)</td></tr>
-<tr class="separator:adf630cbee7561038c47e6876d5c3bc7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cf21cf86ab8ec6850edd874896801c4"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#a7cf21cf86ab8ec6850edd874896801c4">convertFloatToInt24</a> (void *dest, const float *src, qint64 length, bool isLittleEndian)</td></tr>
-<tr class="separator:a7cf21cf86ab8ec6850edd874896801c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27db0015157176b751f8d20f42b1b5b5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#a27db0015157176b751f8d20f42b1b5b5">convertFloatToInt32</a> (void *dest, const float *src, qint64 length, bool isLittleEndian)</td></tr>
-<tr class="separator:a27db0015157176b751f8d20f42b1b5b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1168f908ba7f3a7d91d9c881cb8566b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#af1168f908ba7f3a7d91d9c881cb8566b">convertFloatToFloat32</a> (void *dest, const float *src, qint64 length, bool isLittleEndian)</td></tr>
-<tr class="separator:af1168f908ba7f3a7d91d9c881cb8566b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83b71cfebec9ff9330ecf6c8d99958a5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#a83b71cfebec9ff9330ecf6c8d99958a5">convertFloatToFloat64</a> (void *dest, const float *src, qint64 length, bool isLittleEndian)</td></tr>
-<tr class="separator:a83b71cfebec9ff9330ecf6c8d99958a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32492c1cf6c493766eb6a7da19eb9c63"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#a32492c1cf6c493766eb6a7da19eb9c63">convertToInt16</a> (void *dest, const float *src, qint64 length, bool isLittleEndian)</td></tr>
+<tr class="separator:a32492c1cf6c493766eb6a7da19eb9c63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa63527c2afeed7ddb0446c58bc384f19"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#aa63527c2afeed7ddb0446c58bc384f19">convertToInt24</a> (void *dest, const float *src, qint64 length, bool isLittleEndian)</td></tr>
+<tr class="separator:aa63527c2afeed7ddb0446c58bc384f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4511d325ac97d425af02cd656b2f1820"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#a4511d325ac97d425af02cd656b2f1820">convertToInt32</a> (void *dest, const float *src, qint64 length, bool isLittleEndian)</td></tr>
+<tr class="separator:a4511d325ac97d425af02cd656b2f1820"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a134dd1b83bd673aa0aa73876fa830e79"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#a134dd1b83bd673aa0aa73876fa830e79">convertToFloat32</a> (void *dest, const float *src, qint64 length, bool isLittleEndian)</td></tr>
+<tr class="separator:a134dd1b83bd673aa0aa73876fa830e79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2dce1dd4666bfb231fe3d859496fc311"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#a2dce1dd4666bfb231fe3d859496fc311">convertToFloat64</a> (void *dest, const float *src, qint64 length, bool isLittleEndian)</td></tr>
+<tr class="separator:a2dce1dd4666bfb231fe3d859496fc311"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The class provides functions to convert between several sample types. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="af1168f908ba7f3a7d91d9c881cb8566b" name="af1168f908ba7f3a7d91d9c881cb8566b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1168f908ba7f3a7d91d9c881cb8566b">&#9670;&#160;</a></span>convertFloatToFloat32()</h2>
+<a id="a134dd1b83bd673aa0aa73876fa830e79" name="a134dd1b83bd673aa0aa73876fa830e79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a134dd1b83bd673aa0aa73876fa830e79">&#9670;&#160;</a></span>convertToFloat32()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -134,7 +141,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void convertFloatToFloat32 </td>
+          <td class="memname">void convertToFloat32 </td>
           <td>(</td>
           <td class="paramtype">void *&#160;</td>
           <td class="paramname"><em>dest</em>, </td>
@@ -181,8 +188,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a83b71cfebec9ff9330ecf6c8d99958a5" name="a83b71cfebec9ff9330ecf6c8d99958a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a83b71cfebec9ff9330ecf6c8d99958a5">&#9670;&#160;</a></span>convertFloatToFloat64()</h2>
+<a id="a2dce1dd4666bfb231fe3d859496fc311" name="a2dce1dd4666bfb231fe3d859496fc311"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2dce1dd4666bfb231fe3d859496fc311">&#9670;&#160;</a></span>convertToFloat64()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -191,7 +198,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void convertFloatToFloat64 </td>
+          <td class="memname">void convertToFloat64 </td>
           <td>(</td>
           <td class="paramtype">void *&#160;</td>
           <td class="paramname"><em>dest</em>, </td>
@@ -238,8 +245,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="adf630cbee7561038c47e6876d5c3bc7a" name="adf630cbee7561038c47e6876d5c3bc7a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf630cbee7561038c47e6876d5c3bc7a">&#9670;&#160;</a></span>convertFloatToInt16()</h2>
+<a id="a32492c1cf6c493766eb6a7da19eb9c63" name="a32492c1cf6c493766eb6a7da19eb9c63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32492c1cf6c493766eb6a7da19eb9c63">&#9670;&#160;</a></span>convertToInt16()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -248,7 +255,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void convertFloatToInt16 </td>
+          <td class="memname">void convertToInt16 </td>
           <td>(</td>
           <td class="paramtype">void *&#160;</td>
           <td class="paramname"><em>dest</em>, </td>
@@ -295,8 +302,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a7cf21cf86ab8ec6850edd874896801c4" name="a7cf21cf86ab8ec6850edd874896801c4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7cf21cf86ab8ec6850edd874896801c4">&#9670;&#160;</a></span>convertFloatToInt24()</h2>
+<a id="aa63527c2afeed7ddb0446c58bc384f19" name="aa63527c2afeed7ddb0446c58bc384f19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa63527c2afeed7ddb0446c58bc384f19">&#9670;&#160;</a></span>convertToInt24()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -305,7 +312,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void convertFloatToInt24 </td>
+          <td class="memname">void convertToInt24 </td>
           <td>(</td>
           <td class="paramtype">void *&#160;</td>
           <td class="paramname"><em>dest</em>, </td>
@@ -352,8 +359,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a27db0015157176b751f8d20f42b1b5b5" name="a27db0015157176b751f8d20f42b1b5b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27db0015157176b751f8d20f42b1b5b5">&#9670;&#160;</a></span>convertFloatToInt32()</h2>
+<a id="a4511d325ac97d425af02cd656b2f1820" name="a4511d325ac97d425af02cd656b2f1820"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4511d325ac97d425af02cd656b2f1820">&#9670;&#160;</a></span>convertToInt32()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -362,7 +369,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void convertFloatToInt32 </td>
+          <td class="memname">void convertToInt32 </td>
           <td>(</td>
           <td class="paramtype">void *&#160;</td>
           <td class="paramname"><em>dest</em>, </td>
@@ -410,8 +417,8 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>utils/<a class="el" href="_audio_sample_converter_8h_source.html">AudioSampleConverter.h</a></li>
-<li>utils/AudioSampleConverter.cpp</li>
+<li>core/utils/<a class="el" href="_audio_sample_converter_8h_source.html">AudioSampleConverter.h</a></li>
+<li>core/utils/AudioSampleConverter.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -105,7 +112,7 @@ $(document).ready(function(){initNavTree('classtalcs_1_1_audio_source_clip_serie
 </div><!--header-->
 <div class="contents">
 
-<p>An AudioClipsSeries that uses <a class="el" href="classtalcs_1_1_positionable_audio_source.html" title="Base class for sources from which audio data can be streamly read, and the source can be repositioned...">PositionableAudioSource</a>.  
+<p>An AudioClipsSeriesBase object that uses <a class="el" href="classtalcs_1_1_positionable_audio_source.html" title="Base class for sources from which audio data can be streamly read, and the source can be repositioned...">PositionableAudioSource</a>.  
  <a href="classtalcs_1_1_audio_source_clip_series.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for AudioSourceClipSeries:</div>
@@ -126,7 +133,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae7682e8d045a34539c34d1acbf9bd7fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59b43fee6b74093da08f37f7362d740e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source_clip_series.html#a59b43fee6b74093da08f37f7362d740e">~AudioSourceClipSeries</a> () override</td></tr>
 <tr class="separator:a59b43fee6b74093da08f37f7362d740e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf4e0e1df0fe08aea0de05e6336a497a"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source_clip_series.html#adf4e0e1df0fe08aea0de05e6336a497a">read</a> (const <a class="el" href="classtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData) override</td></tr>
+<tr class="memitem:adf4e0e1df0fe08aea0de05e6336a497a"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source_clip_series.html#adf4e0e1df0fe08aea0de05e6336a497a">read</a> (const <a class="el" href="structtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData) override</td></tr>
 <tr class="separator:adf4e0e1df0fe08aea0de05e6336a497a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a960d83c08ae7b9e46cb2b89391e477e2"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source_clip_series.html#a960d83c08ae7b9e46cb2b89391e477e2">nextReadPosition</a> () const override</td></tr>
 <tr class="separator:a960d83c08ae7b9e46cb2b89391e477e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -136,7 +143,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0e9ca28b2e704ade50e7324ae4418a1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7008bca493d69ea65f12e0940f3a6886"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source_clip_series.html#a7008bca493d69ea65f12e0940f3a6886">close</a> () override</td></tr>
 <tr class="separator:a7008bca493d69ea65f12e0940f3a6886"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa784c732103a8445aed86163d5b893e7"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source_clip_series.html#aa784c732103a8445aed86163d5b893e7">removeClipAt</a> (qint64 pos) override</td></tr>
+<tr class="memitem:aa784c732103a8445aed86163d5b893e7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source_clip_series.html#aa784c732103a8445aed86163d5b893e7">removeClipAt</a> (qint64 pos) override</td></tr>
 <tr class="separator:aa784c732103a8445aed86163d5b893e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba4695b93fd15d9ae2ed79a59580f82e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source_clip_series.html#aba4695b93fd15d9ae2ed79a59580f82e">clearClips</a> () override</td></tr>
 <tr class="separator:aba4695b93fd15d9ae2ed79a59580f82e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,7 +157,7 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_classtalcs_1_1_audio_source"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtalcs_1_1_audio_source')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtalcs_1_1_audio_source.html">AudioSource</a></td></tr>
 <tr class="memitem:add402d877760acea169534eca2aca92f inherit pub_methods_classtalcs_1_1_audio_source"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source.html#add402d877760acea169534eca2aca92f">AudioSource</a> ()</td></tr>
 <tr class="separator:add402d877760acea169534eca2aca92f inherit pub_methods_classtalcs_1_1_audio_source"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1659be10107765700e6d763e42a6dcff inherit pub_methods_classtalcs_1_1_audio_source"><td class="memItemLeft" align="right" valign="top">virtual qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source.html#a1659be10107765700e6d763e42a6dcff">read</a> (const <a class="el" href="classtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData)=0</td></tr>
+<tr class="memitem:a1659be10107765700e6d763e42a6dcff inherit pub_methods_classtalcs_1_1_audio_source"><td class="memItemLeft" align="right" valign="top">virtual qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source.html#a1659be10107765700e6d763e42a6dcff">read</a> (const <a class="el" href="structtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData)=0</td></tr>
 <tr class="separator:a1659be10107765700e6d763e42a6dcff inherit pub_methods_classtalcs_1_1_audio_source"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtalcs_1_1_audio_stream_base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtalcs_1_1_audio_stream_base')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtalcs_1_1_audio_stream_base.html">AudioStreamBase</a></td></tr>
 <tr class="memitem:afa00541698e5024942ad99e2c2b8375f inherit pub_methods_classtalcs_1_1_audio_stream_base"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_stream_base.html#afa00541698e5024942ad99e2c2b8375f">open</a> (qint64 <a class="el" href="classtalcs_1_1_audio_stream_base.html#a874ea3d5cd0fd10576a6139d0000cf07">bufferSize</a>, double <a class="el" href="classtalcs_1_1_audio_stream_base.html#aa6ff92bd4ac20b88b83bda4d7f96d48c">sampleRate</a>)</td></tr>
@@ -178,11 +185,11 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_attribs_classtalcs_1_1_audio_clip_series_base"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classtalcs_1_1_audio_clip_series_base')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classtalcs_1_1_audio_clip_series_base.html">AudioClipSeriesBase&lt; PositionableAudioSource &gt;</a></td></tr>
-<tr class="memitem:a1f3935a49343f44fcbd515e5770792e8 inherit pro_attribs_classtalcs_1_1_audio_clip_series_base"><td class="memItemLeft" align="right" valign="top">std::set&lt; <a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase</a>&lt; <a class="el" href="classtalcs_1_1_positionable_audio_source.html">PositionableAudioSource</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_clip_series_base.html#a1f3935a49343f44fcbd515e5770792e8">m_clips</a></td></tr>
+<tr class="memitem:a1f3935a49343f44fcbd515e5770792e8 inherit pro_attribs_classtalcs_1_1_audio_clip_series_base"><td class="memItemLeft" align="right" valign="top">AudioClipBaseIntervalTree_&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_clip_series_base.html#a1f3935a49343f44fcbd515e5770792e8">m_clips</a></td></tr>
 <tr class="separator:a1f3935a49343f44fcbd515e5770792e8 inherit pro_attribs_classtalcs_1_1_audio_clip_series_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>An AudioClipsSeries that uses <a class="el" href="classtalcs_1_1_positionable_audio_source.html" title="Base class for sources from which audio data can be streamly read, and the source can be repositioned...">PositionableAudioSource</a>. </p>
+<div class="textblock"><p>An AudioClipsSeriesBase object that uses <a class="el" href="classtalcs_1_1_positionable_audio_source.html" title="Base class for sources from which audio data can be streamly read, and the source can be repositioned...">PositionableAudioSource</a>. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae7682e8d045a34539c34d1acbf9bd7fc" name="ae7682e8d045a34539c34d1acbf9bd7fc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae7682e8d045a34539c34d1acbf9bd7fc">&#9670;&#160;</a></span>AudioSourceClipSeries()</h2>
@@ -383,7 +390,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">qint64 read </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;&#160;</td>
           <td class="paramname"><em>readData</em></td><td>)</td>
           <td></td>
         </tr>
@@ -396,7 +403,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <p>Reads audio data from the source. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">readData</td><td>see docs in class <a class="el" href="classtalcs_1_1_audio_source_read_data.html" title="The object that contains the target for AudioSource to fill data in.">AudioSourceReadData</a> </td></tr>
+    <tr><td class="paramname">readData</td><td>see docs in class <a class="el" href="structtalcs_1_1_audio_source_read_data.html" title="The object that contains the target for AudioSource to fill data in.">AudioSourceReadData</a> </td></tr>
   </table>
   </dd>
 </dl>
@@ -459,6 +466,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Sets the next read position.</p>
+<p>The new position might be identical to the current position. Such cases should be handled properly.</p>
 <p>Note that for derived class that reimplement this function, it should be synchronized with <a class="el" href="classtalcs_1_1_audio_source_clip_series.html#adf4e0e1df0fe08aea0de05e6336a497a">read()</a> function. </p>
 
 <p>Reimplemented from <a class="el" href="classtalcs_1_1_positionable_audio_source.html#a14f57872667fd308a9e1785959989261">PositionableAudioSource</a>.</p>
@@ -466,8 +474,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>source/<a class="el" href="_audio_source_clip_series_8h_source.html">AudioSourceClipSeries.h</a></li>
-<li>source/AudioSourceClipSeries.cpp</li>
+<li>core/source/<a class="el" href="_audio_source_clip_series_8h_source.html">AudioSourceClipSeries.h</a></li>
+<li>core/source/AudioSourceClipSeries.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

@@ -6,5 +6,6 @@ var classtalcs_1_1_sine_wave_audio_source =
     [ "open", "classtalcs_1_1_sine_wave_audio_source.html#a0e9ca28b2e704ade50e7324ae4418a1d", null ],
     [ "read", "classtalcs_1_1_sine_wave_audio_source.html#adf4e0e1df0fe08aea0de05e6336a497a", null ],
     [ "setFrequency", "classtalcs_1_1_sine_wave_audio_source.html#ad9f3714565b2d6000b66f71cd3c96db7", null ],
-    [ "setFrequency", "classtalcs_1_1_sine_wave_audio_source.html#a1b73bb28268c6cd46ae66317fdb9f907", null ]
+    [ "setFrequency", "classtalcs_1_1_sine_wave_audio_source.html#a1b73bb28268c6cd46ae66317fdb9f907", null ],
+    [ "setNextReadPosition", "classtalcs_1_1_sine_wave_audio_source.html#aa9b6aa84f5f06fda7368a6c8636c6d9e", null ]
 ];

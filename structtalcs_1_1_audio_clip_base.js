@@ -1,8 +1,11 @@
 var structtalcs_1_1_audio_clip_base =
 [
-    [ "operator<", "structtalcs_1_1_audio_clip_base.html#a849a61da9c06105a508c7a2139b982a7", null ],
-    [ "content", "structtalcs_1_1_audio_clip_base.html#a6858851eee0e05f318897984757b59dc", null ],
-    [ "length", "structtalcs_1_1_audio_clip_base.html#af9d495c1655d813d553030485d00fea7", null ],
-    [ "position", "structtalcs_1_1_audio_clip_base.html#a7130b1618285588513fd1ff97884b9d9", null ],
-    [ "startPos", "structtalcs_1_1_audio_clip_base.html#ab57103658ea08830681122eff763046d", null ]
+    [ "AudioClipBase", "structtalcs_1_1_audio_clip_base.html#a98964f68bb01c3292bc0bbee47337af3", null ],
+    [ "AudioClipBase", "structtalcs_1_1_audio_clip_base.html#a6d00022eb63d665f168db6ae833a369e", null ],
+    [ "AudioClipBase", "structtalcs_1_1_audio_clip_base.html#afaf8955dab2bde887e346dfdeaac91b9", null ],
+    [ "content", "structtalcs_1_1_audio_clip_base.html#abcd61bae54b3185354ba33e41ca3e91c", null ],
+    [ "contentStartPosition", "structtalcs_1_1_audio_clip_base.html#aa10321192277cab0eb9d4315aa08a231", null ],
+    [ "endPosition", "structtalcs_1_1_audio_clip_base.html#a78eed81302d91048d9b5013990399762", null ],
+    [ "length", "structtalcs_1_1_audio_clip_base.html#a2ab16cb605f71d18a02321a19d57adcd", null ],
+    [ "position", "structtalcs_1_1_audio_clip_base.html#ae97f379361eedc353acca4b088f74b3e", null ]
 ];

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['nameprovider_0',['NameProvider',['../classtalcs_1_1_name_provider.html',1,'talcs']]]
+  ['memoryaudiosource_0',['MemoryAudioSource',['../classtalcs_1_1_memory_audio_source.html',1,'talcs']]],
+  ['mixeraudiosource_1',['MixerAudioSource',['../classtalcs_1_1_mixer_audio_source.html',1,'talcs']]]
 ];

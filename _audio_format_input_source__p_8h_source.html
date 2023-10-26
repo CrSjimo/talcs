@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=11" />
     <meta name="generator" content="Doxygen 1.9.7" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TALCS: source/AudioFormatInputSource_p.h Source File</title>
+    <title>TALCS: format/AudioFormatInputSource_p.h Source File</title>
     <link href="tabs.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -104,8 +111,8 @@ $(document).ready(function(){initNavTree('_audio_format_input_source__p_8h_sourc
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef TALCS_AUDIOFORMATINPUTSOURCE_P_H</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define TALCS_AUDIOFORMATINPUTSOURCE_P_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;AudioFormatInputSource.h&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;PositionableAudioSource_p.h&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;TalcsCore/private/PositionableAudioSource_p.h&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;TalcsFormat/AudioFormatInputSource.h&gt;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;samplerate.h&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
@@ -142,14 +149,14 @@ $(document).ready(function(){initNavTree('_audio_format_input_source__p_8h_sourc
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>}</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#endif </span><span class="comment">// TALCS_AUDIOFORMATINPUTSOURCE_P_H</span></div>
-<div class="ttc" id="aclasstalcs_1_1_audio_format_input_source_html_af10f920d2468ab08b8f1b25194f56f2d"><div class="ttname"><a href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2d">talcs::AudioFormatInputSource::ResampleMode</a></div><div class="ttdeci">ResampleMode</div><div class="ttdef"><b>Definition</b> AudioFormatInputSource.h:13</div></div>
-<div class="ttc" id="aclasstalcs_1_1_audio_format_input_source_html_af10f920d2468ab08b8f1b25194f56f2dafee5df2251ab6e3ea093544b9691b6f4"><div class="ttname"><a href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2dafee5df2251ab6e3ea093544b9691b6f4">talcs::AudioFormatInputSource::SincBestQuality</a></div><div class="ttdeci">@ SincBestQuality</div><div class="ttdef"><b>Definition</b> AudioFormatInputSource.h:14</div></div>
+<div class="ttc" id="aclasstalcs_1_1_audio_format_input_source_html_af10f920d2468ab08b8f1b25194f56f2d"><div class="ttname"><a href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2d">talcs::AudioFormatInputSource::ResampleMode</a></div><div class="ttdeci">ResampleMode</div><div class="ttdef"><b>Definition</b> AudioFormatInputSource.h:15</div></div>
+<div class="ttc" id="aclasstalcs_1_1_audio_format_input_source_html_af10f920d2468ab08b8f1b25194f56f2dafee5df2251ab6e3ea093544b9691b6f4"><div class="ttname"><a href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2dafee5df2251ab6e3ea093544b9691b6f4">talcs::AudioFormatInputSource::SincBestQuality</a></div><div class="ttdeci">@ SincBestQuality</div><div class="ttdef"><b>Definition</b> AudioFormatInputSource.h:16</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_94e7a0fbe7f8eaf7f05ee7b02c647e9f.html">source</a></li><li class="navelem"><b>AudioFormatInputSource_p.h</b></li>
+    <li class="navelem"><a class="el" href="dir_24c049936c2e162b277227e4c6675044.html">format</a></li><li class="navelem"><b>AudioFormatInputSource_p.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

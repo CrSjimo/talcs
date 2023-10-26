@@ -14,5 +14,7 @@ var classtalcs_1_1_positionable_mixer_audio_source =
     [ "setNextReadPosition", "classtalcs_1_1_positionable_mixer_audio_source.html#aa9b6aa84f5f06fda7368a6c8636c6d9e", null ],
     [ "setPan", "classtalcs_1_1_positionable_mixer_audio_source.html#aceb0ad974dc5fdcb9db7d7045dfe0005", null ],
     [ "setRouteChannels", "classtalcs_1_1_positionable_mixer_audio_source.html#a10b6e81990091d6462e4ec3cdd221f4a", null ],
+    [ "setSilentFlags", "classtalcs_1_1_positionable_mixer_audio_source.html#a24064e6517b72cfc60d6cad2715c9efd", null ],
+    [ "silentFlags", "classtalcs_1_1_positionable_mixer_audio_source.html#a3c87521e5d896972a240f1fac1e74189", null ],
     [ "sources", "classtalcs_1_1_positionable_mixer_audio_source.html#abce9c1dbe9f17ccbce1769c11dee7e52", null ]
 ];

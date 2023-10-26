@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -113,18 +120,21 @@ Inheritance diagram for AudioStreamBase:</div>
  <div class="center">
   <img src="classtalcs_1_1_audio_stream_base.png" usemap="#AudioStreamBase_map" alt=""/>
   <map id="AudioStreamBase_map" name="AudioStreamBase_map">
-<area href="classtalcs_1_1_audio_device.html" title="Base class for audio devices." alt="AudioDevice" shape="rect" coords="98,56,284,80"/>
-<area href="classtalcs_1_1_audio_source.html" title="Base class for sources from which audio data can be streamly read." alt="AudioSource" shape="rect" coords="588,56,774,80"/>
+<area href="classtalcs_1_1_audio_device.html" title="Base class for audio devices." alt="AudioDevice" shape="rect" coords="196,56,382,80"/>
+<area href="classtalcs_1_1_audio_source.html" title="Base class for sources from which audio data can be streamly read." alt="AudioSource" shape="rect" coords="784,56,970,80"/>
 <area href="classtalcs_1_1_a_s_i_o_audio_device.html" title="The audio device using ASIO." alt="ASIOAudioDevice" shape="rect" coords="0,112,186,136"/>
-<area href="classtalcs_1_1_s_d_l_audio_device.html" title="The audio device using SDL2 Audio." alt="SDLAudioDevice" shape="rect" coords="196,112,382,136"/>
-<area href="classtalcs_1_1_mixer_audio_source.html" title="The object that mixes the output of other AudioSource objects." alt="MixerAudioSource" shape="rect" coords="392,112,578,136"/>
-<area href="classtalcs_1_1_positionable_audio_source.html" title="Base class for sources from which audio data can be streamly read, and the source can be repositioned..." alt="PositionableAudioSource" shape="rect" coords="588,112,774,136"/>
-<area href="classtalcs_1_1_transport_audio_source.html" title="The object takes a PositionableAudioSource object and supports playing and pausing." alt="TransportAudioSource" shape="rect" coords="784,112,970,136"/>
+<area href="classtalcs_1_1_remote_audio_device.html" title="The device that plays audio to a remote audio context." alt="RemoteAudioDevice" shape="rect" coords="196,112,382,136"/>
+<area href="classtalcs_1_1_s_d_l_audio_device.html" title="The audio device using SDL2 Audio." alt="SDLAudioDevice" shape="rect" coords="392,112,578,136"/>
+<area href="classtalcs_1_1_mixer_audio_source.html" title="The object that mixes the output of other AudioSource objects." alt="MixerAudioSource" shape="rect" coords="588,112,774,136"/>
+<area href="classtalcs_1_1_positionable_audio_source.html" title="Base class for sources from which audio data can be streamly read, and the source can be repositioned..." alt="PositionableAudioSource" shape="rect" coords="784,112,970,136"/>
+<area href="classtalcs_1_1_transport_audio_source.html" title="The object takes a PositionableAudioSource object and supports playing and pausing." alt="TransportAudioSource" shape="rect" coords="980,112,1166,136"/>
 <area href="classtalcs_1_1_audio_format_input_source.html" title="Takes audio from an AudioFormatIO object, resamples it to a specified sample rate,..." alt="AudioFormatInputSource" shape="rect" coords="196,168,382,192"/>
-<area href="classtalcs_1_1_audio_source_clip_series.html" title="An AudioClipsSeries that uses PositionableAudioSource." alt="AudioSourceClipSeries" shape="rect" coords="392,168,578,192"/>
-<area href="classtalcs_1_1_memory_audio_source.html" title="Produces audio from an IAudioSampleProvider object." alt="MemoryAudioSource" shape="rect" coords="588,168,774,192"/>
-<area href="classtalcs_1_1_positionable_mixer_audio_source.html" title="A class very similar to MixerAudioSource, but this one supports repositioning." alt="PositionableMixerAudioSource" shape="rect" coords="784,168,970,192"/>
-<area href="classtalcs_1_1_sine_wave_audio_source.html" alt="SineWaveAudioSource" shape="rect" coords="980,168,1166,192"/>
+<area href="classtalcs_1_1_audio_source_clip_series.html" title="An AudioClipsSeriesBase object that uses PositionableAudioSource." alt="AudioSourceClipSeries" shape="rect" coords="392,168,578,192"/>
+<area href="classtalcs_1_1_future_audio_source.html" title="The class takes an PositionableAudioSource object as the result of a asynchronous process." alt="FutureAudioSource" shape="rect" coords="588,168,774,192"/>
+<area href="classtalcs_1_1_future_audio_source_clip_series.html" title="An AudioClipsSeriesBase object that uses FutureAudioSource." alt="FutureAudioSourceClipSeries" shape="rect" coords="784,168,970,192"/>
+<area href="classtalcs_1_1_memory_audio_source.html" title="Produces audio from an IAudioSampleProvider object." alt="MemoryAudioSource" shape="rect" coords="980,168,1166,192"/>
+<area href="classtalcs_1_1_positionable_mixer_audio_source.html" title="A class very similar to MixerAudioSource, but this one supports repositioning." alt="PositionableMixerAudioSource" shape="rect" coords="1176,168,1362,192"/>
+<area href="classtalcs_1_1_sine_wave_audio_source.html" title="Generates sine wave." alt="SineWaveAudioSource" shape="rect" coords="1372,168,1558,192"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -188,7 +198,7 @@ Public Member Functions</h2></td></tr>
 <p>All reimplemented functions should call this function.</p>
 <dl class="section note"><dt>Note</dt><dd>The function might be called when the stream is close. In this case, derived classes should handle it properly. </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#a7008bca493d69ea65f12e0940f3a6886">ASIOAudioDevice</a>, <a class="el" href="classtalcs_1_1_audio_device.html#a7008bca493d69ea65f12e0940f3a6886">AudioDevice</a>, <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#a7008bca493d69ea65f12e0940f3a6886">SDLAudioDevice</a>, <a class="el" href="classtalcs_1_1_audio_format_input_source.html#a7008bca493d69ea65f12e0940f3a6886">AudioFormatInputSource</a>, <a class="el" href="classtalcs_1_1_audio_source_clip_series.html#a7008bca493d69ea65f12e0940f3a6886">AudioSourceClipSeries</a>, <a class="el" href="classtalcs_1_1_mixer_audio_source.html#a7008bca493d69ea65f12e0940f3a6886">MixerAudioSource</a>, <a class="el" href="classtalcs_1_1_positionable_mixer_audio_source.html#a7008bca493d69ea65f12e0940f3a6886">PositionableMixerAudioSource</a>, and <a class="el" href="classtalcs_1_1_transport_audio_source.html#a7008bca493d69ea65f12e0940f3a6886">TransportAudioSource</a>.</p>
+<p>Reimplemented in <a class="el" href="classtalcs_1_1_audio_source_clip_series.html#a7008bca493d69ea65f12e0940f3a6886">AudioSourceClipSeries</a>, <a class="el" href="classtalcs_1_1_mixer_audio_source.html#a7008bca493d69ea65f12e0940f3a6886">MixerAudioSource</a>, <a class="el" href="classtalcs_1_1_positionable_mixer_audio_source.html#a7008bca493d69ea65f12e0940f3a6886">PositionableMixerAudioSource</a>, <a class="el" href="classtalcs_1_1_transport_audio_source.html#a7008bca493d69ea65f12e0940f3a6886">TransportAudioSource</a>, <a class="el" href="classtalcs_1_1_audio_device.html#a7008bca493d69ea65f12e0940f3a6886">AudioDevice</a>, <a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#a7008bca493d69ea65f12e0940f3a6886">ASIOAudioDevice</a>, <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#a7008bca493d69ea65f12e0940f3a6886">SDLAudioDevice</a>, <a class="el" href="classtalcs_1_1_audio_format_input_source.html#a7008bca493d69ea65f12e0940f3a6886">AudioFormatInputSource</a>, <a class="el" href="classtalcs_1_1_remote_audio_device.html#a7008bca493d69ea65f12e0940f3a6886">RemoteAudioDevice</a>, <a class="el" href="classtalcs_1_1_future_audio_source.html#a7008bca493d69ea65f12e0940f3a6886">FutureAudioSource</a>, and <a class="el" href="classtalcs_1_1_future_audio_source_clip_series.html#a7008bca493d69ea65f12e0940f3a6886">FutureAudioSourceClipSeries</a>.</p>
 
 </div>
 </div>
@@ -255,7 +265,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if success </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#a0e9ca28b2e704ade50e7324ae4418a1d">ASIOAudioDevice</a>, <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#a0e9ca28b2e704ade50e7324ae4418a1d">SDLAudioDevice</a>, <a class="el" href="classtalcs_1_1_audio_format_input_source.html#a0e9ca28b2e704ade50e7324ae4418a1d">AudioFormatInputSource</a>, <a class="el" href="classtalcs_1_1_audio_source_clip_series.html#a0e9ca28b2e704ade50e7324ae4418a1d">AudioSourceClipSeries</a>, <a class="el" href="classtalcs_1_1_mixer_audio_source.html#a0e9ca28b2e704ade50e7324ae4418a1d">MixerAudioSource</a>, <a class="el" href="classtalcs_1_1_positionable_mixer_audio_source.html#a0e9ca28b2e704ade50e7324ae4418a1d">PositionableMixerAudioSource</a>, <a class="el" href="classtalcs_1_1_sine_wave_audio_source.html#a0e9ca28b2e704ade50e7324ae4418a1d">SineWaveAudioSource</a>, and <a class="el" href="classtalcs_1_1_transport_audio_source.html#a0e9ca28b2e704ade50e7324ae4418a1d">TransportAudioSource</a>.</p>
+<p>Reimplemented in <a class="el" href="classtalcs_1_1_audio_source_clip_series.html#a0e9ca28b2e704ade50e7324ae4418a1d">AudioSourceClipSeries</a>, <a class="el" href="classtalcs_1_1_mixer_audio_source.html#a0e9ca28b2e704ade50e7324ae4418a1d">MixerAudioSource</a>, <a class="el" href="classtalcs_1_1_positionable_mixer_audio_source.html#a0e9ca28b2e704ade50e7324ae4418a1d">PositionableMixerAudioSource</a>, <a class="el" href="classtalcs_1_1_sine_wave_audio_source.html#a0e9ca28b2e704ade50e7324ae4418a1d">SineWaveAudioSource</a>, <a class="el" href="classtalcs_1_1_transport_audio_source.html#a0e9ca28b2e704ade50e7324ae4418a1d">TransportAudioSource</a>, <a class="el" href="classtalcs_1_1_a_s_i_o_audio_device.html#a0e9ca28b2e704ade50e7324ae4418a1d">ASIOAudioDevice</a>, <a class="el" href="classtalcs_1_1_s_d_l_audio_device.html#a0e9ca28b2e704ade50e7324ae4418a1d">SDLAudioDevice</a>, <a class="el" href="classtalcs_1_1_audio_format_input_source.html#a0e9ca28b2e704ade50e7324ae4418a1d">AudioFormatInputSource</a>, <a class="el" href="classtalcs_1_1_remote_audio_device.html#a0e9ca28b2e704ade50e7324ae4418a1d">RemoteAudioDevice</a>, <a class="el" href="classtalcs_1_1_future_audio_source.html#a0e9ca28b2e704ade50e7324ae4418a1d">FutureAudioSource</a>, and <a class="el" href="classtalcs_1_1_future_audio_source_clip_series.html#a0e9ca28b2e704ade50e7324ae4418a1d">FutureAudioSourceClipSeries</a>.</p>
 
 </div>
 </div>
@@ -278,8 +288,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>utils/<a class="el" href="_audio_stream_base_8h_source.html">AudioStreamBase.h</a></li>
-<li>utils/AudioStreamBase.cpp</li>
+<li>core/base/<a class="el" href="_audio_stream_base_8h_source.html">AudioStreamBase.h</a></li>
+<li>core/base/AudioStreamBase.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

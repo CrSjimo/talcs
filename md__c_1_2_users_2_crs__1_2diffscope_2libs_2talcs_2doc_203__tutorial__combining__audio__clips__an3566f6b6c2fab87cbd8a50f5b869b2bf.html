@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -119,8 +126,8 @@ $(document).ready(function(){initNavTree('md__c_1_2_users_2_crs__1_2diffscope_2l
 <div class="line">    .startPos = 0,</div>
 <div class="line">    .length = 44100 * 2,</div>
 <div class="line">});</div>
-<div class="ttc" id="aclasstalcs_1_1_audio_source_clip_series_html"><div class="ttname"><a href="classtalcs_1_1_audio_source_clip_series.html">talcs::AudioSourceClipSeries</a></div><div class="ttdoc">An AudioClipsSeries that uses PositionableAudioSource.</div><div class="ttdef"><b>Definition</b> AudioSourceClipSeries.h:13</div></div>
-<div class="ttc" id="aclasstalcs_1_1_sine_wave_audio_source_html"><div class="ttname"><a href="classtalcs_1_1_sine_wave_audio_source.html">talcs::SineWaveAudioSource</a></div><div class="ttdef"><b>Definition</b> SineWaveAudioSource.h:11</div></div>
+<div class="ttc" id="aclasstalcs_1_1_audio_source_clip_series_html"><div class="ttname"><a href="classtalcs_1_1_audio_source_clip_series.html">talcs::AudioSourceClipSeries</a></div><div class="ttdoc">An AudioClipsSeriesBase object that uses PositionableAudioSource.</div><div class="ttdef"><b>Definition</b> AudioSourceClipSeries.h:18</div></div>
+<div class="ttc" id="aclasstalcs_1_1_sine_wave_audio_source_html"><div class="ttname"><a href="classtalcs_1_1_sine_wave_audio_source.html">talcs::SineWaveAudioSource</a></div><div class="ttdoc">Generates sine wave.</div><div class="ttdef"><b>Definition</b> SineWaveAudioSource.h:12</div></div>
 </div><!-- fragment --><p>This example creates two audio clips. The first one is a 440 Hz sine wave and the second one is an 880 Hz sine wave. The start position of the first clip is 0 and the start position of the second clip is 44100 * 4. The length of each clip is 44100 * 2.</p>
 <p>Please note that overlapping clips are not allowed to be added to the series. In this case, AudioSourceClipSeries::addClip() returns <code>false</code>.</p>
 <p><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer</a> is an interface that mixes several tracks together. There are 2 classes that implement it: <a class="el" href="classtalcs_1_1_mixer_audio_source.html">MixerAudioSource</a> (which takes <a class="el" href="classtalcs_1_1_audio_source.html">AudioSource</a>) and <a class="el" href="classtalcs_1_1_positionable_audio_source.html">PositionableMixerAudioSource</a> (which takes <a class="el" href="classtalcs_1_1_positionable_audio_source.html">PositionableAudioSource</a>).</p>
@@ -131,7 +138,7 @@ $(document).ready(function(){initNavTree('md__c_1_2_users_2_crs__1_2diffscope_2l
 <div class="line">mixer-&gt;addSource(src3);</div>
 <div class="line">mixer-&gt;setGain(0.5);</div>
 <div class="line">mixer-&gt;setPan(0.5);</div>
-<div class="ttc" id="aclasstalcs_1_1_positionable_mixer_audio_source_html"><div class="ttname"><a href="classtalcs_1_1_positionable_mixer_audio_source.html">talcs::PositionableMixerAudioSource</a></div><div class="ttdoc">A class very similar to MixerAudioSource, but this one supports repositioning.</div><div class="ttdef"><b>Definition</b> PositionableMixerAudioSource.h:13</div></div>
+<div class="ttc" id="aclasstalcs_1_1_positionable_mixer_audio_source_html"><div class="ttname"><a href="classtalcs_1_1_positionable_mixer_audio_source.html">talcs::PositionableMixerAudioSource</a></div><div class="ttdoc">A class very similar to MixerAudioSource, but this one supports repositioning.</div><div class="ttdef"><b>Definition</b> PositionableMixerAudioSource.h:14</div></div>
 </div><!-- fragment --><p>The example creates a mixer and mixes the <a class="el" href="classtalcs_1_1_audio_source_clip_series.html">AudioSourceClipSeries</a> object created above and a 1320 Hz sine wave source together. Then the example sets the output gain to 0.5 (approx. -3 dB) and the output pan to 0.5.</p>
 <p><a class="el" href="structtalcs_1_1_i_mixer.html">IMixer</a> can also be used to route the input sources to output channels. To use this feature, call <a class="el" href="structtalcs_1_1_i_mixer.html#a2b98d9b247c44e9701512a33f17cf510">IMixer::setRouteChannels()</a> and set it to <code>true</code> For example, if 4 channels are read from this object, and this object owns 3 input sources, the first and the second channels are read from the first input source, the third and the fourth channels are read from the second source, and the third source is not read. The order in which input sources are processed depends on the order in which they were added.</p>
 <p>Now, let's dive deeper and have a look at a more complicated example. First, we define a schema of JSON that contains the synthesis information. <code>audio</code> property represents the index of audio file in <code>audioFiles</code>, and <code>pos</code>, <code>start</code>, <code>length</code> are all measured in seconds.</p>
@@ -220,8 +227,8 @@ $(document).ready(function(){initNavTree('md__c_1_2_users_2_crs__1_2diffscope_2l
 <div class="line">    effectiveLength = std::max(effectiveLength, clipSeries-&gt;effectiveLength());</div>
 <div class="line">    mixer.addSource(trackSrc);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclasstalcs_1_1_audio_format_i_o_html"><div class="ttname"><a href="classtalcs_1_1_audio_format_i_o.html">talcs::AudioFormatIO</a></div><div class="ttdoc">The AudioFormatIO class provides interfaces to access audio files based on libsndfile.</div><div class="ttdef"><b>Definition</b> AudioFormatIO.h:14</div></div>
-<div class="ttc" id="aclasstalcs_1_1_audio_format_input_source_html"><div class="ttname"><a href="classtalcs_1_1_audio_format_input_source.html">talcs::AudioFormatInputSource</a></div><div class="ttdoc">Takes audio from an AudioFormatIO object, resamples it to a specified sample rate,...</div><div class="ttdef"><b>Definition</b> AudioFormatInputSource.h:10</div></div>
+<div class="ttc" id="aclasstalcs_1_1_audio_format_i_o_html"><div class="ttname"><a href="classtalcs_1_1_audio_format_i_o.html">talcs::AudioFormatIO</a></div><div class="ttdoc">The AudioFormatIO class provides interfaces to access audio files based on libsndfile.</div><div class="ttdef"><b>Definition</b> AudioFormatIO.h:16</div></div>
+<div class="ttc" id="aclasstalcs_1_1_audio_format_input_source_html"><div class="ttname"><a href="classtalcs_1_1_audio_format_input_source.html">talcs::AudioFormatInputSource</a></div><div class="ttdoc">Takes audio from an AudioFormatIO object, resamples it to a specified sample rate,...</div><div class="ttdef"><b>Definition</b> AudioFormatInputSource.h:12</div></div>
 </div><!-- fragment --><p>Finally, play the audio to the device:</p>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classtalcs_1_1_audio_device.html">AudioDevice</a> *device;</div>
 <div class="line"><span class="comment">/* create and initialize the device */</span></div>
@@ -231,9 +238,9 @@ $(document).ready(function(){initNavTree('md__c_1_2_users_2_crs__1_2diffscope_2l
 <div class="line">tpSrc.play();</div>
 <div class="line">device-&gt;<a class="code hl_function" href="classtalcs_1_1_audio_device.html#a0b36a991ca9d2abee975e84bb4def2ae">start</a>(&amp;playback);</div>
 <div class="ttc" id="aclasstalcs_1_1_audio_device_html"><div class="ttname"><a href="classtalcs_1_1_audio_device.html">talcs::AudioDevice</a></div><div class="ttdoc">Base class for audio devices.</div><div class="ttdef"><b>Definition</b> AudioDevice.h:18</div></div>
-<div class="ttc" id="aclasstalcs_1_1_audio_device_html_a0b36a991ca9d2abee975e84bb4def2ae"><div class="ttname"><a href="classtalcs_1_1_audio_device.html#a0b36a991ca9d2abee975e84bb4def2ae">talcs::AudioDevice::start</a></div><div class="ttdeci">virtual bool start(AudioDeviceCallback *audioDeviceCallback)</div><div class="ttdef"><b>Definition</b> AudioDevice.cpp:158</div></div>
+<div class="ttc" id="aclasstalcs_1_1_audio_device_html_a0b36a991ca9d2abee975e84bb4def2ae"><div class="ttname"><a href="classtalcs_1_1_audio_device.html#a0b36a991ca9d2abee975e84bb4def2ae">talcs::AudioDevice::start</a></div><div class="ttdeci">virtual bool start(AudioDeviceCallback *audioDeviceCallback)</div><div class="ttdef"><b>Definition</b> AudioDevice.cpp:159</div></div>
 <div class="ttc" id="aclasstalcs_1_1_audio_source_playback_html"><div class="ttname"><a href="classtalcs_1_1_audio_source_playback.html">talcs::AudioSourcePlayback</a></div><div class="ttdoc">Callback functions that starts, stops and reads data from an AudioSource.</div><div class="ttdef"><b>Definition</b> AudioSourcePlayback.h:13</div></div>
-<div class="ttc" id="aclasstalcs_1_1_transport_audio_source_html"><div class="ttname"><a href="classtalcs_1_1_transport_audio_source.html">talcs::TransportAudioSource</a></div><div class="ttdoc">The object takes a PositionableAudioSource object and supports playing and pausing.</div><div class="ttdef"><b>Definition</b> TransportAudioSource.h:13</div></div>
+<div class="ttc" id="aclasstalcs_1_1_transport_audio_source_html"><div class="ttname"><a href="classtalcs_1_1_transport_audio_source.html">talcs::TransportAudioSource</a></div><div class="ttdoc">The object takes a PositionableAudioSource object and supports playing and pausing.</div><div class="ttdef"><b>Definition</b> TransportAudioSource.h:14</div></div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

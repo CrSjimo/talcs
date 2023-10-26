@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -104,11 +111,11 @@ $(document).ready(function(){initNavTree('classtalcs_1_1_audio_sample_converter.
 
 <p>This is the complete list of members for <a class="el" href="classtalcs_1_1_audio_sample_converter.html">AudioSampleConverter</a>, including all inherited members.</p>
 <table class="directory">
-  <tr class="even"><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#af1168f908ba7f3a7d91d9c881cb8566b">convertFloatToFloat32</a>(void *dest, const float *src, qint64 length, bool isLittleEndian)</td><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html">AudioSampleConverter</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#a83b71cfebec9ff9330ecf6c8d99958a5">convertFloatToFloat64</a>(void *dest, const float *src, qint64 length, bool isLittleEndian)</td><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html">AudioSampleConverter</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#adf630cbee7561038c47e6876d5c3bc7a">convertFloatToInt16</a>(void *dest, const float *src, qint64 length, bool isLittleEndian)</td><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html">AudioSampleConverter</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#a7cf21cf86ab8ec6850edd874896801c4">convertFloatToInt24</a>(void *dest, const float *src, qint64 length, bool isLittleEndian)</td><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html">AudioSampleConverter</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#a27db0015157176b751f8d20f42b1b5b5">convertFloatToInt32</a>(void *dest, const float *src, qint64 length, bool isLittleEndian)</td><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html">AudioSampleConverter</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#a134dd1b83bd673aa0aa73876fa830e79">convertToFloat32</a>(void *dest, const float *src, qint64 length, bool isLittleEndian)</td><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html">AudioSampleConverter</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#a2dce1dd4666bfb231fe3d859496fc311">convertToFloat64</a>(void *dest, const float *src, qint64 length, bool isLittleEndian)</td><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html">AudioSampleConverter</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#a32492c1cf6c493766eb6a7da19eb9c63">convertToInt16</a>(void *dest, const float *src, qint64 length, bool isLittleEndian)</td><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html">AudioSampleConverter</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#aa63527c2afeed7ddb0446c58bc384f19">convertToInt24</a>(void *dest, const float *src, qint64 length, bool isLittleEndian)</td><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html">AudioSampleConverter</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html#a4511d325ac97d425af02cd656b2f1820">convertToInt32</a>(void *dest, const float *src, qint64 length, bool isLittleEndian)</td><td class="entry"><a class="el" href="classtalcs_1_1_audio_sample_converter.html">AudioSampleConverter</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

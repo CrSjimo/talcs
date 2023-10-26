@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -102,12 +109,12 @@ $(document).ready(function(){initNavTree('md__c_1_2_users_2_crs__1_2diffscope_2l
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="autotoc_md0"></a> TALCS has built-in support for <a href="https://wiki.libsdl.org/">SDL2 Audio</a> and <a href="https://forums.steinberg.net/c/developer/asio/">ASIO</a> (only Windows).</p>
-<p>Due to license issues, the support for ASIO is optional. If you want to use it, you should enable the <code>TALCS_ENABLE_ASIO</code> option and specify the path to <a href="https://www.steinberg.net/asiosdk">ASIO SDK</a> by setting the CMAKE variable <code>TALCS_ASIOSDK_DIR</code>.</p>
+<p>Due to license issues, the support for ASIO is optional. If you want to use it, you should enable the <code>TALCS_ENABLE_ASIO</code> option and specify the path to <a href="https://www.steinberg.net/asiosdk">ASIO SDK</a> by setting the CMake variable <code>TALCS_ASIOSDK_DIR</code>.</p>
 <p>Here is an example of how to get these built-in <a class="el" href="classtalcs_1_1_audio_driver.html">AudioDriver</a> objects:</p>
 <div class="fragment"><div class="line"><span class="keyword">auto</span> mgr = <a class="code hl_function" href="classtalcs_1_1_audio_driver_manager.html#a724ac1748148af6347672eab2ad2badd">talcs::AudioDriverManager::createBuiltInDriverManager</a>();</div>
 <div class="line">qInfo() &lt;&lt; <span class="stringliteral">&quot;Built-in drivers:&quot;</span> &lt;&lt; mgr-&gt;drivers();</div>
 <div class="line"><span class="keyword">auto</span> wasapiDrv = mgr-&gt;driver(<span class="stringliteral">&quot;wasapi&quot;</span>);</div>
-<div class="ttc" id="aclasstalcs_1_1_audio_driver_manager_html_a724ac1748148af6347672eab2ad2badd"><div class="ttname"><a href="classtalcs_1_1_audio_driver_manager.html#a724ac1748148af6347672eab2ad2badd">talcs::AudioDriverManager::createBuiltInDriverManager</a></div><div class="ttdeci">static AudioDriverManager * createBuiltInDriverManager(QObject *parent=nullptr)</div><div class="ttdef"><b>Definition</b> AudioDriverManager.cpp:96</div></div>
+<div class="ttc" id="aclasstalcs_1_1_audio_driver_manager_html_a724ac1748148af6347672eab2ad2badd"><div class="ttname"><a href="classtalcs_1_1_audio_driver_manager.html#a724ac1748148af6347672eab2ad2badd">talcs::AudioDriverManager::createBuiltInDriverManager</a></div><div class="ttdeci">static AudioDriverManager * createBuiltInDriverManager(QObject *parent=nullptr)</div><div class="ttdef"><b>Definition</b> AudioDriverManager.cpp:103</div></div>
 </div><!-- fragment --><p>This example creates an <a class="el" href="classtalcs_1_1_audio_driver_manager.html">AudioDriverManager</a> with all built-in driver modes, lists the names of all driver modes, and creates a WASAPI audio driver. You can refer to the documentation of SDL2 to find all supported driver modes.</p>
 <p>Here is an example of how to use the <a class="el" href="classtalcs_1_1_audio_driver.html">AudioDriver</a> object:</p>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span> (!wasapiDrv-&gt;initialize()) {</div>
@@ -136,7 +143,7 @@ $(document).ready(function(){initNavTree('md__c_1_2_users_2_crs__1_2diffscope_2l
 <div class="line">    <span class="keywordflow">return</span> 1;</div>
 <div class="line">}</div>
 <div class="ttc" id="aclasstalcs_1_1_audio_source_playback_html"><div class="ttname"><a href="classtalcs_1_1_audio_source_playback.html">talcs::AudioSourcePlayback</a></div><div class="ttdoc">Callback functions that starts, stops and reads data from an AudioSource.</div><div class="ttdef"><b>Definition</b> AudioSourcePlayback.h:13</div></div>
-<div class="ttc" id="aclasstalcs_1_1_sine_wave_audio_source_html"><div class="ttname"><a href="classtalcs_1_1_sine_wave_audio_source.html">talcs::SineWaveAudioSource</a></div><div class="ttdef"><b>Definition</b> SineWaveAudioSource.h:11</div></div>
+<div class="ttc" id="aclasstalcs_1_1_sine_wave_audio_source_html"><div class="ttname"><a href="classtalcs_1_1_sine_wave_audio_source.html">talcs::SineWaveAudioSource</a></div><div class="ttdoc">Generates sine wave.</div><div class="ttdef"><b>Definition</b> SineWaveAudioSource.h:12</div></div>
 </div><!-- fragment --><p>Firstly, it is necessary to check whether the audio device is valid. If any error occurs when creating the <a class="el" href="classtalcs_1_1_audio_device.html">AudioDevice</a> object, the pointer will be <code>nullptr</code>; if any error occurs when the object is initializing, <code>AudioDriver::isInitialized()</code> will return <code>false</code>.</p>
 <p>Then, the example outputs the preferred buffer size and sample rate of the audio device and opens the device with them.</p>
 <p>After the device is opened, the example creates a <a class="el" href="classtalcs_1_1_sine_wave_audio_source.html">SineWaveAudioSource</a> to produce a 440 Hz sine wave, and then creates an <a class="el" href="classtalcs_1_1_audio_source_playback.html">AudioSourcePlayback</a> that uses the source, for the audio device to play it.</p>

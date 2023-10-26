@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['sdlaudiodevice_0',['SDLAudioDevice',['../classtalcs_1_1_s_d_l_audio_device.html',1,'talcs']]],
-  ['sdlaudiodriver_1',['SDLAudioDriver',['../classtalcs_1_1_s_d_l_audio_driver.html',1,'talcs']]],
-  ['sinewaveaudiosource_2',['SineWaveAudioSource',['../classtalcs_1_1_sine_wave_audio_source.html',1,'talcs']]],
-  ['subtypeinfo_3',['SubtypeInfo',['../structtalcs_1_1_audio_format_i_o_1_1_subtype_info.html',1,'talcs::AudioFormatIO']]]
+  ['positionableaudiosource_0',['PositionableAudioSource',['../classtalcs_1_1_positionable_audio_source.html',1,'talcs']]],
+  ['positionablemixeraudiosource_1',['PositionableMixerAudioSource',['../classtalcs_1_1_positionable_mixer_audio_source.html',1,'talcs']]],
+  ['processinfo_2',['ProcessInfo',['../structtalcs_1_1_remote_audio_device_1_1_process_info.html',1,'talcs::RemoteAudioDevice']]],
+  ['processinfocallback_3',['ProcessInfoCallback',['../classtalcs_1_1_remote_audio_device_1_1_process_info_callback.html',1,'talcs::RemoteAudioDevice']]]
 ];

@@ -17,6 +17,13 @@
  <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+ <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
     <link href="doxygen.css" rel="stylesheet" type="text/css" /> <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
 <link href="extra-stylesheet.css" rel="stylesheet" type="text/css"/>
@@ -124,7 +131,7 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a1f3935a49343f44fcbd515e5770792e8"><td class="memItemLeft" align="right" valign="top">std::set&lt; <a class="el" href="structtalcs_1_1_audio_clip_base.html">AudioClipBase</a>&lt; T &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_clip_series_base.html#a1f3935a49343f44fcbd515e5770792e8">m_clips</a></td></tr>
+<tr class="memitem:a1f3935a49343f44fcbd515e5770792e8"><td class="memItemLeft" align="right" valign="top">AudioClipBaseIntervalTree_&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_clip_series_base.html#a1f3935a49343f44fcbd515e5770792e8">m_clips</a></td></tr>
 <tr class="separator:a1f3935a49343f44fcbd515e5770792e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -188,7 +195,7 @@ template&lt;class T &gt; </div>
 </div><div class="memdoc">
 <p>Removes all clips from the series. </p>
 
-<p>Reimplemented in <a class="el" href="classtalcs_1_1_audio_source_clip_series.html#aba4695b93fd15d9ae2ed79a59580f82e">AudioSourceClipSeries</a>.</p>
+<p>Reimplemented in <a class="el" href="classtalcs_1_1_audio_source_clip_series.html#aba4695b93fd15d9ae2ed79a59580f82e">AudioSourceClipSeries</a>, and <a class="el" href="classtalcs_1_1_future_audio_source_clip_series.html#aba4695b93fd15d9ae2ed79a59580f82e">FutureAudioSourceClipSeries</a>.</p>
 
 </div>
 </div>
@@ -277,7 +284,7 @@ template&lt;class T &gt; </div>
 </div><div class="memdoc">
 <p>Removes a clip from the series. </p><dl class="section return"><dt>Returns</dt><dd><code>true</code> if success, <code>false</code> if there is no clip </dd></dl>
 
-<p>Reimplemented in <a class="el" href="classtalcs_1_1_audio_source_clip_series.html#aa784c732103a8445aed86163d5b893e7">AudioSourceClipSeries</a>.</p>
+<p>Reimplemented in <a class="el" href="classtalcs_1_1_audio_source_clip_series.html#aa784c732103a8445aed86163d5b893e7">AudioSourceClipSeries</a>, and <a class="el" href="classtalcs_1_1_future_audio_source_clip_series.html#aa784c732103a8445aed86163d5b893e7">FutureAudioSourceClipSeries</a>.</p>
 
 </div>
 </div>
@@ -308,8 +315,8 @@ template&lt;class T &gt; </div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>utils/<a class="el" href="_audio_clip_base_8h_source.html">AudioClipBase.h</a></li>
-<li>utils/AudioClipBase.cpp</li>
+<li>core/base/<a class="el" href="_audio_clip_base_8h_source.html">AudioClipBase.h</a></li>
+<li>core/base/AudioClipBase.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
