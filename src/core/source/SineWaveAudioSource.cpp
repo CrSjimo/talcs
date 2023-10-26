@@ -7,7 +7,7 @@ namespace talcs {
 
     /**
      * @class SineWaveAudioSource
-     * Generates sine wave.
+     * @brief Generates sine wave.
      */
 
     /**

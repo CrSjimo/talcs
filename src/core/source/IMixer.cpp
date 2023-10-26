@@ -32,6 +32,16 @@ namespace talcs {
      */
 
     /**
+     * @fn void IMixer::setSourceSolo(T *src, bool isSolo)
+     * Sets an input source to be solo or not-solo.
+     */
+
+    /**
+     * @fn bool IMixer::isSourceSolo(T *src) const
+     * Gets whether an input source is solo or not.
+     */
+
+    /**
      * @fn void IMixer::setGain(float gain)
      * Sets the output gain.
      */
@@ -72,6 +82,20 @@ namespace talcs {
     /**
      * @fn bool IMixer::routeChannels() const
      * Gets whether to route the input sources to output channels.
+     */
+
+    /**
+     * @fn void IMixer::setSilentFlags(int silentFlags)
+     * Sets the silent flags of the source.
+     *
+     * @see AudioSourceReadData::silentFlags
+     */
+
+    /**
+     * @fn int IMixer::silentFlags() const
+     * Gets the silent flags of the source.
+     *
+     * @see AudioSourceReadData::silentFlags
      */
      
 }

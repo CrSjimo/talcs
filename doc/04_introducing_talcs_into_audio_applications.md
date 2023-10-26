@@ -18,7 +18,7 @@ First, let's dive deeper into [IMixer](@ref talcs::PositionableMixerAudioSource)
 
 ![IMixer Diagram](https://raw.githubusercontent.com/CrSjimo/talcs/main/doc/imixer.svg)
 
-[IMixer](@ref talcs::IMixer) can also set an input source to solo (using [IMixer::setSourceSolo](talcs::IMixer::setSourceSolo())()) or mute the output (using [IMixer::setSilentFlags](@ref talcs::IMixer::setSilentFlags())()). By combining [PositionableMixerAudioSource](@ref talcs::PositionableMixerAudioSource) objects within a project scope, you can create the track layout.
+[IMixer](@ref talcs::IMixer) can also set an input source to solo (using [IMixer::setSourceSolo](@ref talcs::IMixer::setSourceSolo())()) or mute the output (using [IMixer::setSilentFlags](@ref talcs::IMixer::setSilentFlags())()). By combining [PositionableMixerAudioSource](@ref talcs::PositionableMixerAudioSource) objects within a project scope, you can create the track layout.
 
 ## Arranging Clips in a Track
 
@@ -26,4 +26,14 @@ A TALCS audio application is supposed to have two types of audio clips: the audi
 
 For the first one, [AudioSourceClipSeries](@ref talcs::AudioSourceClipSeries) is used. If the track is an audio track, add [AudioFormatInputSource](@ref talcs::AudioFormatInputSource) clips to the series. The [AudioFormatInputSource](@ref AudioFormatInputSource) object reads audio from [AudioFormatIO](@ref AudioFormatIO) and produces it. Note that compared with other object connections, one [AudioFormatIO](@ref talcs::AudioFormatIO) can be set to multiple [AudioFormatInputSource](@ref talcs::AudioFormatInputSource) objects.
 
-For the second one, [FutureAudioSourceClipSeries](@ref talcs::FutureAudioSourceClipSeries) is used. A [FutureAudioSourceClipSeries](@ref talcs::FutureAudioSourceClipSeries) series takes multiple [FutureAudioSource](@talcs::FutureAudioSource) clips as input. In practice, these sources are manipulated by the synthesis engine using [QFuture](https://doc.qt.io/qt-5/qfuture.html) APIs.
+For the second one, [FutureAudioSourceClipSeries](@ref talcs::FutureAudioSourceClipSeries) is used. A [FutureAudioSourceClipSeries](@ref talcs::FutureAudioSourceClipSeries) series takes multiple [FutureAudioSource](@ref talcs::FutureAudioSource) clips as input. In practice, these sources are manipulated by the synthesis engine using [QFuture](https://doc.qt.io/qt-5/qfuture.html) APIs.
+
+## Exporting Audio to File
+
+The [AudioSourceWriter](@ref talcs::AudioSourceWriter) object provides functionalities to write the audio produced by an [AudioSource](@ref talcs::AudioSource) to an [AudioFormatIO](@ref talcs::AudioFormatIO) object. To export the project to an  audio file, you should detach the [PositionableAudioSource](@ref talcs::PositionableAudioSource) that acts as the master track, connect it to an writer, runs the writer, and reconnect the master track.
+
+## VST Mode Audio Playback
+
+In standalone mode, the audio is played to a physical audio device. In VST Mode, the remote audio context running in the VST plugin can be treated as a virtual audio device. On each audio block to be processed in the remote audio context, it reads audio from a RemoteAudioSource object (extends [juce::AudioSource](https://docs.juce.com/master/classAudioSource.html)), then the RemoteAudioSource object tells the [RemoteAudioDevice](@ref talcs::RemoteAudioDevice) to get the audio from an [AudioDeviceCallback](@ref talcs::AudioDeviceCallback) and returns to the source via the RPC connection.
+
+Additionally, on each audio block to be processed in the remote audio context, it also transmits a [ProcessInfo](@ref talcs::RemoteAudioDevice::ProcessInfo) struct, and [ProcessInfoCallback](@ref talcs::RemoteAudioDevice::ProcessInfoCallback) callback functions will be called to handle the information.

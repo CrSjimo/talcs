@@ -7,7 +7,7 @@ namespace talcs {
 
     /**
      * @class AudioSourceProcessorBase
-     * Base class for objects that process the audio produced by an AudioSource object.
+     * @brief Base class for objects that process the audio produced by an AudioSource object.
      */
 
     /**

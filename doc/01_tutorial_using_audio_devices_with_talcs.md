@@ -2,7 +2,7 @@
 
 TALCS has built-in support for [SDL2 Audio](https://wiki.libsdl.org/) and  [ASIO](https://forums.steinberg.net/c/developer/asio/) (only Windows). 
 
-Due to license issues, the support for ASIO is optional. If you want to use it, you should enable the `TALCS_ENABLE_ASIO` option and specify the path to [ASIO SDK](https://www.steinberg.net/asiosdk) by setting the CMAKE variable `TALCS_ASIOSDK_DIR`.
+Due to license issues, the support for ASIO is optional. If you want to use it, you should enable the `TALCS_ENABLE_ASIO` option and specify the path to [ASIO SDK](https://www.steinberg.net/asiosdk) by setting the CMake variable `TALCS_ASIOSDK_DIR`.
 
 Here is an example of how to get these built-in [AudioDriver](@ref talcs::AudioDriver) objects:
 

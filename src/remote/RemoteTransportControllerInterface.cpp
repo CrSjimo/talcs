@@ -6,13 +6,13 @@ namespace talcs {
     /**
      * @class RemoteTransportControllerInterface
      * @brief An interface to control the transport of the remote audio bridge.
+     * @note The feature "transport" may not be supported by all remote bridges, and even if the feature is supported,
+     * calling these functions may also not achieve the expected results.
      */
 
     /**
      * Constructor.
      *
-     * @note The feature "transport" may not be supported by all remote bridges, and even if the feature is supported,
-     * calling these functions may also not achieve the expected results.
      * @param socket the remote socket where this object runs
      */
     RemoteTransportControllerInterface::RemoteTransportControllerInterface(RemoteSocket *socket) : m_socket(socket) {
