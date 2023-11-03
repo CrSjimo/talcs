@@ -1,6 +1,8 @@
 #ifndef TALCS_IAUDIOSAMPLEPROVIDER_H
 #define TALCS_IAUDIOSAMPLEPROVIDER_H
 
+#include <QPair>
+
 #include <TalcsCore/TalcsCoreGlobal.h>
 
 namespace talcs {
@@ -18,6 +20,9 @@ namespace talcs {
 
         float magnitude(int channel, qint64 startPos, qint64 length) const;
         float magnitude(int channel) const;
+
+        QPair<float, float> findMinMax(int channel, qint64 startPos, qint64 length) const;
+        QPair<float, float> findMinMax(int channel) const;
 
         float rms(int channel, qint64 startPos, qint64 length) const;
         float rms(int channel) const;

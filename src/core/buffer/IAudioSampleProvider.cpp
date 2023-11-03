@@ -86,6 +86,26 @@ namespace talcs {
         return magnitude(channel, 0, sampleCount());
     }
 
+    QPair<float, float> IAudioSampleProvider::findMinMax(int channel, qint64 startPos, qint64 length) const {
+        boundCheck(*this, channel, startPos, length);
+        if (!isContinuous()) {
+            auto m = qMakePair(std::numeric_limits<float>::max(), std::numeric_limits<float>::lowest());
+            for (qint64 i = 0; i < length; i++) {
+                m.first = std::min(m.first, constSampleAt(channel, startPos + i));
+                m.second = std::max(m.second, constSampleAt(channel, startPos + i));
+            }
+            return m;
+        } else {
+            auto p = readPointerTo(channel, startPos);
+            auto ret = std::minmax(p, p + length);
+            return qMakePair(*ret.first, *ret.second);
+        }
+    }
+
+    QPair<float, float> IAudioSampleProvider::findMinMax(int channel) const {
+        return findMinMax(channel, 0, sampleCount());
+    }
+
     /**
      * Calculates the root mean squared sample value within a range of a specified channel.
      */
