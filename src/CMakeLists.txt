@@ -92,6 +92,8 @@ add_subdirectory(remote)
 
 add_subdirectory(synthesis)
 
+add_subdirectory(3rdparty)
+
 # ----------------------------------
 # Documentation
 # ----------------------------------
