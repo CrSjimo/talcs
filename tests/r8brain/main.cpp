@@ -4,26 +4,28 @@
 #include <QDebug>
 #include <QTime>
 #include <TalcsFormat/AudioFormatIO.h>
-#include <TalcsFormat/R8BrainResampler.h>
+#include <TalcsFormat/R8BrainMultichannelResampler.h>
 #include <TalcsCore/InterleavedAudioDataWrapper.h>
 #include <TalcsCore/AudioBuffer.h>
+#include <TalcsCore/AudioSource.h>
+#include <TalcsCore/InterleavedAudioDataWrapper.h>
 
 using namespace talcs;
 
-float *f32audio;
-double *f64audio;
-size_t length;
-
-class MyResampler : public R8BrainResampler {
+class MyResampler : public R8BrainMultichannelResampler {
 public:
-    MyResampler(double ratio, qint64 bufferSize) : R8BrainResampler(ratio, bufferSize) {}
-
+    MyResampler(double ratio, qint64 bufferSize, int channelCount, AudioFormatIO *io) :
+        R8BrainMultichannelResampler(ratio, bufferSize, channelCount),
+        io(io) {}
 private:
-
-    void read(float *inputBlock, qint64 length_) override {
-        static int pos = 0;
-        std::copy(f32audio + pos, f32audio + pos + length_, inputBlock);
-        pos += length_;
+    AudioFormatIO *io;
+    QVector<float> data;
+    void read(const AudioSourceReadData &readData) override {
+        data.resize(readData.length * io->channelCount());
+        io->read(data.data(), readData.length);
+        InterleavedAudioDataWrapper wrapper(data.data(), io->channelCount(), readData.length);
+        readData.buffer->setSampleRange(0, readData.startPos, readData.length, wrapper, 0, 0);
+        readData.buffer->setSampleRange(1, readData.startPos, readData.length, wrapper, 1, 0);
     }
 };
 
@@ -32,31 +34,18 @@ void testFunc() {
         QFile f("D:\\CloudMusic\\07.恋染色.flac");
         AudioFormatIO io(&f);
         io.open(QFile::ReadOnly);
-        length = io.length();
-        auto p = new float[io.channelCount() * io.length()];
-        io.read(p, io.length());
-        InterleavedAudioDataWrapper wrapper(p, io.channelCount(), io.length());
-        auto buf = AudioBuffer::from(wrapper);
-        delete[] p;
-
-        f32audio = new float[length];
-        f64audio = new double[length];
-        std::copy(buf.constData(0), buf.constData(0) + length, f32audio);
-        std::copy(buf.constData(0), buf.constData(0) + length, f64audio);
-    }
-
-    qDebug() << "Length:" << length;
-
-    MyResampler resampler(48000.0 / 44100.0, 1024);
-
-    QFile f("D:/test.pcm");
-    f.open(QFile::WriteOnly);
-
-    float p[1024];
-
-    for (int i = 0; i < 1000; i++) {
-        resampler.process(p);
-        f.write((char*)(p), 1024 * sizeof(float));
+        MyResampler resampler(96000.0 / 44100.0, 1024, 2, &io);
+        QVector<float> data(1024 * 2);
+        InterleavedAudioDataWrapper wrapper(data.data(), 2, 1024);
+        QFile fOut("D:\\test.pcm");
+        fOut.open(QFile::WriteOnly);
+        QTime t0 = QTime::currentTime();
+        for (int i = 0; i < std::ceil(io.length() * 96000.0 / 44100.0 / 1024.0); i++) {
+            resampler.process(&wrapper);
+            fOut.write((char*)(data.data()), 2048 * sizeof(float));
+        }
+        qDebug() << t0.msecsTo(QTime::currentTime());
+        fOut.flush();
     }
 
     qDebug() << "Finished";
