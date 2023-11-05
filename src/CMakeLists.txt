@@ -119,7 +119,7 @@ if(TALCS_BUILD_DOCUMENTATIONS)
         DESCRIPTION "TALCS: Audio Library of CrSjimo"
         MDFILE ../README.md
         OUTPUT_DIR ${CMAKE_BUILD_SHARE_DIR}/doc/${TALCS_INSTALL_NAME}
-        INPUT . ../doc ../tests
+        INPUT core device format remote synthesis ../doc
         TARGETS ${_doc_targets}
         DEPENDS ${_doc_targets}
         NO_EXPAND_MACROS Q_OBJECT Q_GADGET Q_DECLARE_TR_FUNCTIONS
