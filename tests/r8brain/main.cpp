@@ -10,11 +10,24 @@
 
 using namespace talcs;
 
-void testFunc() {
-    float *f32audio;
-    double *f64audio;
-    size_t length;
+float *f32audio;
+double *f64audio;
+size_t length;
 
+class MyResampler : public R8BrainResampler {
+public:
+    MyResampler(double ratio, qint64 bufferSize) : R8BrainResampler(ratio, bufferSize) {}
+
+private:
+
+    void read(float *inputBlock, qint64 length_) override {
+        static int pos = 0;
+        std::copy(f32audio + pos, f32audio + pos + length_, inputBlock);
+        pos += length_;
+    }
+};
+
+void testFunc() {
     {
         QFile f("D:\\CloudMusic\\07.恋染色.flac");
         AudioFormatIO io(&f);
@@ -34,11 +47,7 @@ void testFunc() {
 
     qDebug() << "Length:" << length;
 
-    R8BrainResampler resampler(1, 1024, [=](float *buffer, qint64 size) {
-        static int pos = 0;
-        std::copy(f32audio + pos, f32audio + pos + size, buffer);
-        pos += size;
-    });
+    MyResampler resampler(48000.0 / 44100.0, 1024);
 
     QFile f("D:/test.pcm");
     f.open(QFile::WriteOnly);

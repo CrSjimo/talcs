@@ -13,7 +13,6 @@ namespace talcs {
         bool copyOnly = false;
         double ratio;
         int bufferSize;
-        R8BrainResampler::CallbackFunction cb;
         QScopedPointer<r8b::CDSPResampler> resampler;
         QVector<float> inputBuffer;
         QVector<double> f64InputBuffer;

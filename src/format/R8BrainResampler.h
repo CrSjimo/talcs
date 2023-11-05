@@ -16,15 +16,19 @@ namespace talcs {
     class R8BrainResamplerPrivate;
 
     class TALCSFORMAT_EXPORT R8BrainResampler {
-        friend class R8BrainResamplerPrivate;
-        using CallbackFunction = std::function<void(float *, qint64)>;
     public:
-        explicit R8BrainResampler(double ratio, qint64 bufferSize, const CallbackFunction &callback);
+        explicit R8BrainResampler(double ratio, qint64 bufferSize);
         ~R8BrainResampler();
 
         void reset();
 
         void process(float *buffer);
+
+        double ratio() const;
+        qint64 bufferSize() const;
+
+    protected:
+        virtual void read(float *inputBlock, qint64 length) = 0;
 
     private:
         QScopedPointer<R8BrainResamplerPrivate> d;

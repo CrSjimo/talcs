@@ -2,10 +2,22 @@
 #include "R8BrainResampler_p.h"
 
 namespace talcs {
-    R8BrainResampler::R8BrainResampler(double ratio, qint64 bufferSize, const R8BrainResampler::CallbackFunction &callback) : d(new R8BrainResamplerPrivate) {
+
+    /**
+     * @class R8BrainResampler
+     * @brief An adapter class of [r8b::CDSPResampler](https://www.voxengo.com/public/r8brain-free-src/Documentation/a00114.html)
+     * that provides Secret-Rabbit-Code-like APIs.
+     */
+
+    /**
+     * Constructor.
+     * @param ratio destination sample rate / source sample rate
+     * @param bufferSize the size of each output block
+     */
+
+    R8BrainResampler::R8BrainResampler(double ratio, qint64 bufferSize) : d(new R8BrainResamplerPrivate) {
         d->ratio = ratio;
         d->bufferSize = bufferSize;
-        d->cb = callback;
         if (ratio == 1.0) {
             d->copyOnly = true;
             return;
@@ -18,8 +30,14 @@ namespace talcs {
         d->outputBuffer.resize(outputBufferSize * 2);
     }
 
+    /**
+     * Destructor.
+     */
     R8BrainResampler::~R8BrainResampler() = default;
 
+    /**
+     * Resets the initial states of the resampler. This function should be called when the source is changed.
+     */
     void R8BrainResampler::reset() {
         d->resampler->clear();
         d->outputBuffer.clear();
@@ -28,63 +46,97 @@ namespace talcs {
         d->processedOutputLength = 0;
     }
 
+    /**
+     * Gets the ratio of the resampler.
+     */
+    double R8BrainResampler::ratio() const {
+        return d->ratio;
+    }
+
+    /**
+     * Gets the buffer size of the resampler.
+     */
+    qint64 R8BrainResampler::bufferSize() const {
+        return d->bufferSize;
+    }
+
+    /**
+     * Processes the output buffer.
+     *
+     * This function does not provide functionalities of getting read length, and it should be checked in other ways.
+     *
+     * @param buffer the output buffer to be filled
+     */
     void R8BrainResampler::process(float *buffer) {
         // If ratio is 1.0 then just copy.
         if (d->copyOnly)
-            return d->cb(buffer, d->bufferSize);
+            return read(buffer, d->bufferSize);
 
-        readTag:
 
-        bool readFlag = true;
+        for (int i = 0; i < 2; i++) {
+            bool readFlag = true;
 
-        // First, get the latency and processed the first block. The output length is always zero.
-        if (!d->processedOutputLength) {
-            int initialLength = d->resampler->getInLenBeforeOutPos(d->bufferSize);
-            d->cb(d->inputBuffer.data(), initialLength);
-            std::copy(d->inputBuffer.cbegin(), d->inputBuffer.cend(), d->f64InputBuffer.begin());
-            double *outputPointer;
-            int outputBlockLength = d->resampler->process(d->f64InputBuffer.data(), initialLength, outputPointer);
-            std::copy(outputPointer, outputPointer + outputBlockLength, d->outputBuffer.begin() + d->outputBufferOffset);
-            d->processedInputLength += initialLength;
-            d->processedOutputLength += d->bufferSize;
-            d->outputBufferOffset += outputBlockLength;
-            if (outputBlockLength != 0)
-                readFlag = false;
-        }
+            // First, get the latency and processed the first block. The output length is always zero.
+            if (!d->processedOutputLength) {
+                int initialLength = d->resampler->getInLenBeforeOutPos(d->bufferSize);
+                read(d->inputBuffer.data(), initialLength);
+                std::copy(d->inputBuffer.cbegin(), d->inputBuffer.cbegin() + initialLength, d->f64InputBuffer.begin());
+                double *outputPointer;
+                int outputBlockLength = d->resampler->process(d->f64InputBuffer.data(), initialLength, outputPointer);
+                std::copy(outputPointer, outputPointer + outputBlockLength,
+                          d->outputBuffer.begin() + d->outputBufferOffset);
+                d->processedInputLength += initialLength;
+                d->processedOutputLength += d->bufferSize;
+                d->outputBufferOffset += outputBlockLength;
+                if (outputBlockLength != 0)
+                    readFlag = false;
+            }
 
-        // Read input block, covert it to f64, process, and convert the output block into output buffer.
-        if (readFlag) {
-            int inputBlockLength = d->resampler->getInLenBeforeOutPos(d->processedOutputLength + d->bufferSize) -
-                                   d->processedInputLength;
-            d->cb(d->inputBuffer.data(), inputBlockLength);
-            std::copy(d->inputBuffer.cbegin(), d->inputBuffer.cend(), d->f64InputBuffer.begin());
-            double *outputPointer;
-            int outputBlockLength = d->resampler->process(d->f64InputBuffer.data(), inputBlockLength, outputPointer);
-            std::copy(outputPointer, outputPointer + outputBlockLength,
-                      d->outputBuffer.begin() + d->outputBufferOffset);
-            d->processedInputLength += inputBlockLength;
-            d->processedOutputLength += d->bufferSize;
-            d->outputBufferOffset += outputBlockLength;
-        }
+            // Read input block, covert it to f64, process, and convert the output block into output buffer.
+            if (readFlag) {
+                int inputBlockLength = d->resampler->getInLenBeforeOutPos(d->processedOutputLength + d->bufferSize) -
+                                       d->processedInputLength;
+                read(d->inputBuffer.data(), inputBlockLength);
+                std::copy(d->inputBuffer.cbegin(), d->inputBuffer.cbegin() + inputBlockLength,
+                          d->f64InputBuffer.begin());
+                double *outputPointer;
+                int outputBlockLength = d->resampler->process(d->f64InputBuffer.data(), inputBlockLength,
+                                                              outputPointer);
+                std::copy(outputPointer, outputPointer + outputBlockLength,
+                          d->outputBuffer.begin() + d->outputBufferOffset);
+                d->processedInputLength += inputBlockLength;
+                d->processedOutputLength += d->bufferSize;
+                d->outputBufferOffset += outputBlockLength;
+            }
 
-        if (d->outputBufferOffset >= d->bufferSize) {
-            //=================================     =======
-            //|--old offset--|--output block--|     |*****|
-            //================================= --> =======
-            //|-------buffer size-------|*****|           ^
-            //=================================           the new offset
+            if (d->outputBufferOffset >= d->bufferSize) {
+                //=================================     =======
+                //|--old offset--|--output block--|     |*****|
+                //================================= --> =======
+                //|-------buffer size-------|*****|           ^
+                //=================================           the new offset
 
-            std::copy(d->outputBuffer.cbegin(), d->outputBuffer.cbegin() + d->bufferSize, buffer);
-            std::copy(d->outputBuffer.cbegin() + d->bufferSize, d->outputBuffer.cbegin() + d->outputBufferOffset, d->outputBuffer.begin());
-            d->outputBufferOffset = d->outputBufferOffset - d->bufferSize;
-        } else {
-            //===================================     ===================================
-            //|--old offset--|--output block--|       |-------------offset------------|
-            //=================================== --> ===================================
-            //|-----------buffer size-----------|     |-----------buffer size-----------|
-            //===================================     ===================================
-            // Read the input again and fill the output buffer from the current offset.
-            goto readTag;
+                std::copy(d->outputBuffer.cbegin(), d->outputBuffer.cbegin() + d->bufferSize, buffer);
+                std::copy(d->outputBuffer.cbegin() + d->bufferSize, d->outputBuffer.cbegin() + d->outputBufferOffset,
+                          d->outputBuffer.begin());
+                d->outputBufferOffset = d->outputBufferOffset - d->bufferSize;
+                break;
+            } else {
+                //===================================     ===================================
+                //|--old offset--|--output block--|       |-------------offset------------|
+                //=================================== --> ===================================
+                //|-----------buffer size-----------|     |-----------buffer size-----------|
+                //===================================     ===================================
+                // Read the input again and fill the output buffer from the current offset.
+                continue;
+            }
         }
     }
+
+    /**
+     * @fn void R8BrainResampler::read(float *inputBlock, qint64 length)
+     * Reads an input block of specified length. If the source is not able to provide
+     * a block of the specified length, the function needs to fill the exceeding part with zeros.
+     */
+
 } // talcs
