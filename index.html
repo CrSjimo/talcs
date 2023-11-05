@@ -109,14 +109,59 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2_r_e_a_d_m_e"></a> <img src="https://raw.githubusercontent.com/CrSjimo/talcs/main/doc/talcs.svg" alt="TALCS Logo" style="pointer-events: none;" class="inline"/></p>
+<p><b>T</b>ALCS: <b>A</b>udio <b>L</b>ibrary of <b>C</b>r<b>S</b>jimo</p>
 <h1><a class="anchor" id="autotoc_md10"></a>
+Modules</h1>
+<ul>
+<li><p class="startli">Core</p>
+<p class="startli">The core module includes basic buffers, sources and utilities for audio processing.</p>
+</li>
+<li><p class="startli">Device</p>
+<p class="startli">The device module includes functionalities of outputting audio to the device.</p>
+</li>
+<li><p class="startli">Format</p>
+<p class="startli">The format module includes functionalities of accessing formatted audio files.</p>
+</li>
+<li><p class="startli">Remote</p>
+<p class="startli">The remote module provides interfaces to communicate with the remote audio bridge. See <a href="https://github.com/CrSjimo/talcs-remote">talcs-remote</a>.</p>
+</li>
+<li><p class="startli">Synthesis</p>
+<p class="startli">The synthesis module provides interfaces for asynchronous audio synthesizers.</p>
+</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md11"></a>
+Documentation</h1>
+<p><a href="https://talcs.sjimo.dev/">Documentation homepage</a></p>
+<h1><a class="anchor" id="autotoc_md12"></a>
 Dependencies</h1>
 <ul>
-<li>SDL2</li>
-<li>SndFile</li>
-<li>SampleRate</li>
-<li>rpclib</li>
-<li>interval-tree </li>
+<li><a href="https://qt-project.org/">Qt 5.15.2</a></li>
+<li><p class="startli"><a href="https://github.com/5cript/interval-tree">5cript/interval-tree</a></p>
+<p class="startli">A C++ header only interval tree implementation.</p>
+</li>
+<li><p class="startli"><a href="https://github.com/libsdl-org/SDL">libsdl-org/SDL</a></p>
+<p class="startli">Simple Directmedia Layer</p>
+</li>
+<li><p class="startli"><a href="https://github.com/libsndfile/libsndfile">libsndfile/libsndfile</a></p>
+<p class="startli">A C library for reading and writing sound files containing sampled audio data.</p>
+</li>
+<li><p class="startli"><a href="https://www.steinberg.net/developers/">ASIO SDK</a> <em>(optional)</em></p>
+<p class="startli">Audio Stream Input/Output (ASIO) is a protocol allowing communication between a software application and a computer’s sound card.</p>
+</li>
+<li><p class="startli"><a href="https://github.com/avaneev/r8brain-free-src">avaneev/r8brain-free-src</a></p>
+<p class="startli">High-quality pro audio resampler / sample rate converter C++ library. Very fast, for both audio resampling and time-series interpolation.</p>
+</li>
+<li><p class="startli"><a href="https://github.com/rpclib/rpclib">rpclib/rpclib</a></p>
+<p class="startli">rpclib is a modern C++ msgpack-RPC server and client library</p>
+</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md13"></a>
+Build Dependencies</h1>
+<ul>
+<li><a href="https://www.doxygen.nl/">Doxygen</a></li>
+<li><p class="startli"><a href="https://github.com/SineStriker/qtmediate-cmake-modules">SineStriker/qtmediate-cmake-modules</a></p>
+<p class="startli">CMake Modules for QtMediate and other projects. </p>
+</li>
 </ul>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->

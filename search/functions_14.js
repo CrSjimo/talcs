@@ -10,10 +10,11 @@ var searchData=
   ['_7efutureaudiosourceclipseries_7',['~FutureAudioSourceClipSeries',['../classtalcs_1_1_future_audio_source_clip_series.html#ade57f40319a6ae647c619585a968ec57',1,'talcs::FutureAudioSourceClipSeries']]],
   ['_7emixeraudiosource_8',['~MixerAudioSource',['../classtalcs_1_1_mixer_audio_source.html#abc65b39e8214dfb115ca6c5f03b74608',1,'talcs::MixerAudioSource']]],
   ['_7epositionablemixeraudiosource_9',['~PositionableMixerAudioSource',['../classtalcs_1_1_positionable_mixer_audio_source.html#ac82f98074633d812b040834d9c7e0d8e',1,'talcs::PositionableMixerAudioSource']]],
-  ['_7eremoteaudiodevice_10',['~RemoteAudioDevice',['../classtalcs_1_1_remote_audio_device.html#ad9e558b62258886ef0085a1776c12953',1,'talcs::RemoteAudioDevice']]],
-  ['_7eremoteeditor_11',['~RemoteEditor',['../classtalcs_1_1_remote_editor.html#a0a0bb173702c57d6cf827be645fcfbeb',1,'talcs::RemoteEditor']]],
-  ['_7eremotesocket_12',['~RemoteSocket',['../classtalcs_1_1_remote_socket.html#a7cd06370a9910083959be86b74ed0304',1,'talcs::RemoteSocket']]],
-  ['_7esdlaudiodevice_13',['~SDLAudioDevice',['../classtalcs_1_1_s_d_l_audio_device.html#a7efe198db43786d17e4b0589553c3738',1,'talcs::SDLAudioDevice']]],
-  ['_7esdlaudiodriver_14',['~SDLAudioDriver',['../classtalcs_1_1_s_d_l_audio_driver.html#a09094777df1fac50e1d995ddecbbc211',1,'talcs::SDLAudioDriver']]],
-  ['_7etransportaudiosource_15',['~TransportAudioSource',['../classtalcs_1_1_transport_audio_source.html#a940ba8ded18174e55daf4f2ad19c40a8',1,'talcs::TransportAudioSource']]]
+  ['_7er8brainresampler_10',['~R8BrainResampler',['../classtalcs_1_1_r8_brain_resampler.html#a608bba10ae51b86223a120525938bb95',1,'talcs::R8BrainResampler']]],
+  ['_7eremoteaudiodevice_11',['~RemoteAudioDevice',['../classtalcs_1_1_remote_audio_device.html#ad9e558b62258886ef0085a1776c12953',1,'talcs::RemoteAudioDevice']]],
+  ['_7eremoteeditor_12',['~RemoteEditor',['../classtalcs_1_1_remote_editor.html#a0a0bb173702c57d6cf827be645fcfbeb',1,'talcs::RemoteEditor']]],
+  ['_7eremotesocket_13',['~RemoteSocket',['../classtalcs_1_1_remote_socket.html#a7cd06370a9910083959be86b74ed0304',1,'talcs::RemoteSocket']]],
+  ['_7esdlaudiodevice_14',['~SDLAudioDevice',['../classtalcs_1_1_s_d_l_audio_device.html#a7efe198db43786d17e4b0589553c3738',1,'talcs::SDLAudioDevice']]],
+  ['_7esdlaudiodriver_15',['~SDLAudioDriver',['../classtalcs_1_1_s_d_l_audio_driver.html#a09094777df1fac50e1d995ddecbbc211',1,'talcs::SDLAudioDriver']]],
+  ['_7etransportaudiosource_16',['~TransportAudioSource',['../classtalcs_1_1_transport_audio_source.html#a940ba8ded18174e55daf4f2ad19c40a8',1,'talcs::TransportAudioSource']]]
 ];

@@ -25,7 +25,10 @@
 var NAVTREE =
 [
   [ "TALCS", "index.html", [
-    [ "Dependencies", "index.html#autotoc_md10", null ],
+    [ "Modules", "index.html#autotoc_md10", null ],
+    [ "Documentation", "index.html#autotoc_md11", null ],
+    [ "Dependencies", "index.html#autotoc_md12", null ],
+    [ "Build Dependencies", "index.html#autotoc_md13", null ],
     [ "Tutorial: Using audio devices with TALCS", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_201__tutorial__using__audio__devices__with__talcs.html", null ],
     [ "Tutorial: Access audio files with TALCS", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_202__tutorial__access__audio__files__with__talcs.html", null ],
     [ "Tutorial: Combining Audio Clips and Mixing Multi-track Audio with TALCS", "md__c_1_2_users_2_crs__1_2diffscope_2libs_2talcs_2doc_203__tutorial__combining__audio__clips__an3566f6b6c2fab87cbd8a50f5b869b2bf.html", null ],
@@ -57,8 +60,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_a_s_i_o_audio_device_8h_source.html",
-"classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da32df7821dde2d58044b5763aa0a452d3",
-"classtalcs_1_1_remote_editor.html#a22890317d6cca785c3e9371d513ab79d"
+"classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da1890a2e2d1688aa18117e10de19306e6",
+"classtalcs_1_1_remote_audio_device.html#a3bfff58e0004c2b1e1cd88f80568618d"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
