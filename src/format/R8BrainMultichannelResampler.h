@@ -4,6 +4,7 @@
 #include <QScopedPointer>
 
 #include <TalcsFormat/TalcsFormatGlobal.h>
+#include <TalcsCore/AudioSource.h>
 
 namespace talcs {
 
@@ -25,9 +26,10 @@ namespace talcs {
 
         double ratio() const;
         qint64 bufferSize() const;
+        int channelCount() const;
 
     protected:
-        virtual void read(const AudioSourceReadData &buffer) = 0;
+        virtual void read(const AudioSourceReadData &readData) = 0;
 
     private:
         friend class ChannelResampler;

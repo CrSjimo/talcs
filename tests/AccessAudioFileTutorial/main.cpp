@@ -69,8 +69,6 @@ void exportAudio() {
         return;
     stopPlay();
 
-    inputSource->setResamplerMode(talcs::AudioFormatInputSource::SincBestQuality);
-
     QFile exportFile(exportFileName);
     AudioFormatIO exportIO(&exportFile);
     exportIO.open(QFile::WriteOnly, AudioFormatIO::WAV | AudioFormatIO::PCM_24, 2, 44100);
@@ -103,7 +101,6 @@ void exportAudio() {
     thread.start();
     dlg.exec();
     tpSrc->close();
-    inputSource->setResamplerMode(talcs::AudioFormatInputSource::SincFastest);
 
     thread.quit();
     thread.wait();
@@ -115,8 +112,6 @@ bool initializeAudioEngine() {
     inputSource = new AudioFormatInputSource(inputFormatIO);
     tpSrc = new TransportAudioSource(inputSource);
     srcPlayback = new AudioSourcePlayback(tpSrc);
-
-    inputSource->setResamplerMode(talcs::AudioFormatInputSource::SincFastest);
 
     auto drvMgr = AudioDriverManager::createBuiltInDriverManager();
     auto drv = drvMgr->driver(drvMgr->drivers()[0]);

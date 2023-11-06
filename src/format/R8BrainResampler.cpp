@@ -39,6 +39,8 @@ namespace talcs {
      * Resets the initial states of the resampler. This function should be called when the source is changed.
      */
     void R8BrainResampler::reset() {
+        if (d->copyOnly)
+            return;
         d->resampler->clear();
         d->outputBuffer.clear();
         d->outputBufferOffset = 0;
@@ -64,8 +66,6 @@ namespace talcs {
      * Processes the output buffer.
      *
      * This function does not provide functionalities of getting read length, and it should be checked in other ways.
-     *
-     * @param buffer the output buffer to be filled
      */
     void R8BrainResampler::process(float *buffer) {
         // If ratio is 1.0 then just copy.

@@ -1,6 +1,6 @@
 # Tutorial: Access audio files with TALCS
 
-TALCS  uses [libsndfile](https://libsndfile.github.io/libsndfile/) to read and write audio files in various codecs, and uses [libsamplerate](https://libsndfile.github.io/libsamplerate/) to convert between different sample rates.
+TALCS  uses [libsndfile](https://libsndfile.github.io/libsndfile/) to read and write audio files in various codecs, and uses [r8brain](https://github.com/avaneev/r8brain-free-src) to convert between different sample rates.
 
 [AudioFormatIO](@ref talcs::AudioFormatIO) can be used to read audio from and write audio to a [QIODevice](https://doc.qt.io/qt-5/qiodevice.html) object. Here is an example of how to read audio from a file:
 
