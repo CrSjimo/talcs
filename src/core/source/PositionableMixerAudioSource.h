@@ -42,6 +42,9 @@ namespace talcs {
         void setSilentFlags(int silentFlags) override;
         int silentFlags() const override;
 
+        void setMeterEnabled(bool enabled) override;
+        bool isMeterEnabled() const override;
+
 
     signals:
         void meterUpdated(float magnitudeLeft, float magnitudeRight);

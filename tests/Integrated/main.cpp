@@ -299,6 +299,7 @@ int main(int argc, char **argv) {
 
     auto availableFormats = AudioFormatIO::availableFormats();
 
+    mixer.setMeterEnabled(true);
     QObject::connect(&mixer, &PositionableMixerAudioSource::meterUpdated, fileSpecLabel, [=](float ml, float mr){
         QString text = "bm: ";
         if(ml == 0) {

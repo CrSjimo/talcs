@@ -86,6 +86,9 @@ namespace talcs {
         return magnitude(channel, 0, sampleCount());
     }
 
+    /**
+     * Gets the minimum and maximum sample values within a range of a specified channel.
+     */
     QPair<float, float> IAudioSampleProvider::findMinMax(int channel, qint64 startPos, qint64 length) const {
         boundCheck(*this, channel, startPos, length);
         if (!isContinuous()) {
@@ -102,6 +105,11 @@ namespace talcs {
         }
     }
 
+    /**
+     * @overload
+     *
+     * Gets the minimum and maximum sample values within a specified channel.
+     */
     QPair<float, float> IAudioSampleProvider::findMinMax(int channel) const {
         return findMinMax(channel, 0, sampleCount());
     }

@@ -49,12 +49,11 @@ namespace talcs {
 
     qint64 PositionableMixerAudioSource::read(const AudioSourceReadData &readData) {
         Q_D(PositionableMixerAudioSource);
-        QList<float> magnitude;
         qint64 readLength;
+        auto channelCount = readData.buffer->channelCount();
         {
             QMutexLocker locker(&d->mutex);
             auto bufferLength = length();
-            auto channelCount = readData.buffer->channelCount();
             if (d->tmpBuf.channelCount() < channelCount)
                 d->tmpBuf.resize(channelCount);
             for (int i = 0; i < channelCount; i++) {
@@ -62,21 +61,20 @@ namespace talcs {
             }
             readLength = std::min(readData.length, bufferLength - nextReadPosition());
             d->mix(readData, readLength);
-
-            for (int i = 0; i < channelCount; i++) {
-                magnitude.append(readData.buffer->magnitude(i, readData.startPos, readLength));
-            }
             d->position += readLength;
         }
-
-        float magL = 0, magR = 0;
-        if (magnitude.length() >= 2) {
-            magL = magnitude[0];
-            magR = magnitude[1];
-        } else if (magnitude.length() == 1) {
-            magL = magR = magnitude[0];
+        if (d->isMeterEnabled) {
+            float magnitude[2] = {0, 0};
+            for (int i = 0; i < channelCount; i++) {
+                if (i > 1)
+                    break;
+                magnitude[i] = readData.buffer->magnitude(i, readData.startPos, readLength);
+            }
+            if (channelCount == 1) {
+                magnitude[1] = magnitude[0];
+            }
+            emit meterUpdated(magnitude[0], magnitude[1]);
         }
-        emit meterUpdated(magL, magR);
         return readLength;
     }
 
@@ -203,5 +201,23 @@ namespace talcs {
         Q_D(const PositionableMixerAudioSource);
         return d->silentFlags;
     }
-    
+
+    void PositionableMixerAudioSource::setMeterEnabled(bool enabled) {
+        Q_D(PositionableMixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        d->isMeterEnabled = enabled;
+    }
+
+    bool PositionableMixerAudioSource::isMeterEnabled() const {
+        Q_D(const PositionableMixerAudioSource);
+        return d->isMeterEnabled;
+    }
+
+    /**
+     * @fn void PositionableMixerAudioSource::meterUpdated(float leftMagnitude, float rightMagnitude)
+     * Emitted on each block processed.
+     *
+     * To use this signal, setMeterEnabled() must be set to true.
+     */
+
 }

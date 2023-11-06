@@ -32,6 +32,7 @@ namespace talcs {
         float gain = 1;
         float pan = 0;
         int silentFlags = 0;
+        bool isMeterEnabled = false;
 
         AudioBuffer tmpBuf;
 
@@ -111,7 +112,6 @@ namespace talcs {
             auto channelCount = readData.buffer->channelCount();
             auto gainLeftRight = applyGainAndPan(gain, pan);
             int routeCnt = 0;
-            // TODO tell QtMediate to use key value iterator
             for (auto &srcInfo : sourceDict) {
                 auto src = srcInfo.src;
                 bool isMutedBySoloSetting = (soloCounter && !srcInfo.isSolo);

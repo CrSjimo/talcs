@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QDebug>
 #include <QFile>
 #include <QFileDialog>
 #include <QHBoxLayout>
@@ -93,6 +94,8 @@ int main(int argc, char **argv) {
     QObject::connect(resetButton, &QPushButton::clicked, [&]() {
         tpSrc.setPosition(0);
     });
+
+    mixer.setMeterEnabled(true);
 
     QObject::connect(&mixer, &MixerAudioSource::meterUpdated, win, [&](float ml, float mr) {
         float dBL = Decibels::gainToDecibels(ml, -30);

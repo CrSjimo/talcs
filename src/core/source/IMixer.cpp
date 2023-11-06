@@ -97,5 +97,15 @@ namespace talcs {
      *
      * @see AudioSourceReadData::silentFlags
      */
+
+    /**
+     * @fn void IMixer::setMeterEnabled(bool enabled)
+     * Sets whether to calculate the magnitude of each block.
+     */
+
+    /**
+     * @fn bool IMixer::isMeterEnabled() const
+     * Gets whether to calculate the magnitude of each block.
+     */
      
 }
