@@ -10,7 +10,7 @@ find_package(SndFile REQUIRED)
 
 talcs_add_library(${PROJECT_NAME}
     SOURCES ${_src}
-    LINKS TalcsCore
+    LINKS talcs::Core
     LINKS_PRIVATE SndFile::sndfile r8brain
     QT_INCLUDE_PRIVATE Core
 )

@@ -24,7 +24,7 @@ find_package(SDL2 REQUIRED)
 
 talcs_add_library(${PROJECT_NAME}
     SOURCES ${_src}
-    LINKS TalcsCore
+    LINKS talcs::Core
     LINKS_PRIVATE SDL2::SDL2
     DEFINES ${_defines}
     INCLUDE_PRIVATE ${_include_private}

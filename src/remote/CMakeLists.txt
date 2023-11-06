@@ -10,6 +10,6 @@ find_package(rpclib REQUIRED)
 
 talcs_add_library(${PROJECT_NAME}
     SOURCES ${_src}
-    LINKS TalcsDevice rpclib::rpc
+    LINKS talcs::Device rpclib::rpc
     QT_INCLUDE_PRIVATE Core
 )

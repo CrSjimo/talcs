@@ -8,6 +8,6 @@ file(GLOB_RECURSE _src *.h *.cpp)
 
 talcs_add_library(${PROJECT_NAME}
     SOURCES ${_src}
-    LINKS TalcsCore
+    LINKS talcs::Core
     QT_INCLUDE_PRIVATE Core
 )
