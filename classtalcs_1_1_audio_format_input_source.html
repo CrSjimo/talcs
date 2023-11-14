@@ -106,7 +106,6 @@ $(document).ready(function(){initNavTree('classtalcs_1_1_audio_format_input_sour
 
 <div class="header">
   <div class="summary">
-<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classtalcs_1_1_audio_format_input_source-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">AudioFormatInputSource Class Reference</div></div>
@@ -127,23 +126,10 @@ Inheritance diagram for AudioFormatInputSource:</div>
   </map>
 </div></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:af10f920d2468ab08b8f1b25194f56f2d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2d">ResampleMode</a> { <br />
-&#160;&#160;<a class="el" href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2dafee5df2251ab6e3ea093544b9691b6f4">SincBestQuality</a> = 0
-, <a class="el" href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2da247ebae322f22b225a102e17deca8538">SincMediumQuality</a>
-, <a class="el" href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2da2768f987fb8cf4cffe86f50d194d2017">SincFastest</a>
-, <a class="el" href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2da6fa6cc279c98f78ab2b8b0ee99e9f76c">ZeroOrderHold</a>
-, <br />
-&#160;&#160;<a class="el" href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2daf1d4d6ecf790e97123b51b05256bf117">Linear</a>
-<br />
- }</td></tr>
-<tr class="separator:af10f920d2468ab08b8f1b25194f56f2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad5137cade045970c0536c50787becfa3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#ad5137cade045970c0536c50787becfa3">AudioFormatInputSource</a> (<a class="el" href="classtalcs_1_1_audio_format_i_o.html">AudioFormatIO</a> *<a class="el" href="classtalcs_1_1_audio_format_input_source.html#af35f8e853cf62c5777523ab88ecc4c2a">audioFormatIo</a>=nullptr)</td></tr>
-<tr class="separator:ad5137cade045970c0536c50787becfa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60545c973aa6b0501cfdef87a81cff22"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#a60545c973aa6b0501cfdef87a81cff22">AudioFormatInputSource</a> (<a class="el" href="classtalcs_1_1_audio_format_i_o.html">AudioFormatIO</a> *<a class="el" href="classtalcs_1_1_audio_format_input_source.html#af35f8e853cf62c5777523ab88ecc4c2a">audioFormatIo</a>=nullptr, bool takeOwnership=false)</td></tr>
+<tr class="separator:a60545c973aa6b0501cfdef87a81cff22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf4e0e1df0fe08aea0de05e6336a497a"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#adf4e0e1df0fe08aea0de05e6336a497a">read</a> (const <a class="el" href="structtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData) override</td></tr>
 <tr class="separator:adf4e0e1df0fe08aea0de05e6336a497a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9b6aa84f5f06fda7368a6c8636c6d9e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#aa9b6aa84f5f06fda7368a6c8636c6d9e">setNextReadPosition</a> (qint64 pos) override</td></tr>
@@ -152,8 +138,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0e9ca28b2e704ade50e7324ae4418a1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7008bca493d69ea65f12e0940f3a6886"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#a7008bca493d69ea65f12e0940f3a6886">close</a> () override</td></tr>
 <tr class="separator:a7008bca493d69ea65f12e0940f3a6886"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab55a0de91a777edeeb5030c0eb3f4d45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#ab55a0de91a777edeeb5030c0eb3f4d45">setAudioFormatIo</a> (<a class="el" href="classtalcs_1_1_audio_format_i_o.html">AudioFormatIO</a> *<a class="el" href="classtalcs_1_1_audio_format_input_source.html#af35f8e853cf62c5777523ab88ecc4c2a">audioFormatIo</a>)</td></tr>
-<tr class="separator:ab55a0de91a777edeeb5030c0eb3f4d45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacd2591bef60d519cd76f189bfbcbb00"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#aacd2591bef60d519cd76f189bfbcbb00">setAudioFormatIo</a> (<a class="el" href="classtalcs_1_1_audio_format_i_o.html">AudioFormatIO</a> *<a class="el" href="classtalcs_1_1_audio_format_input_source.html#af35f8e853cf62c5777523ab88ecc4c2a">audioFormatIo</a>, bool takeOwnership=false)</td></tr>
+<tr class="separator:aacd2591bef60d519cd76f189bfbcbb00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af35f8e853cf62c5777523ab88ecc4c2a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtalcs_1_1_audio_format_i_o.html">AudioFormatIO</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#af35f8e853cf62c5777523ab88ecc4c2a">audioFormatIo</a> () const</td></tr>
 <tr class="separator:af35f8e853cf62c5777523ab88ecc4c2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adac116554b543b7c4228c018a85882f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#adac116554b543b7c4228c018a85882f5">flush</a> ()</td></tr>
@@ -162,10 +148,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3bf920fbf2543808a6f67ab3b3a153e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9717b432c7df2b2d2238df81cd33c40b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#a9717b432c7df2b2d2238df81cd33c40b">stereoize</a> () const</td></tr>
 <tr class="separator:a9717b432c7df2b2d2238df81cd33c40b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae127c5de9a2ca17ddcb0ded47667c460"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#ae127c5de9a2ca17ddcb0ded47667c460">setResamplerMode</a> (<a class="el" href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2d">ResampleMode</a> mode)</td></tr>
-<tr class="separator:ae127c5de9a2ca17ddcb0ded47667c460"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade103a1ff8b3fca5351e0e357d61e478"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2d">ResampleMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#ade103a1ff8b3fca5351e0e357d61e478">resampleMode</a> () const</td></tr>
-<tr class="separator:ade103a1ff8b3fca5351e0e357d61e478"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtalcs_1_1_positionable_audio_source"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtalcs_1_1_positionable_audio_source')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtalcs_1_1_positionable_audio_source.html">PositionableAudioSource</a></td></tr>
 <tr class="memitem:a2507ecc3065aa3f1b958a11915bdb38f inherit pub_methods_classtalcs_1_1_positionable_audio_source"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_positionable_audio_source.html#a2507ecc3065aa3f1b958a11915bdb38f">PositionableAudioSource</a> ()</td></tr>
 <tr class="separator:a2507ecc3065aa3f1b958a11915bdb38f inherit pub_methods_classtalcs_1_1_positionable_audio_source"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -192,39 +174,10 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Takes audio from an <a class="el" href="classtalcs_1_1_audio_format_i_o.html" title="The AudioFormatIO class provides interfaces to access audio files based on libsndfile.">AudioFormatIO</a> object, resamples it to a specified sample rate, and produces it out. </p>
-<p>libsamplerate is used to resample the audio. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href=""><a href="https://libsndfile.github.io/libsamplerate/">https://libsndfile.github.io/libsamplerate/</a> </a> </dd></dl>
-</div><h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="af10f920d2468ab08b8f1b25194f56f2d" name="af10f920d2468ab08b8f1b25194f56f2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af10f920d2468ab08b8f1b25194f56f2d">&#9670;&#160;</a></span>ResampleMode</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2d">ResampleMode</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Resample modes. </p><dl class="section note"><dt>Note</dt><dd>It is recommended to use faster modes for realtime processing and higher-quality modes for non-realtime processing. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href=""><a href="https://libsndfile.github.io/libsamplerate/api_misc.html#converters">https://libsndfile.github.io/libsamplerate/api_misc.html#converters</a> </a> </dd></dl>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="af10f920d2468ab08b8f1b25194f56f2dafee5df2251ab6e3ea093544b9691b6f4" name="af10f920d2468ab08b8f1b25194f56f2dafee5df2251ab6e3ea093544b9691b6f4"></a>SincBestQuality&#160;</td><td class="fielddoc"><p>This is a bandlimited interpolator derived from the mathematical sinc function and this is the highest quality sinc based converter, providing a worst case Signal-to-Noise Ratio (SNR) of 97 decibels (dB) at a bandwidth of 97%. All three SRC_SINC_* converters are based on the techniques of Julius O. Smith although this code was developed independently. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="af10f920d2468ab08b8f1b25194f56f2da247ebae322f22b225a102e17deca8538" name="af10f920d2468ab08b8f1b25194f56f2da247ebae322f22b225a102e17deca8538"></a>SincMediumQuality&#160;</td><td class="fielddoc"><p>This is another bandlimited interpolator much like the previous one. It has an SNR of 97dB and a bandwidth of 90%. The speed of the conversion is much faster than the previous one. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="af10f920d2468ab08b8f1b25194f56f2da2768f987fb8cf4cffe86f50d194d2017" name="af10f920d2468ab08b8f1b25194f56f2da2768f987fb8cf4cffe86f50d194d2017"></a>SincFastest&#160;</td><td class="fielddoc"><p>This is the fastest bandlimited interpolator and has an SNR of 97dB and a bandwidth of 80%. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="af10f920d2468ab08b8f1b25194f56f2da6fa6cc279c98f78ab2b8b0ee99e9f76c" name="af10f920d2468ab08b8f1b25194f56f2da6fa6cc279c98f78ab2b8b0ee99e9f76c"></a>ZeroOrderHold&#160;</td><td class="fielddoc"><p>A Zero Order Hold converter (interpolated value is equal to the last value). The quality is poor but the conversion speed is blindlingly fast. Be aware that this interpolator is not bandlimited, and the user is responsible for adding anti-aliasing filtering. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="af10f920d2468ab08b8f1b25194f56f2daf1d4d6ecf790e97123b51b05256bf117" name="af10f920d2468ab08b8f1b25194f56f2daf1d4d6ecf790e97123b51b05256bf117"></a>Linear&#160;</td><td class="fielddoc"><p>A linear converter. Again the quality is poor, but the conversion speed is blindingly fast. This interpolator is also not bandlimited, and the user is responsible for adding anti-aliasing filtering. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ad5137cade045970c0536c50787becfa3" name="ad5137cade045970c0536c50787becfa3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad5137cade045970c0536c50787becfa3">&#9670;&#160;</a></span>AudioFormatInputSource()</h2>
+<p>r8brain is used to resample the audio. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href=""><a href="https://github.com/avaneev/r8brain-free-src">https://github.com/avaneev/r8brain-free-src</a> </a> </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a60545c973aa6b0501cfdef87a81cff22" name="a60545c973aa6b0501cfdef87a81cff22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60545c973aa6b0501cfdef87a81cff22">&#9670;&#160;</a></span>AudioFormatInputSource()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -236,8 +189,18 @@ Public Member Functions</h2></td></tr>
           <td class="memname"><a class="el" href="classtalcs_1_1_audio_format_input_source.html">AudioFormatInputSource</a> </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtalcs_1_1_audio_format_i_o.html">AudioFormatIO</a> *&#160;</td>
-          <td class="paramname"><em>audioFormatIo</em> = <code>nullptr</code></td><td>)</td>
+          <td class="paramname"><em>audioFormatIo</em> = <code>nullptr</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>takeOwnership</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -246,8 +209,7 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Constructor.</p>
-<p>Note that unlike other objects, one <a class="el" href="classtalcs_1_1_audio_format_i_o.html" title="The AudioFormatIO class provides interfaces to access audio files based on libsndfile.">AudioFormatIO</a> object can be set to multiple <a class="el" href="classtalcs_1_1_audio_format_input_source.html" title="Takes audio from an AudioFormatIO object, resamples it to a specified sample rate,...">AudioFormatInputSource</a> object, and the ownership is not taken. </p>
+<p>Constructor. </p>
 
 </div>
 </div>
@@ -403,26 +365,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ade103a1ff8b3fca5351e0e357d61e478" name="ade103a1ff8b3fca5351e0e357d61e478"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade103a1ff8b3fca5351e0e357d61e478">&#9670;&#160;</a></span>resampleMode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2d">AudioFormatInputSource::ResampleMode</a> resampleMode </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Gets the mode of resampler. </p>
-
-</div>
-</div>
-<a id="ab55a0de91a777edeeb5030c0eb3f4d45" name="ab55a0de91a777edeeb5030c0eb3f4d45"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab55a0de91a777edeeb5030c0eb3f4d45">&#9670;&#160;</a></span>setAudioFormatIo()</h2>
+<a id="aacd2591bef60d519cd76f189bfbcbb00" name="aacd2591bef60d519cd76f189bfbcbb00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacd2591bef60d519cd76f189bfbcbb00">&#9670;&#160;</a></span>setAudioFormatIo()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -431,8 +375,18 @@ Public Member Functions</h2></td></tr>
           <td class="memname">void setAudioFormatIo </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classtalcs_1_1_audio_format_i_o.html">AudioFormatIO</a> *&#160;</td>
-          <td class="paramname"><em>audioFormatIo</em></td><td>)</td>
+          <td class="paramname"><em>audioFormatIo</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>takeOwnership</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -469,26 +423,6 @@ Public Member Functions</h2></td></tr>
 <p>Note that for derived class that reimplement this function, it should be synchronized with <a class="el" href="classtalcs_1_1_audio_format_input_source.html#adf4e0e1df0fe08aea0de05e6336a497a">read()</a> function. </p>
 
 <p>Reimplemented from <a class="el" href="classtalcs_1_1_positionable_audio_source.html#a14f57872667fd308a9e1785959989261">PositionableAudioSource</a>.</p>
-
-</div>
-</div>
-<a id="ae127c5de9a2ca17ddcb0ded47667c460" name="ae127c5de9a2ca17ddcb0ded47667c460"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae127c5de9a2ca17ddcb0ded47667c460">&#9670;&#160;</a></span>setResamplerMode()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void setResamplerMode </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2d">AudioFormatInputSource::ResampleMode</a>&#160;</td>
-          <td class="paramname"><em>mode</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Sets the mode of resampler.</p>
-<p>Note that this function should be called when the source is not open. If it is called when the source is open, it will take effect the next time the source is opened. </p>
 
 </div>
 </div>

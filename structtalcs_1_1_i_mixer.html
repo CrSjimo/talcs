@@ -145,6 +145,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad06492f0579f68f73a3a1632347fbf48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae270f8e61896c0c55cae85b74703dfaa"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_i_mixer.html#ae270f8e61896c0c55cae85b74703dfaa">silentFlags</a> () const =0</td></tr>
 <tr class="separator:ae270f8e61896c0c55cae85b74703dfaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cfecaa6766fe6a1ba8fe4be2a524194"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_i_mixer.html#a3cfecaa6766fe6a1ba8fe4be2a524194">setMeterEnabled</a> (bool enabled)=0</td></tr>
+<tr class="separator:a3cfecaa6766fe6a1ba8fe4be2a524194"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a840fc581ab9dd8fd4f1a7cd6fe6acd60"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_i_mixer.html#a840fc581ab9dd8fd4f1a7cd6fe6acd60">isMeterEnabled</a> () const =0</td></tr>
+<tr class="separator:a840fc581ab9dd8fd4f1a7cd6fe6acd60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class T&gt;<br />
@@ -223,6 +227,36 @@ template&lt;class T &gt; </div>
 <p>Gets the output gain. </p>
 
 <p>Implemented in <a class="el" href="classtalcs_1_1_mixer_audio_source.html#a11e71f5a05ba61ac85b44db66140ee1e">MixerAudioSource</a>, and <a class="el" href="classtalcs_1_1_positionable_mixer_audio_source.html#a11e71f5a05ba61ac85b44db66140ee1e">PositionableMixerAudioSource</a>.</p>
+
+</div>
+</div>
+<a id="a840fc581ab9dd8fd4f1a7cd6fe6acd60" name="a840fc581ab9dd8fd4f1a7cd6fe6acd60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a840fc581ab9dd8fd4f1a7cd6fe6acd60">&#9670;&#160;</a></span>isMeterEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isMeterEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Gets whether to calculate the magnitude of each block. </p>
+
+<p>Implemented in <a class="el" href="classtalcs_1_1_mixer_audio_source.html#ae908ec2a22166f6dba338f5ab7c3738c">MixerAudioSource</a>, and <a class="el" href="classtalcs_1_1_positionable_mixer_audio_source.html#ae908ec2a22166f6dba338f5ab7c3738c">PositionableMixerAudioSource</a>.</p>
 
 </div>
 </div>
@@ -402,6 +436,37 @@ template&lt;class T &gt; </div>
 <p>Sets the output gain. </p>
 
 <p>Implemented in <a class="el" href="classtalcs_1_1_mixer_audio_source.html#add53219d04ff63b1e3bd0c70a0f2dfef">MixerAudioSource</a>, and <a class="el" href="classtalcs_1_1_positionable_mixer_audio_source.html#add53219d04ff63b1e3bd0c70a0f2dfef">PositionableMixerAudioSource</a>.</p>
+
+</div>
+</div>
+<a id="a3cfecaa6766fe6a1ba8fe4be2a524194" name="a3cfecaa6766fe6a1ba8fe4be2a524194"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cfecaa6766fe6a1ba8fe4be2a524194">&#9670;&#160;</a></span>setMeterEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setMeterEnabled </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enabled</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Sets whether to calculate the magnitude of each block. </p>
+
+<p>Implemented in <a class="el" href="classtalcs_1_1_mixer_audio_source.html#a972439e60694b2cb1e108f54515d5f61">MixerAudioSource</a>, and <a class="el" href="classtalcs_1_1_positionable_mixer_audio_source.html#a972439e60694b2cb1e108f54515d5f61">PositionableMixerAudioSource</a>.</p>
 
 </div>
 </div>

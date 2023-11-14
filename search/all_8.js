@@ -16,8 +16,9 @@ var searchData=
   ['ircam_13',['IRCAM',['../classtalcs_1_1_audio_format_i_o.html#a91e9756e83443fbd1fa3a129c3c34b4ca906611b772d7c7df393d6a1230b096a1',1,'talcs::AudioFormatIO']]],
   ['iscontinuous_14',['isContinuous',['../classtalcs_1_1_audio_buffer.html#a2be41fd838ef34bb2faa3563980357d7',1,'talcs::AudioBuffer::isContinuous()'],['../classtalcs_1_1_audio_data_wrapper.html#a2be41fd838ef34bb2faa3563980357d7',1,'talcs::AudioDataWrapper::isContinuous()'],['../classtalcs_1_1_i_audio_sample_provider.html#a8bad496e530b253752fc935cf428297d',1,'talcs::IAudioSampleProvider::isContinuous()'],['../classtalcs_1_1_interleaved_audio_data_wrapper.html#a2be41fd838ef34bb2faa3563980357d7',1,'talcs::InterleavedAudioDataWrapper::isContinuous()']]],
   ['isinitialized_15',['isInitialized',['../classtalcs_1_1_audio_device.html#a161d75a220f87c68d6975112f0bff3f6',1,'talcs::AudioDevice::isInitialized()'],['../classtalcs_1_1_audio_driver.html#a161d75a220f87c68d6975112f0bff3f6',1,'talcs::AudioDriver::isInitialized()']]],
-  ['isopen_16',['isOpen',['../classtalcs_1_1_audio_stream_base.html#a002ed331862370f434b7befe331b5a0b',1,'talcs::AudioStreamBase']]],
-  ['isplaying_17',['isPlaying',['../classtalcs_1_1_transport_audio_source.html#a389ad71786b00ae81f69060f153509d2',1,'talcs::TransportAudioSource']]],
-  ['issourcesolo_18',['isSourceSolo',['../structtalcs_1_1_i_mixer.html#a4cb753b5aab9de489ad5a3b85ef035b9',1,'talcs::IMixer']]],
-  ['isstarted_19',['isStarted',['../classtalcs_1_1_audio_device.html#ac1991ea0e286fbb461b60c8c9299d781',1,'talcs::AudioDevice']]]
+  ['ismeterenabled_16',['isMeterEnabled',['../structtalcs_1_1_i_mixer.html#a840fc581ab9dd8fd4f1a7cd6fe6acd60',1,'talcs::IMixer::isMeterEnabled()'],['../classtalcs_1_1_mixer_audio_source.html#ae908ec2a22166f6dba338f5ab7c3738c',1,'talcs::MixerAudioSource::isMeterEnabled()'],['../classtalcs_1_1_positionable_mixer_audio_source.html#ae908ec2a22166f6dba338f5ab7c3738c',1,'talcs::PositionableMixerAudioSource::isMeterEnabled()']]],
+  ['isopen_17',['isOpen',['../classtalcs_1_1_audio_stream_base.html#a002ed331862370f434b7befe331b5a0b',1,'talcs::AudioStreamBase']]],
+  ['isplaying_18',['isPlaying',['../classtalcs_1_1_transport_audio_source.html#a389ad71786b00ae81f69060f153509d2',1,'talcs::TransportAudioSource']]],
+  ['issourcesolo_19',['isSourceSolo',['../structtalcs_1_1_i_mixer.html#a4cb753b5aab9de489ad5a3b85ef035b9',1,'talcs::IMixer']]],
+  ['isstarted_20',['isStarted',['../classtalcs_1_1_audio_device.html#ac1991ea0e286fbb461b60c8c9299d781',1,'talcs::AudioDevice']]]
 ];

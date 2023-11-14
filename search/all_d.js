@@ -20,7 +20,7 @@ var searchData=
   ['preferredsamplerate_17',['preferredSampleRate',['../classtalcs_1_1_audio_device.html#aacefa7a784378f90197d7d1846812e3d',1,'talcs::AudioDevice']]],
   ['preloadingopen_18',['preloadingOpen',['../structtalcs_1_1_future_audio_source_1_1_callbacks.html#a45f52dae0257d41045858c5f7282037f',1,'talcs::FutureAudioSource::Callbacks']]],
   ['preparebuffer_19',['prepareBuffer',['../classtalcs_1_1_audio_source_processor_base.html#a1b518f6c6eb77cca85934561b0c629aa',1,'talcs::AudioSourceProcessorBase::prepareBuffer()'],['../classtalcs_1_1_audio_source_writer.html#a36edc1b5fd5a64f9525edfa12e807aef',1,'talcs::AudioSourceWriter::prepareBuffer()']]],
-  ['process_20',['process',['../classtalcs_1_1_r8_brain_resampler.html#a02af0f5894b1a3fa4a8994e0e855d2e1',1,'talcs::R8BrainResampler']]],
+  ['process_20',['process',['../classtalcs_1_1_r8_brain_multichannel_resampler.html#ad293ef3137206cc95a223c6d0f9d4cfe',1,'talcs::R8BrainMultichannelResampler::process()'],['../classtalcs_1_1_r8_brain_resampler.html#a02af0f5894b1a3fa4a8994e0e855d2e1',1,'talcs::R8BrainResampler::process()']]],
   ['processblock_21',['processBlock',['../classtalcs_1_1_audio_source_processor_base.html#a5a446a549e8b56a79f97a8e4514fc76b',1,'talcs::AudioSourceProcessorBase::processBlock()'],['../classtalcs_1_1_audio_source_writer.html#a585bbffedee3bb19f96b2b8d47fbdc02',1,'talcs::AudioSourceWriter::processBlock()']]],
   ['processinfo_22',['ProcessInfo',['../structtalcs_1_1_remote_audio_device_1_1_process_info.html',1,'talcs::RemoteAudioDevice']]],
   ['processinfocallback_23',['ProcessInfoCallback',['../classtalcs_1_1_remote_audio_device_1_1_process_info_callback.html',1,'talcs::RemoteAudioDevice']]],

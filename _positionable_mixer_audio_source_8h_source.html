@@ -152,19 +152,23 @@ $(document).ready(function(){initNavTree('_positionable_mixer_audio_source_8h_so
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keywordtype">void</span> setSilentFlags(<span class="keywordtype">int</span> silentFlags) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <span class="keywordtype">int</span> silentFlags() <span class="keyword">const override</span>;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    signals:</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keywordtype">void</span> meterUpdated(<span class="keywordtype">float</span> magnitudeLeft, <span class="keywordtype">float</span> magnitudeRight);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keywordtype">void</span> setMeterEnabled(<span class="keywordtype">bool</span> enabled) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keywordtype">bool</span> isMeterEnabled() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keyword">explicit</span> <a class="code hl_class" href="classtalcs_1_1_positionable_mixer_audio_source.html">PositionableMixerAudioSource</a>(PositionableMixerAudioSourcePrivate &amp;d, QObject *parent);</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    };</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>}</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#endif </span><span class="comment">// TALCS_POSITIONABLEMIXERAUDIOSOURCE_H</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    signals:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno"><a class="line" href="classtalcs_1_1_positionable_mixer_audio_source.html#ac6a854cda964154c6b2601dbfceb3ecb">   50</a></span>        <span class="keywordtype">void</span> <a class="code hl_signal" href="classtalcs_1_1_positionable_mixer_audio_source.html#ac6a854cda964154c6b2601dbfceb3ecb">meterUpdated</a>(<span class="keywordtype">float</span> magnitudeLeft, <span class="keywordtype">float</span> magnitudeRight);</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keyword">explicit</span> <a class="code hl_class" href="classtalcs_1_1_positionable_mixer_audio_source.html">PositionableMixerAudioSource</a>(PositionableMixerAudioSourcePrivate &amp;d, QObject *parent);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    };</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#endif </span><span class="comment">// TALCS_POSITIONABLEMIXERAUDIOSOURCE_H</span></div>
 <div class="ttc" id="aclasstalcs_1_1_positionable_audio_source_html"><div class="ttname"><a href="classtalcs_1_1_positionable_audio_source.html">talcs::PositionableAudioSource</a></div><div class="ttdoc">Base class for sources from which audio data can be streamly read, and the source can be repositioned...</div><div class="ttdef"><b>Definition</b> PositionableAudioSource.h:10</div></div>
 <div class="ttc" id="aclasstalcs_1_1_positionable_mixer_audio_source_html"><div class="ttname"><a href="classtalcs_1_1_positionable_mixer_audio_source.html">talcs::PositionableMixerAudioSource</a></div><div class="ttdoc">A class very similar to MixerAudioSource, but this one supports repositioning.</div><div class="ttdef"><b>Definition</b> PositionableMixerAudioSource.h:14</div></div>
+<div class="ttc" id="aclasstalcs_1_1_positionable_mixer_audio_source_html_ac6a854cda964154c6b2601dbfceb3ecb"><div class="ttname"><a href="classtalcs_1_1_positionable_mixer_audio_source.html#ac6a854cda964154c6b2601dbfceb3ecb">talcs::PositionableMixerAudioSource::meterUpdated</a></div><div class="ttdeci">void meterUpdated(float magnitudeLeft, float magnitudeRight)</div></div>
 <div class="ttc" id="astructtalcs_1_1_audio_source_read_data_html"><div class="ttname"><a href="structtalcs_1_1_audio_source_read_data.html">talcs::AudioSourceReadData</a></div><div class="ttdoc">The object that contains the target for AudioSource to fill data in.</div><div class="ttdef"><b>Definition</b> AudioSource.h:11</div></div>
 <div class="ttc" id="astructtalcs_1_1_i_mixer_html"><div class="ttname"><a href="structtalcs_1_1_i_mixer.html">talcs::IMixer</a></div><div class="ttdoc">Interface for objects that have a list of input sources and produces audio from them.</div><div class="ttdef"><b>Definition</b> IMixer.h:9</div></div>
 </div><!-- fragment --></div><!-- contents -->

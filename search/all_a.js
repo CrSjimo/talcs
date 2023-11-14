@@ -9,11 +9,12 @@ var searchData=
   ['mat5_6',['MAT5',['../classtalcs_1_1_audio_format_i_o.html#a91e9756e83443fbd1fa3a129c3c34b4ca78b9ef1e067c11e91acfade17c138710',1,'talcs::AudioFormatIO']]],
   ['memoryaudiosource_7',['MemoryAudioSource',['../classtalcs_1_1_memory_audio_source.html#ab6bdd56531f358bb063592d75cf4fcfd',1,'talcs::MemoryAudioSource::MemoryAudioSource()'],['../classtalcs_1_1_memory_audio_source.html',1,'MemoryAudioSource']]],
   ['metadata_8',['MetaData',['../classtalcs_1_1_audio_format_i_o.html#a85d1594e87e4c4e5da912ca49a87f8d3',1,'talcs::AudioFormatIO']]],
-  ['mixeraudiosource_9',['MixerAudioSource',['../classtalcs_1_1_mixer_audio_source.html#adacc225ea553413eee020d8a09048a52',1,'talcs::MixerAudioSource::MixerAudioSource()'],['../classtalcs_1_1_mixer_audio_source.html',1,'MixerAudioSource']]],
-  ['mpc2k_10',['MPC2K',['../classtalcs_1_1_audio_format_i_o.html#a91e9756e83443fbd1fa3a129c3c34b4ca667df155103cf5e3b620dd5888b6f63e',1,'talcs::AudioFormatIO']]],
-  ['mpeg_11',['MPEG',['../classtalcs_1_1_audio_format_i_o.html#a91e9756e83443fbd1fa3a129c3c34b4cad4486ccf446ef635cd9d491e6a005679',1,'talcs::AudioFormatIO']]],
-  ['mpeg_5flayer_5fi_12',['MPEG_LAYER_I',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da34312463763711bdebc896b70733965b',1,'talcs::AudioFormatIO']]],
-  ['mpeg_5flayer_5fii_13',['MPEG_LAYER_II',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da32df7821dde2d58044b5763aa0a452d3',1,'talcs::AudioFormatIO']]],
-  ['mpeg_5flayer_5fiii_14',['MPEG_LAYER_III',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7daabe27575cba7619aa487907f10960d9e',1,'talcs::AudioFormatIO']]],
-  ['ms_5fadpcm_15',['MS_ADPCM',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da5f712189d1a650fe405c025a23b1c57c',1,'talcs::AudioFormatIO']]]
+  ['meterupdated_9',['meterUpdated',['../classtalcs_1_1_mixer_audio_source.html#ab6a940c5028dd5643e5949b22f9e6a68',1,'talcs::MixerAudioSource::meterUpdated()'],['../classtalcs_1_1_positionable_mixer_audio_source.html#ac6a854cda964154c6b2601dbfceb3ecb',1,'talcs::PositionableMixerAudioSource::meterUpdated()']]],
+  ['mixeraudiosource_10',['MixerAudioSource',['../classtalcs_1_1_mixer_audio_source.html#adacc225ea553413eee020d8a09048a52',1,'talcs::MixerAudioSource::MixerAudioSource()'],['../classtalcs_1_1_mixer_audio_source.html',1,'MixerAudioSource']]],
+  ['mpc2k_11',['MPC2K',['../classtalcs_1_1_audio_format_i_o.html#a91e9756e83443fbd1fa3a129c3c34b4ca667df155103cf5e3b620dd5888b6f63e',1,'talcs::AudioFormatIO']]],
+  ['mpeg_12',['MPEG',['../classtalcs_1_1_audio_format_i_o.html#a91e9756e83443fbd1fa3a129c3c34b4cad4486ccf446ef635cd9d491e6a005679',1,'talcs::AudioFormatIO']]],
+  ['mpeg_5flayer_5fi_13',['MPEG_LAYER_I',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da34312463763711bdebc896b70733965b',1,'talcs::AudioFormatIO']]],
+  ['mpeg_5flayer_5fii_14',['MPEG_LAYER_II',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da32df7821dde2d58044b5763aa0a452d3',1,'talcs::AudioFormatIO']]],
+  ['mpeg_5flayer_5fiii_15',['MPEG_LAYER_III',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7daabe27575cba7619aa487907f10960d9e',1,'talcs::AudioFormatIO']]],
+  ['ms_5fadpcm_16',['MS_ADPCM',['../classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da5f712189d1a650fe405c025a23b1c57c',1,'talcs::AudioFormatIO']]]
 ];

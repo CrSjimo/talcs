@@ -106,6 +106,7 @@ $(document).ready(function(){initNavTree('classtalcs_1_1_mixer_audio_source.html
 
 <div class="header">
   <div class="summary">
+<a href="#signals">Signals</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classtalcs_1_1_mixer_audio_source-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">MixerAudioSource Class Reference</div></div>
@@ -126,6 +127,11 @@ Inheritance diagram for MixerAudioSource:</div>
   </map>
 </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="signals" name="signals"></a>
+Signals</h2></td></tr>
+<tr class="memitem:ab6a940c5028dd5643e5949b22f9e6a68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_mixer_audio_source.html#ab6a940c5028dd5643e5949b22f9e6a68">meterUpdated</a> (float leftMagnitude, float rightMagnitude)</td></tr>
+<tr class="separator:ab6a940c5028dd5643e5949b22f9e6a68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:adacc225ea553413eee020d8a09048a52"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_mixer_audio_source.html#adacc225ea553413eee020d8a09048a52">MixerAudioSource</a> (QObject *parent=nullptr)</td></tr>
@@ -158,6 +164,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a24064e6517b72cfc60d6cad2715c9efd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c87521e5d896972a240f1fac1e74189"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_mixer_audio_source.html#a3c87521e5d896972a240f1fac1e74189">silentFlags</a> () const override</td></tr>
 <tr class="separator:a3c87521e5d896972a240f1fac1e74189"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a972439e60694b2cb1e108f54515d5f61"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_mixer_audio_source.html#a972439e60694b2cb1e108f54515d5f61">setMeterEnabled</a> (bool enabled) override</td></tr>
+<tr class="separator:a972439e60694b2cb1e108f54515d5f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae908ec2a22166f6dba338f5ab7c3738c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_mixer_audio_source.html#ae908ec2a22166f6dba338f5ab7c3738c">isMeterEnabled</a> () const override</td></tr>
+<tr class="separator:ae908ec2a22166f6dba338f5ab7c3738c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtalcs_1_1_audio_source"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtalcs_1_1_audio_source')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtalcs_1_1_audio_source.html">AudioSource</a></td></tr>
 <tr class="memitem:add402d877760acea169534eca2aca92f inherit pub_methods_classtalcs_1_1_audio_source"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_audio_source.html#add402d877760acea169534eca2aca92f">AudioSource</a> ()</td></tr>
 <tr class="separator:add402d877760acea169534eca2aca92f inherit pub_methods_classtalcs_1_1_audio_source"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -203,6 +213,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad06492f0579f68f73a3a1632347fbf48 inherit pub_methods_structtalcs_1_1_i_mixer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae270f8e61896c0c55cae85b74703dfaa inherit pub_methods_structtalcs_1_1_i_mixer"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_i_mixer.html#ae270f8e61896c0c55cae85b74703dfaa">silentFlags</a> () const=0</td></tr>
 <tr class="separator:ae270f8e61896c0c55cae85b74703dfaa inherit pub_methods_structtalcs_1_1_i_mixer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cfecaa6766fe6a1ba8fe4be2a524194 inherit pub_methods_structtalcs_1_1_i_mixer"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_i_mixer.html#a3cfecaa6766fe6a1ba8fe4be2a524194">setMeterEnabled</a> (bool enabled)=0</td></tr>
+<tr class="separator:a3cfecaa6766fe6a1ba8fe4be2a524194 inherit pub_methods_structtalcs_1_1_i_mixer"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a840fc581ab9dd8fd4f1a7cd6fe6acd60 inherit pub_methods_structtalcs_1_1_i_mixer"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structtalcs_1_1_i_mixer.html#a840fc581ab9dd8fd4f1a7cd6fe6acd60">isMeterEnabled</a> () const=0</td></tr>
+<tr class="separator:a840fc581ab9dd8fd4f1a7cd6fe6acd60 inherit pub_methods_structtalcs_1_1_i_mixer"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The object that mixes the output of other <a class="el" href="classtalcs_1_1_audio_source.html" title="Base class for sources from which audio data can be streamly read.">AudioSource</a> objects. </p>
@@ -321,6 +335,72 @@ Public Member Functions</h2></td></tr>
 <p>Gets the output gain. </p>
 
 <p>Implements <a class="el" href="structtalcs_1_1_i_mixer.html#a31092f5b8dbb452d7c079f5c3bea695c">IMixer&lt; AudioSource &gt;</a>.</p>
+
+</div>
+</div>
+<a id="ae908ec2a22166f6dba338f5ab7c3738c" name="ae908ec2a22166f6dba338f5ab7c3738c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae908ec2a22166f6dba338f5ab7c3738c">&#9670;&#160;</a></span>isMeterEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isMeterEnabled </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Gets whether to calculate the magnitude of each block. </p>
+
+<p>Implements <a class="el" href="structtalcs_1_1_i_mixer.html#a840fc581ab9dd8fd4f1a7cd6fe6acd60">IMixer&lt; AudioSource &gt;</a>.</p>
+
+</div>
+</div>
+<a id="ab6a940c5028dd5643e5949b22f9e6a68" name="ab6a940c5028dd5643e5949b22f9e6a68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6a940c5028dd5643e5949b22f9e6a68">&#9670;&#160;</a></span>meterUpdated</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void meterUpdated </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>leftMagnitude</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>rightMagnitude</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Emitted on each block processed.</p>
+<p>To use this signal, <a class="el" href="classtalcs_1_1_mixer_audio_source.html#a972439e60694b2cb1e108f54515d5f61">setMeterEnabled()</a> must be set to true. </p>
 
 </div>
 </div>
@@ -521,6 +601,35 @@ Public Member Functions</h2></td></tr>
 <p>Sets the output gain. </p>
 
 <p>Implements <a class="el" href="structtalcs_1_1_i_mixer.html#af396f4281d34897782f1d3b01258fdf5">IMixer&lt; AudioSource &gt;</a>.</p>
+
+</div>
+</div>
+<a id="a972439e60694b2cb1e108f54515d5f61" name="a972439e60694b2cb1e108f54515d5f61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a972439e60694b2cb1e108f54515d5f61">&#9670;&#160;</a></span>setMeterEnabled()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setMeterEnabled </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enabled</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Sets whether to calculate the magnitude of each block. </p>
+
+<p>Implements <a class="el" href="structtalcs_1_1_i_mixer.html#a3cfecaa6766fe6a1ba8fe4be2a524194">IMixer&lt; AudioSource &gt;</a>.</p>
 
 </div>
 </div>

@@ -69,6 +69,7 @@ var hierarchy =
     [ "ProcessInfoCallback", "classtalcs_1_1_remote_audio_device_1_1_process_info_callback.html", [
       [ "TransportAudioSourceProcessInfoCallback", "classtalcs_1_1_transport_audio_source_process_info_callback.html", null ]
     ] ],
+    [ "R8BrainMultichannelResampler", "classtalcs_1_1_r8_brain_multichannel_resampler.html", null ],
     [ "R8BrainResampler", "classtalcs_1_1_r8_brain_resampler.html", null ],
     [ "RemoteEditor", "classtalcs_1_1_remote_editor.html", null ],
     [ "RemoteSocket", "classtalcs_1_1_remote_socket.html", null ],

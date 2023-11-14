@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=11" />
     <meta name="generator" content="Doxygen 1.9.7" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>TALCS: R8BrainResampler Class Reference</title>
+    <title>TALCS: R8BrainMultichannelResampler Class Reference</title>
     <link href="tabs.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="dynsections.js"></script>
@@ -79,7 +79,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('classtalcs_1_1_r8_brain_resampler.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('classtalcs_1_1_r8_brain_multichannel_resampler.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -108,41 +108,43 @@ $(document).ready(function(){initNavTree('classtalcs_1_1_r8_brain_resampler.html
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
-<a href="classtalcs_1_1_r8_brain_resampler-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">R8BrainResampler Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
+<a href="classtalcs_1_1_r8_brain_multichannel_resampler-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">R8BrainMultichannelResampler Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>An adapter class of <a href="https://www.voxengo.com/public/r8brain-free-src/Documentation/a00114.html">r8b::CDSPResampler</a> that provides Secret-Rabbit-Code-like APIs.  
- <a href="classtalcs_1_1_r8_brain_resampler.html#details">More...</a></p>
+<p>An adapter class of <a href="https://www.voxengo.com/public/r8brain-free-src/Documentation/a00114.html">r8b::CDSPResampler</a> that provides Secret-Rabbit-Code-like APIs with the ability to process multi-channel audio.  
+ <a href="classtalcs_1_1_r8_brain_multichannel_resampler.html#details">More...</a></p>
 
-<p>Inherited by ChannelResampler.</p>
+<p>Inherited by AudioFormatInputSourcePrivate::AudioFormatInputResampler.</p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af08fbbbff823a29bd9b349adae68a6bd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_resampler.html#af08fbbbff823a29bd9b349adae68a6bd">R8BrainResampler</a> (double <a class="el" href="classtalcs_1_1_r8_brain_resampler.html#aa2bac84017585755effa29dd4873a72c">ratio</a>, qint64 <a class="el" href="classtalcs_1_1_r8_brain_resampler.html#a874ea3d5cd0fd10576a6139d0000cf07">bufferSize</a>)</td></tr>
-<tr class="separator:af08fbbbff823a29bd9b349adae68a6bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a608bba10ae51b86223a120525938bb95"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_resampler.html#a608bba10ae51b86223a120525938bb95">~R8BrainResampler</a> ()</td></tr>
-<tr class="separator:a608bba10ae51b86223a120525938bb95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad20897c5c8bd47f5d4005989bead0e55"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_resampler.html#ad20897c5c8bd47f5d4005989bead0e55">reset</a> ()</td></tr>
+<tr class="memitem:a73b2946ae5aaeff8e464b66918e24c2c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_multichannel_resampler.html#a73b2946ae5aaeff8e464b66918e24c2c">R8BrainMultichannelResampler</a> (double <a class="el" href="classtalcs_1_1_r8_brain_multichannel_resampler.html#aa2bac84017585755effa29dd4873a72c">ratio</a>, qint64 <a class="el" href="classtalcs_1_1_r8_brain_multichannel_resampler.html#a874ea3d5cd0fd10576a6139d0000cf07">bufferSize</a>, int <a class="el" href="classtalcs_1_1_r8_brain_multichannel_resampler.html#ad805cd75615b6a1f2af8a9c4041e5e2b">channelCount</a>)</td></tr>
+<tr class="separator:a73b2946ae5aaeff8e464b66918e24c2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a369a34ae7bd6875cc1021307f8468810"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_multichannel_resampler.html#a369a34ae7bd6875cc1021307f8468810">~R8BrainMultichannelResampler</a> ()</td></tr>
+<tr class="separator:a369a34ae7bd6875cc1021307f8468810"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad20897c5c8bd47f5d4005989bead0e55"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_multichannel_resampler.html#ad20897c5c8bd47f5d4005989bead0e55">reset</a> ()</td></tr>
 <tr class="separator:ad20897c5c8bd47f5d4005989bead0e55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02af0f5894b1a3fa4a8994e0e855d2e1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_resampler.html#a02af0f5894b1a3fa4a8994e0e855d2e1">process</a> (float *buffer)</td></tr>
-<tr class="separator:a02af0f5894b1a3fa4a8994e0e855d2e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2bac84017585755effa29dd4873a72c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_resampler.html#aa2bac84017585755effa29dd4873a72c">ratio</a> () const</td></tr>
+<tr class="memitem:ad293ef3137206cc95a223c6d0f9d4cfe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_multichannel_resampler.html#ad293ef3137206cc95a223c6d0f9d4cfe">process</a> (const <a class="el" href="structtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData)</td></tr>
+<tr class="separator:ad293ef3137206cc95a223c6d0f9d4cfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2bac84017585755effa29dd4873a72c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_multichannel_resampler.html#aa2bac84017585755effa29dd4873a72c">ratio</a> () const</td></tr>
 <tr class="separator:aa2bac84017585755effa29dd4873a72c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a874ea3d5cd0fd10576a6139d0000cf07"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_resampler.html#a874ea3d5cd0fd10576a6139d0000cf07">bufferSize</a> () const</td></tr>
+<tr class="memitem:a874ea3d5cd0fd10576a6139d0000cf07"><td class="memItemLeft" align="right" valign="top">qint64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_multichannel_resampler.html#a874ea3d5cd0fd10576a6139d0000cf07">bufferSize</a> () const</td></tr>
 <tr class="separator:a874ea3d5cd0fd10576a6139d0000cf07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad805cd75615b6a1f2af8a9c4041e5e2b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_multichannel_resampler.html#ad805cd75615b6a1f2af8a9c4041e5e2b">channelCount</a> () const</td></tr>
+<tr class="separator:ad805cd75615b6a1f2af8a9c4041e5e2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:ad194456e55b876aef00f5714736fd58d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_resampler.html#ad194456e55b876aef00f5714736fd58d">read</a> (float *inputBlock, qint64 length)=0</td></tr>
-<tr class="separator:ad194456e55b876aef00f5714736fd58d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35a1f3ea780e20671781e7a8d6e56262"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtalcs_1_1_r8_brain_multichannel_resampler.html#a35a1f3ea780e20671781e7a8d6e56262">read</a> (const <a class="el" href="structtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;readData)=0</td></tr>
+<tr class="separator:a35a1f3ea780e20671781e7a8d6e56262"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>An adapter class of <a href="https://www.voxengo.com/public/r8brain-free-src/Documentation/a00114.html">r8b::CDSPResampler</a> that provides Secret-Rabbit-Code-like APIs. </p>
+<div class="textblock"><p>An adapter class of <a href="https://www.voxengo.com/public/r8brain-free-src/Documentation/a00114.html">r8b::CDSPResampler</a> that provides Secret-Rabbit-Code-like APIs with the ability to process multi-channel audio. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="af08fbbbff823a29bd9b349adae68a6bd" name="af08fbbbff823a29bd9b349adae68a6bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af08fbbbff823a29bd9b349adae68a6bd">&#9670;&#160;</a></span>R8BrainResampler()</h2>
+<a id="a73b2946ae5aaeff8e464b66918e24c2c" name="a73b2946ae5aaeff8e464b66918e24c2c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73b2946ae5aaeff8e464b66918e24c2c">&#9670;&#160;</a></span>R8BrainMultichannelResampler()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -151,7 +153,7 @@ Protected Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classtalcs_1_1_r8_brain_resampler.html">R8BrainResampler</a> </td>
+          <td class="memname"><a class="el" href="classtalcs_1_1_r8_brain_multichannel_resampler.html">R8BrainMultichannelResampler</a> </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>ratio</em>, </td>
@@ -160,7 +162,13 @@ Protected Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">qint64&#160;</td>
-          <td class="paramname"><em>bufferSize</em>&#160;</td>
+          <td class="paramname"><em>bufferSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>channelCount</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -178,33 +186,26 @@ Protected Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">ratio</td><td>destination sample rate / source sample rate </td></tr>
     <tr><td class="paramname">bufferSize</td><td>the size of each output block </td></tr>
+    <tr><td class="paramname">channelCount</td><td>the number of audio channels </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a608bba10ae51b86223a120525938bb95" name="a608bba10ae51b86223a120525938bb95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a608bba10ae51b86223a120525938bb95">&#9670;&#160;</a></span>~R8BrainResampler()</h2>
+<a id="a369a34ae7bd6875cc1021307f8468810" name="a369a34ae7bd6875cc1021307f8468810"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a369a34ae7bd6875cc1021307f8468810">&#9670;&#160;</a></span>~R8BrainMultichannelResampler()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">~<a class="el" href="classtalcs_1_1_r8_brain_resampler.html">R8BrainResampler</a> </td>
+          <td class="memname">~<a class="el" href="classtalcs_1_1_r8_brain_multichannel_resampler.html">R8BrainMultichannelResampler</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">default</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>Destructor. </p>
 
@@ -225,12 +226,32 @@ Protected Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets the buffer size of the resampler. </p>
+
+<p></p>
+<p>Gets the buffer size of the resampler.   </p>
 
 </div>
 </div>
-<a id="a02af0f5894b1a3fa4a8994e0e855d2e1" name="a02af0f5894b1a3fa4a8994e0e855d2e1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a02af0f5894b1a3fa4a8994e0e855d2e1">&#9670;&#160;</a></span>process()</h2>
+<a id="ad805cd75615b6a1f2af8a9c4041e5e2b" name="ad805cd75615b6a1f2af8a9c4041e5e2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad805cd75615b6a1f2af8a9c4041e5e2b">&#9670;&#160;</a></span>channelCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int channelCount </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets the number of channels of the resampler. </p>
+
+</div>
+</div>
+<a id="ad293ef3137206cc95a223c6d0f9d4cfe" name="ad293ef3137206cc95a223c6d0f9d4cfe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad293ef3137206cc95a223c6d0f9d4cfe">&#9670;&#160;</a></span>process()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -238,14 +259,16 @@ Protected Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void process </td>
           <td>(</td>
-          <td class="paramtype">float *&#160;</td>
-          <td class="paramname"><em>buffer</em></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="structtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;&#160;</td>
+          <td class="paramname"><em>readData</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p></p>
 <p>Processes the output buffer.</p>
-<p>This function does not provide functionalities of getting read length, and it should be checked in other ways. </p>
+<p>This function does not provide functionalities of getting read length, and it should be checked in other ways.   </p>
 
 </div>
 </div>
@@ -263,12 +286,14 @@ Protected Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Gets the ratio of the resampler. </p>
+
+<p></p>
+<p>Gets the ratio of the resampler.   </p>
 
 </div>
 </div>
-<a id="ad194456e55b876aef00f5714736fd58d" name="ad194456e55b876aef00f5714736fd58d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad194456e55b876aef00f5714736fd58d">&#9670;&#160;</a></span>read()</h2>
+<a id="a35a1f3ea780e20671781e7a8d6e56262" name="a35a1f3ea780e20671781e7a8d6e56262"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35a1f3ea780e20671781e7a8d6e56262">&#9670;&#160;</a></span>read()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -279,19 +304,9 @@ Protected Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void read </td>
           <td>(</td>
-          <td class="paramtype">float *&#160;</td>
-          <td class="paramname"><em>inputBlock</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const <a class="el" href="structtalcs_1_1_audio_source_read_data.html">AudioSourceReadData</a> &amp;&#160;</td>
+          <td class="paramname"><em>readData</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">qint64&#160;</td>
-          <td class="paramname"><em>length</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -300,7 +315,7 @@ Protected Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Reads an input block of specified length. If the source is not able to provide a block of the specified length, the function needs to fill the exceeding part with zeros. </p>
+<p>Reads an input block of specified length. If the source is not able to provide a block of the specified length, the function needs to fill the exceeding part with zeros.   </p>
 
 </div>
 </div>
@@ -318,20 +333,22 @@ Protected Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Resets the initial states of the resampler. This function should be called when the source is changed. </p>
+
+<p></p>
+<p>Resets the initial states of the resampler. This function should be called when the source is changed.   </p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>format/<a class="el" href="_r8_brain_resampler_8h_source.html">R8BrainResampler.h</a></li>
-<li>format/R8BrainResampler.cpp</li>
+<li>format/<a class="el" href="_r8_brain_multichannel_resampler_8h_source.html">R8BrainMultichannelResampler.h</a></li>
+<li>format/R8BrainMultichannelResampler.cpp</li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>talcs</b></li><li class="navelem"><a class="el" href="classtalcs_1_1_r8_brain_resampler.html">R8BrainResampler</a></li>
+    <li class="navelem"><b>talcs</b></li><li class="navelem"><a class="el" href="classtalcs_1_1_r8_brain_multichannel_resampler.html">R8BrainMultichannelResampler</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

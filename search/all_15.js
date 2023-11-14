@@ -1,4 +1,21 @@
 var searchData=
 [
-  ['zeroorderhold_0',['ZeroOrderHold',['../classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2da6fa6cc279c98f78ab2b8b0ee99e9f76c',1,'talcs::AudioFormatInputSource']]]
+  ['_7easioaudiodevice_0',['~ASIOAudioDevice',['../classtalcs_1_1_a_s_i_o_audio_device.html#a545ea46170fb73c67e01808167742c00',1,'talcs::ASIOAudioDevice']]],
+  ['_7easioaudiodriver_1',['~ASIOAudioDriver',['../classtalcs_1_1_a_s_i_o_audio_driver.html#af32f2846076e7a43ca15021954f2c757',1,'talcs::ASIOAudioDriver']]],
+  ['_7eaudioformatio_2',['~AudioFormatIO',['../classtalcs_1_1_audio_format_i_o.html#a62aa906d91e4fc339206800e6ae5b9c0',1,'talcs::AudioFormatIO']]],
+  ['_7eaudiosourceclipseries_3',['~AudioSourceClipSeries',['../classtalcs_1_1_audio_source_clip_series.html#a59b43fee6b74093da08f37f7362d740e',1,'talcs::AudioSourceClipSeries']]],
+  ['_7eaudiosourceplayback_4',['~AudioSourcePlayback',['../classtalcs_1_1_audio_source_playback.html#a713aabd53feccd87123ff18853d278c6',1,'talcs::AudioSourcePlayback']]],
+  ['_7eaudiosourcewriter_5',['~AudioSourceWriter',['../classtalcs_1_1_audio_source_writer.html#ac0764c014cd8c43b5339796ce70bc80d',1,'talcs::AudioSourceWriter']]],
+  ['_7efutureaudiosource_6',['~FutureAudioSource',['../classtalcs_1_1_future_audio_source.html#a96cf13f2b67129620b192f901c1ddb4d',1,'talcs::FutureAudioSource']]],
+  ['_7efutureaudiosourceclipseries_7',['~FutureAudioSourceClipSeries',['../classtalcs_1_1_future_audio_source_clip_series.html#ade57f40319a6ae647c619585a968ec57',1,'talcs::FutureAudioSourceClipSeries']]],
+  ['_7emixeraudiosource_8',['~MixerAudioSource',['../classtalcs_1_1_mixer_audio_source.html#abc65b39e8214dfb115ca6c5f03b74608',1,'talcs::MixerAudioSource']]],
+  ['_7epositionablemixeraudiosource_9',['~PositionableMixerAudioSource',['../classtalcs_1_1_positionable_mixer_audio_source.html#ac82f98074633d812b040834d9c7e0d8e',1,'talcs::PositionableMixerAudioSource']]],
+  ['_7er8brainmultichannelresampler_10',['~R8BrainMultichannelResampler',['../classtalcs_1_1_r8_brain_multichannel_resampler.html#a369a34ae7bd6875cc1021307f8468810',1,'talcs::R8BrainMultichannelResampler']]],
+  ['_7er8brainresampler_11',['~R8BrainResampler',['../classtalcs_1_1_r8_brain_resampler.html#a608bba10ae51b86223a120525938bb95',1,'talcs::R8BrainResampler']]],
+  ['_7eremoteaudiodevice_12',['~RemoteAudioDevice',['../classtalcs_1_1_remote_audio_device.html#ad9e558b62258886ef0085a1776c12953',1,'talcs::RemoteAudioDevice']]],
+  ['_7eremoteeditor_13',['~RemoteEditor',['../classtalcs_1_1_remote_editor.html#a0a0bb173702c57d6cf827be645fcfbeb',1,'talcs::RemoteEditor']]],
+  ['_7eremotesocket_14',['~RemoteSocket',['../classtalcs_1_1_remote_socket.html#a7cd06370a9910083959be86b74ed0304',1,'talcs::RemoteSocket']]],
+  ['_7esdlaudiodevice_15',['~SDLAudioDevice',['../classtalcs_1_1_s_d_l_audio_device.html#a7efe198db43786d17e4b0589553c3738',1,'talcs::SDLAudioDevice']]],
+  ['_7esdlaudiodriver_16',['~SDLAudioDriver',['../classtalcs_1_1_s_d_l_audio_driver.html#a09094777df1fac50e1d995ddecbbc211',1,'talcs::SDLAudioDriver']]],
+  ['_7etransportaudiosource_17',['~TransportAudioSource',['../classtalcs_1_1_transport_audio_source.html#a940ba8ded18174e55daf4f2ad19c40a8',1,'talcs::TransportAudioSource']]]
 ];

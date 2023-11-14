@@ -61,7 +61,7 @@ var NAVTREEINDEX =
 [
 "_a_s_i_o_audio_device_8h_source.html",
 "classtalcs_1_1_audio_format_i_o.html#af762875b323a1c4d9ababc9a0735ed7da1890a2e2d1688aa18117e10de19306e6",
-"classtalcs_1_1_remote_audio_device.html#a3bfff58e0004c2b1e1cd88f80568618d"
+"classtalcs_1_1_r8_brain_resampler.html#a874ea3d5cd0fd10576a6139d0000cf07"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

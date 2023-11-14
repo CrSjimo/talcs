@@ -33,6 +33,7 @@ var annotated_dup =
       [ "NameProvider", "classtalcs_1_1_name_provider.html", "classtalcs_1_1_name_provider" ],
       [ "PositionableAudioSource", "classtalcs_1_1_positionable_audio_source.html", "classtalcs_1_1_positionable_audio_source" ],
       [ "PositionableMixerAudioSource", "classtalcs_1_1_positionable_mixer_audio_source.html", "classtalcs_1_1_positionable_mixer_audio_source" ],
+      [ "R8BrainMultichannelResampler", "classtalcs_1_1_r8_brain_multichannel_resampler.html", "classtalcs_1_1_r8_brain_multichannel_resampler" ],
       [ "R8BrainResampler", "classtalcs_1_1_r8_brain_resampler.html", "classtalcs_1_1_r8_brain_resampler" ],
       [ "RemoteAudioDevice", "classtalcs_1_1_remote_audio_device.html", "classtalcs_1_1_remote_audio_device" ],
       [ "RemoteEditor", "classtalcs_1_1_remote_editor.html", "classtalcs_1_1_remote_editor" ],

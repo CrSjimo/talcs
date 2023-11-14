@@ -108,7 +108,7 @@ $(document).ready(function(){initNavTree('md__c_1_2_users_2_crs__1_2diffscope_2l
   <div class="headertitle"><div class="title">Tutorial: Access audio files with TALCS</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md1"></a> TALCS uses <a href="https://libsndfile.github.io/libsndfile/">libsndfile</a> to read and write audio files in various codecs, and uses <a href="https://libsndfile.github.io/libsamplerate/">libsamplerate</a> to convert between different sample rates.</p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md1"></a> TALCS uses <a href="https://libsndfile.github.io/libsndfile/">libsndfile</a> to read and write audio files in various codecs, and uses <a href="https://github.com/avaneev/r8brain-free-src">r8brain</a> to convert between different sample rates.</p>
 <p><a class="el" href="classtalcs_1_1_audio_format_i_o.html">AudioFormatIO</a> can be used to read audio from and write audio to a <a href="https://doc.qt.io/qt-5/qiodevice.html">QIODevice</a> object. Here is an example of how to read audio from a file:</p>
 <div class="fragment"><div class="line">QFile audioFile1(<span class="stringliteral">&quot;path/to/audio/file.wav&quot;</span>);</div>
 <div class="line"><span class="keyword">auto</span> audioFormatIO1 = <span class="keyword">new</span> <a class="code hl_class" href="classtalcs_1_1_audio_format_i_o.html">talcs::AudioFormatIO</a>(&amp;audioFile1);</div>

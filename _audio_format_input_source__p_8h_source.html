@@ -114,7 +114,7 @@ $(document).ready(function(){initNavTree('_audio_format_input_source__p_8h_sourc
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;TalcsCore/private/PositionableAudioSource_p.h&gt;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;TalcsFormat/AudioFormatInputSource.h&gt;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;samplerate.h&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;R8BrainMultichannelResampler.h&quot;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;QMutex&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;QVector&gt;</span></div>
@@ -124,33 +124,35 @@ $(document).ready(function(){initNavTree('_audio_format_input_source__p_8h_sourc
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keyword">class </span>AudioFormatInputSourcePrivate : <span class="keyword">public</span> PositionableAudioSourcePrivate {</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        Q_DECLARE_PUBLIC(AudioFormatInputSource);</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        AudioFormatIO *io = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        AudioFormatIO *io = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        <span class="keywordtype">bool</span> takeOwnership;</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        <span class="keywordtype">double</span> ratio = 0;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        SRC_STATE *srcState = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        qint64 inPosition = 0;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        QVector&lt;float&gt; inData;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        QVector&lt;float&gt; outData;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        <span class="keywordtype">bool</span> doStereoize = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keyword">class </span>AudioFormatInputResampler : <span class="keyword">public</span> R8BrainMultichannelResampler {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>            AudioFormatInputResampler(<span class="keywordtype">double</span> <a class="code hl_function" href="classtalcs_1_1_r8_brain_multichannel_resampler.html#aa2bac84017585755effa29dd4873a72c">ratio</a>, qint64 <a class="code hl_function" href="classtalcs_1_1_r8_brain_multichannel_resampler.html#a874ea3d5cd0fd10576a6139d0000cf07">bufferSize</a>, <span class="keywordtype">int</span> <a class="code hl_function" href="classtalcs_1_1_r8_brain_multichannel_resampler.html#ad805cd75615b6a1f2af8a9c4041e5e2b">channelCount</a>, AudioFormatInputSourcePrivate *d);</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>            <span class="keywordtype">void</span> read(<span class="keyword">const</span> <a class="code hl_struct" href="structtalcs_1_1_audio_source_read_data.html">talcs::AudioSourceReadData</a> &amp;readData) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>            AudioFormatInputSourcePrivate *d;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>            QVector&lt;float&gt; tmpBuf;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        };</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        QMutex mutex;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        AudioFormatInputResampler *resampler = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="keywordtype">void</span> resizeInDataBuffers(qint64 bufferSize);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keywordtype">void</span> resizeOutDataBuffers(qint64 bufferSize);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keywordtype">long</span> fetchInData(<span class="keywordtype">float</span> **data);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <a class="code hl_enumeration" href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2d">AudioFormatInputSource::ResampleMode</a> resampleMode = <a class="code hl_enumvalue" href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2dafee5df2251ab6e3ea093544b9691b6f4">AudioFormatInputSource::SincBestQuality</a>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        qint64 inPosition = 0;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keywordtype">bool</span> doStereoize = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        QMutex mutex;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    };</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>}</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#endif </span><span class="comment">// TALCS_AUDIOFORMATINPUTSOURCE_P_H</span></div>
-<div class="ttc" id="aclasstalcs_1_1_audio_format_input_source_html_af10f920d2468ab08b8f1b25194f56f2d"><div class="ttname"><a href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2d">talcs::AudioFormatInputSource::ResampleMode</a></div><div class="ttdeci">ResampleMode</div><div class="ttdef"><b>Definition</b> AudioFormatInputSource.h:15</div></div>
-<div class="ttc" id="aclasstalcs_1_1_audio_format_input_source_html_af10f920d2468ab08b8f1b25194f56f2dafee5df2251ab6e3ea093544b9691b6f4"><div class="ttname"><a href="classtalcs_1_1_audio_format_input_source.html#af10f920d2468ab08b8f1b25194f56f2dafee5df2251ab6e3ea093544b9691b6f4">talcs::AudioFormatInputSource::SincBestQuality</a></div><div class="ttdeci">@ SincBestQuality</div><div class="ttdef"><b>Definition</b> AudioFormatInputSource.h:16</div></div>
+<div class="ttc" id="aclasstalcs_1_1_r8_brain_multichannel_resampler_html_a874ea3d5cd0fd10576a6139d0000cf07"><div class="ttname"><a href="classtalcs_1_1_r8_brain_multichannel_resampler.html#a874ea3d5cd0fd10576a6139d0000cf07">talcs::R8BrainMultichannelResampler::bufferSize</a></div><div class="ttdeci">qint64 bufferSize() const</div><div class="ttdef"><b>Definition</b> R8BrainMultichannelResampler.cpp:87</div></div>
+<div class="ttc" id="aclasstalcs_1_1_r8_brain_multichannel_resampler_html_aa2bac84017585755effa29dd4873a72c"><div class="ttname"><a href="classtalcs_1_1_r8_brain_multichannel_resampler.html#aa2bac84017585755effa29dd4873a72c">talcs::R8BrainMultichannelResampler::ratio</a></div><div class="ttdeci">double ratio() const</div><div class="ttdef"><b>Definition</b> R8BrainMultichannelResampler.cpp:80</div></div>
+<div class="ttc" id="aclasstalcs_1_1_r8_brain_multichannel_resampler_html_ad805cd75615b6a1f2af8a9c4041e5e2b"><div class="ttname"><a href="classtalcs_1_1_r8_brain_multichannel_resampler.html#ad805cd75615b6a1f2af8a9c4041e5e2b">talcs::R8BrainMultichannelResampler::channelCount</a></div><div class="ttdeci">int channelCount() const</div><div class="ttdef"><b>Definition</b> R8BrainMultichannelResampler.cpp:94</div></div>
+<div class="ttc" id="astructtalcs_1_1_audio_source_read_data_html"><div class="ttname"><a href="structtalcs_1_1_audio_source_read_data.html">talcs::AudioSourceReadData</a></div><div class="ttdoc">The object that contains the target for AudioSource to fill data in.</div><div class="ttdef"><b>Definition</b> AudioSource.h:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
