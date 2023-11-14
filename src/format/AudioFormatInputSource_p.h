@@ -16,6 +16,7 @@ namespace talcs {
         Q_DECLARE_PUBLIC(AudioFormatInputSource);
     public:
         AudioFormatIO *io = nullptr;
+        bool takeOwnership;
         double ratio = 0;
 
         class AudioFormatInputResampler : public R8BrainMultichannelResampler {

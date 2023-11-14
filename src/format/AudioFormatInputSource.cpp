@@ -26,16 +26,18 @@ namespace talcs {
 
     /**
      * Constructor.
-     *
-     * Note that unlike other objects, one AudioFormatIO object can be set to multiple AudioFormatInputSource object,
-     * and the ownership is not taken.
      */
-    AudioFormatInputSource::AudioFormatInputSource(AudioFormatIO *audioFormatIo)
+    AudioFormatInputSource::AudioFormatInputSource(AudioFormatIO *audioFormatIo, bool takeOwnership)
             : AudioFormatInputSource(*new AudioFormatInputSourcePrivate) {
-        setAudioFormatIo(audioFormatIo);
+        setAudioFormatIo(audioFormatIo, takeOwnership);
     }
 
-    AudioFormatInputSource::~AudioFormatInputSource() = default;
+    AudioFormatInputSource::~AudioFormatInputSource() {
+        Q_D(AudioFormatInputSource);
+        if (d->takeOwnership) {
+            delete d->io;
+        }
+    }
 
     AudioFormatInputSource::AudioFormatInputSource(AudioFormatInputSourcePrivate &d) : PositionableAudioSource(d) {
     }
@@ -122,7 +124,7 @@ namespace talcs {
      *
      * Note that this function should not be called when the source is open.
      */
-    void AudioFormatInputSource::setAudioFormatIo(AudioFormatIO *audioFormatIo) {
+    void AudioFormatInputSource::setAudioFormatIo(AudioFormatIO *audioFormatIo, bool takeOwnership) {
         Q_ASSERT(!isOpen());
         if (isOpen()) {
             qWarning() << "Cannot set audio format io when source is opened.";
@@ -131,6 +133,7 @@ namespace talcs {
         Q_D(AudioFormatInputSource);
         QMutexLocker locker(&d->mutex);
         d->io = audioFormatIo;
+        d->takeOwnership = takeOwnership;
         if (d->io && d->io->openMode())
             d->io->seek(d->inPosition);
         if (d->resampler)
