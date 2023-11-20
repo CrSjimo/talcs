@@ -79,4 +79,17 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         PositionableAudioSource::setNextReadPosition(pos);
     }
+
+    bool MemoryAudioSource::isDuplicatable() const {
+        Q_D(const MemoryAudioSource);
+        return d->buffer->isDuplicatable();
+    }
+
+    DuplicatableObject *MemoryAudioSource::duplicate() const {
+        Q_D(const MemoryAudioSource);
+        auto newBuf = d->buffer->duplicate();
+        if (newBuf)
+            return new MemoryAudioSource(static_cast<IAudioSampleProvider *>(newBuf), d->takeOwnership);
+        return nullptr;
+    }
 }

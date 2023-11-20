@@ -6,9 +6,7 @@
 namespace talcs {
 
     class AudioDataWrapperPrivate {
-        Q_DECLARE_PUBLIC(AudioDataWrapper)
     public:
-        AudioDataWrapper *q_ptr;
         float *const *data;
         int channelCount;
         qint64 sampleCount;

@@ -5,6 +5,7 @@
 
 #include <TalcsCore/IAudioSampleContainer.h>
 #include <TalcsCore/AudioStreamBase.h>
+#include <TalcsCore/DuplicatableObject.h>
 
 namespace talcs {
 
@@ -19,7 +20,7 @@ namespace talcs {
 
     class AudioSourcePrivate;
 
-    class TALCSCORE_EXPORT AudioSource : public AudioStreamBase {
+    class TALCSCORE_EXPORT AudioSource : public AudioStreamBase, public DuplicatableObject {
         Q_DECLARE_PRIVATE(AudioSource)
     public:
         AudioSource();

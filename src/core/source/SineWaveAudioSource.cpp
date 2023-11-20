@@ -96,5 +96,14 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         PositionableAudioSource::setNextReadPosition(pos);
     }
-    
+
+    bool SineWaveAudioSource::isDuplicatable() const {
+        return true;
+    }
+
+    DuplicatableObject *SineWaveAudioSource::duplicate() const {
+        Q_D(const SineWaveAudioSource);
+        return new SineWaveAudioSource(d->freq);
+    }
+
 }

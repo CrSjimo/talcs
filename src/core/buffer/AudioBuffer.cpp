@@ -13,8 +13,7 @@ namespace talcs {
     /**
      * Default constructor. Creates an empty buffer with zero channel and zero sample initially.
      */
-    AudioBuffer::AudioBuffer() {
-    }
+    AudioBuffer::AudioBuffer() = default;
 
     /**
      * Creates an empty buffer with specified number of channels and samples.
@@ -154,5 +153,13 @@ namespace talcs {
     const float *AudioBuffer::readPointerTo(int channel, qint64 startPos) const {
         return m_buffer[channel].constData() + startPos;
     }
-    
+
+    bool AudioBuffer::isDuplicatable() const {
+        return true;
+    }
+
+    DuplicatableObject *AudioBuffer::duplicate() const {
+        return new AudioBuffer(*this);
+    }
+
 }

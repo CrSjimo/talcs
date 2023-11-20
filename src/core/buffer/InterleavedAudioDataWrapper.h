@@ -10,7 +10,6 @@ namespace talcs {
     class InterleavedAudioDataWrapperPrivate;
 
     class TALCSCORE_EXPORT InterleavedAudioDataWrapper : public IAudioSampleContainer {
-        Q_DECLARE_PRIVATE(InterleavedAudioDataWrapper)
     public:
         InterleavedAudioDataWrapper(float *data, int channelCount, qint64 sampleCount);
         ~InterleavedAudioDataWrapper() override;
@@ -28,9 +27,17 @@ namespace talcs {
         float *data() const;
         void reset(float *data, int channelCount, qint64 sampleCount);
 
-    protected:
-        QScopedPointer<InterleavedAudioDataWrapperPrivate> d_ptr;
-        InterleavedAudioDataWrapper(InterleavedAudioDataWrapperPrivate &d);
+        InterleavedAudioDataWrapper(const InterleavedAudioDataWrapper &other);
+        InterleavedAudioDataWrapper(InterleavedAudioDataWrapper &&other);
+        InterleavedAudioDataWrapper &operator=(const InterleavedAudioDataWrapper &other);
+        InterleavedAudioDataWrapper &operator=(InterleavedAudioDataWrapper &&other);
+
+        bool isDuplicatable() const override;
+
+        DuplicatableObject *duplicate() const override;
+
+    private:
+        QScopedPointer<InterleavedAudioDataWrapperPrivate> d;
     };
 
 }

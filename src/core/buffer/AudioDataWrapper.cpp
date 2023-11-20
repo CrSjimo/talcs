@@ -20,8 +20,7 @@ namespace talcs {
      * second dimension
      */
     AudioDataWrapper::AudioDataWrapper(float *const *data, int channelCount, qint64 sampleCount, qint64 startPos)
-        : AudioDataWrapper(*new AudioDataWrapperPrivate) {
-        Q_D(AudioDataWrapper);
+        : d(new AudioDataWrapperPrivate) {
         d->data = data;
         d->channelCount = channelCount;
         d->sampleCount = sampleCount;
@@ -31,22 +30,18 @@ namespace talcs {
     AudioDataWrapper::~AudioDataWrapper() = default;
 
     float &AudioDataWrapper::sampleAt(int channel, qint64 pos) {
-        Q_D(AudioDataWrapper);
         return d->data[channel][d->startPos + pos];
     }
 
     float AudioDataWrapper::constSampleAt(int channel, qint64 pos) const {
-        Q_D(const AudioDataWrapper);
         return d->data[channel][d->startPos + pos];
     }
 
     int AudioDataWrapper::channelCount() const {
-        Q_D(const AudioDataWrapper);
         return d->channelCount;
     }
 
     qint64 AudioDataWrapper::sampleCount() const {
-        Q_D(const AudioDataWrapper);
         return d->sampleCount;
     }
 
@@ -54,7 +49,6 @@ namespace talcs {
      * Gets the data pointer that a specified channel points to.
      */
     float *AudioDataWrapper::data(int channel) const {
-        Q_D(const AudioDataWrapper);
         return d->data[channel] + d->startPos;
     }
 
@@ -64,19 +58,13 @@ namespace talcs {
      * @see AudioDataWrapper()
      */
     void AudioDataWrapper::reset(float *const *data, int channelCount, qint64 sampleCount, qint64 startPos) {
-        Q_D(AudioDataWrapper);
         d->data = data;
         d->channelCount = channelCount;
         d->sampleCount = sampleCount;
         d->startPos = startPos;
     }
 
-    AudioDataWrapper::AudioDataWrapper(AudioDataWrapperPrivate &d) : d_ptr(&d) {
-        d.q_ptr = this;
-    }
-
     float *AudioDataWrapper::writePointerTo(int channel, qint64 startPos) {
-        Q_D(AudioDataWrapper);
         return d->data[channel] + startPos;
     }
 
@@ -89,8 +77,32 @@ namespace talcs {
     }
 
     const float *AudioDataWrapper::readPointerTo(int channel, qint64 startPos) const {
-        Q_D(const AudioDataWrapper);
         return d->data[channel] + startPos;
     }
-    
+
+    AudioDataWrapper::AudioDataWrapper(const AudioDataWrapper &other) : d(new AudioDataWrapperPrivate(*other.d.data())) {
+
+    }
+
+    AudioDataWrapper::AudioDataWrapper(AudioDataWrapper &&other) : d(other.d.take()) {
+    }
+
+    AudioDataWrapper &AudioDataWrapper::operator=(const AudioDataWrapper &other) {
+        d.reset(new AudioDataWrapperPrivate(*other.d.data()));
+        return *this;
+    }
+
+    AudioDataWrapper &AudioDataWrapper::operator=(AudioDataWrapper &&other) {
+        d.reset(other.d.take());
+        return *this;
+    }
+
+    bool AudioDataWrapper::isDuplicatable() const {
+        return true;
+    }
+
+    DuplicatableObject *AudioDataWrapper::duplicate() const {
+        return new AudioDataWrapper(*this);
+    }
+
 }

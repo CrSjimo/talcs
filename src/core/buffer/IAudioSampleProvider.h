@@ -4,10 +4,11 @@
 #include <QPair>
 
 #include <TalcsCore/TalcsCoreGlobal.h>
+#include <TalcsCore/DuplicatableObject.h>
 
 namespace talcs {
 
-    class TALCSCORE_EXPORT IAudioSampleProvider {
+    class TALCSCORE_EXPORT IAudioSampleProvider : public DuplicatableObject {
     public:
         virtual ~IAudioSampleProvider() = default;
 

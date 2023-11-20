@@ -25,6 +25,9 @@ namespace talcs {
         std::function<double(qint64)> frequency() const;
 
         void setNextReadPosition(qint64 pos) override;
+
+        bool isDuplicatable() const override;
+        DuplicatableObject *duplicate() const override;
     };
     
 }
