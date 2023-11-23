@@ -177,4 +177,18 @@ namespace talcs {
         return d->doStereoize;
     }
 
+    bool AudioFormatInputSource::isDuplicatable() const {
+        Q_D(const AudioFormatInputSource);
+        return !d->io || d->io->isDuplicatable();
+    }
+
+    DuplicatableObject *AudioFormatInputSource::duplicate() const {
+        Q_D(const AudioFormatInputSource);
+        if (!d->io)
+            return new AudioFormatInputSource;
+        if (d->io->isDuplicatable())
+            return new AudioFormatInputSource(static_cast<AudioFormatIO *>(d->io->duplicate()), d->takeOwnership);
+        return nullptr;
+    }
+
 }

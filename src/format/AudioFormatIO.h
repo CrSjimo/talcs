@@ -4,6 +4,7 @@
 #include <QIODevice>
 
 #include <TalcsCore/ErrorStringProvider.h>
+#include <TalcsCore/DuplicatableObject.h>
 #include <TalcsFormat/TalcsFormatGlobal.h>
 
 class SndfileHandle;
@@ -13,7 +14,7 @@ namespace talcs {
 
     class AudioFormatIOPrivate;
 
-    class TALCSFORMAT_EXPORT AudioFormatIO : public ErrorStringProvider {
+    class TALCSFORMAT_EXPORT AudioFormatIO : public ErrorStringProvider, public DuplicatableObject {
         Q_DECLARE_PRIVATE(AudioFormatIO)
     public:
         explicit AudioFormatIO(QIODevice *stream = nullptr);
@@ -145,6 +146,9 @@ namespace talcs {
 
         void setCompressionLevel(double level);
         double compressionLevel() const;
+
+        bool isDuplicatable() const override;
+        DuplicatableObject *duplicate() const override;
 
         struct SubtypeInfo {
             Subtype subtype;

@@ -5,6 +5,7 @@
 
 #include <QDebug>
 #include <QIODevice>
+#include <QFile>
 
 /**
  * If there is no SndFile handle, this will output a warning message and return the given value.
@@ -129,7 +130,7 @@ namespace talcs {
         if (openMode.testFlag(QIODevice::ReadOnly)) {
             sfOpenMode |= SFM_READ;
         }
-        if (openMode.testFlag(QIODevice::WriteOnly)) {
+        if (openMode.testFlag(QIODevice::WriteOnly) || openMode.testFlag(QIODevice::Append) || openMode.testFlag(QIODevice::Truncate)) {
             sfOpenMode |= SFM_WRITE;
         }
         if (sfOpenMode == 0) {
@@ -605,6 +606,22 @@ namespace talcs {
         Q_D(const AudioFormatIO);
         TEST_IS_OPEN(0.0)
         return d->compressionLevel;
+    }
+
+    bool AudioFormatIO::isDuplicatable() const {
+        Q_D(const AudioFormatIO);
+        return !d->stream || (qobject_cast<QFile *>(d->stream) && (d->openMode == QIODevice::NotOpen || d->openMode == QIODevice::ReadOnly));
+    }
+
+    DuplicatableObject *AudioFormatIO::duplicate() const {
+        Q_D(const AudioFormatIO);
+        if (!d->stream)
+            return new AudioFormatIO;
+        auto f = qobject_cast<QFile *>(d->stream);
+        if (!f)
+            return nullptr;
+        auto dupFile = new QFile(f->fileName());
+        return new AudioFormatIO(dupFile);
     }
 
     /**
