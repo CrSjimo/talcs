@@ -18,25 +18,33 @@ namespace talcs {
         }
     }
 
+    MidiInputDevice::~MidiInputDevice() = default;
+
     static void rtmidiCallback(double timeStamp, std::vector<unsigned char> *message, void *userData) {
         auto d = reinterpret_cast<MidiInputDevicePrivate *>(userData);
         MidiMessage msg(message->data(), message->size(), timeStamp);
-        d->callback->workCallback(msg);
+        std::for_each(d->listeners.begin(), d->listeners.end(), [&](MidiInputDeviceCallback *cb) {
+            cb->workCallback(msg);
+        });
     }
 
     static void rtmidiErrorCallback(RtMidiError::Type type, const std::string &errorText, void *userData) {
         Q_UNUSED(type);
         auto d = reinterpret_cast<MidiInputDevicePrivate *>(userData);
-        d->callback->errorCallback(errorText.c_str());
+        std::for_each(d->listeners.begin(), d->listeners.end(), [&](MidiInputDeviceCallback *cb) {
+            cb->errorCallback(errorText.c_str());
+        });
     }
 
-    bool MidiInputDevice::open(MidiInputDeviceCallback *callback) {
+    bool MidiInputDevice::open() {
         if (!d->midi)
             return false;
         try {
             d->midi->openPort(d->portNumber);
-            d->callback = callback;
-            d->callback->deviceWillStartCallback(this);
+            d->midi->ignoreTypes(false, false, false);
+            std::for_each(d->listeners.begin(), d->listeners.end(), [&](MidiInputDeviceCallback *cb) {
+                cb->deviceWillStartCallback(this);
+            });
             d->midi->setCallback(&rtmidiCallback, d.data());
             d->midi->setErrorCallback(&rtmidiErrorCallback, d.data());
         } catch (RtMidiError &e) {
@@ -54,11 +62,18 @@ namespace talcs {
     void MidiInputDevice::close() {
         if (d->midi)
             d->midi->closePort();
-        if (d->callback) {
-            d->callback->deviceStoppedCallback();
-            d->callback = nullptr;
-        }
+        std::for_each(d->listeners.begin(), d->listeners.end(), [&](MidiInputDeviceCallback *cb) {
+            cb->deviceStoppedCallback();
+        });
         setErrorString({});
+    }
+
+    void MidiInputDevice::addListener(MidiInputDeviceCallback *callback) {
+        d->listeners.append(callback);
+    }
+
+    void MidiInputDevice::removeListener(MidiInputDeviceCallback *callback) {
+        d->listeners.removeOne(callback);
     }
 
     QStringList MidiInputDevice::devices() {

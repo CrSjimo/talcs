@@ -13,14 +13,18 @@ namespace talcs {
 
     class MidiInputDevicePrivate;
 
-    class MidiInputDevice : public QObject, public NameProvider, public ErrorStringProvider {
+    class TALCSMIDI_EXPORT MidiInputDevice : public QObject, public NameProvider, public ErrorStringProvider {
         Q_OBJECT
     public:
         explicit MidiInputDevice(int deviceIndex, QObject *parent = nullptr);
+        ~MidiInputDevice();
 
-        bool open(MidiInputDeviceCallback *callback);
+        bool open();
         bool isOpen() const;
         void close();
+
+        void addListener(MidiInputDeviceCallback *callback);
+        void removeListener(MidiInputDeviceCallback *callback);
 
         static QStringList devices();
 

@@ -10,7 +10,7 @@ namespace talcs {
     public:
         int portNumber;
         QScopedPointer<RtMidiIn> midi;
-        MidiInputDeviceCallback *callback = nullptr;
+        QList<MidiInputDeviceCallback *> listeners;
     };
 }
 
