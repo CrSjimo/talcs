@@ -15,3 +15,5 @@ add_subdirectory(r8brain)
 add_subdirectory(RemoteSocket)
 
 add_subdirectory(RemoteAudioDevice)
+
+add_subdirectory(SimpleAudioApplication)
