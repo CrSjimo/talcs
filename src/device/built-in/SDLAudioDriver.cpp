@@ -141,6 +141,7 @@ namespace talcs {
      */
 
     void SDLEventPoller::start() {
+        stopRequested = false;
         while (!stopRequested) {
             SDL_Event e;
             while (SDL_PollEvent(&e) > 0) {
