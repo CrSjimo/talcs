@@ -16,6 +16,7 @@ namespace talcs {
      */
 
     R8BrainResampler::R8BrainResampler(double ratio, qint64 bufferSize) : d(new R8BrainResamplerPrivate) {
+        Q_ASSERT(ratio > 0.0);
         d->ratio = ratio;
         d->bufferSize = bufferSize;
         if (ratio == 1.0) {

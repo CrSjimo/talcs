@@ -677,7 +677,7 @@ namespace talcs {
                 sf_command(nullptr, SFC_GET_FORMAT_SUBTYPE, &info, sizeof(info));
                 sfinfo.format = formatInfo.majorFormat | info.format;
                 if (sf_format_check(&sfinfo)) {
-                    formatInfo.subtypes.append({(Subtype) info.format, info.name});
+                    formatInfo.subtypes.append({(Subtype) info.format, info.name, info.extension});
                 }
             }
             formatInfo.byteOrders.append(DefaultOrder);

@@ -33,6 +33,7 @@ namespace talcs {
         Q_D(TransportAudioSource);
         if (d->takeOwnership) {
             delete d->src;
+            d->src = nullptr;
         }
         TransportAudioSource::close();
     }
@@ -81,7 +82,7 @@ namespace talcs {
         }
         d->position += readData.length;
         if (readData.length != 0)
-            d->_q_positionAboutToChange(d->position + readData.length);
+            d->_q_positionAboutToChange(d->position);
         return readData.length;
     }
 
@@ -99,7 +100,7 @@ namespace talcs {
         if (d->src && d->src->open(bufferSize, sampleRate)) {
             return AudioStreamBase::open(bufferSize, sampleRate);
         }
-        return AudioStreamBase::open(bufferSize, sampleRate);
+        return false;
     }
 
     /**

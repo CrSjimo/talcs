@@ -11,6 +11,8 @@
 namespace talcs {
     class SDLEventPoller : public QObject {
         Q_OBJECT
+    public:
+        explicit SDLEventPoller(QObject *parent = nullptr) : QObject(parent) {}
         QAtomicInteger<bool> stopRequested = false;
     public slots:
         void start();
@@ -24,9 +26,8 @@ namespace talcs {
         Q_DECLARE_PUBLIC(SDLAudioDriver)
     public:
         int driverIndex;
-        QMutex mutex;
-        SDLEventPoller eventPoller;
-        QThread eventPollerThread;
+        QScopedPointer<SDLEventPoller> eventPoller;
+        QThread *eventPollerThread;
         QMap<quint32, SDLAudioDevice *> openedDevices;
 
         void handleSDLEvent(const QByteArray &sdlEventData);

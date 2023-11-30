@@ -20,9 +20,11 @@ namespace talcs {
      */
     SDLAudioDriver::SDLAudioDriver(QObject * parent) : SDLAudioDriver(*new SDLAudioDriverPrivate, parent) {
         Q_D(SDLAudioDriver);
-        d->eventPoller.moveToThread(&d->eventPollerThread);
-        connect(&d->eventPollerThread, &QThread::started, &d->eventPoller, &SDLEventPoller::start);
-        connect(&d->eventPoller, &SDLEventPoller::event,
+        d->eventPoller.reset(new SDLEventPoller);
+        d->eventPollerThread = new QThread(this);
+        d->eventPoller->moveToThread(d->eventPollerThread);
+        connect(d->eventPollerThread, &QThread::started, d->eventPoller.data(), &SDLEventPoller::start);
+        connect(d->eventPoller.data(), &SDLEventPoller::event, this,
                 [=](const QByteArray &sdlEventData) { d->handleSDLEvent(sdlEventData); });
     }
 
@@ -42,7 +44,7 @@ namespace talcs {
     bool SDLAudioDriver::initialize() {
         Q_D(SDLAudioDriver);
         if (SDL_Init(SDL_INIT_AUDIO) == 0 && SDL_AudioInit(name().toLocal8Bit()) == 0) {
-            d->eventPollerThread.start();
+            d->eventPollerThread->start();
             return AudioDriver::initialize();
         } else {
             setErrorString(SDL_GetError());
@@ -51,9 +53,9 @@ namespace talcs {
     }
     void SDLAudioDriver::finalize() {
         Q_D(SDLAudioDriver);
-        d->eventPoller.quit();
-        d->eventPollerThread.quit();
-        d->eventPollerThread.wait();
+        d->eventPoller->quit();
+        d->eventPollerThread->quit();
+        d->eventPollerThread->wait();
         SDL_AudioQuit();
         SDL_Quit();
         AudioDriver::finalize();
@@ -84,13 +86,11 @@ namespace talcs {
 
     void SDLAudioDriver::addOpenedDevice(quint32 devId, SDLAudioDevice * dev) {
         Q_D(SDLAudioDriver);
-        QMutexLocker locker(&d->mutex);
         d->openedDevices.insert(devId, dev);
     }
 
     void SDLAudioDriver::removeOpenedDevice(quint32 devId) {
         Q_D(SDLAudioDriver);
-        QMutexLocker locker(&d->mutex);
         d->openedDevices.remove(devId);
     }
     QList<SDLAudioDriver *> SDLAudioDriver::getDrivers() {
@@ -120,7 +120,6 @@ namespace talcs {
         }
     }
     void SDLAudioDriverPrivate::handleDeviceRemoved(quint32 devId) {
-        QMutexLocker locker(&mutex);
         auto it = openedDevices.find(devId);
         if (it == openedDevices.end())
             return;
