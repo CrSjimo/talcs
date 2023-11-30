@@ -99,7 +99,8 @@ namespace talcs {
     bool SDLAudioDevice::start(AudioDeviceCallback * audioDeviceCallback) {
         Q_D(SDLAudioDevice);
         d->audioDeviceCallback = audioDeviceCallback;
-        audioDeviceCallback->deviceWillStartCallback(this);
+        if (!audioDeviceCallback->deviceWillStartCallback(this))
+            return false;
         SDL_PauseAudioDevice(d->devId, 0);
         return AudioDevice::start(audioDeviceCallback);
     }

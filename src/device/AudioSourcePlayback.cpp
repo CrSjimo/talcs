@@ -60,9 +60,9 @@ namespace talcs {
         d->takeOwnership = takeOwnership;
     }
 
-    void AudioSourcePlayback::deviceWillStartCallback(AudioDevice *device) {
+    bool AudioSourcePlayback::deviceWillStartCallback(AudioDevice *device) {
         Q_D(AudioSourcePlayback);
-        d->src->open(device->bufferSize(), device->sampleRate());
+        return d->src->open(device->bufferSize(), device->sampleRate());
     }
     void AudioSourcePlayback::deviceStoppedCallback() {
         Q_D(AudioSourcePlayback);

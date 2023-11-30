@@ -11,7 +11,7 @@ namespace talcs {
 
     class TALCSDEVICE_EXPORT AudioDeviceCallback {
     public:
-        virtual void deviceWillStartCallback(AudioDevice *device) = 0;
+        virtual bool deviceWillStartCallback(AudioDevice *device) = 0;
         virtual void deviceStoppedCallback() = 0;
         virtual void workCallback(const AudioSourceReadData &readData) = 0;
     };

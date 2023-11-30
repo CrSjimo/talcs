@@ -137,7 +137,8 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         m_audioDeviceCallback = audioDeviceCallback;
         audioBuffer.resize(activeChannelCount(), bufferSize());
-        m_audioDeviceCallback->deviceWillStartCallback(this);
+        if (!m_audioDeviceCallback->deviceWillStartCallback(this))
+            return false;
         d->iasio->start();
         return AudioDevice::start(audioDeviceCallback);
     }
