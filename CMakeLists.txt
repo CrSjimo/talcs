@@ -43,6 +43,8 @@ set(TALCS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 # Main Project
 # ----------------------------------
 find_package(qmsetup REQUIRED)
+qm_import(Filesystem)
+qm_init_directories()
 
 add_subdirectory(src)
 

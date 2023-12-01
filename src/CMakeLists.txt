@@ -1,5 +1,4 @@
-qm_import(Preprocess Filesystem)
-qm_init_directories()
+qm_import(Preprocess)
 
 set(TALCS_PROJECT_DESCRIPTION "TALCS: Audio Library of CrSjimo")
 set(TALCS_PROJECT_COPYRIGHT "Copyright 2022-2023 CrSjimo")
