@@ -1,9 +1,5 @@
 project(TalcsDevice VERSION ${TALCS_VERSION} LANGUAGES CXX)
 
-set(CMAKE_AUTOUIC on)
-set(CMAKE_AUTOMOC on)
-set(CMAKE_AUTORCC on)
-
 set(_defines)
 set(_include_private)
 
@@ -22,7 +18,7 @@ endif()
 
 find_package(SDL2 REQUIRED)
 
-talcs_add_library(${PROJECT_NAME}
+talcs_add_library(${PROJECT_NAME} AUTOGEN
     SOURCES ${_src}
     LINKS talcs::Core
     LINKS_PRIVATE SDL2::SDL2

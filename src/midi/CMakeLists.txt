@@ -1,14 +1,10 @@
 project(TalcsMidi VERSION ${TALCS_VERSION} LANGUAGES CXX)
 
-set(CMAKE_AUTOUIC on)
-set(CMAKE_AUTOMOC on)
-set(CMAKE_AUTORCC on)
-
 file(GLOB_RECURSE _src *.h *.cpp)
 
 find_package(rtmidi REQUIRED)
 
-talcs_add_library(${PROJECT_NAME}
+talcs_add_library(${PROJECT_NAME} AUTOGEN
     SOURCES ${_src}
     LINKS talcs::Core
     LINKS_PRIVATE RtMidi::rtmidi

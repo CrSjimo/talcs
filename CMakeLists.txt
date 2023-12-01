@@ -16,22 +16,6 @@ option(TALCS_ENABLE_ASIO "Enable ASIO feature" OFF)
 # ----------------------------------
 # CMake Settings
 # ----------------------------------
-if(NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-endif()
-
-if(NOT DEFINED CMAKE_LIBRARY_OUTPUT_DIRECTORY)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-endif()
-
-if(NOT DEFINED CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-endif()
-
-if(NOT DEFINED CMAKE_BUILD_SHARE_DIR)
-    set(CMAKE_BUILD_SHARE_DIR ${CMAKE_BINARY_DIR}/share)
-endif()
-
 if(MSVC)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /manifest:no")
     set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /manifest:no")
@@ -51,16 +35,14 @@ endif()
 # ----------------------------------
 # Project Variables
 # ----------------------------------
-set(TALCS_MODULES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 set(TALCS_VERSION ${PROJECT_VERSION})
 set(TALCS_INSTALL_NAME ${PROJECT_NAME})
 set(TALCS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-set(TALCS_TRANSLATIONS zh_CN zh_HK ja_JP)
 
 # ----------------------------------
 # Main Project
 # ----------------------------------
-find_package(qtmediate-cmake-modules REQUIRED)
+find_package(qmsetup REQUIRED)
 
 add_subdirectory(src)
 

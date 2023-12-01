@@ -62,6 +62,4 @@
 
 - [Doxygen](https://www.doxygen.nl/)
 
-- [SineStriker/qtmediate-cmake-modules](https://github.com/SineStriker/qtmediate-cmake-modules)
-
-  CMake Modules for QtMediate and other projects.
+- [qmsetup](https://github.com/stdware/qmsetup)
