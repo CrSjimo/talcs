@@ -138,7 +138,8 @@ if(TALCS_BUILD_DOCUMENTATIONS)
 
     set(_doc_targets TalcsCore TalcsDevice TalcsFormat TalcsRemote TalcsSynthesis)
 
-    qtmediate_setup_doxygen(talcs_RunDoxygen
+    qm_import(Doxygen)
+    qm_setup_doxygen(talcs_RunDoxygen
         NAME "TALCS"
         DESCRIPTION "TALCS: Audio Library of CrSjimo"
         MDFILE ../README.md
