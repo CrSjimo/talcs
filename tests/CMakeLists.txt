@@ -2,6 +2,8 @@ add_subdirectory(AudioDriverTutorial)
 
 add_subdirectory(AccessAudioFileTutorial)
 
+add_subdirectory(BufferingAudioSource)
+
 add_subdirectory(Decibels)
 
 add_subdirectory(FutureAudioSource)
