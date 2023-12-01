@@ -40,12 +40,16 @@ set(TALCS_INSTALL_NAME ${PROJECT_NAME})
 set(TALCS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # ----------------------------------
-# Main Project
+# Find basic dependencies
 # ----------------------------------
 find_package(qmsetup REQUIRED)
+
 qm_import(Filesystem)
 qm_init_directories()
 
+# ----------------------------------
+# Main Project
+# ----------------------------------
 add_subdirectory(src)
 
 if(TALCS_BUILD_TESTS)
