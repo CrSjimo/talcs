@@ -19,9 +19,9 @@ namespace talcs {
         d->readAheadSize = readAheadSize;
         d->threadPool = threadPool ? threadPool : BufferingAudioSource::threadPool();
 
-        d->buf.resize(channelCount, readAheadSize);
+        d->buf.resize(channelCount, readAheadSize * 2);
         d->headPosition = 0;
-        d->tailPosition = 1;
+        d->tailPosition = 0;
     }
 
     BufferingAudioSource::~BufferingAudioSource() {
@@ -36,38 +36,27 @@ namespace talcs {
             return d->src->read(readData);
         }
         int channelCount = std::min(readData.buffer->channelCount(), d->channelCount);
-        qint64 head = d->headPosition;
-        qint64 tail = d->tailPosition;
-        if (tail > head && tail - head > readData.length) {
-            for (int ch = 0; ch < channelCount; ch++) {
-                readData.buffer->setSampleRange(ch, readData.startPos, readData.length, d->buf, ch, head);
-            }
-        } else if (tail <= head && d->readAheadSize - head >= readData.length) {
-            for (int ch = 0; ch < channelCount; ch++) {
-                readData.buffer->setSampleRange(ch, readData.startPos, readData.length, d->buf, ch, head);
-            }
-
-        } else if (tail <= head && (head + readData.length) % d->readAheadSize <= tail) {
-            for (int ch = 0; ch < channelCount; ch++) {
-                readData.buffer->setSampleRange(ch, readData.startPos, d->readAheadSize - head, d->buf, ch, head);
-                readData.buffer->setSampleRange(ch, readData.startPos + d->readAheadSize - head, readData.length + head - d->readAheadSize, d->buf, ch, 0);
-            }
-        } else {
-            d->accelerateCurrentBufferingTaskAndWait();
-            Q_ASSERT(head == d->tailPosition);
-            if (d->readAheadSize - head >= readData.length) {
+        {
+            QMutexLocker readLocker(&d->bufLock);
+            qint64 head = d->headPosition;
+            qint64 tail = d->tailPosition;
+            if (tail - head >= readData.length) {
+                readFromBuffer:
                 for (int ch = 0; ch < channelCount; ch++) {
                     readData.buffer->setSampleRange(ch, readData.startPos, readData.length, d->buf, ch, head);
                 }
             } else {
-                for (int ch = 0; ch < channelCount; ch++) {
-                    readData.buffer->setSampleRange(ch, readData.startPos, d->readAheadSize - head, d->buf, ch, head);
-                    readData.buffer->setSampleRange(ch, readData.startPos + d->readAheadSize - head, readData.length + head - d->readAheadSize, d->buf, ch, 0);
-                }
+                readLocker.unlock();
+                d->accelerateCurrentBufferingTaskAndWait();
+                head = d->headPosition;
+                tail = d->tailPosition;
+                Q_ASSERT(tail - head >= readData.length);
+                goto readFromBuffer;
             }
+            d->headPosition += readData.length;
         }
-        d->headPosition = (head + readData.length) % d->readAheadSize;
-        d->commitBufferingTask(false);
+        if (!d->currentBufferingTask)
+            d->commitBufferingTask(false);
         d->position += readData.length;
         return readData.length;
     }
@@ -87,7 +76,7 @@ namespace talcs {
             d->buf.clear();
             d->src->setNextReadPosition(pos);
             d->headPosition = 0;
-            d->tailPosition = 1;
+            d->tailPosition = 0;
             d->commitBufferingTask(false);
         }
         PositionableAudioSource::setNextReadPosition(pos);
@@ -102,7 +91,7 @@ namespace talcs {
         if (d->readAheadSize > bufferSize) {
             d->buf.clear();
             d->headPosition = 0;
-            d->tailPosition = 1;
+            d->tailPosition = 0;
             d->commitBufferingTask(false);
         }
         return AudioStreamBase::open(bufferSize, sampleRate);
@@ -122,9 +111,9 @@ namespace talcs {
         if (isOpen() && size > bufferSize()) {
             d->terminateCurrentBufferingTask();
             d->buf.clear();
-            d->buf.resize(-1, size);
+            d->buf.resize(-1, size * 2);
             d->headPosition = 0;
-            d->tailPosition = 1;
+            d->tailPosition = 0;
             d->commitBufferingTask(false);
         }
         d->readAheadSize = size;
@@ -165,13 +154,17 @@ namespace talcs {
     void BufferingAudioSourceTask::run() {
         qint64 head = d->headPosition;
         qint64 tail = d->tailPosition;
-        if (tail > head) {
-            readByFrame(tail, d->readAheadSize - tail);
-            readByFrame(0, head);
-        } else {
-            readByFrame(tail, head - tail);
+        if (head > d->readAheadSize) {
+            QMutexLocker locker(&d->bufLock);
+            for (int ch = 0; ch < d->channelCount; ch++) {
+                d->buf.setSampleRange(ch, 0, tail - head, d->buf, ch, head);
+            }
+            d->tailPosition -= head;
+            d->headPosition = 0;
+            head = d->headPosition;
+            tail = d->tailPosition;
         }
-        d->tailPosition = head;
+        readByFrame(tail, d->readAheadSize - (tail - head));
         {
             QMutexLocker locker(&d->bufferingTaskMutex);
             d->currentBufferingTask = nullptr;
@@ -180,7 +173,7 @@ namespace talcs {
     }
 
     void BufferingAudioSourceTask::readByFrame(qint64 startPos, qint64 length) const {
-        if (length == 0)
+        if (length <= 0)
             return;
         if (d->src->length() - d->src->nextReadPosition() < length) {
             for (int ch = 0; ch < d->channelCount; ch++)
@@ -192,6 +185,7 @@ namespace talcs {
             if (d->isTerminateRequested)
                 return;
             d->src->read(AudioSourceReadData(&d->buf, startPos + offset, std::min(frameLength, length - offset)));
+            d->tailPosition += std::min(frameLength, length - offset);
         }
     }
 
@@ -210,8 +204,10 @@ namespace talcs {
         Q_Q(BufferingAudioSource);
         if (!currentBufferingTask)
             return;
-        if (threadPool->tryTake(currentBufferingTask))
+        if (threadPool->tryTake(currentBufferingTask)) {
+            currentBufferingTask = nullptr;
             return;
+        }
         isTerminateRequested = true;
         q->waitForBuffering();
         isTerminateRequested = false;
@@ -223,9 +219,11 @@ namespace talcs {
             commitBufferingTask(true);
         } else if (threadPool->tryTake(currentBufferingTask)) {
             delete currentBufferingTask;
+            currentBufferingTask = nullptr;
             commitBufferingTask(true);
         } else {
             q->waitForBuffering();
+            commitBufferingTask(true);
         }
     }
 

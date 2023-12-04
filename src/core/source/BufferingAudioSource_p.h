@@ -30,6 +30,7 @@ namespace talcs {
 
         QMutex mutex;
 
+        QMutex bufLock;
         AudioBuffer buf;
         QAtomicInteger<qint64> headPosition;
         QAtomicInteger<qint64> tailPosition;

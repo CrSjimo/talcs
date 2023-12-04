@@ -12,15 +12,17 @@
 #include <TalcsDevice/AudioSourcePlayback.h>
 #include <TalcsFormat/AudioFormatIO.h>
 #include <TalcsFormat/AudioFormatInputSource.h>
+#include <QMainWindow>
+#include <QPushButton>
 
 using namespace talcs;
 
 int main(int argc, char **argv) {
     QApplication a(argc, argv);
-    QFile f("D:\\CloudMusic\\07.恋染色.wav");
+    QFile f("C:\\CloudMusic\\07.恋染色.flac");
     AudioFormatIO io(&f);
     AudioFormatInputSource src(&io);
-    BufferingAudioSource bufSrc(&src, 2, 131072);
+    BufferingAudioSource bufSrc(&src, 2, 114514);
     auto mgr = AudioDriverManager::createBuiltInDriverManager();
     auto drv = mgr->driver("wasapi");
     drv->initialize();
@@ -32,10 +34,15 @@ int main(int argc, char **argv) {
     QTimer timer;
     timer.setInterval(1000);
     timer.callOnTimeout([&]{
-        qint64 _1 = src.nextReadPosition();
-        qint64 _2 = bufSrc.nextReadPosition();
-        qDebug() << _1 << _2;
+        qDebug() << bufSrc.source()->nextReadPosition() << bufSrc.nextReadPosition();
     });
     timer.start();
+    auto win = new QMainWindow;
+    auto resetButton = new QPushButton("Reset Position");
+    QObject::connect(resetButton, &QPushButton::clicked, [&] {
+        bufSrc.setNextReadPosition(0);
+    });
+    win->setCentralWidget(resetButton);
+    win->show();
     return a.exec();
 }
