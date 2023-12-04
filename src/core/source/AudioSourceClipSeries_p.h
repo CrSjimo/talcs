@@ -15,8 +15,12 @@ namespace talcs {
         }
 
         bool open(qint64 bufferSize, double sampleRate) {
-            return std::all_of(q->m_clips.begin(), q->m_clips.end(),
-                        [=](const ClipClass &clip) { return clip.content()->open(bufferSize, sampleRate); });
+            for (auto p = q->m_clips.begin(); p != q->m_clips.end(); p++) {
+                auto clip = p->interval();
+                if (!clip.content()->open(bufferSize, sampleRate))
+                    return false;
+            }
+            return true;
         }
 
         void close() {

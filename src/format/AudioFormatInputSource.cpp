@@ -1,6 +1,8 @@
 #include "AudioFormatInputSource.h"
 #include "AudioFormatInputSource_p.h"
 
+#include <cmath>
+
 #include <QDebug>
 
 #include <TalcsCore/InterleavedAudioDataWrapper.h>

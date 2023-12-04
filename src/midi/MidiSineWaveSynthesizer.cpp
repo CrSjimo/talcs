@@ -1,6 +1,8 @@
 #include "MidiSineWaveSynthesizer.h"
 #include "MidiSineWaveSynthesizer_p.h"
 
+#include <cmath>
+
 namespace talcs {
     static quint16 bundlePlayData(qint8 note, qint8 vel) {
         qint8 a[2] = {note, vel};

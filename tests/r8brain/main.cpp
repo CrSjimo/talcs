@@ -1,5 +1,6 @@
-#include <QCoreApplication>
+#include <cmath>
 
+#include <QCoreApplication>
 #include <QFile>
 #include <QDebug>
 #include <QTime>

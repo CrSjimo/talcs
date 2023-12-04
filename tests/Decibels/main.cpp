@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include <QApplication>
 #include <QDebug>
 #include <QFile>
