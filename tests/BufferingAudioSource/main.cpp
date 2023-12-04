@@ -14,6 +14,7 @@
 #include <TalcsFormat/AudioFormatInputSource.h>
 #include <QMainWindow>
 #include <QPushButton>
+#include <QVBoxLayout>
 
 using namespace talcs;
 
@@ -38,11 +39,20 @@ int main(int argc, char **argv) {
     });
     timer.start();
     auto win = new QMainWindow;
+    auto mainWidget = new QWidget;
+    auto mainLayout = new QVBoxLayout;
+    mainWidget->setLayout(mainLayout);
+    win->setCentralWidget(mainWidget);
     auto resetButton = new QPushButton("Reset Position");
     QObject::connect(resetButton, &QPushButton::clicked, [&] {
         bufSrc.setNextReadPosition(0);
     });
-    win->setCentralWidget(resetButton);
+    auto flushButton = new QPushButton("Flush");
+    QObject::connect(flushButton, &QPushButton::clicked, [&] {
+        bufSrc.flush();
+    });
+    mainLayout->addWidget(resetButton);
+    mainLayout->addWidget(flushButton);
     win->show();
     return a.exec();
 }

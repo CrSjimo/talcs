@@ -6,20 +6,22 @@
 namespace talcs {
 
     BufferingAudioSource::BufferingAudioSource(PositionableAudioSource *src, int channelCount, qint64 readAheadSize,
-                                               QThreadPool *threadPool) : BufferingAudioSource(src, false, channelCount, readAheadSize, threadPool) {
+                                               bool autoBuffering, QThreadPool *threadPool) : BufferingAudioSource(src, false, channelCount,
+                                                                                               readAheadSize, autoBuffering,
+                                                                                               threadPool) {
 
     }
 
     BufferingAudioSource::BufferingAudioSource(PositionableAudioSource *src, bool takeOwnership, int channelCount,
-                                               qint64 readAheadSize, QThreadPool *threadPool) : BufferingAudioSource(*new BufferingAudioSourcePrivate) {
+                                               qint64 readAheadSize, bool autoBuffering, QThreadPool *threadPool) : BufferingAudioSource(*new BufferingAudioSourcePrivate) {
         Q_D(BufferingAudioSource);
         d->src = src;
         d->takeOwnership = takeOwnership;
         d->channelCount = channelCount;
         d->readAheadSize = readAheadSize;
+        d->autoBuffering = autoBuffering;
         d->threadPool = threadPool ? threadPool : BufferingAudioSource::threadPool();
 
-        d->buf.resize(channelCount, readAheadSize * 2);
         d->headPosition = 0;
         d->tailPosition = 0;
     }
@@ -48,6 +50,7 @@ namespace talcs {
             } else {
                 readLocker.unlock();
                 d->accelerateCurrentBufferingTaskAndWait();
+                readLocker.relock();
                 head = d->headPosition;
                 tail = d->tailPosition;
                 Q_ASSERT(tail - head >= readData.length);
@@ -72,12 +75,10 @@ namespace talcs {
         if (pos == nextReadPosition())
             return;
         if (isOpen() && d->readAheadSize > bufferSize()) {
-            d->terminateCurrentBufferingTask();
-            d->buf.clear();
+            flush();
             d->src->setNextReadPosition(pos);
-            d->headPosition = 0;
-            d->tailPosition = 0;
-            d->commitBufferingTask(false);
+            if (d->autoBuffering)
+                d->commitBufferingTask(false);
         }
         PositionableAudioSource::setNextReadPosition(pos);
     }
@@ -85,14 +86,13 @@ namespace talcs {
     bool BufferingAudioSource::open(qint64 bufferSize, double sampleRate) {
         Q_D(BufferingAudioSource);
         QMutexLocker locker(&d->mutex);
-        d->terminateCurrentBufferingTask();
+        flush();
         if (!d->src->open(bufferSize, sampleRate))
             return false;
         if (d->readAheadSize > bufferSize) {
-            d->buf.clear();
-            d->headPosition = 0;
-            d->tailPosition = 0;
-            d->commitBufferingTask(false);
+            d->buf.resize(d->channelCount, d->readAheadSize * 2);
+            if (d->autoBuffering)
+                d->commitBufferingTask(false);
         }
         return AudioStreamBase::open(bufferSize, sampleRate);
     }
@@ -100,7 +100,7 @@ namespace talcs {
     void BufferingAudioSource::close() {
         Q_D(BufferingAudioSource);
         QMutexLocker locker(&d->mutex);
-        d->terminateCurrentBufferingTask();
+        flush();
     }
 
     void BufferingAudioSource::setReadAheadSize(qint64 size) {
@@ -109,12 +109,10 @@ namespace talcs {
         if (size == d->readAheadSize)
             return;
         if (isOpen() && size > bufferSize()) {
-            d->terminateCurrentBufferingTask();
-            d->buf.clear();
+            flush();
             d->buf.resize(-1, size * 2);
-            d->headPosition = 0;
-            d->tailPosition = 0;
-            d->commitBufferingTask(false);
+            if (d->autoBuffering)
+                d->commitBufferingTask(false);
         }
         d->readAheadSize = size;
     }
@@ -146,6 +144,23 @@ namespace talcs {
         Q_D(BufferingAudioSource);
         QMutexLocker locker(&d->bufferingTaskMutex);
         return d->bufferingFinished.wait(&d->bufferingTaskMutex, deadline);
+    }
+
+    void BufferingAudioSource::flush() {
+        Q_D(BufferingAudioSource);
+        QMutexLocker locker(&d->mutex);
+        d->terminateCurrentBufferingTask();
+        d->src->setNextReadPosition(d->position);
+        QMutexLocker bufLocker(&d->bufLock);
+        d->buf.clear();
+        d->headPosition = 0;
+        d->tailPosition = 0;
+    }
+
+    void BufferingAudioSource::startBuffering() {
+        Q_D(BufferingAudioSource);
+        if (!d->currentBufferingTask)
+            d->commitBufferingTask(false);
     }
 
     BufferingAudioSourceTask::BufferingAudioSourceTask(BufferingAudioSourcePrivate *d) : d(d) {

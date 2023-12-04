@@ -13,8 +13,10 @@ namespace talcs {
     class TALCSCORE_EXPORT BufferingAudioSource : public PositionableAudioSource {
         Q_DECLARE_PRIVATE(BufferingAudioSource)
     public:
-        explicit BufferingAudioSource(PositionableAudioSource *src, int channelCount, qint64 readAheadSize, QThreadPool *threadPool = nullptr);
-        explicit BufferingAudioSource(PositionableAudioSource *src, bool takeOwnership, int channelCount, qint64 readAheadSize, QThreadPool *threadPool = nullptr);
+        explicit BufferingAudioSource(PositionableAudioSource *src, int channelCount, qint64 readAheadSize,
+                                      bool autoBuffering = true, QThreadPool *threadPool = nullptr);
+        explicit BufferingAudioSource(PositionableAudioSource *src, bool takeOwnership, int channelCount,
+                                      qint64 readAheadSize, bool autoBuffering = true, QThreadPool *threadPool = nullptr);
 
         ~BufferingAudioSource() override;
 
@@ -31,6 +33,9 @@ namespace talcs {
         PositionableAudioSource *source() const;
 
         bool waitForBuffering(QDeadlineTimer deadline = QDeadlineTimer::Forever);
+
+        void flush();
+        void startBuffering();
 
         static QThreadPool *threadPool();
 

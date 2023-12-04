@@ -10,6 +10,7 @@ namespace talcs {
     class AudioSourcePlayback;
     class TransportAudioSource;
     class AudioFormatIO;
+    class BufferingAudioSource;
 }
 
 class QLabel;
@@ -52,6 +53,7 @@ private:
     talcs::AudioSourcePlayback *m_playback;
     talcs::TransportAudioSource *m_tpSrc;
     talcs::AudioFormatIO *m_formatIo;
+    talcs::BufferingAudioSource *m_bufSrc;
 };
 
 

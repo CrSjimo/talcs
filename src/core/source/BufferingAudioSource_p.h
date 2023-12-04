@@ -26,9 +26,10 @@ namespace talcs {
         bool takeOwnership;
         int channelCount;
         qint64 readAheadSize;
+        bool autoBuffering;
         QThreadPool *threadPool;
 
-        QMutex mutex;
+        QRecursiveMutex mutex;
 
         QMutex bufLock;
         AudioBuffer buf;

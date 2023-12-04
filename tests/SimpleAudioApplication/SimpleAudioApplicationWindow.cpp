@@ -7,6 +7,7 @@
 #include <TalcsCore/TransportAudioSource.h>
 #include <TalcsFormat/AudioFormatInputSource.h>
 #include <TalcsFormat/AudioFormatIO.h>
+#include <TalcsCore/BufferingAudioSource.h>
 
 #include <QBoxLayout>
 #include <QDebug>
@@ -139,7 +140,8 @@ void SimpleAudioApplicationWindow::initializeAudioDevice() {
 void SimpleAudioApplicationWindow::initializeAudioSource() {
     m_formatIo = new AudioFormatIO;
     auto fmtSrc = new AudioFormatInputSource(m_formatIo, true);
-    m_tpSrc = new TransportAudioSource(fmtSrc, true, this);
+    m_bufSrc = new BufferingAudioSource(fmtSrc, true, 2, 114514);
+    m_tpSrc = new TransportAudioSource(m_bufSrc, true, this);
     m_playback = new AudioSourcePlayback(m_tpSrc);
     m_audioFile = new QFile(m_tpSrc);
     m_formatIo->setStream(m_audioFile);
