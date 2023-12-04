@@ -141,8 +141,9 @@ namespace talcs {
 
     void SDLEventPoller::start() {
         stopRequested = false;
+        SDL_Event e;
+        while (SDL_PollEvent(&e) > 0);
         while (!stopRequested) {
-            SDL_Event e;
             while (SDL_PollEvent(&e) > 0) {
                 emit event(QByteArray(reinterpret_cast<char *>(&e), sizeof(SDL_Event)));
             }
