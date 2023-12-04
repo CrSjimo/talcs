@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "talcs",
+  "description": "TALCS: Audio Library of CrSjimo",
+  "version": "0.0.1.1",
+  "homepage": "https://talcs.sjimo.dev/",
+  "license": "LGPL-2.1",
+  "dependencies": [
+    "libsndfile",
+    "rpclib",
+    "rtmidi",
+    "sdl2",
+    "interval-tree"
+  ],
+  "vcpkg-configuration": {
+    "overlay-ports": ["../vcpkg/ports"],
+    "overlay-triplets": ["../vcpkg/triplets"]
+  }
+}
