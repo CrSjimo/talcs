@@ -79,6 +79,8 @@ namespace talcs {
             d->src->setNextReadPosition(pos);
             if (d->autoBuffering)
                 d->commitBufferingTask(false);
+        } else {
+            d->src->setNextReadPosition(pos);
         }
         PositionableAudioSource::setNextReadPosition(pos);
     }
