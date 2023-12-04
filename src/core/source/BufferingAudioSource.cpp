@@ -217,29 +217,25 @@ namespace talcs {
 
     void BufferingAudioSourcePrivate::terminateCurrentBufferingTask() {
         Q_Q(BufferingAudioSource);
-        if (!currentBufferingTask)
-            return;
         if (threadPool->tryTake(currentBufferingTask)) {
+            delete currentBufferingTask;
             currentBufferingTask = nullptr;
             return;
         }
-        isTerminateRequested = true;
-        q->waitForBuffering();
-        isTerminateRequested = false;
+        {
+            QMutexLocker locker(&bufferingTaskMutex);
+            if (!currentBufferingTask)
+                return;
+            isTerminateRequested = true;
+            bufferingFinished.wait(&bufferingTaskMutex);
+            isTerminateRequested = false;
+        }
     }
 
     void BufferingAudioSourcePrivate::accelerateCurrentBufferingTaskAndWait() {
         Q_Q(BufferingAudioSource);
-        if (!currentBufferingTask) {
-            commitBufferingTask(true);
-        } else if (threadPool->tryTake(currentBufferingTask)) {
-            delete currentBufferingTask;
-            currentBufferingTask = nullptr;
-            commitBufferingTask(true);
-        } else {
-            q->waitForBuffering();
-            commitBufferingTask(true);
-        }
+        terminateCurrentBufferingTask();
+        commitBufferingTask(true);
     }
 
 
