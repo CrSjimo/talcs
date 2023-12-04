@@ -1,3 +1,7 @@
+add_subdirectory(UnitTests)
+
+################################################################
+
 add_subdirectory(AudioDriverTutorial)
 
 add_subdirectory(AccessAudioFileTutorial)
