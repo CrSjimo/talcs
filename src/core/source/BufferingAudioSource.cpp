@@ -157,12 +157,6 @@ namespace talcs {
         d->tailPosition = 0;
     }
 
-    void BufferingAudioSource::startBuffering() {
-        Q_D(BufferingAudioSource);
-        if (!d->currentBufferingTask)
-            d->commitBufferingTask(false);
-    }
-
     BufferingAudioSourceTask::BufferingAudioSourceTask(BufferingAudioSourcePrivate *d) : d(d) {
     }
 

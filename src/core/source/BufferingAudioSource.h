@@ -35,7 +35,6 @@ namespace talcs {
         bool waitForBuffering(QDeadlineTimer deadline = QDeadlineTimer::Forever);
 
         void flush();
-        void startBuffering();
 
         static QThreadPool *threadPool();
 
