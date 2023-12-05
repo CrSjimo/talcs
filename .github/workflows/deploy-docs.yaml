@@ -2,7 +2,6 @@ name: Deploy documentations to GitHub Pages
 
 on:
   push:
-    branches: [main]
     tags: [docs]
   workflow_dispatch:
 
@@ -27,7 +26,7 @@ jobs:
       - name: Initialize Building Environment
         uses: ./.github/actions/init-build
         with:
-          os: windows-latest
+          os: ubuntu-latest
 
       - name: Install Doxygen
         uses: ssciwr/doxygen-install@v1.2.0
@@ -45,12 +44,12 @@ jobs:
       - name: Output CNAME
         shell: pwsh
         run: |
-          Write-Output "talcs.sjimo.dev" >> build/share/doc/talcs/html/CNAME
+          Write-Output "talcs.sjimo.dev" >> build/out-x86_64-Release/share/doc/talcs/html/CNAME
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: build/share/doc/talcs/html
+          path: build/out-x86_64-Release/share/doc/talcs/html
 
       - name: Deploy to GitHub Pages
         id: deployment
