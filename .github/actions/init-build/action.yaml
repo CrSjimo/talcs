@@ -1,0 +1,124 @@
+name: Initialize Building Environment
+description: Initialize Building Environment
+inputs:
+  os:
+    description: OS
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup devcmd
+      if: inputs.os == 'windows-latest'
+      uses: ilammy/msvc-dev-cmd@v1
+
+    - name: Install build tools (Windows)
+      if: inputs.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        if ((Get-Command "ninja.exe" -ErrorAction SilentlyContinue) -eq $null)
+        {
+           choco install ninja
+        }
+        where.exe ninja
+        ninja --version
+        Write-Output VCPKG_TRIPLET=x64-windows >> $env:GITHUB_ENV
+        Write-Output QT_ARCH=win64_msvc2019_64 >> $env:GITHUB_ENV
+
+    - name: Install build tools (Ubuntu)
+      if: inputs.os == 'ubuntu-latest'
+      shell: pwsh
+      run: |
+        sudo apt update
+        sudo apt-get -y install ninja-build
+        Write-Output VCPKG_TRIPLET=x64-linux >> $env:GITHUB_ENV
+        Write-Output QT_ARCH=gcc_64 >> $env:GITHUB_ENV
+
+    - name: Install build tools (MacOS)
+      if: inputs.os == 'macos-latest'
+      shell: pwsh
+      env:
+        HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
+        HOMEBREW_NO_INSTALL_CLEANUP: 1
+      run: |
+        brew update
+        brew install ninja
+        Write-Output VCPKG_TRIPLET=x64-osx >> $env:GITHUB_ENV
+        Write-Output QT_ARCH=clang_64 >> $env:GITHUB_ENV
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: "5.15.2"
+        archives: ${{ inputs.os == 'ubuntu-latest' && 'icu qtbase' || 'qtbase' }}
+        cache: true
+
+    - name: Clone QMSetup
+      shell: pwsh
+      run: |
+        git clone https://github.com/stdware/qmsetup.git --recursive
+        cd qmsetup
+        Write-Output QMSETUP_HASH=$(git rev-parse HEAD) >> $env:GITHUB_ENV
+
+    - name: Restore QMSetup from cache
+      id: cache_qmsetup
+      uses: actions/cache/restore@v3
+      with:
+        path: ${{ github.workspace }}/qmsetup/installed
+        key: ${{ runner.os }}-qmsetup-${{ env.QMSETUP_HASH }}
+
+    - name: Build and install QMSetup
+      if: steps.cache_qmsetup.outputs.cache-hit != 'true'
+      shell: pwsh
+      run: |
+        cd qmsetup
+        cmake -B build -G Ninja `
+          -DCMAKE_BUILD_TYPE=Release `
+          -DCMAKE_INSTALL_PREFIX=installed
+        cmake --build build --target install
+
+    - name: Save QMSetup to cache
+      if: steps.cache_qmsetup.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v3
+      with:
+        path: ${{ github.workspace }}/qmsetup/installed
+        key: ${{ runner.os }}-qmsetup-${{ env.QMSETUP_HASH }}
+
+
+    - name: Restore vcpkg from cache
+      id: cache_vcpkg
+      uses: actions/cache/restore@v3
+      with:
+        path: ${{ github.workspace }}/vcpkg
+        key: ${{ runner.os }}-vcpkg-${{ hashFiles('scripts/vcpkg-manifest/vcpkg.json') }}
+
+    - name: Install vcpkg dependencies
+      if: steps.cache_vcpkg.outputs.cache-hit != 'true'
+      shell: pwsh
+      env:
+        QT_DIR: ${{ env.QT_ROOT_DIR }}/5.15.2/${{ env.QT_ARCH }}/lib/cmake/Qt5
+        Qt5_DIR: ${{ env.QT_ROOT_DIR }}/5.15.2/${{ env.QT_ARCH }}/lib/cmake/Qt5
+        VCPKG_KEEP_ENV_VARS: QT_DIR;Qt5_DIR
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git
+        cd vcpkg
+        ${{ inputs.os == 'windows-latest' && './bootstrap-vcpkg.bat' || 'sh ./bootstrap-vcpkg.sh' }}
+        ./vcpkg install `
+          --x-manifest-root=${{ github.workspace }}/scripts/vcpkg-manifest `
+          --x-install-root=./installed `
+          --triplet=${{ env.VCPKG_TRIPLET }}
+
+    - name: Save vcpkg to cache
+      if: steps.cache_vcpkg.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v3
+      with:
+        path: ${{ github.workspace }}/vcpkg
+        key: ${{ runner.os }}-vcpkg-${{ hashFiles('scripts/vcpkg-manifest/vcpkg.json') }}
+
+    - name: Set directory variables
+      shell: pwsh
+      run: |
+        mv vcpkg ..
+        Write-Output VCPKG_ROOT_DIR=$(Resolve-Path -Path ../vcpkg) >> $env:GITHUB_ENV
+        mv qmsetup ..
+        Write-Output QMSETUP_INSTALLED_DIR=$(Resolve-Path -Path ../qmsetup/installed) >> $env:GITHUB_ENV

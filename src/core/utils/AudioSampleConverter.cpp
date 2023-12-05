@@ -1,5 +1,7 @@
 #include "AudioSampleConverter.h"
 
+#include <limits>
+
 #include <QSysInfo>
 #include <QtEndian>
 

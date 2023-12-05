@@ -1,0 +1,54 @@
+name: Run Unit Tests
+
+on: [pull_request, push]
+
+jobs:
+  Build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Initialize Building Environment
+        uses: ./.github/actions/init-build
+        with:
+          os: ${{ matrix.os }}
+
+      - name: Build TALCS
+        shell: pwsh
+        run: |
+          cmake -B build -G Ninja `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT_DIR }}/scripts/buildsystems/vcpkg.cmake" `
+            -Dqmsetup_DIR=${{ env.QMSETUP_INSTALLED_DIR }}/lib/cmake/qmsetup
+          cmake --build build
+
+      - name: Run TALCS unit tests
+        shell: pwsh
+        run: |
+          $binaryDir = (Get-ChildItem -Path build -Filter out-* -Directory)[0]
+          $unitTestPrograms = (Get-ChildItem -Path $binaryDir/bin -Filter talcs_UnitTest_*)
+          $flag = 0
+          foreach ($program in $unitTestPrograms) {
+            Write-Output "Unit test: $($program.Name)"
+            & $program
+            if ($LASTEXITCODE -ne 0) {
+              Write-Output "Unit test failed: $($program.Name)"
+              $flag++
+            }
+          }
+          if ($flag) {
+            Write-Output "$flag unit test(s) failed."
+            exit 1
+          } else {
+            Write-Output "All unit tests passed."
+            exit 0
+          }

@@ -9,9 +9,19 @@
     "libsndfile",
     "rpclib",
     "rtmidi",
-    "sdl2",
+    {
+      "name": "sdl2",
+      "default-features": false
+    },
     "interval-tree"
   ],
+  "overrides": [
+    {
+      "name": "sdl2",
+      "version": "2.28.2"
+    }
+  ],
+  "builtin-baseline": "2c356da17069ed4ce4d793d03a60bf87b3e5cf2a",
   "vcpkg-configuration": {
     "overlay-ports": ["../vcpkg/ports"],
     "overlay-triplets": ["../vcpkg/triplets"]
