@@ -1,0 +1,57 @@
+name: Deploy documentations to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    tags: [docs]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Initialize Building Environment
+        uses: ./.github/actions/init-build
+        with:
+          os: windows-latest
+
+      - name: Install Doxygen
+        uses: ssciwr/doxygen-install@v1.2.0
+
+      - name: Build TALCS
+        shell: pwsh
+        run: |
+          cmake -B build -G Ninja `
+            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT_DIR }}/scripts/buildsystems/vcpkg.cmake" `
+            -Dqmsetup_DIR=${{ env.QMSETUP_INSTALLED_DIR }}/lib/cmake/qmsetup `
+            -DTALCS_BUILD_DOCUMENTATIONS:BOOL=ON
+          cmake --build build --target talcs_RunDoxygen
+
+      - name: Output CNAME
+        shell: pwsh
+        run: |
+          Write-Output "talcs.sjimo.dev" >> build/share/doc/talcs/html/CNAME
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: build/share/doc/talcs/html
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v3
