@@ -4,7 +4,8 @@
 
 <b>T</b>ALCS: <b>A</b>udio <b>L</b>ibrary of <b>C</b>r<b>S</b>jimo
 
-[![Run Unit Tests](https://github.com/CrSjimo/talcs/actions/workflows/run-unit-tests.yaml/badge.svg)](https://github.com/HyperbolaStudio/talcs-test/actions/workflows/run-unit-tests.yaml)
+[![Run Unit Tests](https://github.com/CrSjimo/talcs/actions/workflows/run-unit-tests.yaml/badge.svg)](https://github.com/CrSjimo/talcs/actions/workflows/run-unit-tests.yaml)
+[![Deploy documentations to GitHub Pages](https://github.com/CrSjimo/talcs/actions/workflows/deploy-docs.yaml/badge.svg)](https://github.com/CrSjimo/talcs/actions/workflows/deploy-docs.yaml)
 
 ## Modules
 
