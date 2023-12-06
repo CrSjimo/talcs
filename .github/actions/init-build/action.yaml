@@ -119,6 +119,7 @@ runs:
         key: ${{ runner.os }}-vcpkg-${{ hashFiles('scripts/vcpkg-manifest/vcpkg.json') }}
 
     - name: Restore ASIO SDK from cache
+      id: cache_asiosdk
       if: inputs.os == 'windows-latest'
       uses: actions/cache/restore@v3
       with:
@@ -126,7 +127,7 @@ runs:
         key: asiosdk
 
     - name: Get ASIO SDK
-      if: inputs.os == 'windows-latest'
+      if: inputs.os == 'windows-latest' && steps.cache_asiosdk.outputs.cache-hit != 'true'
       shell: pwsh
       run: |
         Invoke-WebRequest -Uri https://download.steinberg.net/sdk_downloads/asiosdk_2.3.3_2019-06-14.zip -OutFile $env:RUNNER_TEMP/asiosdk.zip
@@ -134,7 +135,7 @@ runs:
         Rename-Item -Path asiosdk_2.3.3_2019-06-14 -NewName asiosdk
 
     - name: Save ASIO SDK to cache
-      if: inputs.os == 'windows-latest'
+      if: inputs.os == 'windows-latest' && steps.cache_asiosdk.outputs.cache-hit != 'true'
       uses: actions/cache/save@v3
       with:
         path: ${{github.workspace}}/asiosdk
