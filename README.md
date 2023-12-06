@@ -4,6 +4,8 @@
 
 <b>T</b>ALCS: <b>A</b>udio <b>L</b>ibrary of <b>C</b>r<b>S</b>jimo
 
+[GitHub homepage](https://github.com/CrSjimo/talcs)
+
 [![Run Unit Tests](https://github.com/CrSjimo/talcs/actions/workflows/run-unit-tests.yaml/badge.svg)](https://github.com/CrSjimo/talcs/actions/workflows/run-unit-tests.yaml)
 [![Deploy documentations to GitHub Pages](https://github.com/CrSjimo/talcs/actions/workflows/deploy-docs.yaml/badge.svg)](https://github.com/CrSjimo/talcs/actions/workflows/deploy-docs.yaml)
 [![Coverity](https://scan.coverity.com/projects/29491/badge.svg)](https://scan.coverity.com/projects/crsjimo-talcs)
@@ -38,6 +40,8 @@
 
 - [Qt 5.15.2](https://qt-project.org/)
 
+  A cross-platform application development framework
+
 - [5cript/interval-tree](https://github.com/5cript/interval-tree)
 
   A C++ header only interval tree implementation.
@@ -64,6 +68,18 @@
 
 ## Build Dependencies
 
-- [Doxygen](https://www.doxygen.nl/)
+- [Doxygen](https://www.doxygen.nl/) <i>(optional)</i>
 
 - [qmsetup](https://github.com/stdware/qmsetup)
+
+## License of TALCS
+
+TALCS is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+TALCS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with TALCS. If not, see <https://www.gnu.org/licenses/>.
+
+## License of the TALCS Documentation
+
+Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included in the section entitled "GNU Free Documentation License".
