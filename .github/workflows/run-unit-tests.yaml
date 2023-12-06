@@ -28,7 +28,8 @@ jobs:
           cmake -B build -G Ninja `
             -DCMAKE_BUILD_TYPE=RelWithDebInfo `
             -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT_DIR }}/scripts/buildsystems/vcpkg.cmake" `
-            -Dqmsetup_DIR=${{ env.QMSETUP_INSTALLED_DIR }}/lib/cmake/qmsetup
+            -Dqmsetup_DIR=${{ env.QMSETUP_INSTALLED_DIR }}/lib/cmake/qmsetup `
+            -DTALCS_ENABLE_ASIO:BOOL=ON
           cmake --build build
           $binaryDir = (Get-ChildItem -Path build -Filter out-* -Directory)[0]
           Write-Output BUILD_BINARY_DIR=$(Resolve-Path -Path $binaryDir) >> $env:GITHUB_ENV
