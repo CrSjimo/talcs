@@ -1,9 +1,6 @@
 name: Run Unit Tests
 
-on:
-  pull_request:
-  push:
-    tags-ignore: [docs]
+on: [pull_request, push]
 
 jobs:
   Build:
@@ -29,10 +26,18 @@ jobs:
         shell: pwsh
         run: |
           cmake -B build -G Ninja `
-            -DCMAKE_BUILD_TYPE=Release `
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo `
             -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT_DIR }}/scripts/buildsystems/vcpkg.cmake" `
             -Dqmsetup_DIR=${{ env.QMSETUP_INSTALLED_DIR }}/lib/cmake/qmsetup
           cmake --build build
+          $binaryDir = (Get-ChildItem -Path build -Filter out-* -Directory)[0]
+          Write-Output BUILD_BINARY_DIR=$(Resolve-Path -Path $binaryDir) >> $env:GITHUB_ENV
+
+      - name: Upload TALCS binary artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: TALCS_${{ runner.os }}_${{ github.sha }}
+          path: ${{ env.BUILD_BINARY_DIR }}
 
       - name: Run TALCS unit tests
         shell: pwsh
