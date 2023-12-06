@@ -107,9 +107,9 @@ runs:
           --x-manifest-root=${{ github.workspace }}/scripts/vcpkg-manifest `
           --x-install-root=./installed `
           --triplet=${{ env.VCPKG_TRIPLET }}
-        Remove-Item -Path buildtrees -Recurse
-        Remove-Item -Path downloads -Recurse
-        Remove-Item -Path packages -Recurse
+        Remove-Item -Path buildtrees -Recurse -Force
+        Remove-Item -Path downloads -Recurse -Force
+        Remove-Item -Path packages -Recurse -Force
 
     - name: Save vcpkg to cache
       if: steps.cache_vcpkg.outputs.cache-hit != 'true'
