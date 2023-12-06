@@ -43,7 +43,7 @@ jobs:
         shell: pwsh
         run: |
           $binaryDir = (Get-ChildItem -Path build -Filter out-* -Directory)[0]
-          $unitTestPrograms = (Get-ChildItem -Path $binaryDir/bin -Filter talcs_UnitTest_*)
+          $unitTestPrograms = (Get-ChildItem -Path $binaryDir/bin -Filter talcs_UnitTest_*${{ matrix.os == 'windows-latest' && '.exe' || '' }})
           $flag = 0
           foreach ($program in $unitTestPrograms) {
             Write-Output "Unit test: $($program.Name)"
