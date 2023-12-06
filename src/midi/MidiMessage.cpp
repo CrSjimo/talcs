@@ -1,24 +1,21 @@
-/*
-  ==============================================================================
-
-   This file is migrated form the JUCE library.
-   Copyright (c) 2022 - Raw Material Software Limited
-
-   JUCE is an open source library subject to commercial or open-source
-   licensing.
-
-   The code included in this file is provided under the terms of the ISC license
-   http://www.isc.org/downloads/software-support-policy/isc-license. Permission
-   To use, copy, modify, and/or distribute this software for any purpose with or
-   without fee is hereby granted provided that the above copyright notice and
-   this permission notice appear in all copies.
-
-   JUCE IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL WARRANTIES, WHETHER
-   EXPRESSED OR IMPLIED, INCLUDING MERCHANTABILITY AND FITNESS FOR PURPOSE, ARE
-   DISCLAIMED.
-
-  ==============================================================================
-*/
+/******************************************************************************
+ * Copyright (c) 2022-2023 CrSjimo                                            *
+ *                                                                            *
+ * This file is part of TALCS.                                                *
+ *                                                                            *
+ * TALCS is free software: you can redistribute it and/or modify it under the *
+ * terms of the GNU Lesser General Public License as published by the Free    *
+ * Software Foundation, either version 3 of the License, or (at your option)  *
+ * any later version.                                                         *
+ *                                                                            *
+ * TALCS is distributed in the hope that it will be useful, but WITHOUT ANY   *
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS  *
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for    *
+ * more details.                                                              *
+ *                                                                            *
+ * You should have received a copy of the GNU Lesser General Public License   *
+ * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
+ ******************************************************************************/
 
 #include "MidiMessage.h"
 
