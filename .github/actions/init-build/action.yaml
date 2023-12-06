@@ -118,6 +118,28 @@ runs:
         path: ${{ github.workspace }}/vcpkg
         key: ${{ runner.os }}-vcpkg-${{ hashFiles('scripts/vcpkg-manifest/vcpkg.json') }}
 
+    - name: Restore ASIO SDK from cache
+      if: inputs.os == 'windows-latest'
+      uses: actions/cache/restore@v3
+      with:
+        path: ${{github.workspace}}/asiosdk
+        key: asiosdk
+
+    - name: Get ASIO SDK
+      if: inputs.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        Invoke-WebRequest -Uri https://download.steinberg.net/sdk_downloads/asiosdk_2.3.3_2019-06-14.zip -OutFile $env:RUNNER_TEMP/asiosdk.zip
+        Expand-Archive -Path $env:RUNNER_TEMP/asiosdk.zip -DestinationPath $env:GITHUB_WORKSPACE
+        Rename-Item -Path asiosdk_2.3.3_2019-06-14 -NewName asiosdk
+
+    - name: Save ASIO SDK to cache
+      if: inputs.os == 'windows-latest'
+      uses: actions/cache/save@v3
+      with:
+        path: ${{github.workspace}}/asiosdk
+        key: asiosdk
+
     - name: Set directory variables
       shell: pwsh
       run: |
@@ -125,3 +147,16 @@ runs:
         Write-Output VCPKG_ROOT_DIR=$(Resolve-Path -Path ../vcpkg) >> $env:GITHUB_ENV
         mv qmsetup ..
         Write-Output QMSETUP_INSTALLED_DIR=$(Resolve-Path -Path ../qmsetup/installed) >> $env:GITHUB_ENV
+
+    - name: Set ASIO SDK directory variable (Windows)
+      if: inputs.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        mv asiosdk ..
+        Write-Output ASIOSDK_DIR=$(Resolve-Path -Path ../asiosdk) >> $env:GITHUB_ENV
+
+    - name: Set ASIO SDK directory variable (Ubuntu & MacOS)
+      if: inputs.os != 'windows-latest'
+      shell: pwsh
+      run: |
+        Write-Output ASIOSDK_DIR= >> $env:GITHUB_ENV

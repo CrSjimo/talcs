@@ -13,8 +13,7 @@
       "name": "sdl2",
       "default-features": false
     },
-    "interval-tree",
-    "asiosdk"
+    "interval-tree"
   ],
   "overrides": [
     {
