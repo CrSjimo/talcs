@@ -57,3 +57,39 @@ add_subdirectory(lib)
 if(TALCS_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
+
+# ----------------------------------
+# Documentation
+# ----------------------------------
+if(TALCS_BUILD_DOCUMENTATIONS)
+    if(NOT DOXYGEN_EXECUTABLE)
+        find_package(Doxygen REQUIRED)
+    endif()
+
+    set(_install_options)
+
+    if(TALCS_INSTALL)
+        set(_install_options INSTALL_DIR share/doc/${TALCS_INSTALL_NAME})
+    endif()
+
+    set(TALCS_DOXYGEN_TAGFILE ${CMAKE_BUILD_SHARE_DIR}/doc/${TALCS_INSTALL_NAME}/talcs_tagfile.xml
+        CACHE FILEPATH "talcs doxygen tag file path" FORCE
+    )
+
+    set(_doc_targets TalcsCore TalcsDevice TalcsFormat TalcsMidi TalcsRemote TalcsSynthesis)
+
+    qm_import(Doxygen)
+    qm_setup_doxygen(talcs_RunDoxygen
+        NAME "TALCS"
+        DESCRIPTION "TALCS: Audio Library of CrSjimo"
+        MDFILE README.md
+        OUTPUT_DIR ${CMAKE_BUILD_SHARE_DIR}/doc/${TALCS_INSTALL_NAME}
+        INPUT src doc
+        TARGETS ${_doc_targets}
+        DEPENDS ${_doc_targets}
+        NO_EXPAND_MACROS Q_OBJECT Q_GADGET Q_DECLARE_TR_FUNCTIONS
+        COMPILE_DEFINITIONS Q_SIGNALS=Q_SIGNALS Q_SLOTS=Q_SLOTS
+        GENERATE_TAGFILE "${TALCS_DOXYGEN_TAGFILE}"
+        ${_install_options}
+    )
+endif()
