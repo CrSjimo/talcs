@@ -164,6 +164,10 @@ namespace talcs {
      * Derived classes should implement this function to process each block.
      *
      * When this function is called, the block read from the source has been stored in the buffer that prepareBuffer() returns.
+     *
+     * @param processedSampleCount the number of samples that have been already processed in total (not including the current buffer)
+     * @param samplesToProcess the number of samples going to be processed in total (including the current buffer)
+     *
      * @returns @c true if successful
      * @see prepareBuffer()
      */
