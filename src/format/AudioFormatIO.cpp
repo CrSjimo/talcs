@@ -464,7 +464,7 @@ namespace talcs {
      *
      * Note that this function should be called after the AudioFormatIO object is opened.
      */
-    AudioFormatIO::Subtype AudioFormatIO::subType() const {
+    AudioFormatIO::Subtype AudioFormatIO::subtype() const {
         return (Subtype) (format() & SubtypeMask);
     }
 

@@ -134,7 +134,7 @@ namespace talcs {
 
         int format() const;
         MajorFormat majorFormat() const;
-        Subtype subType() const;
+        Subtype subtype() const;
         ByteOrder byteOrder() const;
 
         qint64 length() const;
