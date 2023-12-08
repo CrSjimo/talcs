@@ -64,7 +64,7 @@ namespace talcs {
         private:
             friend class RemoteSocket;
 
-            inline explicit Reply(bool isError, clmdep_msgpack::object object) : m_isError(isError), m_object(object) {
+            inline explicit Reply(bool isError, const clmdep_msgpack::object &object) : m_isError(isError), m_object(object) {
             }
 
             bool m_isError;
@@ -93,7 +93,7 @@ namespace talcs {
                 return Reply(true, {});
             }
             try {
-                auto objRef = m_client->call((feature + "." + name).toStdString(), args...).get();
+                const auto &objRef = m_client->call((feature + "." + name).toStdString(), args...).get();
                 return Reply(false, objRef);
             } catch (rpc::rpc_error &e) {
                 auto &replyError = e.get_error().get();
