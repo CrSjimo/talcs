@@ -231,6 +231,8 @@ namespace talcs {
         qint64 tail = d->tailPosition;
         if (head > d->readAheadSize) {
             QMutexLocker locker(&d->bufLock);
+            head = d->headPosition;
+            tail = d->tailPosition;
             for (int ch = 0; ch < d->channelCount; ch++) {
                 d->buf.setSampleRange(ch, 0, tail - head, d->buf, ch, head);
             }
