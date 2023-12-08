@@ -52,6 +52,8 @@ qm_init_directories()
 # ----------------------------------
 add_subdirectory(src)
 
+add_subdirectory(lib)
+
 if(TALCS_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
