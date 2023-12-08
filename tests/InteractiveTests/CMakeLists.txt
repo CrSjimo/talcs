@@ -19,3 +19,5 @@ add_subdirectory(RemoteSocket)
 add_subdirectory(RemoteAudioDevice)
 
 add_subdirectory(SimpleAudioApplication)
+
+add_subdirectory(AudioProcessorVisualization)
