@@ -119,7 +119,7 @@ namespace talcs {
             return m;
         } else {
             auto p = readPointerTo(channel, startPos);
-            auto ret = std::minmax(p, p + length);
+            auto ret = std::minmax_element(p, p + length);
             return qMakePair(*ret.first, *ret.second);
         }
     }
