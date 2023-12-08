@@ -17,9 +17,6 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_MIDIMESSAGE_H
-#define TALCS_MIDIMESSAGE_H
-
 /*
   ==============================================================================
 
@@ -41,6 +38,9 @@
 
   ==============================================================================
 */
+
+#ifndef TALCS_MIDIMESSAGE_H
+#define TALCS_MIDIMESSAGE_H
 
 #include <TalcsMidi/TalcsMidiGlobal.h>
 #include <QString>
