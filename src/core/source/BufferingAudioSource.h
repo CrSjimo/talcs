@@ -49,6 +49,10 @@ namespace talcs {
         void setReadAheadSize(qint64 size);
         qint64 readAheadSize() const;
 
+        void setChannelCount(int channelCount);
+        int channelCount() const;
+
+        void setSource(PositionableAudioSource *src, bool takeOwnership = false);
         PositionableAudioSource *source() const;
 
         bool waitForBuffering(QDeadlineTimer deadline = QDeadlineTimer::Forever);

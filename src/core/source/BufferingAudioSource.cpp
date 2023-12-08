@@ -21,6 +21,7 @@
 #include "BufferingAudioSource_p.h"
 
 #include <QThreadPool>
+#include <QDebug>
 
 namespace talcs {
 
@@ -110,6 +111,7 @@ namespace talcs {
         flush();
         if (!d->src->open(bufferSize, sampleRate))
             return false;
+        d->src->setNextReadPosition(d->position);
         if (d->readAheadSize > bufferSize) {
             d->buf.resize(d->channelCount, d->readAheadSize * 2);
             if (d->autoBuffering)
@@ -131,16 +133,59 @@ namespace talcs {
             return;
         if (isOpen() && size > bufferSize()) {
             flush();
+            d->readAheadSize = size;
             d->buf.resize(-1, size * 2);
             if (d->autoBuffering)
                 d->commitBufferingTask(false);
+        } else {
+            d->readAheadSize = size;
         }
-        d->readAheadSize = size;
     }
 
     qint64 BufferingAudioSource::readAheadSize() const {
         Q_D(const BufferingAudioSource);
         return d->readAheadSize;
+    }
+
+    void BufferingAudioSource::setChannelCount(int channelCount) {
+        Q_D(BufferingAudioSource);
+        QMutexLocker locker(&d->mutex);
+        if (channelCount == d->channelCount)
+            return;
+        if (isOpen() && d->readAheadSize > bufferSize()) {
+            flush();
+            d->channelCount = channelCount;
+            d->buf.resize(channelCount);
+            if (d->autoBuffering)
+                d->commitBufferingTask(false);
+        } else {
+            d->channelCount = channelCount;
+        }
+    }
+
+    int BufferingAudioSource::channelCount() const {
+        Q_D(const BufferingAudioSource);
+        return d->channelCount;
+    }
+
+    void BufferingAudioSource::setSource(PositionableAudioSource *src, bool takeOwnership) {
+        Q_D(BufferingAudioSource);
+        QMutexLocker locker(&d->mutex);
+        if (isOpen() && d->readAheadSize > bufferSize()) {
+            flush();
+            if (!src->open(bufferSize(), sampleRate())) {
+                qWarning() << "BufferingAudioSource: Cannot open source";
+                return;
+            }
+            d->src = src;
+            d->takeOwnership = takeOwnership;
+            d->src->setNextReadPosition(d->position);
+            if (d->autoBuffering)
+                d->commitBufferingTask(false);
+        } else {
+            d->src = src;
+            d->takeOwnership = takeOwnership;
+        }
     }
 
     PositionableAudioSource *BufferingAudioSource::source() const {
