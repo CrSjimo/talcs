@@ -136,7 +136,7 @@ if(TALCS_BUILD_DOCUMENTATIONS)
         CACHE FILEPATH "talcs doxygen tag file path" FORCE
     )
 
-    set(_doc_targets TalcsCore TalcsDevice TalcsFormat TalcsRemote TalcsSynthesis)
+    set(_doc_targets TalcsCore TalcsDevice TalcsFormat TalcsMidi TalcsRemote TalcsSynthesis)
 
     qm_import(Doxygen)
     qm_setup_doxygen(talcs_RunDoxygen
@@ -144,7 +144,7 @@ if(TALCS_BUILD_DOCUMENTATIONS)
         DESCRIPTION "TALCS: Audio Library of CrSjimo"
         MDFILE ../README.md
         OUTPUT_DIR ${CMAKE_BUILD_SHARE_DIR}/doc/${TALCS_INSTALL_NAME}
-        INPUT core device format remote synthesis ../doc
+        INPUT core device format midi remote synthesis ../doc
         TARGETS ${_doc_targets}
         DEPENDS ${_doc_targets}
         NO_EXPAND_MACROS Q_OBJECT Q_GADGET Q_DECLARE_TR_FUNCTIONS
