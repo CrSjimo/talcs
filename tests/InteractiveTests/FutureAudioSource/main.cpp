@@ -19,6 +19,7 @@
 
 #include <QApplication>
 #include <QComboBox>
+#define QFUTURE_TEST
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QGroupBox>

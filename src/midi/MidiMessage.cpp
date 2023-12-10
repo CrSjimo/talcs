@@ -657,12 +657,12 @@ namespace talcs {
         return QByteArray(textData, getMetaEventLength());
     }
 
-    MidiMessage MidiMessage::textMetaEvent(int type, QStringRef text) {
+    MidiMessage MidiMessage::textMetaEvent(int type, const QString &text) {
         Q_ASSERT(type > 0 && type < 16);
 
         MidiMessage result;
 
-        const size_t textSize = text.size() - 1;
+        const size_t textSize = text.toUtf8().size() - 1;
 
         quint8 header[8];
         size_t n = sizeof(header);
@@ -682,7 +682,7 @@ namespace talcs {
         auto dest = result.m_data.data();
 
         memcpy(dest, header + n, headerLen);
-        memcpy(dest + headerLen, text.data(), textSize);
+        memcpy(dest + headerLen, text.toUtf8().data(), textSize);
 
         return result;
     }

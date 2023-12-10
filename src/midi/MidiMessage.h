@@ -217,7 +217,7 @@ namespace talcs {
 
         QString getTextFromTextMetaEvent() const;
 
-        static MidiMessage textMetaEvent(int type, QStringRef text);
+        static MidiMessage textMetaEvent(int type, const QString &text);
 
         bool isTempoMetaEvent() const noexcept;
 

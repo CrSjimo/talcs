@@ -22,6 +22,7 @@
 #include <cassert>
 #include <cmath>
 #include <numeric>
+#include <algorithm>
 
 namespace talcs {
 

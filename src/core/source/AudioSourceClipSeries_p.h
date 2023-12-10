@@ -20,6 +20,8 @@
 #ifndef TALCS_AUDIOSOURCECLIPSERIES_P_H
 #define TALCS_AUDIOSOURCECLIPSERIES_P_H
 
+#include <algorithm>
+
 #include <QMutex>
 
 #include <TalcsCore/AudioSourceClipSeries.h>
