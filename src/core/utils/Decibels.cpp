@@ -27,7 +27,7 @@ namespace talcs {
         return decibels > minusInfinityDb ? std::pow (10.0f, decibels * .05f) : .0f;
     }
     float Decibels::gainToDecibels(float gain, float minusInfinityDb) {
-        return gain > .0f ? std::max (minusInfinityDb, std::log10 (gain) * 20.0f) : minusInfinityDb;
+        return gain > .0f ? qMax (minusInfinityDb, std::log10 (gain) * 20.0f) : minusInfinityDb;
     }
     QString Decibels::toString(float decibels, int precision, float minusInfinityDb) {
         if (decibels <= minusInfinityDb)

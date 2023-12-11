@@ -154,7 +154,7 @@ QMutex progressMutex;
             auto futureInterface = it->clip.content()->future().d;
             auto increment = msecToSample(1.0 * it->rate * 100.0);
             futureInterface.setProgressValue(
-                std::min<int>(futureInterface.progressValue() + increment, futureInterface.progressMaximum()));
+                qMin<int>(futureInterface.progressValue() + increment, futureInterface.progressMaximum()));
             if (futureInterface.progressValue() >= futureInterface.progressMaximum()) {
                 futureInterface.reportFinished(reinterpret_cast<PositionableAudioSource *const *>(&it->source));
                 itToErase.append(it);

@@ -78,7 +78,7 @@ namespace talcs {
             for (int i = 0; i < channelCount; i++) {
                 readData.buffer->clear(i, readData.startPos, readData.length);
             }
-            readLength = std::min(readData.length, bufferLength - nextReadPosition());
+            readLength = qMin(readData.length, bufferLength - nextReadPosition());
             d->mix(readData, readLength);
             d->position += readLength;
         }

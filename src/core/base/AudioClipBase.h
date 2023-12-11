@@ -116,9 +116,9 @@ namespace talcs {
     protected:
         static QPair<qint64, AudioClipBase<T>> calculateClipReadData(const AudioClipBase<T> &clip,
                                                                      const AudioClipBase<T> &readDataInterval) {
-            auto headCut = std::max(0ll, readDataInterval.position() - clip.position());
-            auto tailCut = std::max(0ll, clip.endPosition() - readDataInterval.endPosition());
-            auto readStart = std::max(0ll, clip.position() - readDataInterval.position());
+            auto headCut = qMax(0ll, readDataInterval.position() - clip.position());
+            auto tailCut = qMax(0ll, clip.endPosition() - readDataInterval.endPosition());
+            auto readStart = qMax(0ll, clip.position() - readDataInterval.position());
             qint64 clipReadPosition = headCut + clip.contentStartPosition();
             AudioClipBase<T> clipReadInterval(readStart, clip.length() - headCut - tailCut);
             return {clipReadPosition, clipReadInterval};

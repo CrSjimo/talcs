@@ -95,8 +95,8 @@ namespace talcs {
      * object or vice versa, only the overlapping part will be processed.
      */
     void IAudioSampleContainer::setSampleRange(const IAudioSampleProvider &src) {
-        auto minChannelCount = std::min(channelCount(), src.channelCount());
-        auto minSampleCount = std::min(sampleCount(), src.sampleCount());
+        auto minChannelCount = qMin(channelCount(), src.channelCount());
+        auto minSampleCount = qMin(sampleCount(), src.sampleCount());
         for (int i = 0; i < minChannelCount; i++) {
             setSampleRange(i, 0, minSampleCount, src, i, 0);
         }
@@ -137,8 +137,8 @@ namespace talcs {
      * object or vice versa, only the overlapping part will be processed.
      */
     void IAudioSampleContainer::addSampleRange(const IAudioSampleProvider &src, float gain) {
-        auto minChannelCount = std::min(channelCount(), src.channelCount());
-        auto minSampleCount = std::min(sampleCount(), src.sampleCount());
+        auto minChannelCount = qMin(channelCount(), src.channelCount());
+        auto minSampleCount = qMin(sampleCount(), src.sampleCount());
         for (int i = 0; i < minChannelCount; i++) {
             addSampleRange(i, 0, minSampleCount, src, i, 0, gain);
         }

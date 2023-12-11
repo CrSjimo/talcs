@@ -87,7 +87,7 @@ namespace talcs {
         if (!isContinuous()) {
             float m = 0;
             for (qint64 i = 0; i < length; i++) {
-                m = std::max(m, std::abs(constSampleAt(channel, startPos + i)));
+                m = qMax(m, std::abs(constSampleAt(channel, startPos + i)));
             }
             return m;
         } else {
@@ -114,8 +114,8 @@ namespace talcs {
         if (!isContinuous()) {
             auto m = qMakePair(std::numeric_limits<float>::max(), std::numeric_limits<float>::lowest());
             for (qint64 i = 0; i < length; i++) {
-                m.first = std::min(m.first, constSampleAt(channel, startPos + i));
-                m.second = std::max(m.second, constSampleAt(channel, startPos + i));
+                m.first = qMin(m.first, constSampleAt(channel, startPos + i));
+                m.second = qMax(m.second, constSampleAt(channel, startPos + i));
             }
             return m;
         } else {

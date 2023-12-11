@@ -120,7 +120,7 @@ namespace talcs {
                 d->status = Interrupted;
                 break;
             }
-            qint64 readLength = std::min(framesToRead, blockSize);
+            qint64 readLength = qMin(framesToRead, blockSize);
             qint64 framesRead = d->src->read({buf, 0, readLength});
             if (framesRead == 0) {
                 d->status = Failed;

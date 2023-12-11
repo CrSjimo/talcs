@@ -30,11 +30,11 @@
 namespace talcs {
 
     static inline qint64 outPositionToIn(qint64 position, double ratio) {
-        return std::round(position / ratio);
+        return qRound64(position / ratio);
     }
 
     static inline qint64 inPositionToOut(qint64 position, double ratio) {
-        return std::round(position * ratio);
+        return qRound64(position * ratio);
     }
 
     /**
@@ -85,7 +85,7 @@ namespace talcs {
         Q_D(AudioFormatInputSource);
         QMutexLocker locker(&d->mutex);
         Q_ASSERT(d->io && isOpen());
-        auto readLength = std::min(readData.length, length() - d->position);
+        auto readLength = qMin(readData.length, length() - d->position);
         d->resampler->process(readData);
         if (d->doStereoize && d->io->channelCount() == 1 && readData.buffer->channelCount() > 1) {
             readData.buffer->setSampleRange(1, readData.startPos, readLength, *readData.buffer, 0, readData.startPos);

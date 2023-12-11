@@ -133,8 +133,8 @@ int main(int argc, char **argv) {
     });
 
     QObject::connect(&timer, &QTimer::timeout, win, [&]() {
-        meterL->setValue(std::round(300 + 10 * valueL.nextValue()));
-        meterR->setValue(std::round(300 + 10 * valueR.nextValue()));
+        meterL->setValue(qRound(300 + 10 * valueL.nextValue()));
+        meterR->setValue(qRound(300 + 10 * valueR.nextValue()));
     });
     timer.start();
 

@@ -144,7 +144,7 @@ namespace talcs {
             for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
                 readData.buffer->clear(ch, readData.startPos, readData.length);
             }
-            auto readLength = std::min(readData.length, length() - d->position);
+            auto readLength = qMin(readData.length, length() - d->position);
             d->position += readLength;
             return readLength;
         }

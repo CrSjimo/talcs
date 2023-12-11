@@ -48,7 +48,7 @@ namespace talcs {
 
     template<typename T>
     static inline T jlimit(T lowerLimit, T upperLimit, T valueToConstrain) {
-        return qMax(lowerLimit, qMin(upperLimit, valueToConstrain));
+        return qBound(lowerLimit, valueToConstrain, upperLimit);
     }
 
     template<typename T>
@@ -66,7 +66,7 @@ namespace talcs {
 
     template<typename T>
     static inline int roundToInt(T value) {
-        return static_cast<int>(std::round(value));
+        return qRound(value);
     }
 
     template<typename Type, size_t N>

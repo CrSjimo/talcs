@@ -79,8 +79,8 @@ namespace talcs {
         Q_D(MemoryAudioSource);
         QMutexLocker locker(&d->mutex);
         auto bufferLength = length();
-        auto channelCount = std::min(d->buffer->channelCount(), readData.buffer->channelCount());
-        auto readLength = std::min(readData.length, bufferLength - nextReadPosition());
+        auto channelCount = qMin(d->buffer->channelCount(), readData.buffer->channelCount());
+        auto readLength = qMin(readData.length, bufferLength - nextReadPosition());
         for (int i = 0; i < channelCount; i++) {
             readData.buffer->setSampleRange(i, readData.startPos, readLength, *d->buffer, i, d->position);
         }

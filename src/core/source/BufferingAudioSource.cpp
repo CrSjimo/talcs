@@ -57,7 +57,7 @@ namespace talcs {
         if (d->readAheadSize <= bufferSize()) {
             return d->src->read(readData);
         }
-        int channelCount = std::min(readData.buffer->channelCount(), d->channelCount);
+        int channelCount = qMin(readData.buffer->channelCount(), d->channelCount);
         {
             QMutexLocker readLocker(&d->bufLock);
             qint64 head = d->headPosition;
@@ -261,8 +261,8 @@ namespace talcs {
         for (qint64 offset = 0; offset < length; offset += frameLength) {
             if (d->isTerminateRequested)
                 return;
-            d->src->read(AudioSourceReadData(&d->buf, startPos + offset, std::min(frameLength, length - offset)));
-            d->tailPosition += std::min(frameLength, length - offset);
+            d->src->read(AudioSourceReadData(&d->buf, startPos + offset, qMin(frameLength, length - offset)));
+            d->tailPosition += qMin(frameLength, length - offset);
         }
     }
 

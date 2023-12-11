@@ -222,7 +222,7 @@ int main(int argc, char **argv) {
                     QMessageBox::critical(&mainWindow, "Mixer", "Cannot add clip.");
                 }
             }
-            effectiveLength = std::max(effectiveLength, clipSeries->effectiveLength());
+            effectiveLength = qMax(effectiveLength, clipSeries->effectiveLength());
             mixer.addSource(trackSrc);
 
             auto trackLayout = new QHBoxLayout;

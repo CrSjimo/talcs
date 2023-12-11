@@ -29,7 +29,7 @@
 namespace talcs {
 
     static inline QPair<float, float> applyGainAndPan(float gain, float pan) {
-        return {gain * std::max(1.0f, 1.0f - pan), gain * std::max(1.0f, 1.0f + pan)};
+        return {gain * qMax(1.0f, 1.0f - pan), gain * qMax(1.0f, 1.0f + pan)};
     }
 
     template <class T>
@@ -134,7 +134,7 @@ namespace talcs {
             for (auto &srcInfo : sourceDict) {
                 auto src = srcInfo.src;
                 bool isMutedBySoloSetting = (soloCounter && !srcInfo.isSolo);
-                readLength = std::min(
+                readLength = qMin(
                     readLength,
                     src->read(AudioSourceReadData(&tmpBuf, 0, readLength, isMutedBySoloSetting ? -1 : silentFlags)));
                 if (isMutedBySoloSetting)

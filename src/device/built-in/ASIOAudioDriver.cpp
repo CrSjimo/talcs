@@ -137,7 +137,7 @@ namespace talcs {
         if (::RegOpenKeyA(HKEY_LOCAL_MACHINE, "software\\asio", &hkEnum) != ERROR_SUCCESS)
             return false;
         int index = 0;
-        while (::RegEnumKeyA(hkEnum, index++, (LPTSTR) keyname, MAXPATHLEN) == ERROR_SUCCESS) {
+        while (::RegEnumKeyA(hkEnum, index++, keyname, MAXPATHLEN) == ERROR_SUCCESS) {
             d->createDriverSpec(hkEnum, keyname);
         }
         if (!d->asioDriverSpecs.isEmpty())
