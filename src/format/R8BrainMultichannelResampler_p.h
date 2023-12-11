@@ -32,7 +32,7 @@ namespace talcs {
     class R8BrainMultichannelResamplerPrivate {
     public:
         int channelCount;
-        std::vector<ChannelResampler *> resamplerOfChannel;
+        QVector<ChannelResampler *> resamplerOfChannel;
         AudioBuffer inputBuffer;
         float *tmpBuf = nullptr;
     };

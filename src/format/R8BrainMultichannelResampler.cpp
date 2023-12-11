@@ -39,7 +39,7 @@ namespace talcs {
         d->channelCount = channelCount;
         d->inputBuffer.resize(channelCount, 1);
         for (int i = 0; i < channelCount; i++) {
-            d->resamplerOfChannel.push_back(new ChannelResampler(ratio, bufferSize, this, i));
+            d->resamplerOfChannel.append(new ChannelResampler(ratio, bufferSize, this, i));
         }
         d->tmpBuf = new float[bufferSize];
     }
