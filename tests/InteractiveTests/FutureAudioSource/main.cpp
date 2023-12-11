@@ -201,7 +201,7 @@ void addClip() {
                 QString::number(clipSpec.source->frequency()(1)),
                 QString::number(clipSpec.rate),
             });
-            item->setData(0, Qt::UserRole, QVariant::fromValue(clipSpec));
+            item->setData(0, Qt::UserRole, QVariant::fromValue(QByteArray(reinterpret_cast<char *>(&clipSpec), sizeof(ClipSpec))));
             QObject::connect(clipSpec.clip.content(), &FutureAudioSource::progressChanged, clipsList,
                              [=](int progress) {
                                  item->setText(5, QString::number(100.0 * progress / clipSpec.clip.length()) + "%");
@@ -224,7 +224,8 @@ void addClip() {
 void modifyClip(QTreeWidgetItem *oldItem) {
     if (!oldItem)
         return;
-    auto oldClipSpec = oldItem->data(0, Qt::UserRole).value<ClipSpec>();
+    auto oldClipSpecData = oldItem->data(0, Qt::UserRole).value<QByteArray>();
+    auto oldClipSpec = *reinterpret_cast<ClipSpec *>(oldClipSpecData.data());
     for (;;) {
         auto clipSpec = showClipEditDialog(oldClipSpec);
         if (clipSpec.id.isEmpty())
@@ -241,7 +242,7 @@ void modifyClip(QTreeWidgetItem *oldItem) {
                 QString::number(clipSpec.source->frequency()(1)),
                 QString::number(clipSpec.rate),
             });
-            item->setData(0, Qt::UserRole, QVariant::fromValue(clipSpec));
+            item->setData(0, Qt::UserRole, QVariant::fromValue(QByteArray(reinterpret_cast<char *>(&clipSpec), sizeof(ClipSpec))));
             QObject::connect(clipSpec.clip.content(), &FutureAudioSource::progressChanged, clipsList,
                              [=](int progress) {
                                  item->setText(5, QString::number(100.0 * progress / clipSpec.clip.length()) + "%");
@@ -265,7 +266,8 @@ void deleteClip(QTreeWidgetItem *item) {
     if (!item)
         return;
     clipsList->takeTopLevelItem(clipsList->indexOfTopLevelItem(item));
-    auto clipSpec = item->data(0, Qt::UserRole).value<ClipSpec>();
+    auto clipSpecData = item->data(0, Qt::UserRole).value<QByteArray>();
+    auto clipSpec = *reinterpret_cast<ClipSpec *>(clipSpecData.data());
     removeClipFromSeries(clipSpec);
     delete item;
 }
@@ -273,7 +275,8 @@ void deleteClip(QTreeWidgetItem *item) {
 void reloadClip(QTreeWidgetItem *item) {
     if (!item)
         return;
-    auto clipSpec = item->data(0, Qt::UserRole).value<ClipSpec>();
+    auto clipSpecData = item->data(0, Qt::UserRole).value<QByteArray>();
+    auto clipSpec = *reinterpret_cast<ClipSpec *>(clipSpecData.data());
     auto freq = clipSpec.source->frequency()(1);
     AudioDeviceLocker devLocker(dev);
     removeClipFromSeries(clipSpec);
@@ -288,7 +291,7 @@ void reloadClip(QTreeWidgetItem *item) {
         clipSpec.clip.length(),
     };
     addClipToSeries(clipSpec);
-    item->setData(0, Qt::UserRole, QVariant::fromValue(clipSpec));
+    item->setData(0, Qt::UserRole, QVariant::fromValue(QByteArray(reinterpret_cast<char *>(&clipSpec), sizeof(ClipSpec))));
     QObject::connect(clipSpec.clip.content(), &FutureAudioSource::progressChanged, clipsList, [=](int progress) {
         item->setText(5, QString::number(100.0 * progress / clipSpec.clip.length()) + "%");
     });
@@ -302,7 +305,6 @@ void reloadClip(QTreeWidgetItem *item) {
 
 int main(int argc, char **argv) {
     QApplication a(argc, argv);
-    qRegisterMetaType<ClipSpec>();
     openDevice();
     auto t = QThread::create(&runProgress);
     t->start();

@@ -20,6 +20,8 @@
 #include "FutureAudioSource.h"
 #include "FutureAudioSource_p.h"
 
+#include <QDebug>
+
 namespace talcs {
 
     void FutureAudioSourcePrivate::_q_statusChanged(FutureAudioSource::Status status) {
