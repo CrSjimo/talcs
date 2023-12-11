@@ -19,7 +19,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.event.head_commit && startsWith(github.event.head_commit.message, 'doc:')
+    if: github.event_name != 'push' || (github.event_name == 'push' && github.event.head_commit && startsWith(github.event.head_commit.message, 'doc:'))
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
