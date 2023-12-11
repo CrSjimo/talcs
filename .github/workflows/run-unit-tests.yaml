@@ -8,6 +8,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
+        qt-version: ['5.15.2', '6.5.3']
 
     runs-on: ${{ matrix.os }}
 
@@ -21,6 +22,7 @@ jobs:
         uses: ./.github/actions/init-build
         with:
           os: ${{ matrix.os }}
+          qt-version: ${{ matrix.qt-version }}
 
       - name: Build TALCS
         shell: pwsh
@@ -38,7 +40,7 @@ jobs:
       - name: Upload TALCS binary artifact
         uses: actions/upload-artifact@v3
         with:
-          name: TALCS_${{ runner.os }}_${{ github.sha }}
+          name: TALCS_${{ runner.os }}_Qt${{ matrix.qt-version }}_${{ github.sha }}
           path: ${{ env.BUILD_BINARY_DIR }}
 
       - name: Run TALCS unit tests

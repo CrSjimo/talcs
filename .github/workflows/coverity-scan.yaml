@@ -18,6 +18,7 @@ jobs:
         uses: ./.github/actions/init-build
         with:
           os: ubuntu-latest
+          qt-version: '5.15.2'
 
       - name: Load TALCS CMake project
         shell: pwsh

@@ -4,6 +4,9 @@ inputs:
   os:
     description: OS
     required: true
+  qt-version:
+    description: Qt version
+    required: true
 
 runs:
   using: "composite"
@@ -49,7 +52,7 @@ runs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
       with:
-        version: "5.15.2"
+        version: ${{ inputs.qt-version }}
         archives: ${{ inputs.os == 'ubuntu-latest' && 'icu qtbase' || 'qtbase' }}
         cache: true
 
@@ -95,10 +98,6 @@ runs:
     - name: Install vcpkg dependencies
       if: steps.cache_vcpkg.outputs.cache-hit != 'true'
       shell: pwsh
-      env:
-        QT_DIR: ${{ env.QT_ROOT_DIR }}/5.15.2/${{ env.QT_ARCH }}/lib/cmake/Qt5
-        Qt5_DIR: ${{ env.QT_ROOT_DIR }}/5.15.2/${{ env.QT_ARCH }}/lib/cmake/Qt5
-        VCPKG_KEEP_ENV_VARS: QT_DIR;Qt5_DIR
       run: |
         git clone https://github.com/microsoft/vcpkg.git
         cd vcpkg

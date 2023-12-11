@@ -30,6 +30,7 @@ jobs:
         uses: ./.github/actions/init-build
         with:
           os: ubuntu-latest
+          qt-version: '5.15.2'
 
       - name: Install Doxygen
         uses: ssciwr/doxygen-install@v1.2.0
