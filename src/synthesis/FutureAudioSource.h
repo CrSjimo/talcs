@@ -46,6 +46,7 @@ namespace talcs {
         ~FutureAudioSource() override;
 
         QFuture<PositionableAudioSource *> future() const;
+        void setFuture(const QFuture<PositionableAudioSource *> &future);
 
         qint64 read(const AudioSourceReadData &readData) override;
         qint64 length() const override;

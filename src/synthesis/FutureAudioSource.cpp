@@ -43,16 +43,21 @@ namespace talcs {
      * of this class. (But the Qt Concurrent framework is not used, only [QFuture](https://doc.qt.io/qt-5/qfuture.html)
      * and other relevant classes are used)
      *
-     * This object requires some restrictions for the [QFuture](https://doc.qt.io/qt-5/qfuture.html) object:
+     * For functionality and compatibility of both Qt 5 and 6, This object requires some restrictions on the
+     * [QFuture](https://doc.qt.io/qt-5/qfuture.html) object:
      *
      * - The [QFuture::progressMinimum](https://doc.qt.io/qt-5/qfuture.html#progressMinimum)() should be set to 0 and the
      * [QFuture::progressMaximum](https://doc.qt.io/qt-5/qfuture.html#progressMaximum)() should be set to the length of
      * the source.
      *
-     * - It should be started by QFutureInterface::reportStarted() before used by this object.
+     * - It should be started before used by this object.
      *
      * - There should be only one result in it. Before finished, the [QFuture::progressValue](https://doc.qt.io/qt-5/qfuture.html#progressValue)()
      * should be set to the maximum and the result should be reported.
+     *
+     * - Its progress should be incremental.
+     *
+     * - Once finished or cancelled, it should not be started again.
      *
      * @see [QFuture](https://doc.qt.io/qt-5/qfuture.html), [QFutureWatcher](https://doc.qt.io/qt-5/qfuturewatcher.html), QFutureInterface
      */
@@ -61,8 +66,18 @@ namespace talcs {
      * @class FutureAudioSource::Callbacks
      * @brief The callback functions for the FutureAudioSource object.
      *
+     * Note that:
+     *
+     * - Preloading callback functions could be invoked just after the source is ready, which should be handled properly.
+     *
+     * - If this object is opened while the source is still loading, the source will be automatically opened once loading
+     * finished. Therefore, the preloading open callback function does not need to handle such case.
+     *
      * @var FutureAudioSource::Callbacks::preloadingOpen
      * This function is invoked when open() is called before the source is ready.
+     *
+     * @var FutureAudioSource::Callbacks::preloadingClose
+     * This function is invoked when close() is called before the source is ready.
      */
 
     /**
@@ -101,6 +116,19 @@ namespace talcs {
     QFuture<PositionableAudioSource *> FutureAudioSource::future() const {
         Q_D(const FutureAudioSource);
         return d->futureWatcher->future();
+    }
+
+    void FutureAudioSource::setFuture(const QFuture<PositionableAudioSource *> &future) {
+        Q_D(FutureAudioSource);
+        QMutexLocker locker(&d->mutex);
+        if (isOpen()) {
+            if (!d->callbacks.preloadingOpen(bufferSize(), sampleRate())) {
+                qWarning() << "FutureAudioSource: Preloading open callback fails when setting future.";
+                return;
+            }
+        }
+        d->src = nullptr;
+        d->futureWatcher->setFuture(future);
     }
 
     qint64 FutureAudioSource::read(const AudioSourceReadData &readData) {
@@ -215,10 +243,13 @@ namespace talcs {
      *
      * @var FutureAudioSource::Running
      * The preparation is being processed.
+     *
      * @var FutureAudioSource::Paused
      * The preparation is paused.
+     *
      * @var FutureAudioSource::Cancelled
      * The preparation is cancelled.
+     *
      * @var FutureAudioSource::Ready
      * The source is ready for read.
      */
