@@ -30,6 +30,7 @@ namespace talcs {
         AudioSourcePlayback *q_ptr;
         AudioSource *src;
         bool takeOwnership;
+        bool managedByDevice;
     };
     
 }

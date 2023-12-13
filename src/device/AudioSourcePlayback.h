@@ -32,11 +32,10 @@ namespace talcs {
     class TALCSDEVICE_EXPORT AudioSourcePlayback : public AudioDeviceCallback {
         Q_DECLARE_PRIVATE(AudioSourcePlayback)
     public:
-        explicit AudioSourcePlayback(AudioSource *src, bool takeOwnership = false);
+        explicit AudioSourcePlayback(AudioSource *src, bool takeOwnership = false, bool managedByDevice = true);
         ~AudioSourcePlayback();
 
         AudioSource *source() const;
-        void setSource(AudioSource *src, bool takeOwnership = false);
 
         bool deviceWillStartCallback(AudioDevice *device) override;
         void deviceStoppedCallback() override;

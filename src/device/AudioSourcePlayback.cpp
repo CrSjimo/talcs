@@ -38,12 +38,14 @@ namespace talcs {
      * @param src the AudioSource to process
      * @param takeOwnership If the ownership of the AudioSource object is taken, the object will be deleted on
      * destruction.
+     * @param managedByDevice If set to true, the source will be opened on device started and closed on device stopped.
      */
-    AudioSourcePlayback::AudioSourcePlayback(AudioSource *src, bool takeOwnership)
+    AudioSourcePlayback::AudioSourcePlayback(AudioSource *src, bool takeOwnership, bool managedByDevice)
         : AudioSourcePlayback(*new AudioSourcePlaybackPrivate) {
         Q_D(AudioSourcePlayback);
         d->src = src;
         d->takeOwnership = takeOwnership;
+        d->managedByDevice = managedByDevice;
     }
 
     AudioSourcePlayback::AudioSourcePlayback(AudioSourcePlaybackPrivate &d) : d_ptr(&d) {
@@ -70,22 +72,17 @@ namespace talcs {
         return d->src;
     }
 
-    /**
-     * Change the AudioSource object used dynamically. The ownership of the previous object is no more taken.
-     */
-    void AudioSourcePlayback::setSource(AudioSource *src, bool takeOwnership) {
-        Q_D(AudioSourcePlayback);
-        d->src = src;
-        d->takeOwnership = takeOwnership;
-    }
-
     bool AudioSourcePlayback::deviceWillStartCallback(AudioDevice *device) {
         Q_D(AudioSourcePlayback);
-        return d->src->open(device->bufferSize(), device->sampleRate());
+        if (d->managedByDevice)
+            return d->src->open(device->bufferSize(), device->sampleRate());
+        else
+            return true;
     }
     void AudioSourcePlayback::deviceStoppedCallback() {
         Q_D(AudioSourcePlayback);
-        d->src->close();
+        if (d->managedByDevice)
+            d->src->close();
     }
 
     void AudioSourcePlayback::workCallback(const AudioSourceReadData &readData) {
