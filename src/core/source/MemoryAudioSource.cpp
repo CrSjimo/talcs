@@ -27,6 +27,8 @@ namespace talcs {
     /**
      * @class MemoryAudioSource
      * @brief Produces audio from an IAudioSampleProvider object.
+     *
+     * This is one of the @ref doc/object_binding.md "object-binding" classes.
      */
 
     /**

@@ -41,6 +41,9 @@ namespace talcs {
     /**
      * @class AudioFormatIO
      * @brief The AudioFormatIO class provides interfaces to access audio files based on libsndfile.
+     *
+     * This is one of the @ref doc/object_binding.md "object-binding" classes.
+     *
      * @see @link URL https://libsndfile.github.io/libsndfile/ @endlink
      */
 

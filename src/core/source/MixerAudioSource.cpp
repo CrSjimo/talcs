@@ -25,6 +25,9 @@ namespace talcs {
     /**
      * @class MixerAudioSource
      * @brief The object that mixes the output of other AudioSource objects.
+     *
+     * This is one of the @ref doc/object_binding.md "object-binding" classes.
+     *
      * @see PositionableMixerAudioSource
      */
 

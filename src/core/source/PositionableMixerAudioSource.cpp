@@ -27,6 +27,9 @@ namespace talcs {
     /**
      * @class PositionableMixerAudioSource
      * @brief A class very similar to MixerAudioSource, but this one supports repositioning.
+     *
+     * This is one of the @ref doc/object_binding.md "object-binding" classes.
+     *
      * @see MixerAudioSource
      */
 

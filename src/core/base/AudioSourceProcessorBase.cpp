@@ -27,6 +27,9 @@ namespace talcs {
     /**
      * @class AudioSourceProcessorBase
      * @brief Base class for objects that process the audio produced by an AudioSource object.
+     *
+     * Note that this class is **NOT** an @ref doc/object_binding.md "object-binding" class. Starting the processor does
+     * not open the source. The source should be opened before processing.
      */
 
     /**

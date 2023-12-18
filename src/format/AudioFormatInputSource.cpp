@@ -41,6 +41,8 @@ namespace talcs {
      * @class AudioFormatInputSource
      * @brief Takes audio from an AudioFormatIO object, resamples it to a specified sample rate, and produces it out.
      *
+     * This is one of the @ref doc/object_binding.md "object-binding" classes.
+     *
      * r8brain is used to resample the audio.
      * @see @link URL https://github.com/avaneev/r8brain-free-src @endlink
      */

@@ -31,6 +31,8 @@ namespace talcs {
     /**
      * @class AudioSourceClipSeries
      * @brief An AudioClipsSeriesBase object that uses PositionableAudioSource
+     *
+     * This is one of the @ref doc/object_binding.md "object-binding" classes.
      */
 
     /**

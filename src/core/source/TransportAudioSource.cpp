@@ -25,6 +25,9 @@ namespace talcs {
     /**
      * @class TransportAudioSource
      * @brief The object takes a PositionableAudioSource object and supports playing and pausing.
+     *
+     * This is one of the @ref doc/object_binding.md "object-binding" classes.
+     *
      * @see PositionableAudioSource
      */
 

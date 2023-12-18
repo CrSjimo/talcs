@@ -30,6 +30,9 @@ namespace talcs {
      * @brief Callback functions that starts, stops and reads data from an AudioSource
      *
      * In practice, TransportAudioSource is usually used to control the transportation of audio.
+     *
+     * This is one of the @ref doc/object_binding.md "object-binding" classes.
+     *
      * @see AudioSource, TransportAudioSource
      */
 
