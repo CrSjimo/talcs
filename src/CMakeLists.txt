@@ -12,7 +12,7 @@ set(TALCS_BUILD_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/../etc/include)
 # ----------------------------------
 # CMake API
 # ----------------------------------
-function(talcs_add_library _target)
+macro(talcs_add_library _target)
     set(options AUTOGEN NO_SYNC_INCLUDE NO_WIN_RC)
     set(oneValueArgs SYNC_INCLUDE_PREFIX PREFIX)
     set(multiValueArgs SYNC_INCLUDE_OPTIONS)
@@ -99,7 +99,7 @@ function(talcs_add_library _target)
             "$<BUILD_INTERFACE:${TALCS_GENERATED_INCLUDE_DIR}>"
         )
     endif()
-endfunction()
+endmacro()
 
 # ----------------------------------
 # Main Project
