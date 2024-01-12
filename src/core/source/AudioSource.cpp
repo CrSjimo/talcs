@@ -76,6 +76,9 @@ namespace talcs {
     /**
      * @fn qint64 AudioSource::read(const AudioSourceReadData &readData)
      * Reads audio data from the source.
+     *
+     * See @ref doc/reading_from_a_source.md "Reading from a source" for detailed descriptions.
+     *
      * @param readData see docs in class AudioSourceReadData
      * @returns the actual length of audio read measured in samples
      */
