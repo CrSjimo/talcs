@@ -134,9 +134,8 @@ namespace talcs {
             for (auto &srcInfo : sourceDict) {
                 auto src = srcInfo.src;
                 bool isMutedBySoloSetting = (soloCounter && !srcInfo.isSolo);
-                readLength = qMin(
-                    readLength,
-                    src->read(AudioSourceReadData(&tmpBuf, 0, readLength, isMutedBySoloSetting ? -1 : silentFlags)));
+                tmpBuf.clear();
+                src->read(AudioSourceReadData(&tmpBuf, 0, readLength, isMutedBySoloSetting ? -1 : silentFlags));
                 if (isMutedBySoloSetting)
                     tmpBuf.clear();
 

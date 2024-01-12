@@ -106,6 +106,7 @@ namespace talcs {
     void PositionableMixerAudioSource::close() {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
+        d->stop();
         d->tmpBuf.resize(0, 0);
         PositionableAudioSource::close();
     }
@@ -146,9 +147,7 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         if (!d->addSource(src, takeOwnership, isOpen(), bufferSize(), sampleRate()))
             return false;
-        if (isOpen()) {
-            src->setNextReadPosition(nextReadPosition());
-        }
+        src->setNextReadPosition(nextReadPosition());
         return true;
     }
 
