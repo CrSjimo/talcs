@@ -120,7 +120,7 @@ namespace talcs {
         if (isContinuous() && src.isContinuous()) {
             auto pDest = writePointerTo(destChannel, destStartPos);
             auto pSrc = src.readPointerTo(srcChannel, srcStartPos);
-            std::transform(pDest, pDest + length, pSrc, pDest, std::plus<>());
+            std::transform(pDest, pDest + length, pSrc, pDest, [gain](float d, float s) { return d + s * gain; });
         } else {
             for (qint64 i = 0; i < length; i++) {
                 sampleAt(destChannel, destStartPos + i) += src.constSampleAt(srcChannel, srcStartPos + i) * gain;

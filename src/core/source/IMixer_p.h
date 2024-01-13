@@ -29,7 +29,7 @@
 namespace talcs {
 
     static inline QPair<float, float> applyGainAndPan(float gain, float pan) {
-        return {gain * qMax(1.0f, 1.0f - pan), gain * qMax(1.0f, 1.0f + pan)};
+        return {gain * qMin(1.0f, 1.0f - pan), gain * qMin(1.0f, 1.0f + pan)};
     }
 
     template <class T>
@@ -131,21 +131,26 @@ namespace talcs {
             auto channelCount = readData.buffer->channelCount();
             auto gainLeftRight = applyGainAndPan(gain, pan);
             int routeCnt = 0;
+            qint64 actualReadLength = 0;
             for (auto &srcInfo : sourceDict) {
                 auto src = srcInfo.src;
                 bool isMutedBySoloSetting = (soloCounter && !srcInfo.isSolo);
                 tmpBuf.clear();
-                src->read(AudioSourceReadData(&tmpBuf, 0, readLength, isMutedBySoloSetting ? -1 : silentFlags));
+                actualReadLength = qMax(
+                        src->read(AudioSourceReadData(&tmpBuf, 0, readLength, isMutedBySoloSetting ? -1 : silentFlags)),
+                        actualReadLength);
                 if (isMutedBySoloSetting)
                     tmpBuf.clear();
 
                 if (routeChannels) {
                     if (routeCnt >= channelCount / 2)
                         break;
-                    readData.buffer->addSampleRange(routeCnt * 2, readData.startPos, readLength, tmpBuf, 0, 0,
-                                                    gainLeftRight.first);
-                    readData.buffer->addSampleRange(routeCnt * 2 + 1, readData.startPos, readLength, tmpBuf, 1, 0,
-                                                    gainLeftRight.second);
+                    if ((1 & silentFlags) == 0)
+                        readData.buffer->addSampleRange(routeCnt * 2, readData.startPos, readLength, tmpBuf, 0, 0,
+                                                        gainLeftRight.first);
+                    if ((2 & silentFlags) == 0)
+                        readData.buffer->addSampleRange(routeCnt * 2 + 1, readData.startPos, readLength, tmpBuf, 1, 0,
+                                                        gainLeftRight.second);
                     routeCnt++;
                 } else {
                     for (int i = 0; i < channelCount; i++) {
@@ -156,7 +161,7 @@ namespace talcs {
                     }
                 }
             }
-            return readLength;
+            return actualReadLength;
         }
     };
     

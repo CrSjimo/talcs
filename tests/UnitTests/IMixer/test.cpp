@@ -23,8 +23,19 @@
 #include <TalcsCore/MixerAudioSource.h>
 #include <TalcsCore/PositionableMixerAudioSource.h>
 #include <TalcsCore/SineWaveAudioSource.h>
+#include <TalcsCore/MemoryAudioSource.h>
+#include <QPointer>
 
 using namespace talcs;
+
+class DummyAudioSource: public QObject, public SineWaveAudioSource {
+    Q_OBJECT
+public:
+    DummyAudioSource() : QObject(nullptr), SineWaveAudioSource(440) {
+    }
+
+    ~DummyAudioSource() override = default;
+};
 
 class TestIMixer: public QObject {
     Q_OBJECT
@@ -84,7 +95,180 @@ private slots:
         QCOMPARE(src.nextReadPosition(), 19260817);
     }
 
-    // TODO: test of reading functions
+    void readingRange_MixerAudioSource() {
+        MixerAudioSource mixer;
+        AudioBuffer buf[3] = {AudioBuffer(2, 4096), AudioBuffer(2, 2048), AudioBuffer(2,4096)};
+        MemoryAudioSource src[3] = {MemoryAudioSource(buf), MemoryAudioSource(buf + 1), MemoryAudioSource(buf + 2)};
+        for (int i = 0; i < 3; i++)
+            mixer.addSource(src + i);
+        AudioBuffer tmpBuf(2, 2048);
+        mixer.open(1536, 48000);
+
+        QCOMPARE(mixer.read({&tmpBuf, 0, 1536}), 1536);
+        QCOMPARE(mixer.read({&tmpBuf, 0, 1024}), 1024);
+        QCOMPARE(src[0].nextReadPosition(), 2560);
+        QCOMPARE(src[1].nextReadPosition(), 2048);
+        QCOMPARE(src[2].nextReadPosition(), 2560);
+
+        mixer.removeSource(src);
+        mixer.removeSource(src + 2);
+        src[1].setNextReadPosition(1024);
+        QCOMPARE(mixer.read({&tmpBuf, 0, 1536}), 1024);
+    }
+
+    void readingRange_PositionableMixerAudioSource() {
+        PositionableMixerAudioSource mixer;
+        AudioBuffer buf[3] = {AudioBuffer(2, 4096), AudioBuffer(2, 2048), AudioBuffer(2,4096)};
+        MemoryAudioSource src[3] = {MemoryAudioSource(buf), MemoryAudioSource(buf + 1), MemoryAudioSource(buf + 2)};
+        for (int i = 0; i < 3; i++)
+            mixer.addSource(src + i);
+        QCOMPARE(mixer.length(), 2048);
+        AudioBuffer tmpBuf(2, 2048);
+        mixer.open(1536, 48000);
+
+        QCOMPARE(mixer.read({&tmpBuf, 0, 1536}), 1536);
+        QCOMPARE(mixer.read({&tmpBuf, 0, 1024}), 512);
+        QCOMPARE(src[0].nextReadPosition(), 2048);
+        QCOMPARE(src[1].nextReadPosition(), 2048);
+        QCOMPARE(src[2].nextReadPosition(), 2048);
+    }
+
+    void mixing() {
+        PositionableMixerAudioSource mixer;
+        AudioBuffer buf[3] = {AudioBuffer(3, 1024), AudioBuffer(3, 1024), AudioBuffer(3,1024)};
+        MemoryAudioSource src[3] = {MemoryAudioSource(buf), MemoryAudioSource(buf + 1), MemoryAudioSource(buf + 2)};
+        for (int i = 0; i < 3; i++) {
+            buf[i].data(0)[0] = 00.0f + i;
+            buf[i].data(1)[0] = 10.0f + i;
+            buf[i].data(2)[0] = 20.0f + i;
+            mixer.addSource(src + i);
+        }
+        mixer.open(1024, 48000);
+        AudioBuffer tmpBuf(4, 1024);
+        tmpBuf.data(3)[0] = 114514.0f;
+        mixer.read(&tmpBuf);
+        for (int i = 0; i < 3; i++) {
+            QCOMPARE(tmpBuf.data(i)[0], 30 * i + 3);
+        }
+        QCOMPARE(tmpBuf.data(3)[0], 0);
+    }
+
+    void channelRouting() {
+        PositionableMixerAudioSource mixer;
+        AudioBuffer buf[3] = {AudioBuffer(3, 1024), AudioBuffer(3, 1024), AudioBuffer(3,1024)};
+        MemoryAudioSource src[3] = {MemoryAudioSource(buf), MemoryAudioSource(buf + 1), MemoryAudioSource(buf + 2)};
+        for (int i = 0; i < 3; i++) {
+            buf[i].data(0)[0] = 00.0f + i;
+            buf[i].data(1)[0] = 10.0f + i;
+            buf[i].data(2)[0] = 20.0f + i;
+            mixer.addSource(src + i);
+        }
+        mixer.setRouteChannels(true);
+        mixer.open(1024, 48000);
+        AudioBuffer tmpBuf(8, 1024);
+        tmpBuf.data(6)[0] = 114514.0f;
+        tmpBuf.data(7)[0] = 1919810.0f;
+        mixer.read(&tmpBuf);
+        for (int i = 0; i < 3; i++) {
+            QCOMPARE(tmpBuf.data(i * 2)[0], i);
+            QCOMPARE(tmpBuf.data(i * 2 + 1)[0], 10 + i);
+        }
+        QCOMPARE(tmpBuf.data(6)[0], 0);
+        QCOMPARE(tmpBuf.data(7)[0], 0);
+        mixer.removeSource(src + 1);
+        mixer.setNextReadPosition(0);
+        mixer.read(&tmpBuf);
+        QCOMPARE(tmpBuf.data(2)[0], 2);
+    }
+
+    void addingAndRemovingSources() {
+        QScopedPointer<PositionableMixerAudioSource> mixer(new PositionableMixerAudioSource);
+        SineWaveAudioSource src1(440);
+        mixer->addSource(&src1);
+        mixer->open(1024, 48000);
+        QVERIFY(src1.isOpen());
+        QPointer<DummyAudioSource> src2 = new DummyAudioSource;
+        mixer->addSource(src2.data(), true);
+        QVERIFY(src2->isOpen());
+        QPointer<DummyAudioSource> src3 = new DummyAudioSource;
+        mixer->addSource(src3.data(), true);
+        SineWaveAudioSource src4(440);
+        mixer->addSource(&src4);
+        QList<PositionableAudioSource *> expectedSrcList = {&src1, src2.data(), src3.data(), &src4};
+        QCOMPARE(mixer->sources(), expectedSrcList);
+        mixer->removeSource(src3.data());
+        expectedSrcList.removeOne(src3.data());
+        QCOMPARE(mixer->sources(), expectedSrcList);
+        mixer.reset();
+        QVERIFY(src2.isNull());
+        QVERIFY(!src3.isNull());
+        src3.clear();
+    }
+
+    void soloAndMuteTest() {
+        PositionableMixerAudioSource mixer;
+        AudioBuffer buf[3] = {AudioBuffer(2, 1024), AudioBuffer(2, 1024), AudioBuffer(2,1024)};
+        MemoryAudioSource src[3] = {MemoryAudioSource(buf), MemoryAudioSource(buf + 1), MemoryAudioSource(buf + 2)};
+        for (int i = 0; i < 3; i++) {
+            buf[i].data(0)[0] = buf[i].data(1)[0] = 10 + i;
+            mixer.addSource(src + i);
+        }
+        mixer.open(1024, 48000);
+        AudioBuffer tmpBuf(6, 1024);
+        mixer.setSourceSolo(src + 1, true);
+        mixer.read(&tmpBuf);
+        QCOMPARE(tmpBuf.data(0)[0], 11);
+        mixer.setNextReadPosition(0);
+
+        mixer.setSourceSolo(src, true);
+        mixer.read(&tmpBuf);
+        QCOMPARE(tmpBuf.data(0)[0], 21);
+        mixer.setNextReadPosition(0);
+
+        mixer.setRouteChannels(true);
+        mixer.read(&tmpBuf);
+        QCOMPARE(tmpBuf.data(4)[0], 0);
+        mixer.setNextReadPosition(0);
+
+        mixer.setSilentFlags(2);
+        mixer.read(&tmpBuf);
+        QCOMPARE(tmpBuf.data(0)[0], 10);
+        QCOMPARE(tmpBuf.data(1)[0], 0);
+        mixer.setNextReadPosition(0);
+
+        mixer.setRouteChannels(false);
+        mixer.read(&tmpBuf);
+        QCOMPARE(tmpBuf.data(0)[0], 21);
+        QCOMPARE(tmpBuf.data(1)[0], 0);
+    }
+
+    void gainAndPanTest() {
+        PositionableMixerAudioSource mixer;
+        AudioBuffer buf[3] = {AudioBuffer(2, 1024), AudioBuffer(2, 1024), AudioBuffer(2,1024)};
+        MemoryAudioSource src[3] = {MemoryAudioSource(buf), MemoryAudioSource(buf + 1), MemoryAudioSource(buf + 2)};
+        for (int i = 0; i < 3; i++) {
+            buf[i].data(0)[0] = buf[i].data(1)[0] = 10 + i;
+            mixer.addSource(src + i);
+        }
+        mixer.setGain(2);
+        mixer.open(1024, 48000);
+        AudioBuffer tmpBuf(2, 1024);
+        mixer.read(&tmpBuf);
+        QCOMPARE(tmpBuf.data(0)[0], 66);
+        QCOMPARE(tmpBuf.data(1)[0], 66);
+        mixer.setNextReadPosition(0);
+
+        mixer.setPan(-0.5);
+        mixer.read(&tmpBuf);
+        QCOMPARE(tmpBuf.data(0)[0], 66);
+        QCOMPARE(tmpBuf.data(1)[0], 33);
+        mixer.setNextReadPosition(0);
+
+        mixer.setPan(0.5);
+        mixer.read(&tmpBuf);
+        QCOMPARE(tmpBuf.data(0)[0], 33);
+        QCOMPARE(tmpBuf.data(1)[0], 66);
+    }
 
 };
 
