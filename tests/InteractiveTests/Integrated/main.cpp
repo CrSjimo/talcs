@@ -320,7 +320,8 @@ int main(int argc, char **argv) {
 
     mixer.setLevelMeterChannelCount(2);
     QObject::connect(&mixer, &PositionableMixerAudioSource::levelMetered, fileSpecLabel, [=](const QVector<float> &values){
-        auto [ml, mr] = QPair{values[0], values[1]};
+        auto ml = values[0];
+        auto mr = values[1];
         QString text = "bm: ";
         if(ml == 0) {
             text += "-inf dB, ";

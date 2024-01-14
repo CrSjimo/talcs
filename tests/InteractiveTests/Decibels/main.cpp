@@ -119,7 +119,8 @@ int main(int argc, char **argv) {
     mixer.setLevelMeterChannelCount(2);
 
     QObject::connect(&mixer, &MixerAudioSource::levelMetered, win, [&](const QVector<float> &values) {
-        auto [ml, mr] = QPair{values[0], values[1]};
+        auto ml = values[0];
+        auto mr = values[1];
         float dBL = Decibels::gainToDecibels(ml, -30);
         if (dBL < valueL.currentValue())
             valueL.setTargetValue(dBL);
