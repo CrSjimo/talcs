@@ -17,17 +17,17 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_R8BRAINRESAMPLER_P_H
-#define TALCS_R8BRAINRESAMPLER_P_H
+#ifndef TALCS_AUDIORESAMPLER_P_H
+#define TALCS_AUDIORESAMPLER_P_H
 
-#include "R8BrainResampler.h"
+#include "AudioResampler.h"
 
 #include <CDSPResampler.h>
 
 #include <QVector>
 
 namespace talcs {
-    class R8BrainResamplerPrivate {
+    class AudioResamplerPrivate {
     public:
         bool copyOnly = false;
         double ratio;
@@ -42,4 +42,4 @@ namespace talcs {
     };
 }
 
-#endif //TALCS_R8BRAINRESAMPLER_P_H
+#endif //TALCS_AUDIORESAMPLER_P_H

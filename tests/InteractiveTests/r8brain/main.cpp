@@ -24,7 +24,7 @@
 #include <QDebug>
 #include <QTime>
 #include <TalcsFormat/AudioFormatIO.h>
-#include <TalcsFormat/R8BrainMultichannelResampler.h>
+#include <TalcsFormat/MultichannelAudioResampler.h>
 #include <TalcsCore/InterleavedAudioDataWrapper.h>
 #include <TalcsCore/AudioBuffer.h>
 #include <TalcsCore/AudioSource.h>
@@ -32,11 +32,11 @@
 
 using namespace talcs;
 
-class MyResampler : public R8BrainMultichannelResampler {
+class MyResampler : public MultichannelAudioResampler {
 public:
     MyResampler(double ratio, qint64 bufferSize, int channelCount, AudioFormatIO *io) :
-        R8BrainMultichannelResampler(ratio, bufferSize, channelCount),
-        io(io) {}
+            MultichannelAudioResampler(ratio, bufferSize, channelCount),
+            io(io) {}
 private:
     AudioFormatIO *io;
     QVector<float> data;

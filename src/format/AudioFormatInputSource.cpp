@@ -68,7 +68,7 @@ namespace talcs {
     AudioFormatInputSourcePrivate::AudioFormatInputResampler::AudioFormatInputResampler(double ratio, qint64 bufferSize,
                                                                                         int channelCount,
                                                                                         AudioFormatInputSourcePrivate *d)
-            : R8BrainMultichannelResampler(ratio, bufferSize, channelCount), d(d) {
+            : MultichannelAudioResampler(ratio, bufferSize, channelCount), d(d) {
     }
 
     void AudioFormatInputSourcePrivate::AudioFormatInputResampler::read(const AudioSourceReadData &readData) {

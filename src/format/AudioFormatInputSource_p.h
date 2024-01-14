@@ -23,7 +23,7 @@
 #include <TalcsCore/private/PositionableAudioSource_p.h>
 #include <TalcsFormat/AudioFormatInputSource.h>
 
-#include "R8BrainMultichannelResampler.h"
+#include "MultichannelAudioResampler.h"
 
 #include <QMutex>
 #include <QVector>
@@ -38,7 +38,7 @@ namespace talcs {
         bool takeOwnership;
         double ratio = 0;
 
-        class AudioFormatInputResampler : public R8BrainMultichannelResampler {
+        class AudioFormatInputResampler : public MultichannelAudioResampler {
         public:
             AudioFormatInputResampler(double ratio, qint64 bufferSize, int channelCount, AudioFormatInputSourcePrivate *d);
             void read(const talcs::AudioSourceReadData &readData) override;

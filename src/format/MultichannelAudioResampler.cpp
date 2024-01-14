@@ -17,13 +17,13 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#include "R8BrainMultichannelResampler.h"
-#include "R8BrainMultichannelResampler_p.h"
+#include "MultichannelAudioResampler.h"
+#include "MultichannelAudioResampler_p.h"
 #include "TalcsCore/AudioDataWrapper.h"
 
 namespace talcs {
     /**
-     * @class R8BrainMultichannelResampler
+     * @class MultichannelAudioResampler
      * @brief An adapter class of [r8b::CDSPResampler](https://www.voxengo.com/public/r8brain-free-src/Documentation/a00114.html)
      * that provides Secret-Rabbit-Code-like APIs with the ability to process multi-channel audio.
      */
@@ -34,7 +34,7 @@ namespace talcs {
      * @param bufferSize the size of each output block
      * @param channelCount the number of audio channels
      */
-    R8BrainMultichannelResampler::R8BrainMultichannelResampler(double ratio, qint64 bufferSize, int channelCount) : d(new R8BrainMultichannelResamplerPrivate) {
+    MultichannelAudioResampler::MultichannelAudioResampler(double ratio, qint64 bufferSize, int channelCount) : d(new MultichannelAudioResamplerPrivate) {
         Q_ASSERT(channelCount > 0);
         d->channelCount = channelCount;
         d->inputBuffer.resize(channelCount, 1);
@@ -47,7 +47,7 @@ namespace talcs {
     /**
      * Destructor.
      */
-    R8BrainMultichannelResampler::~R8BrainMultichannelResampler() {
+    MultichannelAudioResampler::~MultichannelAudioResampler() {
         for (int i = 0; i < d->channelCount; i++) {
             delete d->resamplerOfChannel[i];
         }
@@ -55,9 +55,9 @@ namespace talcs {
     }
 
     /**
-     * @copydoc R8BrainResampler::reset()
+     * @copydoc AudioResampler::reset()
      */
-    void R8BrainMultichannelResampler::reset() {
+    void MultichannelAudioResampler::reset() {
         for (auto resampler: d->resamplerOfChannel) {
             resampler->reset();
         }
@@ -73,9 +73,9 @@ namespace talcs {
     }
 
     /**
-     * @copydoc R8BrainResampler::process()
+     * @copydoc AudioResampler::process()
      */
-    void R8BrainMultichannelResampler::process(const AudioSourceReadData &readData) {
+    void MultichannelAudioResampler::process(const AudioSourceReadData &readData) {
         if (readData.buffer->isContinuous()) {
             for (int i = 0; i < d->channelCount; i++) {
                 if (i < readData.buffer->channelCount())
@@ -94,28 +94,28 @@ namespace talcs {
     }
 
     /**
-     * @copydoc R8BrainResampler::ratio()
+     * @copydoc AudioResampler::ratio()
      */
-    double R8BrainMultichannelResampler::ratio() const {
+    double MultichannelAudioResampler::ratio() const {
         return d->resamplerOfChannel[0]->ratio();
     }
 
     /**
-     * @copydoc R8BrainResampler::bufferSize()
+     * @copydoc AudioResampler::bufferSize()
      */
-    qint64 R8BrainMultichannelResampler::bufferSize() const {
+    qint64 MultichannelAudioResampler::bufferSize() const {
         return d->resamplerOfChannel[0]->bufferSize();
     }
 
     /**
      * Gets the number of channels of the resampler.
      */
-    int R8BrainMultichannelResampler::channelCount() const {
+    int MultichannelAudioResampler::channelCount() const {
         return d->resamplerOfChannel.size();
     }
 
     /**
-     * @fn void R8BrainMultichannelResampler::read(const AudioSourceReadData &readData)
-     * @copydoc R8BrainResampler::read()
+     * @fn void MultichannelAudioResampler::read(const AudioSourceReadData &readData)
+     * @copydoc AudioResampler::read()
      */
 } // talcs

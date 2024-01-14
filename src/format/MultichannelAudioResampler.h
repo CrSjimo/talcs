@@ -17,8 +17,8 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_R8BRAINMULTICHANNELRESAMPLER_H
-#define TALCS_R8BRAINMULTICHANNELRESAMPLER_H
+#ifndef TALCS_MULTICHANNELAUDIORESAMPLER_H
+#define TALCS_MULTICHANNELAUDIORESAMPLER_H
 
 #include <QScopedPointer>
 
@@ -31,13 +31,13 @@ namespace talcs {
     class AudioSourceReadData;
     class IAudioSampleProvider;
 
-    class R8BrainMultichannelResamplerPrivate;
+    class MultichannelAudioResamplerPrivate;
     class ChannelResampler;
 
-    class TALCSFORMAT_EXPORT R8BrainMultichannelResampler {
+    class TALCSFORMAT_EXPORT MultichannelAudioResampler {
     public:
-        explicit R8BrainMultichannelResampler(double ratio, qint64 bufferSize, int channelCount);
-        ~R8BrainMultichannelResampler();
+        explicit MultichannelAudioResampler(double ratio, qint64 bufferSize, int channelCount);
+        ~MultichannelAudioResampler();
 
         void reset();
 
@@ -52,10 +52,10 @@ namespace talcs {
 
     private:
         friend class ChannelResampler;
-        QScopedPointer<R8BrainMultichannelResamplerPrivate> d;
+        QScopedPointer<MultichannelAudioResamplerPrivate> d;
 
     };
 
 } // talcs
 
-#endif //TALCS_R8BRAINMULTICHANNELRESAMPLER_H
+#endif //TALCS_MULTICHANNELAUDIORESAMPLER_H

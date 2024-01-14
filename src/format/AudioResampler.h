@@ -17,33 +17,43 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_R8BRAINMULTICHANNELRESAMPLER_P_H
-#define TALCS_R8BRAINMULTICHANNELRESAMPLER_P_H
+#ifndef TALCS_AUDIORESAMPLER_H
+#define TALCS_AUDIORESAMPLER_H
 
-#include "R8BrainMultichannelResampler.h"
+#include <functional>
 
-#include "R8BrainResampler.h"
-#include <TalcsCore/AudioBuffer.h>
+#include <QScopedPointer>
+
+#include <TalcsFormat/TalcsFormatGlobal.h>
+
+namespace r8b {
+    class CDSPResampler;
+}
 
 namespace talcs {
 
-    class ChannelResampler;
+    class AudioResamplerPrivate;
 
-    class R8BrainMultichannelResamplerPrivate {
+    class TALCSFORMAT_EXPORT AudioResampler {
     public:
-        int channelCount;
-        QVector<ChannelResampler *> resamplerOfChannel;
-        AudioBuffer inputBuffer;
-        float *tmpBuf = nullptr;
+        explicit AudioResampler(double ratio, qint64 bufferSize);
+        ~AudioResampler();
+
+        void reset();
+
+        void process(float *buffer);
+
+        double ratio() const;
+        qint64 bufferSize() const;
+
+    protected:
+        virtual void read(float *inputBlock, qint64 length) = 0;
+
+    private:
+        QScopedPointer<AudioResamplerPrivate> d;
+
     };
 
-    class ChannelResampler : public R8BrainResampler {
-    public:
-        ChannelResampler(double ratio, qint64 bufferSize, R8BrainMultichannelResampler *mcr, int ch) : R8BrainResampler(ratio, bufferSize), mcr(mcr), ch(ch) {}
-        void read(float *inputBlock, qint64 length) override;
-        R8BrainMultichannelResampler *mcr;
-        int ch;
-    };
-}
+} // talcs
 
-#endif //TALCS_R8BRAINMULTICHANNELRESAMPLER_P_H
+#endif //TALCS_AUDIORESAMPLER_H

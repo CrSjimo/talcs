@@ -17,13 +17,13 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#include "R8BrainResampler.h"
-#include "R8BrainResampler_p.h"
+#include "AudioResampler.h"
+#include "AudioResampler_p.h"
 
 namespace talcs {
 
     /**
-     * @class R8BrainResampler
+     * @class AudioResampler
      * @brief An adapter class of [r8b::CDSPResampler](https://www.voxengo.com/public/r8brain-free-src/Documentation/a00114.html)
      * that provides Secret-Rabbit-Code-like APIs.
      */
@@ -34,7 +34,7 @@ namespace talcs {
      * @param bufferSize the size of each output block
      */
 
-    R8BrainResampler::R8BrainResampler(double ratio, qint64 bufferSize) : d(new R8BrainResamplerPrivate) {
+    AudioResampler::AudioResampler(double ratio, qint64 bufferSize) : d(new AudioResamplerPrivate) {
         Q_ASSERT(ratio > 0.0);
         d->ratio = ratio;
         d->bufferSize = bufferSize;
@@ -53,12 +53,12 @@ namespace talcs {
     /**
      * Destructor.
      */
-    R8BrainResampler::~R8BrainResampler() = default;
+    AudioResampler::~AudioResampler() = default;
 
     /**
      * Resets the initial states of the resampler. This function should be called when the source is changed.
      */
-    void R8BrainResampler::reset() {
+    void AudioResampler::reset() {
         if (d->copyOnly)
             return;
         d->resampler->clear();
@@ -71,14 +71,14 @@ namespace talcs {
     /**
      * Gets the ratio of the resampler.
      */
-    double R8BrainResampler::ratio() const {
+    double AudioResampler::ratio() const {
         return d->ratio;
     }
 
     /**
      * Gets the buffer size of the resampler.
      */
-    qint64 R8BrainResampler::bufferSize() const {
+    qint64 AudioResampler::bufferSize() const {
         return d->bufferSize;
     }
 
@@ -87,7 +87,7 @@ namespace talcs {
      *
      * This function does not provide functionalities of getting read length, and it should be checked in other ways.
      */
-    void R8BrainResampler::process(float *buffer) {
+    void AudioResampler::process(float *buffer) {
         // If ratio is 1.0 then just copy.
         if (d->copyOnly)
             return read(buffer, d->bufferSize);
@@ -154,7 +154,7 @@ namespace talcs {
     }
 
     /**
-     * @fn void R8BrainResampler::read(float *inputBlock, qint64 length)
+     * @fn void AudioResampler::read(float *inputBlock, qint64 length)
      * Reads an input block of specified length. If the source is not able to provide
      * a block of the specified length, the function needs to fill the exceeding part with zeros.
      */
