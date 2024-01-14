@@ -118,13 +118,18 @@ namespace talcs {
      */
 
     /**
-     * @fn void IMixer::setMeterEnabled(bool enabled)
-     * Sets whether to calculate the magnitude of each block.
+     * @fn void IMixer::setLevelMeterChannelCount(int count)
+     * Sets the number of channels to calculate the magnitude of each block. If the number exceeds the number of channels
+     * in the produced audio block, excess part will be set to zero.
+     *
+     * @see MixerAudioSource::levelMetered(), PositionableMixerAudioSource::levelMetered()
      */
 
     /**
-     * @fn bool IMixer::isMeterEnabled() const
-     * Gets whether to calculate the magnitude of each block.
+     * @fn int IMixer::levelMeterChannelCount() const
+     * Gets the number of channels to calculate the magnitude of each block.
+     *
+     * @see MixerAudioSource::levelMetered(), PositionableMixerAudioSource::levelMetered()
      */
      
 }

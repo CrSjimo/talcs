@@ -51,9 +51,10 @@ namespace talcs {
         float gain = 1;
         float pan = 0;
         int silentFlags = 0;
-        bool isMeterEnabled = false;
 
         AudioBuffer tmpBuf;
+
+        QVector<float> currentMagnitudes;
 
         bool routeChannels = false;
 
@@ -161,6 +162,15 @@ namespace talcs {
                     }
                 }
             }
+
+            // update the level meter
+            for (int i = 0; i < currentMagnitudes.size(); i++) {
+                if (i < readData.buffer->channelCount())
+                    currentMagnitudes[i] = readData.buffer->magnitude(i, readData.startPos, readLength);
+                else
+                    currentMagnitudes[i] = 0.0f;
+            }
+
             return actualReadLength;
         }
     };

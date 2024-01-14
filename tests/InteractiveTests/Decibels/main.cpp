@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
     auto drvMgr = AudioDriverManager::createBuiltInDriverManager();
     auto drv = drvMgr->driver(drvMgr->drivers()[0]);
     drv->initialize();
-    auto dev = drv->createDevice(drv->devices()[0]);
+    auto dev = drv->createDevice(drv->defaultDevice().isEmpty() ? drv->devices()[0] : drv->defaultDevice());
     dev->open(dev->preferredBufferSize(), dev->preferredSampleRate());
     AudioSourcePlayback playback(&mixer);
     dev->start(&playback);
@@ -116,9 +116,10 @@ int main(int argc, char **argv) {
         tpSrc.setPosition(0);
     });
 
-    mixer.setMeterEnabled(true);
+    mixer.setLevelMeterChannelCount(2);
 
-    QObject::connect(&mixer, &MixerAudioSource::meterUpdated, win, [&](float ml, float mr) {
+    QObject::connect(&mixer, &MixerAudioSource::levelMetered, win, [&](const QVector<float> &values) {
+        auto [ml, mr] = QPair{values[0], values[1]};
         float dBL = Decibels::gainToDecibels(ml, -30);
         if (dBL < valueL.currentValue())
             valueL.setTargetValue(dBL);

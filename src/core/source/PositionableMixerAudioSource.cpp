@@ -38,6 +38,7 @@ namespace talcs {
      */
     PositionableMixerAudioSource::PositionableMixerAudioSource(QObject *parent)
         : PositionableMixerAudioSource(*new PositionableMixerAudioSourcePrivate, parent) {
+        qRegisterMetaType<QVector<float>>();
     }
     PositionableMixerAudioSource::PositionableMixerAudioSource(PositionableMixerAudioSourcePrivate & d, QObject *parent)
         : QObject(parent), PositionableAudioSource(d) {
@@ -85,18 +86,8 @@ namespace talcs {
             d->mix(readData, readLength);
             d->position += readLength;
         }
-        if (d->isMeterEnabled) {
-            float magnitude[2] = {0, 0};
-            for (int i = 0; i < channelCount; i++) {
-                if (i > 1)
-                    break;
-                magnitude[i] = readData.buffer->magnitude(i, readData.startPos, readLength);
-            }
-            if (channelCount == 1) {
-                magnitude[1] = magnitude[0];
-            }
-            emit meterUpdated(magnitude[0], magnitude[1]);
-        }
+        if (!d->currentMagnitudes.empty())
+            emit levelMetered(d->currentMagnitudes);
         return readLength;
     }
 
@@ -223,22 +214,22 @@ namespace talcs {
         return d->silentFlags;
     }
 
-    void PositionableMixerAudioSource::setMeterEnabled(bool enabled) {
+    void PositionableMixerAudioSource::setLevelMeterChannelCount(int count) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
-        d->isMeterEnabled = enabled;
+        d->currentMagnitudes.resize(count);
     }
 
-    bool PositionableMixerAudioSource::isMeterEnabled() const {
+    int PositionableMixerAudioSource::levelMeterChannelCount() {
         Q_D(const PositionableMixerAudioSource);
-        return d->isMeterEnabled;
+        return d->currentMagnitudes.size();
     }
 
     /**
-     * @fn void PositionableMixerAudioSource::meterUpdated(float leftMagnitude, float rightMagnitude)
-     * Emitted on each block processed.
+     * @fn void PositionableMixerAudioSource::levelMetered(const QVector<float> &values)
+     * Emitted on each block processed. Outputs the magnitude of each channel.
      *
-     * To use this signal, setMeterEnabled() must be set to true.
+     * To use this signal, setLevelMeterChannelCount() must be set to non-zero.
      */
 
 }

@@ -59,11 +59,11 @@ namespace talcs {
         void setSilentFlags(int silentFlags) override;
         int silentFlags() const override;
 
-        void setMeterEnabled(bool enabled) override;
-        bool isMeterEnabled() const override;
+        void setLevelMeterChannelCount(int count) override;
+        int levelMeterChannelCount() override;
 
     signals:
-        void meterUpdated(float leftMagnitude, float rightMagnitude);
+        int levelMetered(const QVector<float> &values);
 
     protected:
         explicit MixerAudioSource(MixerAudioSourcePrivate &d, QObject *parent);

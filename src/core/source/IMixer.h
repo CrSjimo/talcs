@@ -45,8 +45,8 @@ namespace talcs {
         virtual void setSilentFlags(int silentFlags) = 0;
         virtual int silentFlags() const = 0;
 
-        virtual void setMeterEnabled(bool enabled) = 0;
-        virtual bool isMeterEnabled() const = 0;
+        virtual void setLevelMeterChannelCount(int count) = 0;
+        virtual int levelMeterChannelCount() = 0;
     };
     
 }

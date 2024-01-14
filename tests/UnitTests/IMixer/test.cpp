@@ -25,6 +25,7 @@
 #include <TalcsCore/SineWaveAudioSource.h>
 #include <TalcsCore/MemoryAudioSource.h>
 #include <QPointer>
+#include <QSignalSpy>
 
 using namespace talcs;
 
@@ -268,6 +269,26 @@ private slots:
         mixer.read(&tmpBuf);
         QCOMPARE(tmpBuf.data(0)[0], 33);
         QCOMPARE(tmpBuf.data(1)[0], 66);
+    }
+
+    void metering() {
+        PositionableMixerAudioSource mixer;
+        AudioBuffer buf[3] = {AudioBuffer(2, 1024), AudioBuffer(2, 1024), AudioBuffer(2,1024)};
+        MemoryAudioSource src[3] = {MemoryAudioSource(buf), MemoryAudioSource(buf + 1), MemoryAudioSource(buf + 2)};
+        for (int i = 0; i < 3; i++) {
+            buf[i].data(0)[0] = i;
+            buf[i].data(1)[0] = 10 + i;
+            mixer.addSource(src + i);
+        }
+        QSignalSpy spy(&mixer, &PositionableMixerAudioSource::levelMetered);
+        mixer.open(1024, 48000);
+        AudioBuffer tmpBuf(2, 1024);
+        mixer.setLevelMeterChannelCount(3);
+        mixer.read(&tmpBuf);
+        auto vec = spy[0][0].value<QVector<float>>();
+        QCOMPARE(vec[0], 3);
+        QCOMPARE(vec[1], 33);
+        QCOMPARE(vec[2], 0);
     }
 
 };

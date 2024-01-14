@@ -318,8 +318,9 @@ int main(int argc, char **argv) {
 
     auto availableFormats = AudioFormatIO::availableFormats();
 
-    mixer.setMeterEnabled(true);
-    QObject::connect(&mixer, &PositionableMixerAudioSource::meterUpdated, fileSpecLabel, [=](float ml, float mr){
+    mixer.setLevelMeterChannelCount(2);
+    QObject::connect(&mixer, &PositionableMixerAudioSource::levelMetered, fileSpecLabel, [=](const QVector<float> &values){
+        auto [ml, mr] = QPair{values[0], values[1]};
         QString text = "bm: ";
         if(ml == 0) {
             text += "-inf dB, ";

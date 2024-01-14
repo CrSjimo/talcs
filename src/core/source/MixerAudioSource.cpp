@@ -35,6 +35,7 @@ namespace talcs {
      * Default constructor.
      */
     MixerAudioSource::MixerAudioSource(QObject *parent) : MixerAudioSource(*new MixerAudioSourcePrivate, parent) {
+        qRegisterMetaType<QVector<float>>();
     }
 
     MixerAudioSource::MixerAudioSource(MixerAudioSourcePrivate & d, QObject *parent) : QObject(parent), AudioSource(d) {
@@ -80,18 +81,8 @@ namespace talcs {
             readLength = d->mix(readData, readLength);
         }
 
-        if (d->isMeterEnabled) {
-            float magnitude[2] = {0, 0};
-            for (int i = 0; i < channelCount; i++) {
-                if (i > 1)
-                    break;
-                magnitude[i] = readData.buffer->magnitude(i, readData.startPos, readLength);
-            }
-            if (channelCount == 1) {
-                magnitude[1] = magnitude[0];
-            }
-            emit meterUpdated(magnitude[0], magnitude[1]);
-        }
+        if (!d->currentMagnitudes.empty())
+            emit levelMetered(d->currentMagnitudes);
         return readLength;
     }
 
@@ -187,22 +178,22 @@ namespace talcs {
         return d->silentFlags;
     }
 
-    void MixerAudioSource::setMeterEnabled(bool enabled) {
+    void MixerAudioSource::setLevelMeterChannelCount(int count) {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
-        d->isMeterEnabled = enabled;
+        d->currentMagnitudes.resize(count);
     }
 
-    bool MixerAudioSource::isMeterEnabled() const {
+    int MixerAudioSource::levelMeterChannelCount() {
         Q_D(const MixerAudioSource);
-        return d->isMeterEnabled;
+        return d->currentMagnitudes.size();
     }
 
     /**
-     * @fn void MixerAudioSource::meterUpdated(float leftMagnitude, float rightMagnitude)
-     * Emitted on each block processed.
+     * @fn void MixerAudioSource::levelMetered(const QVector<float> &values)
+     * Emitted on each block processed. Outputs the magnitude of each channel.
      *
-     * To use this signal, setMeterEnabled() must be set to true.
+     * To use this signal, setLevelMeterChannelCount() must be set to non-zero.
      */
 
 }
