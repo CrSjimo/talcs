@@ -20,16 +20,59 @@
 #ifndef TALCS_IMIXER_H
 #define TALCS_IMIXER_H
 
+#include <list>
+
 #include <QList>
 
 namespace talcs {
+    template <class T>
+    struct IMixerPrivate;
 
     template <class T>
     struct IMixer {
+        class SourceIterator {
+        public:
+            SourceIterator next() const {
+                return SourceIterator(std::next(m_it), m_lis);
+            }
+            SourceIterator previous() const {
+                return SourceIterator(std::prev(m_it), m_lis);
+            }
+            T *data() const {
+                if (m_it == m_lis->cend())
+                    return nullptr;
+                return *m_it;
+            }
+        private:
+            friend class IMixer<T>;
+            friend class IMixerPrivate<T>;
+
+            using ListType = std::list<T *>;
+            using IteratorType = typename ListType::const_iterator;
+
+            SourceIterator(IteratorType it, const ListType *lis) : m_it(it), m_lis(lis) {
+            }
+
+            IteratorType m_it;
+            const ListType *m_lis;
+        };
+
         virtual bool addSource(T *src, bool takeOwnership) = 0;
+        virtual SourceIterator appendSource(T *src, bool takeOwnership) = 0;
+        virtual SourceIterator prependSource(T *src, bool takeOwnership) = 0;
+        virtual SourceIterator insertSource(const SourceIterator &pos, T *src, bool takeOwnership) = 0;
+
         virtual bool removeSource(T *src) = 0;
+        virtual void eraseSource(const SourceIterator &srcIt) = 0;
         virtual void removeAllSources() = 0;
+
+        virtual void moveSource(const SourceIterator &pos, const SourceIterator &target) = 0;
+        virtual void swapSource(const SourceIterator &first, const SourceIterator &second) = 0;
+
         virtual QList<T *> sources() const = 0;
+        virtual SourceIterator firstSource() const = 0;
+        virtual SourceIterator lastSource() const = 0;
+
         virtual void setSourceSolo(T *src, bool isSolo) = 0;
         virtual bool isSourceSolo(T *src) const = 0;
 

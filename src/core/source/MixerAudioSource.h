@@ -41,9 +41,21 @@ namespace talcs {
         void close() override;
 
         bool addSource(AudioSource *src, bool takeOwnership = false) override;
+        SourceIterator appendSource(talcs::AudioSource *src, bool takeOwnership) override;
+        SourceIterator prependSource(talcs::AudioSource *src, bool takeOwnership) override;
+        SourceIterator insertSource(const SourceIterator &pos, talcs::AudioSource *src, bool takeOwnership) override;
+
         bool removeSource(AudioSource *src) override;
+        void eraseSource(const SourceIterator &srcIt) override;
         void removeAllSources() override;
+
+        void moveSource(const SourceIterator &pos, const SourceIterator &target) override;
+        void swapSource(const SourceIterator &first, const SourceIterator &second) override;
+
         QList<AudioSource *> sources() const override;
+        SourceIterator firstSource() const override;
+        SourceIterator lastSource() const override;
+
         void setSourceSolo(AudioSource *src, bool isSolo) override;
         bool isSourceSolo(AudioSource *src) const override;
 

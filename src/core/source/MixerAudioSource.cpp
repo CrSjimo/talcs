@@ -38,7 +38,7 @@ namespace talcs {
         qRegisterMetaType<QVector<float>>();
     }
 
-    MixerAudioSource::MixerAudioSource(MixerAudioSourcePrivate & d, QObject *parent) : QObject(parent), AudioSource(d) {
+    MixerAudioSource::MixerAudioSource(MixerAudioSourcePrivate &d, QObject *parent) : QObject(parent), AudioSource(d) {
     }
 
     /**
@@ -82,7 +82,7 @@ namespace talcs {
         }
 
         if (!d->currentMagnitudes.empty())
-            emit levelMetered(d->currentMagnitudes);
+                emit levelMetered(d->currentMagnitudes);
         return readLength;
     }
 
@@ -98,7 +98,7 @@ namespace talcs {
         AudioSource::close();
     }
 
-    bool MixerAudioSource::addSource(AudioSource * src, bool takeOwnership) {
+    bool MixerAudioSource::addSource(AudioSource *src, bool takeOwnership) {
         if (src == this)
             return false;
         Q_D(MixerAudioSource);
@@ -106,10 +106,36 @@ namespace talcs {
         return d->addSource(src, takeOwnership, isOpen(), bufferSize(), sampleRate());
     }
 
-    bool MixerAudioSource::removeSource(AudioSource * src) {
+    MixerAudioSource::SourceIterator MixerAudioSource::appendSource(talcs::AudioSource *src, bool takeOwnership) {
+        Q_D(MixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        return d->insertSource(d->lastSource().next(), src, takeOwnership, isOpen(), bufferSize(), sampleRate());
+    }
+
+    MixerAudioSource::SourceIterator MixerAudioSource::prependSource(talcs::AudioSource *src, bool takeOwnership) {
+        Q_D(MixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        return d->insertSource(d->firstSource(), src, takeOwnership, isOpen(), bufferSize(), sampleRate());
+    }
+
+    MixerAudioSource::SourceIterator
+    MixerAudioSource::insertSource(const MixerAudioSource::SourceIterator &pos, talcs::AudioSource *src,
+                                   bool takeOwnership) {
+        Q_D(MixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        return d->insertSource(pos, src, takeOwnership, isOpen(), bufferSize(), sampleRate());
+    }
+
+    bool MixerAudioSource::removeSource(AudioSource *src) {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
         return d->removeSource(src);
+    }
+
+    void MixerAudioSource::eraseSource(const MixerAudioSource::SourceIterator &srcIt) {
+        Q_D(MixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        d->eraseSource(srcIt);
     }
 
     void MixerAudioSource::removeAllSources() {
@@ -118,9 +144,33 @@ namespace talcs {
         d->removeAllSources();
     }
 
+    void MixerAudioSource::moveSource(const MixerAudioSource::SourceIterator &pos,
+                                      const MixerAudioSource::SourceIterator &target) {
+        Q_D(MixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        d->moveSource(pos, target);
+    }
+
+    void MixerAudioSource::swapSource(const MixerAudioSource::SourceIterator &first,
+                                      const MixerAudioSource::SourceIterator &second) {
+        Q_D(MixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        d->swapSource(first, second);
+    }
+
     QList<AudioSource *> MixerAudioSource::sources() const {
         Q_D(const MixerAudioSource);
         return d->sources();
+    }
+
+    MixerAudioSource::SourceIterator MixerAudioSource::firstSource() const {
+        Q_D(const MixerAudioSource);
+        return d->firstSource();
+    }
+
+    MixerAudioSource::SourceIterator MixerAudioSource::lastSource() const {
+        Q_D(const MixerAudioSource);
+        return d->lastSource();
     }
 
     void MixerAudioSource::setSourceSolo(AudioSource *src, bool isSolo) {

@@ -37,11 +37,12 @@ namespace talcs {
      * @copydoc MixerAudioSource::MixerAudioSource()
      */
     PositionableMixerAudioSource::PositionableMixerAudioSource(QObject *parent)
-        : PositionableMixerAudioSource(*new PositionableMixerAudioSourcePrivate, parent) {
+            : PositionableMixerAudioSource(*new PositionableMixerAudioSourcePrivate, parent) {
         qRegisterMetaType<QVector<float>>();
     }
-    PositionableMixerAudioSource::PositionableMixerAudioSource(PositionableMixerAudioSourcePrivate & d, QObject *parent)
-        : QObject(parent), PositionableAudioSource(d) {
+
+    PositionableMixerAudioSource::PositionableMixerAudioSource(PositionableMixerAudioSourcePrivate &d, QObject *parent)
+            : QObject(parent), PositionableAudioSource(d) {
     }
 
     /**
@@ -87,7 +88,7 @@ namespace talcs {
             d->position += readLength;
         }
         if (!d->currentMagnitudes.empty())
-            emit levelMetered(d->currentMagnitudes);
+                emit levelMetered(d->currentMagnitudes);
         return readLength;
     }
 
@@ -113,12 +114,14 @@ namespace talcs {
                                   [](PositionableAudioSource *src1, PositionableAudioSource *src2) {
                                       return src1->length() < src2->length();
                                   }))
-            ->length();
+                ->length();
     }
 
     void PositionableMixerAudioSourcePrivate::setNextReadPositionToAll(qint64 pos) {
         std::for_each(sourceDict.constBegin(), sourceDict.constEnd(),
-                      [=](const SourceInfo<PositionableAudioSource> &srcInfo) { srcInfo.src->setNextReadPosition(pos); });
+                      [=](const SourceInfo<PositionableAudioSource> &srcInfo) {
+                          srcInfo.src->setNextReadPosition(pos);
+                      });
     }
 
     /**
@@ -131,7 +134,7 @@ namespace talcs {
         PositionableAudioSource::setNextReadPosition(pos);
     }
 
-    bool PositionableMixerAudioSource::addSource(PositionableAudioSource * src, bool takeOwnership) {
+    bool PositionableMixerAudioSource::addSource(PositionableAudioSource *src, bool takeOwnership) {
         if (src == this)
             return false;
         Q_D(PositionableMixerAudioSource);
@@ -142,10 +145,38 @@ namespace talcs {
         return true;
     }
 
-    bool PositionableMixerAudioSource::removeSource(PositionableAudioSource * src) {
+    PositionableMixerAudioSource::SourceIterator
+    PositionableMixerAudioSource::appendSource(talcs::PositionableAudioSource *src, bool takeOwnership) {
+        Q_D(PositionableMixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        return d->insertSource(d->lastSource().next(), src, takeOwnership, isOpen(), bufferSize(), sampleRate());
+    }
+
+    PositionableMixerAudioSource::SourceIterator
+    PositionableMixerAudioSource::prependSource(talcs::PositionableAudioSource *src, bool takeOwnership) {
+        Q_D(PositionableMixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        return d->insertSource(d->firstSource(), src, takeOwnership, isOpen(), bufferSize(), sampleRate());
+    }
+
+    PositionableMixerAudioSource::SourceIterator
+    PositionableMixerAudioSource::insertSource(const PositionableMixerAudioSource::SourceIterator &pos,
+                                               talcs::PositionableAudioSource *src, bool takeOwnership) {
+        Q_D(PositionableMixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        return d->insertSource(pos, src, takeOwnership, isOpen(), bufferSize(), sampleRate());
+    }
+
+    bool PositionableMixerAudioSource::removeSource(PositionableAudioSource *src) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
         return d->removeSource(src);
+    }
+
+    void PositionableMixerAudioSource::eraseSource(const PositionableMixerAudioSource::SourceIterator &srcIt) {
+        Q_D(PositionableMixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        d->eraseSource(srcIt);
     }
 
     void PositionableMixerAudioSource::removeAllSources() {
@@ -154,9 +185,33 @@ namespace talcs {
         d->removeAllSources();
     }
 
+    void PositionableMixerAudioSource::moveSource(const PositionableMixerAudioSource::SourceIterator &pos,
+                                                  const PositionableMixerAudioSource::SourceIterator &target) {
+        Q_D(PositionableMixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        d->moveSource(pos, target);
+    }
+
+    void PositionableMixerAudioSource::swapSource(const PositionableMixerAudioSource::SourceIterator &first,
+                                                  const PositionableMixerAudioSource::SourceIterator &second) {
+        Q_D(PositionableMixerAudioSource);
+        QMutexLocker locker(&d->mutex);
+        d->swapSource(first, second);
+    }
+
     QList<PositionableAudioSource *> PositionableMixerAudioSource::sources() const {
         Q_D(const PositionableMixerAudioSource);
         return d->sources();
+    }
+
+    PositionableMixerAudioSource::SourceIterator PositionableMixerAudioSource::firstSource() const {
+        Q_D(const PositionableMixerAudioSource);
+        return d->firstSource();
+    }
+
+    PositionableMixerAudioSource::SourceIterator PositionableMixerAudioSource::lastSource() const {
+        Q_D(const PositionableMixerAudioSource);
+        return d->lastSource();
     }
 
     void PositionableMixerAudioSource::setSourceSolo(PositionableAudioSource *src, bool isSolo) {

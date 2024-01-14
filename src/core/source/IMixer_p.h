@@ -20,8 +20,10 @@
 #ifndef TALCS_IMIXER_P_H
 #define TALCS_IMIXER_P_H
 
-#include <QMutex>
+#include <TalcsCore/IMixer.h>
 
+#include <QMutex>
+#include <QHash>
 #include <QList>
 
 #include <TalcsCore/AudioBuffer.h>
@@ -45,7 +47,12 @@ namespace talcs {
 
     template <class T>
     struct IMixerPrivate {
-        QList<SourceInfo<T>> sourceDict;
+
+        using SrcIt = typename IMixer<T>::SourceIterator;
+
+        QHash<T *, SourceInfo<T>> sourceDict;
+        std::list<T *> sourceList;
+
         QMutex mutex;
 
         float gain = 1;
@@ -66,56 +73,86 @@ namespace talcs {
             }
         }
 
-        bool addSource(T *src, bool takeOwnership, bool isOpen, qint64 bufferSize, double sampleRate) {
+        SrcIt insertSource(const SrcIt &pos, T *src, bool takeOwnership, bool isOpen, qint64 bufferSize, double sampleRate) {
+            if (sourceDict.contains(src))
+                return SrcIt(sourceList.end(), &sourceList);
             if (isOpen && !src->open(bufferSize, sampleRate))
-                return false;
-            sourceDict.append({src, takeOwnership});
-            return true;
+                return SrcIt(sourceList.end(), &sourceList);
+            sourceDict.insert(src, {src, takeOwnership});
+            return SrcIt(sourceList.insert(pos.m_it, src), &sourceList);
+        }
+
+        void eraseSource(const SrcIt &pos) {
+            sourceDict.remove(pos.data());
+            sourceList.erase(pos.m_it);
+        }
+
+        SrcIt findSource(T *src) const {
+            return SrcIt(std::find(sourceList.cbegin(), sourceList.cend(), src), &sourceList);
+        }
+
+        void moveSource(const SrcIt &pos, const SrcIt &target) {
+            sourceList.splice(pos.m_it, sourceList, target.m_it);
+        }
+
+        void swapSource(const SrcIt &first, const SrcIt &second) {
+            auto pos2 = second.m_it;
+            pos2++;
+            sourceList.splice(first.m_it, sourceList, second.m_it);
+            sourceList.splice(pos2, sourceList, first.m_it);
+        }
+
+        bool addSource(T *src, bool takeOwnership, bool isOpen, qint64 bufferSize, double sampleRate) {
+            return insertSource(SrcIt(sourceList.end(), &sourceList), src, takeOwnership, isOpen, bufferSize, sampleRate).m_it != sourceList.end();
         }
 
         bool removeSource(T *src) {
-            if (sourceDict.removeOne({src})) {
-                src->close();
-                return true;
-            }
-            return false;
+            auto srcIt = findSource(src);
+            if (!srcIt.data())
+                return false;
+            eraseSource(srcIt);
+            return true;
         }
 
         void removeAllSources() {
-            stop();
+            sourceList.clear();
             sourceDict.clear();
         }
 
         QList<T *> sources() const {
-            QList<T *> list;
-            for (auto [src, _0, _1]: sourceDict) {
-                list.append(src);
-            }
-            return list;
+            return QList<T *>(sourceList.cbegin(), sourceList.cend());
+        }
+
+        SrcIt firstSource() const {
+            return SrcIt(sourceList.cbegin(), &sourceList);
+        }
+
+        SrcIt lastSource() const {
+            return SrcIt(std::prev(sourceList.cend()), &sourceList);
         }
 
         int soloCounter = 0;
 
         void setSourceSolo(T *src, bool isSolo) {
-            auto i = sourceDict.indexOf({src});
-            if (i == -1)
+            auto it = sourceDict.find(src);
+            if (it == sourceDict.end())
                 return;
-            if (sourceDict[i].isSolo == isSolo)
+            if (it->isSolo == isSolo)
                 return;
-            sourceDict[i].isSolo = isSolo;
+            it->isSolo = isSolo;
             soloCounter += (isSolo ? 1 : -1);
         }
 
         bool isSourceSolo(T *src) const {
-            auto i = sourceDict.indexOf({src});
-            if (i == -1)
+            auto it = sourceDict.find(src);
+            if (it == sourceDict.end())
                 return false;
-            return sourceDict[i].isSolo;
+            return it->isSolo;
         }
 
         bool start(qint64 bufferSize, double sampleRate) {
-            if (std::all_of(sourceDict.constBegin(), sourceDict.constEnd(),
-                            [=](const SourceInfo<T> &srcInfo) { return srcInfo.src->open(bufferSize, sampleRate); })) {
+            if (std::all_of(sourceList.cbegin(), sourceList.cend(),
+                            [=](T *src) { return src->open(bufferSize, sampleRate); })) {
                 tmpBuf.resize(2, bufferSize);
                 return true;
             } else {
@@ -124,7 +161,7 @@ namespace talcs {
         }
 
         void stop() {
-            std::for_each(sourceDict.constBegin(), sourceDict.constEnd(), [=](const SourceInfo<T> &srcInfo) { srcInfo.src->close(); });
+            std::for_each(sourceList.cbegin(), sourceList.cend(), [=](T *src) { src->close(); });
             tmpBuf.resize(0, 0);
         }
 
@@ -133,8 +170,8 @@ namespace talcs {
             auto gainLeftRight = applyGainAndPan(gain, pan);
             int routeCnt = 0;
             qint64 actualReadLength = 0;
-            for (auto &srcInfo : sourceDict) {
-                auto src = srcInfo.src;
+            for (auto src: sourceList) {
+                auto srcInfo = sourceDict.value(src);
                 bool isMutedBySoloSetting = (soloCounter && !srcInfo.isSolo);
                 tmpBuf.clear();
                 actualReadLength = qMax(
