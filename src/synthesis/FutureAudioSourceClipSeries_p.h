@@ -29,10 +29,10 @@
 
 namespace talcs {
 
-    class FutureAudioSourceClipSeriesPrivate: public PositionableAudioSourcePrivate, public AudioSourceClipSeriesImpl<FutureAudioSourceClip, FutureAudioSourceClipSeries> {
+    class FutureAudioSourceClipSeriesPrivate: public PositionableAudioSourcePrivate, public IClipSeriesPrivate, public AudioSourceClipSeriesBase<FutureAudioSource, FutureAudioSourceClipSeriesPrivate> {
         Q_DECLARE_PUBLIC(FutureAudioSourceClipSeries)
     public:
-        explicit FutureAudioSourceClipSeriesPrivate(FutureAudioSourceClipSeries *q);
+        FutureAudioSourceClipSeriesPrivate();
         QMutex mutex;
         FutureAudioSourceClipSeries::ReadMode readMode = FutureAudioSourceClipSeries::Notify;
         qint64 cachedLengthAvailable = 0;
@@ -45,9 +45,11 @@ namespace talcs {
 
         TransportAudioSource *bufferingTarget = nullptr;
 
-        bool addClip(const FutureAudioSourceClip &clip);
-        void removeClip(const FutureAudioSourceClip &clip);
-        void clearClips();
+        void postAddClip(const ClipInterval &clip);
+        void postRemoveClip(const ClipInterval &clip);
+        void postRemoveAllClips();
+
+        bool resetClipRange(qintptr content, qint64 newPosition, qint64 newLength) override;
 
         void notifyPause();
         void notifyResume();

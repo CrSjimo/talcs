@@ -218,7 +218,7 @@ int main(int argc, char **argv) {
                 qint64 length = lengthSec * device->sampleRate();
                 auto src = new AudioFormatInputSource(srcIoList[audioId]);
                 srcList.append(src);
-                if(!clipSeries->addClip({position, src, startPos, length})) {
+                if(!clipSeries->insertClip(src, position, startPos, length).isValid()) {
                     QMessageBox::critical(&mainWindow, "Mixer", "Cannot add clip.");
                 }
             }

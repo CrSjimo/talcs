@@ -21,23 +21,16 @@
 #define AUDIOSOURCECLIPSERIES_H
 
 #include <TalcsCore/PositionableAudioSource.h>
-#include <TalcsCore/AudioClipBase.h>
+#include <TalcsCore/IClipSeries.h>
 
 namespace talcs {
 
-    using AudioSourceClip = AudioClipBase<PositionableAudioSource>;
-
     class AudioSourceClipSeriesPrivate;
-
-    template <class ClipClass, class SeriesClass>
-    class AudioSourceClipSeriesImpl;
 
     class TALCSCORE_EXPORT AudioSourceClipSeries
         : public PositionableAudioSource,
-          public AudioClipSeriesBase<PositionableAudioSource> {
+          public IClipSeries<PositionableAudioSource> {
         Q_DECLARE_PRIVATE(AudioSourceClipSeries)
-        friend class AudioSourceClipSeriesImpl<AudioSourceClip, AudioSourceClipSeries>;
-
     public:
         AudioSourceClipSeries();
         ~AudioSourceClipSeries() override;
@@ -48,9 +41,13 @@ namespace talcs {
         bool open(qint64 bufferSize, double sampleRate) override;
         void close() override;
 
-        bool addClip(const AudioSourceClip &clip) override;
-        bool removeClipAt(qint64 pos) override;
-        void clearClips() override;
+        ClipView insertClip(PositionableAudioSource *content, qint64 position, qint64 startPos, qint64 length) override;
+        ClipView findClip(PositionableAudioSource *content) const override;
+        ClipView findClip(qint64 position) const override;
+        void removeClip(const ClipView &clip) override;
+        void removeAllClips() override;
+        QList<ClipView> clips() const override;
+        qint64 effectiveLength() const override;
 
     protected:
         explicit AudioSourceClipSeries(AudioSourceClipSeriesPrivate &d);

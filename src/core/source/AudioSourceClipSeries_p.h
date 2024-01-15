@@ -25,56 +25,62 @@
 #include <QMutex>
 
 #include <TalcsCore/AudioSourceClipSeries.h>
+#include <TalcsCore/private/IClipSeries_p.h>
 #include <TalcsCore/private/PositionableAudioSource_p.h>
 
 namespace talcs {
 
-    template <class ClipClass, class SeriesClass>
-    class AudioSourceClipSeriesImpl {
+    template <class SourceClass, class SeriesClassPrivate>
+    class AudioSourceClipSeriesBase {
     public:
-        explicit AudioSourceClipSeriesImpl(SeriesClass *q): q(q) {
+        explicit AudioSourceClipSeriesBase(SeriesClassPrivate *d): d(d) {
         }
 
-        bool open(qint64 bufferSize, double sampleRate) {
-            for (auto p = q->m_clips.begin(); p != q->m_clips.end(); p++) {
-                auto clip = p->interval();
-                if (!clip.content()->open(bufferSize, sampleRate))
+        bool openAllClips(qint64 bufferSize, double sampleRate) {
+            for (auto p = d->clips.begin(); p != d->clips.end(); p++) {
+                if (!reinterpret_cast<SourceClass *>(p->interval().content())->open(bufferSize, sampleRate))
                     return false;
             }
             return true;
         }
 
-        void close() {
-            std::for_each(q->m_clips.begin(), q->m_clips.end(),
-                          [=](const ClipClass &clip) { return clip.content()->close(); });
+        void closeAllClips() {
+            for (auto p = d->clips.begin(); p != d->clips.end(); p++) {
+                reinterpret_cast<SourceClass *>(p->interval().content())->close();
+            }
         }
 
-        bool addClip(const ClipClass &clip) {
-            if (q->isOpen()) {
-                if (!clip.content()->open(q->bufferSize(), q->sampleRate())) {
+        bool preInsertClip(SourceClass *src) {
+            if (d->q_ptr->isOpen()) {
+                if (!src->open(d->q_ptr->bufferSize(), d->q_ptr->sampleRate())) {
                     return false;
                 }
             }
             return true;
         }
 
-        void removeClip(const ClipClass &clip) {
-            clip.content()->close();
+        QPair<qint64, AudioSourceReadData> calculateClipReadData(const IClipSeriesPrivate::ClipInterval &clip, qint64 seriesPosition,
+                                                                        const AudioSourceReadData &seriesReadData) {
+            auto headCut = qMax(0ll, seriesPosition - clip.position());
+            auto tailCut = qMax(0ll, (clip.position() + clip.length()) - (seriesPosition + seriesReadData.length));
+            auto readStart = qMax(0ll, clip.position() - seriesPosition);
+            qint64 clipReadPosition = headCut + d->clipStartPosDict.value(clip.content());
+            return {clipReadPosition, {
+                    seriesReadData.buffer,
+                    readStart + seriesReadData.startPos,
+                    clip.length() - headCut - tailCut,
+                    seriesReadData.silentFlags,
+            }};
         }
 
-        void clearClips() {
-            for (const auto &clip : q->m_clips)
-                clip.content()->close();
-        }
-
-     private:
-        SeriesClass *q;
+    private:
+        SeriesClassPrivate *d;
     };
 
-    class AudioSourceClipSeriesPrivate : public PositionableAudioSourcePrivate, public AudioSourceClipSeriesImpl<AudioSourceClip, AudioSourceClipSeries> {
+    class AudioSourceClipSeriesPrivate : public PositionableAudioSourcePrivate, public IClipSeriesPrivate, public AudioSourceClipSeriesBase<PositionableAudioSource, AudioSourceClipSeriesPrivate> {
         Q_DECLARE_PUBLIC(AudioSourceClipSeries);
     public:
-        explicit AudioSourceClipSeriesPrivate(AudioSourceClipSeries *q);
+        AudioSourceClipSeriesPrivate();
         QMutex mutex;
     };
     

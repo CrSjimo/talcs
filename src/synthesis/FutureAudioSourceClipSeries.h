@@ -23,28 +23,23 @@
 #include <QObject>
 
 #include <TalcsCore/PositionableAudioSource.h>
-#include <TalcsCore/AudioClipBase.h>
+#include <TalcsCore/IClipSeries.h>
 #include <TalcsSynthesis/TalcsSynthesisGlobal.h>
 
 namespace talcs {
 
     class FutureAudioSource;
-    using FutureAudioSourceClip = AudioClipBase<FutureAudioSource>;
 
     class FutureAudioSourceClipSeriesPrivate;
-    template <class ClipClass, class SeriesClass>
-    class AudioSourceClipSeriesImpl;
 
     class TransportAudioSource;
 
     class TALCSSYNTHESIS_EXPORT FutureAudioSourceClipSeries
         : public QObject,
           public PositionableAudioSource,
-          public AudioClipSeriesBase<FutureAudioSource> {
+          public IClipSeries<FutureAudioSource> {
         Q_OBJECT
         Q_DECLARE_PRIVATE_D(PositionableAudioSource::d_ptr, FutureAudioSourceClipSeries)
-        friend class AudioSourceClipSeriesImpl<FutureAudioSourceClip, FutureAudioSourceClipSeries>;
-
     public:
         explicit FutureAudioSourceClipSeries(QObject *parent = nullptr);
         ~FutureAudioSourceClipSeries() override;
@@ -53,12 +48,17 @@ namespace talcs {
         qint64 length() const override;
         qint64 nextReadPosition() const override;
         void setNextReadPosition(qint64 pos) override;
-        bool addClip(const AudioClipBase<FutureAudioSource> &clip) override;
-        bool removeClipAt(qint64 pos) override;
-        void clearClips() override;
         bool open(qint64 bufferSize, double sampleRate) override;
         void close() override;
 
+        ClipView insertClip(FutureAudioSource *content, qint64 position, qint64 startPos, qint64 length) override;
+        ClipView findClip(FutureAudioSource *content) const override;
+        ClipView findClip(qint64 position) const override;
+        void removeClip(const ClipView &clip) override;
+        void removeAllClips() override;
+        QList<ClipView> clips() const override;
+        qint64 effectiveLength() const override;
+        
         qint64 lengthAvailable() const;
         qint64 lengthLoaded() const;
         qint64 lengthOfAllClips() const;

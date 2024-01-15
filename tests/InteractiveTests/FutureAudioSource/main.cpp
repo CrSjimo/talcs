@@ -17,6 +17,8 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
+#include <set>
+
 #include <QApplication>
 #include <QComboBox>
 #define QFUTURE_TEST
@@ -73,10 +75,13 @@ void openDevice() {
 }
 
 struct ClipSpec {
-    FutureAudioSourceClip clip;
+    FutureAudioSourceClipSeries::ClipView clip;
     QString id;
     SineWaveAudioSource *source;
     double rate;
+    FutureAudioSource *futureSource;
+    qint64 position;
+    qint64 length;
     inline bool operator<(const ClipSpec &other) const {
         return clip.position() < other.clip.position();
     }
@@ -128,12 +133,9 @@ ClipSpec showClipEditDialog(const ClipSpec &in = {}) {
         QFutureInterface<PositionableAudioSource *> futureInterface;
         futureInterface.setProgressRange(0, msecToSample(lengthEdit->text().toDouble() * 1000.0));
         futureInterface.reportStarted();
-        spec.clip = {
-            msecToSample(positionEdit->text().toDouble() * 1000.0),
-            new FutureAudioSource(futureInterface.future()),
-            0,
-            msecToSample(lengthEdit->text().toDouble() * 1000.0),
-        };
+        spec.position = msecToSample(positionEdit->text().toDouble() * 1000.0);
+        spec.futureSource = new FutureAudioSource(futureInterface.future());
+        spec.length = msecToSample(lengthEdit->text().toDouble() * 1000.0);
         dlg.accept();
     });
     if (dlg.exec() == QDialog::Accepted) {
@@ -151,7 +153,7 @@ QMutex progressMutex;
         QMutexLocker locker(&progressMutex);
         QList<std::set<ClipSpec>::iterator> itToErase;
         for (auto it = futureList.begin(); it != futureList.end(); it++) {
-            auto futureInterface = it->clip.content()->future().d;
+            auto futureInterface = it->futureSource->future().d;
             auto increment = msecToSample(1.0 * it->rate * 100.0);
             futureInterface.setProgressValue(
                 qMin<int>(futureInterface.progressValue() + increment, futureInterface.progressMaximum()));
@@ -167,24 +169,26 @@ QMutex progressMutex;
     }
 }
 
-bool addClipToSeries(const ClipSpec &clipSpec) {
+bool addClipToSeries(ClipSpec &clipSpec) {
     QMutexLocker locker(&progressMutex);
-    if (!series->addClip(clipSpec.clip))
+    clipSpec.clip = series->insertClip(clipSpec.futureSource, clipSpec.position, 0, clipSpec.length);
+    if (!clipSpec.clip.isValid())
         return false;
     futureList.insert(clipSpec);
+
     return true;
 }
 
 void terminateClip(const ClipSpec &clipSpec) {
-    clipSpec.clip.content()->future().d.reportCanceled();
-    delete clipSpec.clip.content();
+    clipSpec.futureSource->future().d.reportCanceled();
+    delete clipSpec.futureSource;
     delete clipSpec.source;
 }
 
 void removeClipFromSeries(const ClipSpec &clipSpec) {
     QMutexLocker locker(&progressMutex);
     futureList.erase(clipSpec);
-    series->removeClipAt(clipSpec.clip.position());
+    series->removeClip(clipSpec.clip);
     terminateClip(clipSpec);
 }
 
@@ -284,12 +288,7 @@ void reloadClip(QTreeWidgetItem *item) {
     QFutureInterface<PositionableAudioSource *> futureInterface;
     futureInterface.setProgressRange(0, clipSpec.clip.length());
     futureInterface.reportStarted();
-    clipSpec.clip = {
-        clipSpec.clip.position(),
-        new FutureAudioSource(futureInterface.future()),
-        0,
-        clipSpec.clip.length(),
-    };
+    clipSpec.futureSource = new FutureAudioSource(futureInterface.future());
     addClipToSeries(clipSpec);
     item->setData(0, Qt::UserRole, QVariant::fromValue(QByteArray(reinterpret_cast<char *>(&clipSpec), sizeof(ClipSpec))));
     QObject::connect(clipSpec.clip.content(), &FutureAudioSource::progressChanged, clipsList, [=](int progress) {
