@@ -106,20 +106,20 @@ namespace talcs {
         return d->addSource(src, takeOwnership, isOpen(), bufferSize(), sampleRate());
     }
 
-    MixerAudioSource::SourceIterator MixerAudioSource::appendSource(talcs::AudioSource *src, bool takeOwnership) {
+    MixerAudioSource::SourceIterator MixerAudioSource::appendSource(AudioSource *src, bool takeOwnership) {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
-        return d->insertSource(d->lastSource().next(), src, takeOwnership, isOpen(), bufferSize(), sampleRate());
+        return d->insertSource(d->sourceIteratorEnd(), src, takeOwnership, isOpen(), bufferSize(), sampleRate());
     }
 
-    MixerAudioSource::SourceIterator MixerAudioSource::prependSource(talcs::AudioSource *src, bool takeOwnership) {
+    MixerAudioSource::SourceIterator MixerAudioSource::prependSource(AudioSource *src, bool takeOwnership) {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
         return d->insertSource(d->firstSource(), src, takeOwnership, isOpen(), bufferSize(), sampleRate());
     }
 
     MixerAudioSource::SourceIterator
-    MixerAudioSource::insertSource(const MixerAudioSource::SourceIterator &pos, talcs::AudioSource *src,
+    MixerAudioSource::insertSource(const MixerAudioSource::SourceIterator &pos, AudioSource *src,
                                    bool takeOwnership) {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
@@ -171,6 +171,16 @@ namespace talcs {
     MixerAudioSource::SourceIterator MixerAudioSource::lastSource() const {
         Q_D(const MixerAudioSource);
         return d->lastSource();
+    }
+
+    MixerAudioSource::SourceIterator MixerAudioSource::findSource(AudioSource *src) const {
+        Q_D(const MixerAudioSource);
+        return d->findSource(src);
+    }
+
+    MixerAudioSource::SourceIterator MixerAudioSource::nullIterator() const {
+        Q_D(const MixerAudioSource);
+        return d->sourceIteratorEnd();
     }
 
     void MixerAudioSource::setSourceSolo(AudioSource *src, bool isSolo) {

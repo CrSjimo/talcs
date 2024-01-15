@@ -43,9 +43,9 @@ namespace talcs {
         void setNextReadPosition(qint64 pos) override;
 
         bool addSource(PositionableAudioSource *src, bool takeOwnership = false) override;
-        SourceIterator appendSource(talcs::PositionableAudioSource *src, bool takeOwnership) override;
-        SourceIterator prependSource(talcs::PositionableAudioSource *src, bool takeOwnership) override;
-        SourceIterator insertSource(const SourceIterator &pos, talcs::PositionableAudioSource *src, bool takeOwnership) override;
+        SourceIterator appendSource(PositionableAudioSource *src, bool takeOwnership = false) override;
+        SourceIterator prependSource(PositionableAudioSource *src, bool takeOwnership = false) override;
+        SourceIterator insertSource(const SourceIterator &pos, PositionableAudioSource *src, bool takeOwnership = false) override;
 
         bool removeSource(PositionableAudioSource *src) override;
         void eraseSource(const SourceIterator &srcIt) override;
@@ -57,6 +57,9 @@ namespace talcs {
         QList<PositionableAudioSource *> sources() const override;
         SourceIterator firstSource() const override;
         SourceIterator lastSource() const override;
+        SourceIterator findSource(PositionableAudioSource *src) const override;
+
+        SourceIterator nullIterator() const override;
 
         void setSourceSolo(PositionableAudioSource *src, bool isSolo) override;
         bool isSourceSolo(PositionableAudioSource *src) const override;

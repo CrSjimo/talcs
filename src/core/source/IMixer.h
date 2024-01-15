@@ -32,16 +32,22 @@ namespace talcs {
     struct IMixer {
         class SourceIterator {
         public:
-            SourceIterator next() const {
+            inline SourceIterator next() const {
                 return SourceIterator(std::next(m_it), m_lis);
             }
-            SourceIterator previous() const {
+            inline SourceIterator previous() const {
                 return SourceIterator(std::prev(m_it), m_lis);
             }
-            T *data() const {
+            inline T *data() const {
                 if (m_it == m_lis->cend())
                     return nullptr;
                 return *m_it;
+            }
+            inline bool operator==(const SourceIterator &other) const {
+                return this->data() == other.data();
+            }
+            inline bool operator!=(const SourceIterator &other) const {
+                return this->data() != other.data();
             }
         private:
             friend class IMixer<T>;
@@ -50,7 +56,7 @@ namespace talcs {
             using ListType = std::list<T *>;
             using IteratorType = typename ListType::const_iterator;
 
-            SourceIterator(IteratorType it, const ListType *lis) : m_it(it), m_lis(lis) {
+            inline SourceIterator(IteratorType it, const ListType *lis) : m_it(it), m_lis(lis) {
             }
 
             IteratorType m_it;
@@ -72,6 +78,9 @@ namespace talcs {
         virtual QList<T *> sources() const = 0;
         virtual SourceIterator firstSource() const = 0;
         virtual SourceIterator lastSource() const = 0;
+        virtual SourceIterator findSource(T *src) const = 0;
+
+        virtual SourceIterator nullIterator() const = 0;
 
         virtual void setSourceSolo(T *src, bool isSolo) = 0;
         virtual bool isSourceSolo(T *src) const = 0;

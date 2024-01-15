@@ -206,6 +206,30 @@ private slots:
         src3.clear();
     }
 
+    void sourceIterating() {
+        PositionableMixerAudioSource mixer;
+        SineWaveAudioSource src[] = {SineWaveAudioSource(440), SineWaveAudioSource(440), SineWaveAudioSource(440), SineWaveAudioSource(440)};
+        QList<PositionableMixerAudioSource::SourceIterator> itList;
+        for (int i = 0; i < 4; i++)
+            itList.append(mixer.appendSource(src + i));
+        for (int i = 0; i < 4; i++)
+            QCOMPARE(itList[i].data(), src + i);
+        QCOMPARE(mixer.firstSource(), itList[0]);
+        QCOMPARE(mixer.lastSource(), itList[3]);
+        QCOMPARE(mixer.findSource(src + 2), itList[2]);
+
+        mixer.moveSource(itList[1], itList[3]);
+        QList<PositionableAudioSource *> expectedSrcList = {src, src + 3, src + 1, src + 2};
+        QCOMPARE(mixer.sources(), expectedSrcList);
+
+        mixer.swapSource(itList[2], itList[3]);
+        expectedSrcList = {src, src + 2, src + 1, src + 3};
+        QCOMPARE(mixer.sources(), expectedSrcList);
+
+        QCOMPARE(mixer.findSource(nullptr).data(), nullptr);
+        QCOMPARE(mixer.findSource(src + 1), itList[1]);
+    }
+
     void soloAndMuteTest() {
         PositionableMixerAudioSource mixer;
         AudioBuffer buf[3] = {AudioBuffer(2, 1024), AudioBuffer(2, 1024), AudioBuffer(2,1024)};

@@ -146,14 +146,14 @@ namespace talcs {
     }
 
     PositionableMixerAudioSource::SourceIterator
-    PositionableMixerAudioSource::appendSource(talcs::PositionableAudioSource *src, bool takeOwnership) {
+    PositionableMixerAudioSource::appendSource(PositionableAudioSource *src, bool takeOwnership) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
-        return d->insertSource(d->lastSource().next(), src, takeOwnership, isOpen(), bufferSize(), sampleRate());
+        return d->insertSource(d->sourceIteratorEnd(), src, takeOwnership, isOpen(), bufferSize(), sampleRate());
     }
 
     PositionableMixerAudioSource::SourceIterator
-    PositionableMixerAudioSource::prependSource(talcs::PositionableAudioSource *src, bool takeOwnership) {
+    PositionableMixerAudioSource::prependSource(PositionableAudioSource *src, bool takeOwnership) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
         return d->insertSource(d->firstSource(), src, takeOwnership, isOpen(), bufferSize(), sampleRate());
@@ -161,7 +161,7 @@ namespace talcs {
 
     PositionableMixerAudioSource::SourceIterator
     PositionableMixerAudioSource::insertSource(const PositionableMixerAudioSource::SourceIterator &pos,
-                                               talcs::PositionableAudioSource *src, bool takeOwnership) {
+                                               PositionableAudioSource *src, bool takeOwnership) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
         return d->insertSource(pos, src, takeOwnership, isOpen(), bufferSize(), sampleRate());
@@ -212,6 +212,17 @@ namespace talcs {
     PositionableMixerAudioSource::SourceIterator PositionableMixerAudioSource::lastSource() const {
         Q_D(const PositionableMixerAudioSource);
         return d->lastSource();
+    }
+
+    PositionableMixerAudioSource::SourceIterator
+    PositionableMixerAudioSource::findSource(PositionableAudioSource *src) const {
+        Q_D(const PositionableMixerAudioSource);
+        return d->findSource(src);
+    }
+
+    PositionableMixerAudioSource::SourceIterator PositionableMixerAudioSource::nullIterator() const {
+        Q_D(const PositionableMixerAudioSource);
+        return d->sourceIteratorEnd();
     }
 
     void PositionableMixerAudioSource::setSourceSolo(PositionableAudioSource *src, bool isSolo) {

@@ -82,6 +82,10 @@ namespace talcs {
             return SrcIt(sourceList.insert(pos.m_it, src), &sourceList);
         }
 
+        SrcIt sourceIteratorEnd() const {
+            return SrcIt(sourceList.end(), &sourceList);
+        }
+
         void eraseSource(const SrcIt &pos) {
             sourceDict.remove(pos.data());
             sourceList.erase(pos.m_it);
@@ -103,7 +107,7 @@ namespace talcs {
         }
 
         bool addSource(T *src, bool takeOwnership, bool isOpen, qint64 bufferSize, double sampleRate) {
-            return insertSource(SrcIt(sourceList.end(), &sourceList), src, takeOwnership, isOpen, bufferSize, sampleRate).m_it != sourceList.end();
+            return insertSource(sourceIteratorEnd(), src, takeOwnership, isOpen, bufferSize, sampleRate).m_it != sourceList.end();
         }
 
         bool removeSource(T *src) {
@@ -128,7 +132,9 @@ namespace talcs {
         }
 
         SrcIt lastSource() const {
-            return SrcIt(std::prev(sourceList.cend()), &sourceList);
+            if (sourceList.empty())
+                return sourceIteratorEnd();
+            return sourceIteratorEnd().previous();
         }
 
         int soloCounter = 0;
