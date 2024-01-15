@@ -27,6 +27,26 @@ namespace talcs {
      */
 
     /**
+     * @class IMixer::SourceIterator
+     * @brief Class for the source iterator of an IMixer object.
+     */
+
+    /**
+     * @fn IMixer::SourceIterator IMixer::SourceIterator::next() const
+     * Gets the next iterator.
+     */
+
+    /**
+     * @fn IMixer::SourceIterator IMixer::SourceIterator::previous() const
+     * Gets the previous iterator.
+     */
+
+    /**
+     * @fn T *IMixer::SourceIterator::data() const
+     * Gets the source of the iterator.
+     */
+
+    /**
      * @fn bool IMixer::addSource(T *src, bool takeOwnership)
      * Adds an input source.
      * @param src the input source
@@ -35,9 +55,39 @@ namespace talcs {
      */
 
     /**
+     * @fn IMixer::SourceIterator IMixer::appendSource(T *src, bool takeOwnership)
+     * Appends an input source to the source list.
+     * @param src the input source
+     * @param takeOwnership If set to @c true, the object will be deleted on destruction.
+     * @return the source iterator. If not successful, the iterator will be null.
+     */
+
+    /**
+     * @fn IMixer::SourceIterator IMixer::prependSource(T *src, bool takeOwnership)
+     * Prepends an input source to the source list.
+     * @param src the input source
+     * @param takeOwnership If set to @c true, the object will be deleted on destruction.
+     * @return the source iterator. If not successful, the iterator will be null iterator.
+     */
+
+    /**
+     * @fn IMixer::SourceIterator IMixer::insertSource(const IMixer::SourceIterator &pos, T *src, bool takeOwnership)
+     * Inserts an input source to the source list.
+     * @param pos The input source will be insert before pos.
+     * @param src the input source
+     * @param takeOwnership If set to @c true, the object will be deleted on destruction.
+     * @return the source iterator. If not successful, the iterator will be null.
+     */
+
+    /**
      * @fn bool IMixer::removeSource(T *src)
      * Removes an input source. The ownership of the removed object is no longer taken.
-     * @return true if success
+     * @return @c true if success
+     */
+
+    /**
+     * @fn void IMixer::eraseSource(const IMixer::SourceIterator &srcIt)
+     * Erases an input source. The ownership of the removed object is no longer taken.
      */
 
     /**
@@ -46,8 +96,38 @@ namespace talcs {
      */
 
     /**
+     * @fn void IMixer::moveSource(const IMixer::SourceIterator &pos, const IMixer::SourceIterator &target)
+     * Moves target to the position before pos.
+     */
+
+    /**
+     * @fn void IMixer::swapSource(const IMixer::SourceIterator &first, const IMixer::SourceIterator &second)
+     * Swaps the position of two sources.
+     */
+
+    /**
      * @fn QList<T *> IMixer::sources() const
      * Gets all input sources.
+     */
+
+    /**
+     * @fn IMixer::SourceIterator IMixer::firstSource() const
+     * Gets the iterator of the first source.
+     */
+
+    /**
+     * @fn IMixer::SourceIterator IMixer::lastSource() const
+     * Gets the iterator of the last source.
+     */
+
+    /**
+     * @fn IMixer::SourceIterator IMixer::findSource(T *src) const
+     * Finds the iterator of a given source. If not found, will return null iterator.
+     */
+
+    /**
+     * @fn IMixer::SourceIterator IMixer::nullIterator() const
+     * Gets the null iterator.
      */
 
     /**
