@@ -20,17 +20,32 @@
 #ifndef TALCS_ICLIPSERIES_P_H
 #define TALCS_ICLIPSERIES_P_H
 
-#include "IClipSeries.h"
+#include <TalcsCore/IClipSeries.h>
 
 #include <set>
 
 #include <QHash>
+#include <QScopedPointer>
 
 #include <interval-tree/interval_tree.hpp>
 
 namespace talcs {
+    class TALCSCORE_EXPORT IClipSeriesRangeResetter {
+    public:
+        IClipSeriesRangeResetter(IClipSeriesPrivate *d) : d(d) {
+        }
+
+        virtual bool resetClipRange(qintptr content, qint64 newPosition, qint64 newLength);
+
+    protected:
+        IClipSeriesPrivate *d;
+    };
+
     class TALCSCORE_EXPORT IClipSeriesPrivate {
     public:
+        explicit IClipSeriesPrivate(IClipSeriesRangeResetter *rangeResetter) : rangeResetter(rangeResetter) {
+        }
+
         struct ClipInterval : public lib_interval_tree::interval<qint64> {
             inline ClipInterval(qintptr content, qint64 position, qint64 length) : lib_interval_tree::interval<qint64>(position, position + length - 1), m_content(content) {
             }
@@ -56,6 +71,8 @@ namespace talcs {
         QHash<qintptr, qint64> clipStartPosDict;
         std::set<qint64> endSet;
 
+        QScopedPointer<IClipSeriesRangeResetter> rangeResetter;
+
         ClipViewImpl insertClip(qintptr content, qint64 position, qint64 startPos, qint64 length);
 
         ClipViewImpl findClipByContent(qintptr content) const;
@@ -69,8 +86,6 @@ namespace talcs {
         QList<ClipViewImpl> clipViewImplList() const;
 
         qint64 effectiveLength() const;
-
-        virtual bool resetClipRange(qintptr content, qint64 newPosition, qint64 newLength);
 
         ClipInterval intervalLookup(qint64 pos) const;
         ClipIntervalTree::iterator findClipIterator(qint64 pos);

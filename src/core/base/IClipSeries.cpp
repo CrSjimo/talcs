@@ -55,7 +55,7 @@ namespace talcs {
 
     bool ClipViewImpl::resetRange(qint64 position, qint64 length) {
         Q_ASSERT(isValid());
-        return d->resetClipRange(m_content, position, length);
+        return d->rangeResetter->resetClipRange(m_content, position, length);
     }
 
     ClipViewImpl::ClipViewImpl(IClipSeriesPrivate *d, qintptr content) : d(d), m_content(content) {
@@ -119,17 +119,17 @@ namespace talcs {
         return *endSet.rbegin();
     }
 
-    bool IClipSeriesPrivate::resetClipRange(qintptr content, qint64 newPosition, qint64 newLength) {
-        auto it = findClipIterator(clipPositionDict.value(content));
+    bool IClipSeriesRangeResetter::resetClipRange(qintptr content, qint64 newPosition, qint64 newLength) {
+        auto it = d->findClipIterator(d->clipPositionDict.value(content));
         auto oldPosition = it->interval().position();
         auto oldLength = it->interval().length();
-        clips.erase(it);
-        auto ival = ClipInterval(content, newPosition, newLength);
-        if (qAsConst(clips).overlap_find(ival) != clips.cend()) {
-            clips.insert({content, oldPosition, oldLength});
+        d->clips.erase(it);
+        auto ival = IClipSeriesPrivate::ClipInterval(content, newPosition, newLength);
+        if (qAsConst(d->clips).overlap_find(ival) != d->clips.cend()) {
+            d->clips.insert({content, oldPosition, oldLength});
             return false;
         }
-        clips.insert(ival);
+        d->clips.insert(ival);
         return true;
     }
 

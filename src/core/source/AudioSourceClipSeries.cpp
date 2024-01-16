@@ -25,7 +25,7 @@
 namespace talcs {
 
     AudioSourceClipSeriesPrivate::AudioSourceClipSeriesPrivate()
-        : AudioSourceClipSeriesBase(this) {
+        : IClipSeriesPrivate(new IClipSeriesRangeResetter(this)), AudioSourceClipSeriesBase(this) {
     }
 
     /**

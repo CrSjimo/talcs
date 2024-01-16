@@ -200,17 +200,17 @@ void addClip() {
         if (addClipToSeries(clipSpec)) {
             auto item = new QTreeWidgetItem({
                 clipSpec.id,
-                QString::number(double(sampleToMsec(clipSpec.clip.position())) * .001, 'f', 3),
-                QString::number(double(sampleToMsec(clipSpec.clip.length())) * .001, 'f', 3),
+                QString::number(double(sampleToMsec(clipSpec.position)) * .001, 'f', 3),
+                QString::number(double(sampleToMsec(clipSpec.length)) * .001, 'f', 3),
                 QString::number(clipSpec.source->frequency()(1)),
                 QString::number(clipSpec.rate),
             });
             item->setData(0, Qt::UserRole, QVariant::fromValue(QByteArray(reinterpret_cast<char *>(&clipSpec), sizeof(ClipSpec))));
-            QObject::connect(clipSpec.clip.content(), &FutureAudioSource::progressChanged, clipsList,
+            QObject::connect(clipSpec.futureSource, &FutureAudioSource::progressChanged, clipsList,
                              [=](int progress) {
-                                 item->setText(5, QString::number(100.0 * progress / clipSpec.clip.length()) + "%");
+                                 item->setText(5, QString::number(100.0 * progress / clipSpec.length) + "%");
                              });
-            QObject::connect(clipSpec.clip.content(), &FutureAudioSource::statusChanged, clipsList,
+            QObject::connect(clipSpec.futureSource, &FutureAudioSource::statusChanged, clipsList,
                              [=](FutureAudioSource::Status status) {
                                  if (status == talcs::FutureAudioSource::Ready) {
                                      item->setText(5, "Ready");
@@ -241,17 +241,17 @@ void modifyClip(QTreeWidgetItem *oldItem) {
         if (addClipToSeries(clipSpec)) {
             auto item = new QTreeWidgetItem({
                 clipSpec.id,
-                QString::number(double(sampleToMsec(clipSpec.clip.position())) * .001, 'f', 3),
-                QString::number(double(sampleToMsec(clipSpec.clip.length())) * .001, 'f', 3),
+                QString::number(double(sampleToMsec(clipSpec.position)) * .001, 'f', 3),
+                QString::number(double(sampleToMsec(clipSpec.length)) * .001, 'f', 3),
                 QString::number(clipSpec.source->frequency()(1)),
                 QString::number(clipSpec.rate),
             });
             item->setData(0, Qt::UserRole, QVariant::fromValue(QByteArray(reinterpret_cast<char *>(&clipSpec), sizeof(ClipSpec))));
-            QObject::connect(clipSpec.clip.content(), &FutureAudioSource::progressChanged, clipsList,
+            QObject::connect(clipSpec.futureSource, &FutureAudioSource::progressChanged, clipsList,
                              [=](int progress) {
-                                 item->setText(5, QString::number(100.0 * progress / clipSpec.clip.length()) + "%");
+                                 item->setText(5, QString::number(100.0 * progress / clipSpec.length) + "%");
                              });
-            QObject::connect(clipSpec.clip.content(), &FutureAudioSource::statusChanged, clipsList,
+            QObject::connect(clipSpec.futureSource, &FutureAudioSource::statusChanged, clipsList,
                              [=](FutureAudioSource::Status status) {
                                  if (status == talcs::FutureAudioSource::Ready) {
                                      item->setText(5, "Ready");
@@ -286,15 +286,15 @@ void reloadClip(QTreeWidgetItem *item) {
     removeClipFromSeries(clipSpec);
     clipSpec.source = new SineWaveAudioSource(freq);
     QFutureInterface<PositionableAudioSource *> futureInterface;
-    futureInterface.setProgressRange(0, clipSpec.clip.length());
+    futureInterface.setProgressRange(0, clipSpec.length);
     futureInterface.reportStarted();
     clipSpec.futureSource = new FutureAudioSource(futureInterface.future());
     addClipToSeries(clipSpec);
     item->setData(0, Qt::UserRole, QVariant::fromValue(QByteArray(reinterpret_cast<char *>(&clipSpec), sizeof(ClipSpec))));
-    QObject::connect(clipSpec.clip.content(), &FutureAudioSource::progressChanged, clipsList, [=](int progress) {
-        item->setText(5, QString::number(100.0 * progress / clipSpec.clip.length()) + "%");
+    QObject::connect(clipSpec.futureSource, &FutureAudioSource::progressChanged, clipsList, [=](int progress) {
+        item->setText(5, QString::number(100.0 * progress / clipSpec.length) + "%");
     });
-    QObject::connect(clipSpec.clip.content(), &FutureAudioSource::statusChanged, clipsList,
+    QObject::connect(clipSpec.futureSource, &FutureAudioSource::statusChanged, clipsList,
                      [=](FutureAudioSource::Status status) {
                          if (status == talcs::FutureAudioSource::Ready) {
                              item->setText(5, "Ready");

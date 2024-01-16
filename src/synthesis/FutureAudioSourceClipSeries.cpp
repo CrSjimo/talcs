@@ -26,7 +26,7 @@
 namespace talcs {
 
     FutureAudioSourceClipSeriesPrivate::FutureAudioSourceClipSeriesPrivate()
-        : AudioSourceClipSeriesBase(this) {
+        : IClipSeriesPrivate(new FutureAudioSourceClipSeriesRangeResetter(this)), AudioSourceClipSeriesBase(this) {
     }
     void FutureAudioSourceClipSeriesPrivate::postAddClip(const ClipInterval &clip) {
         Q_Q(FutureAudioSourceClipSeries);
@@ -91,11 +91,11 @@ namespace talcs {
         checkAndNotify(position, q->bufferSize());
     }
 
-    bool FutureAudioSourceClipSeriesPrivate::resetClipRange(qintptr content, qint64 newPosition, qint64 newLength) {
-        auto oldInterval = intervalLookup(clipPositionDict.value(content));
-        if (IClipSeriesPrivate::resetClipRange(content, newPosition, newLength)) {
-            postRemoveClip(oldInterval);
-            postAddClip({content, newPosition, newLength});
+    bool FutureAudioSourceClipSeriesRangeResetter::resetClipRange(qintptr content, qint64 newPosition, qint64 newLength) {
+        auto oldInterval = d->intervalLookup(d->clipPositionDict.value(content));
+        if (IClipSeriesRangeResetter::resetClipRange(content, newPosition, newLength)) {
+            static_cast<FutureAudioSourceClipSeriesPrivate *>(d)->postRemoveClip(oldInterval);
+            static_cast<FutureAudioSourceClipSeriesPrivate *>(d)->postAddClip({content, newPosition, newLength});
             return true;
         }
         return false;
