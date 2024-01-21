@@ -46,7 +46,7 @@ namespace talcs {
             QVector<float> tmpBuf;
         };
 
-        AudioFormatInputResampler *resampler = nullptr;
+        QScopedPointer<AudioFormatInputResampler> resampler;
 
         qint64 inPosition = 0;
 

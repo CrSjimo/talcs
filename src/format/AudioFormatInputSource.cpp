@@ -123,8 +123,8 @@ namespace talcs {
             return false;
         if (d->io->open(QIODevice::ReadOnly)) {
             d->ratio = sampleRate / d->io->sampleRate();
-            d->resampler = new AudioFormatInputSourcePrivate::AudioFormatInputResampler(d->ratio, bufferSize,
-                                                                                        d->io->channelCount(), d);
+            d->resampler.reset(new AudioFormatInputSourcePrivate::AudioFormatInputResampler(d->ratio, bufferSize,
+                                                                                        d->io->channelCount(), d));
             d->io->seek(outPositionToIn(d->position, d->ratio));
             return AudioStreamBase::open(bufferSize, sampleRate);
         } else
@@ -138,8 +138,7 @@ namespace talcs {
             return;
         d->io->close();
         d->ratio = 0;
-        delete d->resampler;
-        d->resampler = nullptr;
+        d->resampler.reset();
     }
 
     /**
