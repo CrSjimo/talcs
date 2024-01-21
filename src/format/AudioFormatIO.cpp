@@ -157,10 +157,12 @@ namespace talcs {
         }
         if (sfOpenMode == 0) {
             qWarning() << "AudioFormatIO: Cannot open because access mode is not specified.";
+            setErrorString("AudioFormatIO: Cannot open because access mode is not specified.");
             return false;
         }
         if (!d->stream) {
             qWarning() << "AudioFormatIO: Cannot open because stream is null.";
+            setErrorString("AudioFormatIO: Cannot open because stream is null.");
             return false;
         }
         if (!d->stream->open(openMode)) {
@@ -173,6 +175,7 @@ namespace talcs {
             return false;
         }
         d->openMode = openMode;
+        clearErrorString();
         return true;
     }
 
