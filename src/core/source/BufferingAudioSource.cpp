@@ -67,6 +67,9 @@ namespace talcs {
                 for (int ch = 0; ch < channelCount; ch++) {
                     readData.buffer->setSampleRange(ch, readData.startPos, readData.length, d->buf, ch, head);
                 }
+                for (int ch = channelCount; ch < readData.buffer->channelCount(); ch++) {
+                    readData.buffer->clear(ch, readData.startPos, readData.length);
+                }
             } else {
                 readLocker.unlock();
                 d->accelerateCurrentBufferingTaskAndWait();

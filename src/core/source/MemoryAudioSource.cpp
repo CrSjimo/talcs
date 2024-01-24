@@ -86,6 +86,9 @@ namespace talcs {
         for (int i = 0; i < channelCount; i++) {
             readData.buffer->setSampleRange(i, readData.startPos, readLength, *d->buffer, i, d->position);
         }
+        for (int i = channelCount; i < readData.buffer->channelCount(); i++) {
+            readData.buffer->clear(i, readData.startPos, readData.length);
+        }
         d->position += readLength;
         return readLength;
     }

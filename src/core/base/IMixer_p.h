@@ -205,6 +205,11 @@ namespace talcs {
                     }
                 }
             }
+            if (routeChannels) {
+                for (int ch = routeCnt * 2; ch < readData.buffer->channelCount(); ch++) {
+                    readData.buffer->clear(ch, readData.startPos, readData.length);
+                }
+            }
 
             // update the level meter
             for (int i = 0; i < currentMagnitudes.size(); i++) {
