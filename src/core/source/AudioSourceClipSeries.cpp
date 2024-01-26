@@ -24,8 +24,7 @@
 
 namespace talcs {
 
-    AudioSourceClipSeriesPrivate::AudioSourceClipSeriesPrivate()
-        : IClipSeriesPrivate(new IClipSeriesRangeResetter(this)), AudioSourceClipSeriesBase(this) {
+    AudioSourceClipSeriesPrivate::AudioSourceClipSeriesPrivate() : AudioSourceClipSeriesBase(this) {
     }
 
     /**
@@ -116,19 +115,31 @@ namespace talcs {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         if (!d->preInsertClip(content))
-            return ClipView(d->nullClipViewImpl());
-        return ClipView(d->insertClip(reinterpret_cast<qintptr>(content), position, startPos, length));
+            return d->nullClipViewImpl();
+        return d->insertClip(reinterpret_cast<qintptr>(content), position, startPos, length);
+    }
+
+    void AudioSourceClipSeries::setClipStartPos(const AudioSourceClipSeries::ClipView &clip,
+                                                qint64 startPos) {
+        Q_D(AudioSourceClipSeries);
+        d->setClipStartPos(clip, startPos);
+    }
+
+    bool AudioSourceClipSeries::setClipRange(const AudioSourceClipSeries::ClipView &clip, qint64 position,
+                                             qint64 length) {
+        Q_D(AudioSourceClipSeries);
+        return d->setClipRange(clip, position, length);
     }
 
     AudioSourceClipSeries::ClipView
     AudioSourceClipSeries::findClip(PositionableAudioSource *content) const {
         Q_D(const AudioSourceClipSeries);
-        return ClipView(d->findClipByContent(reinterpret_cast<qintptr>(content)));
+        return d->findClipByContent(reinterpret_cast<qintptr>(content));
     }
 
     AudioSourceClipSeries::ClipView AudioSourceClipSeries::findClip(qint64 position) const {
         Q_D(const AudioSourceClipSeries);
-        return ClipView(d->findClipByPosition(position));
+        return d->findClipByPosition(position);
     }
 
     void AudioSourceClipSeries::removeClip(const AudioSourceClipSeries::ClipView &clip) {

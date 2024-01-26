@@ -52,8 +52,11 @@ namespace talcs {
         void close() override;
 
         ClipView insertClip(FutureAudioSource *content, qint64 position, qint64 startPos, qint64 length) override;
+        void setClipStartPos(const ClipView &clip, qint64 startPos) override;
+        bool setClipRange(const ClipView &clip, qint64 position, qint64 length) override;
         ClipView findClip(FutureAudioSource *content) const override;
         ClipView findClip(qint64 position) const override;
+
         void removeClip(const ClipView &clip) override;
         void removeAllClips() override;
         QList<ClipView> clips() const override;

@@ -46,8 +46,6 @@ namespace talcs {
 
         float *data(int channel);
         float const *constData(int channel) const;
-        QVector<float> &vector(int channel);
-        const QVector<float> &constVector(int channel) const;
 
         AudioBuffer slice(int startChannelIndex, qint64 startSampleCount, int channelSize = -1,
                           qint64 length = -1) const;

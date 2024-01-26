@@ -54,14 +54,6 @@ namespace talcs {
         void checkAndNotify(qint64 position, qint64 length);
         void checkAndNotify();
     };
-
-    class FutureAudioSourceClipSeriesRangeResetter : public IClipSeriesRangeResetter {
-    public:
-        explicit FutureAudioSourceClipSeriesRangeResetter(FutureAudioSourceClipSeriesPrivate *d) : IClipSeriesRangeResetter(d) {
-        }
-
-        bool resetClipRange(qintptr content, qint64 newPosition, qint64 newLength) override;
-    };
     
 }
 

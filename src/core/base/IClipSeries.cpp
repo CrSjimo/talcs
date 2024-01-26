@@ -38,11 +38,6 @@ namespace talcs {
         return d->clipStartPosDict.value(m_content);
     }
 
-    void ClipViewImpl::setStartPos(qint64 startPos) {
-        Q_ASSERT(isValid());
-        d->clipStartPosDict[m_content] = startPos;
-    }
-
     qint64 ClipViewImpl::position() const {
         Q_ASSERT(isValid());
         return d->clipPositionDict.value(m_content);
@@ -51,11 +46,6 @@ namespace talcs {
     qint64 ClipViewImpl::length() const {
         Q_ASSERT(isValid());
         return d->intervalLookup(position()).length();
-    }
-
-    bool ClipViewImpl::resetRange(qint64 position, qint64 length) {
-        Q_ASSERT(isValid());
-        return d->rangeResetter->resetClipRange(m_content, position, length);
     }
 
     ClipViewImpl::ClipViewImpl(IClipSeriesPrivate *d, qintptr content) : d(d), m_content(content) {
@@ -71,6 +61,28 @@ namespace talcs {
         clipStartPosDict.insert(content, startPos);
         endSet.insert(position + length);
         return ClipViewImpl(this, content);
+    }
+
+    void IClipSeriesPrivate::setClipStartPos(const ClipViewImpl &clipViewImpl, qint64 startPos) {
+        Q_ASSERT(clipViewImpl.isValid());
+        clipStartPosDict[clipViewImpl.m_content] = startPos;
+    }
+
+    bool IClipSeriesPrivate::setClipRange(const ClipViewImpl &clipViewImpl, qint64 position, qint64 length) {
+        auto it = findClipIterator(clipPositionDict.value(clipViewImpl.m_content));
+        auto oldPosition = it->interval().position();
+        auto oldLength = it->interval().length();
+        clips.erase(it);
+        auto ival = IClipSeriesPrivate::ClipInterval(clipViewImpl.m_content, position, length);
+        if (qAsConst(clips).overlap_find(ival) != clips.cend()) {
+            clips.insert({clipViewImpl.m_content, oldPosition, oldLength});
+            return false;
+        }
+        clips.insert(ival);
+        clipPositionDict[clipViewImpl.m_content] = position;
+        endSet.erase(oldPosition + oldLength);
+        endSet.insert(position + length);
+        return true;
     }
 
     ClipViewImpl IClipSeriesPrivate::findClipByContent(qintptr content) const {
@@ -117,20 +129,6 @@ namespace talcs {
         if (endSet.empty())
             return 0;
         return *endSet.rbegin();
-    }
-
-    bool IClipSeriesRangeResetter::resetClipRange(qintptr content, qint64 newPosition, qint64 newLength) {
-        auto it = d->findClipIterator(d->clipPositionDict.value(content));
-        auto oldPosition = it->interval().position();
-        auto oldLength = it->interval().length();
-        d->clips.erase(it);
-        auto ival = IClipSeriesPrivate::ClipInterval(content, newPosition, newLength);
-        if (qAsConst(d->clips).overlap_find(ival) != d->clips.cend()) {
-            d->clips.insert({content, oldPosition, oldLength});
-            return false;
-        }
-        d->clips.insert(ival);
-        return true;
     }
 
     IClipSeriesPrivate::ClipInterval IClipSeriesPrivate::intervalLookup(qint64 pos) const {

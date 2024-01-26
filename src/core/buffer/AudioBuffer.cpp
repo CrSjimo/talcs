@@ -101,26 +101,6 @@ namespace talcs {
         return m_buffer.at(channel).data();
     }
 
-    /**
-     * Gets the reference to the QVector that stores the sample data with a specified channel.
-     *
-     * Note that only until this buffer is resized does the reference remains valid.
-     * @see resize()
-     */
-    QVector<float> &AudioBuffer::vector(int channel) {
-        return m_buffer[channel];
-    }
-
-    /**
-     * Gets the const reference to the QVector that stores the sample data with a specified channel.
-     *
-     * Note that only until this buffer is resized does the reference remains valid.
-     * @see resize()
-     */
-    const QVector<float> &AudioBuffer::constVector(int channel) const {
-        return m_buffer.at(channel);
-    }
-
     template <typename T>
     static inline QVector<T> vectorSlice(const QVector<T> &l, qint64 s, qint64 t = -1) {
         return QVector<T>(l.cbegin() + s, t == -1 ? l.cend() : l.cbegin() + s + t);

@@ -25,8 +25,7 @@
 
 namespace talcs {
 
-    FutureAudioSourceClipSeriesPrivate::FutureAudioSourceClipSeriesPrivate()
-        : IClipSeriesPrivate(new FutureAudioSourceClipSeriesRangeResetter(this)), AudioSourceClipSeriesBase(this) {
+    FutureAudioSourceClipSeriesPrivate::FutureAudioSourceClipSeriesPrivate() : AudioSourceClipSeriesBase(this) {
     }
     void FutureAudioSourceClipSeriesPrivate::postAddClip(const ClipInterval &clip) {
         Q_Q(FutureAudioSourceClipSeries);
@@ -91,16 +90,6 @@ namespace talcs {
         checkAndNotify(position, q->bufferSize());
     }
 
-    bool FutureAudioSourceClipSeriesRangeResetter::resetClipRange(qintptr content, qint64 newPosition, qint64 newLength) {
-        auto oldInterval = d->intervalLookup(d->clipPositionDict.value(content));
-        if (IClipSeriesRangeResetter::resetClipRange(content, newPosition, newLength)) {
-            static_cast<FutureAudioSourceClipSeriesPrivate *>(d)->postRemoveClip(oldInterval);
-            static_cast<FutureAudioSourceClipSeriesPrivate *>(d)->postAddClip({content, newPosition, newLength});
-            return true;
-        }
-        return false;
-    }
-
     /**
      * @class FutureAudioSourceClipSeries
      * @brief An AudioClipsSeriesBase object that uses FutureAudioSource
@@ -129,7 +118,7 @@ namespace talcs {
             readData.buffer->clear(ch, readData.startPos, readData.length);
         }
         qAsConst(d->clips).overlap_find_all(
-            readDataInterval, [=, &readDataInterval](const decltype(d->clips)::const_iterator &it) {
+            readDataInterval, [=](const decltype(d->clips)::const_iterator &it) {
                 auto clip = it->interval();
                 auto [clipReadPosition, clipReadData] = d->calculateClipReadData(clip, d->position, readData);
                 auto clipSrc = reinterpret_cast<FutureAudioSource *>(clip.content());
@@ -182,21 +171,41 @@ namespace talcs {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         if (!d->preInsertClip(content))
-            return ClipView(d->nullClipViewImpl());
-        auto ret = ClipView(d->insertClip(reinterpret_cast<qintptr>(content), position, startPos, length));
+            return d->nullClipViewImpl();
+        auto ret = d->insertClip(reinterpret_cast<qintptr>(content), position, startPos, length);
         d->postAddClip(d->intervalLookup(ret.position()));
         d->checkAndNotify();
         return ret;
     }
 
+    void FutureAudioSourceClipSeries::setClipStartPos(const FutureAudioSourceClipSeries::ClipView &clip,
+                                                      qint64 startPos) {
+        Q_D(FutureAudioSourceClipSeries);
+        d->setClipStartPos(clip, startPos);
+    }
+
+    bool
+    FutureAudioSourceClipSeries::setClipRange(const IClipSeries<FutureAudioSource>::ClipView &clip, qint64 position,
+                                              qint64 length) {
+        Q_D(FutureAudioSourceClipSeries);
+        auto content = ClipViewImpl(clip).content();
+        auto oldInterval = d->intervalLookup(d->clipPositionDict.value(content));
+        if (d->setClipRange(ClipViewImpl(clip), position, length)) {
+            d->postRemoveClip(oldInterval);
+            d->postAddClip({content, position, length});
+            return true;
+        }
+        return false;
+    }
+
     FutureAudioSourceClipSeries::ClipView FutureAudioSourceClipSeries::findClip(FutureAudioSource *content) const {
         Q_D(const FutureAudioSourceClipSeries);
-        return ClipView(d->findClipByContent(reinterpret_cast<qintptr>(content)));
+        return d->findClipByContent(reinterpret_cast<qintptr>(content));
     }
 
     FutureAudioSourceClipSeries::ClipView FutureAudioSourceClipSeries::findClip(qint64 position) const {\
         Q_D(const FutureAudioSourceClipSeries);
-        return ClipView(d->findClipByPosition(position));
+        return d->findClipByPosition(position);
     }
 
     void FutureAudioSourceClipSeries::removeClip(const FutureAudioSourceClipSeries::ClipView &clip) {

@@ -3,3 +3,5 @@ add_subdirectory(TransportAudioSource)
 add_subdirectory(BufferingAudioSource)
 
 add_subdirectory(IMixer)
+
+add_subdirectory(AudioSourceClipSeries)
