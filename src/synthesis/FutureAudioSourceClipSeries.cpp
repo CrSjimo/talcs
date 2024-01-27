@@ -29,7 +29,7 @@ namespace talcs {
     }
     void FutureAudioSourceClipSeriesPrivate::postAddClip(const ClipInterval &clip) {
         Q_Q(FutureAudioSourceClipSeries);
-        cachedClipsLength += clip.length();
+        cachedClipsLength += reinterpret_cast<FutureAudioSource *>(clip.content())->length();
         emit q->progressChanged(cachedLengthAvailable, cachedLengthLoaded, cachedClipsLength, q->effectiveLength());
         QObject::connect(reinterpret_cast<FutureAudioSource *>(clip.content()), &FutureAudioSource::progressChanged, q, [=](int value) {
             cachedLengthLoaded += (value - clipLengthLoadedDict[clip.position()]);
@@ -48,7 +48,7 @@ namespace talcs {
     void FutureAudioSourceClipSeriesPrivate::postRemoveClip(const ClipInterval &clip) {
         Q_Q(FutureAudioSourceClipSeries);
         QObject::disconnect(reinterpret_cast<FutureAudioSource *>(clip.content()), nullptr, q, nullptr);
-        cachedClipsLength -= clip.length();
+        cachedClipsLength -= reinterpret_cast<FutureAudioSource *>(clip.content())->length();
         cachedLengthLoaded -= clipLengthLoadedDict[clip.position()];
         if (clipLengthCachedDict[clip.position()]) {
             cachedLengthAvailable -= clip.length();
@@ -255,7 +255,9 @@ namespace talcs {
     }
 
     /**
-     * Gets the total length of all clips.
+     * Gets the total length of the content of all clips.
+     *
+     * Note that this is the sum of the length of clip contents (the FutureAudioSource object), not clips.
      */
     qint64 FutureAudioSourceClipSeries::lengthOfAllClips() const {
         Q_D(const FutureAudioSourceClipSeries);

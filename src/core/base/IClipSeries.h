@@ -32,6 +32,10 @@ namespace talcs {
 
         bool isValid() const;
 
+        bool isNull() const {
+            return !bool(m_content);
+        }
+
         qintptr content() const;
 
         qint64 startPos() const;
@@ -39,10 +43,6 @@ namespace talcs {
         qint64 position() const;
 
         qint64 length() const;
-
-        bool operator==(const ClipViewImpl &other) const {
-            return m_content == other.m_content;
-        }
 
         template<class ClipView>
         ClipViewImpl(const ClipView &clipView) : ClipViewImpl(clipView.m_impl) {
@@ -69,6 +69,10 @@ namespace talcs {
                 return m_impl.isValid();
             }
 
+            bool isNull() const {
+                return m_impl.isNull();
+            }
+
             T *content() const {
                 return reinterpret_cast<T *>(m_impl.content());
             }
@@ -86,11 +90,11 @@ namespace talcs {
             }
 
             bool operator==(const ClipView &other) const {
-                return m_impl == other.m_impl;
+                return content() == other.content();
             }
 
             bool operator!=(const ClipView &other) const {
-                return !(m_impl == other.m_impl);
+                return content() != other.content();
             }
         private:
             friend class ClipViewImpl;

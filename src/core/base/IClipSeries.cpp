@@ -86,7 +86,10 @@ namespace talcs {
     }
 
     ClipViewImpl IClipSeriesPrivate::findClipByContent(qintptr content) const {
-        return ClipViewImpl(const_cast<IClipSeriesPrivate *>(this), content);
+        auto ret = ClipViewImpl(const_cast<IClipSeriesPrivate *>(this), content);
+        if (!ret.isValid())
+            ret.m_content = 0;
+        return ret;
     }
 
     ClipViewImpl IClipSeriesPrivate::findClipByPosition(qint64 position) const {
