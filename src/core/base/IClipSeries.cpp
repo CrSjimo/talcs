@@ -146,4 +146,115 @@ namespace talcs {
         return clips.overlap_find({0, pos, 1});
     }
 
+    /**
+     * @class IClipSeries
+     * @brief Generic class for clip series.
+     * @tparam T the class of clip.
+     */
+
+    /**
+     * @class IClipSeries::ClipView
+     * @brief The view of a generic audio clip.
+     */
+
+    /**
+     * @fn IClipSeries::ClipView::ClipView()
+     * Default constructor. Creates a null clip view.
+     */
+
+    /**
+     * @fn bool IClipSeries::ClipView::isValid() const
+     * Gets whether the clip view is valid. Null clip views and views of clip already deleted are invalid.
+     *
+     * Passing invalid clip view as an argument of IClipSeries member functions will cause undefined behaviors.
+     */
+
+    /**
+     * @fn bool IClipSeries::ClipView::isNull() const
+     * Gets whether the clip view is null.
+     */
+
+    /**
+     * @fn T *IClipSeries::ClipView::content() const
+     * Gets the content of the clip.
+     */
+
+    /**
+     * @fn qint64 IClipSeries::ClipView::startPos() const
+     * Gets the starting position of the clip content.
+     */
+
+    /**
+     * @fn qint64 IClipSeries::ClipView::position() const
+     * Gets the position of the clip in the clip series.
+     */
+
+    /**
+     * @fn qint64 IClipSeries::ClipView::length() const
+     * Gets the length of the clip.
+     */
+
+    /**
+     * @fn bool IClipSeries::ClipView::operator==(const IClipSeries::ClipView &other) const
+     * Equal-to operator overloading.
+     */
+
+    /**
+     * @fn bool IClipSeries::ClipView::operator!=(const IClipSeries::ClipView &other) const
+     * Not-equal-to operator overloading.
+     */
+
+    /**
+     * @fn IClipSeries::ClipView IClipSeries::insertClip(T *content, qint64 position, qint64 startPos, qint64 length)
+     * Inserts a clip to the clip series.
+     *
+     * If it fails (due to clip overlapping or other reasons), null clip view will be returned.
+     */
+
+    /**
+     * @fn void IClipSeries::setClipStartPos(const IClipSeries::ClipView &clip, qint64 startPos)
+     * Sets the starting position of a specified clip.
+     */
+
+    /**
+     * @fn bool IClipSeries::setClipRange(const IClipSeries::ClipView &clip, qint64 position, qint64 length)
+     * Sets the clip's position in the series and length.
+     *
+     * If it fails (due to clip overlapping or other reasons), null clip view will be returned.
+     */
+
+    /**
+     * @fn IClipSeries::ClipView IClipSeries::findClip(T *content) const
+     * Finds a clip by its content.
+     *
+     * If not found, a null clip view will be returned.
+     */
+
+    /**
+     * @fn IClipSeries::ClipView IClipSeries::findClip(qint64 position) const
+     * Finds a clip by the position in the series.
+     *
+     * If not found, a null clip view will be returned.
+     */
+
+    /**
+     * @fn void IClipSeries::removeClip(const IClipSeries::ClipView &clip)
+     * Removes a clip.
+     */
+
+    /**
+     * @fn void IClipSeries::removeAllClips()
+     * Removes all clips.
+     */
+
+    /**
+     * @fn QList<ClipView> IClipSeries::clips() const
+     * Gets all clips.
+     */
+
+    /**
+     * @fn qint64 IClipSeries::effectiveLength() const
+     * Gets the effective length (i.e. the ending position of the last clip).
+     */
+
 } // talcs
