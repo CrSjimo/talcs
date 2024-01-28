@@ -39,7 +39,7 @@ namespace talcs {
         bool postOutput = false;
         QVector<ASIOBufferInfo> bufferInfoList;
         QVector<ASIOChannelInfo> channelInfoList;
-        char errorMessageBuffer[128];
+        char errorMessageBuffer[256] = {};
 
         int deviceIndex = -1;
         ASIOCallbacks callbacks = {};
@@ -47,6 +47,8 @@ namespace talcs {
         AudioBuffer audioBuffer;
 
         QMutex mutex;
+
+        void setIASIOError();
     };
 }
 

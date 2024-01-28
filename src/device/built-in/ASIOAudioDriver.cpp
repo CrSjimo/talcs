@@ -49,52 +49,60 @@ namespace talcs {
         ASIOAudioDriver::finalize();
     }
 
+    struct keyClose {
+        void operator()(HKEY hKey) {
+            if (hKey)
+                ::RegCloseKey(hKey);
+        }
+    };
+
+    using HKEYUniquePtr = std::unique_ptr<std::remove_pointer<HKEY>::type, keyClose>;
+
     static bool checkDriverCOMClass(char *clsidStr) {
         CharLowerBuffA(clsidStr, std::strlen(clsidStr));
-        HKEY hkeyClsid;
-        HKEY hkeySub, hKeyInproc;
-        if (::RegOpenKeyExA(HKEY_CLASSES_ROOT, "clsid", 0, KEY_READ, &hkeyClsid) != ERROR_SUCCESS)
+        HKEYUniquePtr hKeyClsid, // HKEY_CLASSES_ROOT\clsid
+                      hKeySub, // HKEY_CLASSES_ROOT\clsid\<CLSID>
+                      hKeyInproc; // HKEY_CLASSES_ROOT\clsid\<CLSID>\InprocServer32
+        HKEY hKey_;
+        if (::RegOpenKeyExA(HKEY_CLASSES_ROOT, "clsid", 0, KEY_READ, &hKey_) != ERROR_SUCCESS)
             return false;
+        hKeyClsid.reset(hKey_);
         int index = 0;
         char buf[512];
-        bool result = false;
-        while (::RegEnumKeyA(hkeyClsid, index++, buf, MAXPATHLEN) == ERROR_SUCCESS) {
+        while (::RegEnumKeyA(hKeyClsid.get(), index++, buf, MAXPATHLEN) == ERROR_SUCCESS) {
             CharLowerBuffA(buf, std::strlen(buf));
             if (std::strcmp(clsidStr, buf) != 0)
                 continue;
 
             // Firstly get DLL path from .\<CLSID>\InprocServer32\<Default>
-            if (::RegOpenKeyExA(hkeyClsid, buf, 0, KEY_READ, &hkeySub) != ERROR_SUCCESS)
-                goto finally1;
-            if (::RegOpenKeyExA(hkeySub, "InprocServer32", 0, KEY_READ, &hKeyInproc) != ERROR_SUCCESS)
-                goto finally2;
+            if (::RegOpenKeyExA(hKeyClsid.get(), buf, 0, KEY_READ, &hKey_) != ERROR_SUCCESS)
+                return false;
+            hKeySub.reset(hKey_);
+            if (::RegOpenKeyExA(hKeySub.get(), "InprocServer32", 0, KEY_READ, &hKey_) != ERROR_SUCCESS)
+                return false;
+            hKeyInproc.reset(hKey_);
             DWORD valueType = REG_SZ;
             DWORD valueSize = 512;
-            if (::RegQueryValueEx(hKeyInproc, NULL, NULL, &valueType, (LPBYTE) buf, &valueSize) != ERROR_SUCCESS)
-                goto finally3;
+            if (::RegQueryValueEx(hKeyInproc.get(), NULL, NULL, &valueType, (LPBYTE) buf, &valueSize) != ERROR_SUCCESS)
+                return false;
 
             // Then check the existence of DLL file
-            result = QFileInfo::exists(buf);
-            break;
+            return QFileInfo::exists(buf);
         }
-    finally3:
-        ::RegCloseKey(hKeyInproc);
-    finally2:
-        ::RegCloseKey(hkeySub);
-    finally1:
-        ::RegCloseKey(hkeyClsid);
-        return result;
+        return false;
     }
 
     void ASIOAudioDriverPrivate::createDriverSpec(HKEY hkey, char *keyName) {
-        HKEY hkeySub;
+        HKEYUniquePtr hKeySub; // HEKY_LOCAL_MACHINE\software\asio\<driver>
+        HKEY hKey_;
 
         // Open the item of driver in the Registry
-        if (::RegOpenKeyExA(hkey, keyName, 0, KEY_READ, &hkeySub) != ERROR_SUCCESS)
+        if (::RegOpenKeyExA(hkey, keyName, 0, KEY_READ, &hKey_) != ERROR_SUCCESS)
             return;
+        hKeySub.reset(hKey_);
 
         char buf[256];
-        WCHAR wStr[128];
+        WCHAR wBuf[128];
         DWORD valueType;
         DWORD valueSize;
         CLSID clsid;
@@ -103,27 +111,24 @@ namespace talcs {
         // Get CLSID
         valueType = REG_SZ;
         valueSize = 256;
-        if (::RegQueryValueExA(hkeySub, "clsid", NULL, &valueType, (LPBYTE) buf, &valueSize) != ERROR_SUCCESS)
-            goto finally;
+        if (::RegQueryValueExA(hKeySub.get(), "clsid", NULL, &valueType, (LPBYTE) buf, &valueSize) != ERROR_SUCCESS)
+            return;
         if (!checkDriverCOMClass(buf))
-            goto finally;
-        ::MultiByteToWideChar(CP_ACP, 0, buf, -1, wStr, 128);
-        if (::CLSIDFromString(wStr, &clsid) != S_OK)
-            goto finally;
+            return;
+        ::MultiByteToWideChar(CP_ACP, 0, buf, -1, wBuf, 128);
+        if (::CLSIDFromString(wBuf, &clsid) != S_OK)
+            return;
 
         // Get driver name
         valueType = REG_SZ;
         valueSize = 256;
-        if (::RegQueryValueExA(hkeySub, "description", NULL, &valueType, (LPBYTE) buf, &valueSize) == ERROR_SUCCESS) {
+        if (::RegQueryValueExA(hKeySub.get(), "description", NULL, &valueType, (LPBYTE) buf, &valueSize) == ERROR_SUCCESS) {
             driverName = buf;
         } else {
             driverName = keyName;
         }
 
         asioDriverSpecs.append({clsid, driverName});
-
-    finally:
-        ::RegCloseKey(hkeySub);
     }
 
     bool ASIOAudioDriver::initialize() {
@@ -131,14 +136,16 @@ namespace talcs {
 
         d->asioDriverSpecs.clear();
 
-        HKEY hkEnum = nullptr;
+        HKEYUniquePtr hKeyEnum; // HEKY_LOCAL_MACHINE\software\asio
+        HKEY hKey_;
         char keyname[MAXPATHLEN];
 
-        if (::RegOpenKeyA(HKEY_LOCAL_MACHINE, "software\\asio", &hkEnum) != ERROR_SUCCESS)
+        if (::RegOpenKeyA(HKEY_LOCAL_MACHINE, "software\\asio", &hKey_) != ERROR_SUCCESS)
             return false;
+        hKeyEnum.reset(hKey_);
         int index = 0;
-        while (::RegEnumKeyA(hkEnum, index++, keyname, MAXPATHLEN) == ERROR_SUCCESS) {
-            d->createDriverSpec(hkEnum, keyname);
+        while (::RegEnumKeyA(hKeyEnum.get(), index++, keyname, MAXPATHLEN) == ERROR_SUCCESS) {
+            d->createDriverSpec(hKeyEnum.get(), keyname);
         }
         if (!d->asioDriverSpecs.isEmpty())
             ::CoInitialize(NULL);

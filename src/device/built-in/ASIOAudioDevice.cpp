@@ -179,6 +179,12 @@ namespace talcs {
         return {};
     }
 
+    void ASIOAudioDevicePrivate::setIASIOError() {
+        Q_Q(ASIOAudioDevice);
+        iasio->getErrorMessage(errorMessageBuffer);
+        q->setErrorString(QString::fromLocal8Bit(errorMessageBuffer));
+    }
+
 
     static const QList<double> COMMON_SAMPLE_RATES = {8000,   11025,  12000,  16000,  22050,  24000,
                                                       32000,  44100,  48000,  64000,  88200,  96000,
@@ -210,19 +216,22 @@ namespace talcs {
         d->iasio = iasio;
         if (!d->iasio->init(nullptr)) {
             qWarning() << "ASIOAudioDevice: Initialization failed" << name;
-            d->iasio->getErrorMessage(d->errorMessageBuffer);
-            setErrorString(d->errorMessageBuffer);
+            d->setIASIOError();
             return;
         }
 
         long numInputChannels, numOutputChannels;
-        if (d->iasio->getChannels(&numInputChannels, &numOutputChannels) != ASE_OK)
+        if (d->iasio->getChannels(&numInputChannels, &numOutputChannels) != ASE_OK) {
+            d->setIASIOError();
             return;
+        }
         setChannelCount(numOutputChannels);
 
         long minSize, preferredSize, maxSize, granularity;
-        if (d->iasio->getBufferSize(&minSize, &maxSize, &preferredSize, &granularity) != ASE_OK)
+        if (d->iasio->getBufferSize(&minSize, &maxSize, &preferredSize, &granularity) != ASE_OK) {
+            d->setIASIOError();
             return;
+        }
         setPreferredBufferSize(preferredSize);
         QList<qint64> bufferSizeList;
         if (granularity <= 0 || minSize > maxSize) {
@@ -235,8 +244,10 @@ namespace talcs {
         setAvailableBufferSizes(bufferSizeList);
 
         double currentSampleRate;
-        if (d->iasio->getSampleRate(&currentSampleRate) != ASE_OK)
+        if (d->iasio->getSampleRate(&currentSampleRate) != ASE_OK) {
+            d->setIASIOError();
             return;
+        }
         setPreferredSampleRate(currentSampleRate);
         QList<double> sampleRateList;
         for (auto sr : COMMON_SAMPLE_RATES) {
@@ -249,6 +260,7 @@ namespace talcs {
         d->postOutput = (d->iasio->outputReady() == ASE_OK);
 
         d->isInitialized = true;
+        setErrorString({});
     }
 
     /**
@@ -269,9 +281,10 @@ namespace talcs {
             return false;
         Q_D(ASIOAudioDevice);
         ASIOAudioDevice::stop();
-        if (d->iasio->setSampleRate(sampleRate) != ASE_OK)
+        if (d->iasio->setSampleRate(sampleRate) != ASE_OK) {
+            d->setIASIOError();
             return false;
-
+        }
         for (int i = 0; i < activeChannelCount(); i++) {
             d->bufferInfoList.append({
                 ASIOFalse,
@@ -279,13 +292,17 @@ namespace talcs {
                 {nullptr, nullptr},
             });
             ASIOChannelInfo channelInfo = {i, ASIOFalse};
-            if (d->iasio->getChannelInfo(&channelInfo) != ASE_OK)
+            if (d->iasio->getChannelInfo(&channelInfo) != ASE_OK) {
+                d->setIASIOError();
                 return false;
+            }
             d->channelInfoList.append(channelInfo);
         }
-        if (d->iasio->createBuffers(d->bufferInfoList.data(), activeChannelCount(), bufferSize, &d->callbacks) !=
-            ASE_OK)
+        if (d->iasio->createBuffers(d->bufferInfoList.data(), activeChannelCount(), bufferSize, &d->callbacks) != ASE_OK) {
+            d->setIASIOError();
             return false;
+        }
+        setErrorString({});
         return AudioDevice::open(bufferSize, sampleRate);
     }
     void ASIOAudioDevice::close() {
@@ -308,7 +325,11 @@ namespace talcs {
         d->audioBuffer.resize(activeChannelCount(), bufferSize());
         if (!d->audioDeviceCallback->deviceWillStartCallback(this))
             return false;
-        d->iasio->start();
+        if (d->iasio->start() != ASE_OK) {
+            d->setIASIOError();
+            return false;
+        }
+        setErrorString({});
         return AudioDevice::start(audioDeviceCallback);
     }
     void ASIOAudioDevice::stop() {
