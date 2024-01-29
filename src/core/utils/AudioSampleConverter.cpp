@@ -30,6 +30,10 @@ namespace talcs {
     static const double factor24 = (double) 0x7fffffL + 0.49999;
     static const double factor32 = (double) 0x7fffffffL + 0.49999;
 
+    static inline float rangeRestrict(float x) {
+        return qMax(-1.0f, qMin(1.0f, x));
+    }
+
     /**
      * @class AudioSampleConverter
      * @brief The class provides functions to convert between several sample types.
@@ -42,11 +46,16 @@ namespace talcs {
      * @param length the number of samples
      * @param isLittleEndian whether the destination values are little-endian
      */
-    void AudioSampleConverter::convertToInt16(void *dest, const float *src, qint64 length, bool isLittleEndian) {
+    void AudioSampleConverter::convertToInt16(void *dest, const float *src, qint64 length, bool isLittleEndian, bool restrictRange) {
         auto p = reinterpret_cast<qint16 *>(dest);
-        while (--length >= 0)
-            *p++ = isLittleEndian ? (qint16) qToLittleEndian((double) (*src++) * factor16)
-                                  : (qint16) qToBigEndian((double) (*src++) * factor16);
+        if (restrictRange)
+            while (--length >= 0)
+                *p++ = isLittleEndian ? qToLittleEndian(qint16(rangeRestrict(*src++) * factor16))
+                                      : qToBigEndian(qint16(rangeRestrict(*src++) * factor16));
+        else
+            while (--length >= 0)
+                *p++ = isLittleEndian ? qToLittleEndian(qint16((*src++) * factor16))
+                                      : qToBigEndian(qint16((*src++) * factor16));
     }
 
     /**
@@ -56,23 +65,38 @@ namespace talcs {
      * @param length the number of samples
      * @param isLittleEndian whether the destination values are little-endian
      */
-    void AudioSampleConverter::convertToInt24(void *dest, const float *src, qint64 length, bool isLittleEndian) {
+    void AudioSampleConverter::convertToInt24(void *dest, const float *src, qint64 length, bool isLittleEndian, bool restrictRange) {
         long a;
         char *b = (char *) dest;
         char *aa = (char *) &a;
-        while (--length >= 0) {
-            if (isLittleEndian) {
-                a = (qint32) qToLittleEndian((double) (*src++) * factor24);
-                *b++ = aa[0];
-                *b++ = aa[1];
-                *b++ = aa[2];
-            } else {
-                a = (qint32) qToBigEndian((double) (*src++) * factor24);
-                *b++ = aa[3];
-                *b++ = aa[2];
-                *b++ = aa[1];
+        if (restrictRange)
+            while (--length >= 0) {
+                if (isLittleEndian) {
+                    a = qToLittleEndian(qint32(rangeRestrict(*src++) * factor24));
+                    *b++ = aa[0];
+                    *b++ = aa[1];
+                    *b++ = aa[2];
+                } else {
+                    a = qToBigEndian(qint32(rangeRestrict(*src++) * factor24));
+                    *b++ = aa[3];
+                    *b++ = aa[2];
+                    *b++ = aa[1];
+                }
             }
-        }
+        else
+            while (--length >= 0) {
+                if (isLittleEndian) {
+                    a = qToLittleEndian(qint32((*src++) * factor24));
+                    *b++ = aa[0];
+                    *b++ = aa[1];
+                    *b++ = aa[2];
+                } else {
+                    a = qToBigEndian(qint32((*src++) * factor24));
+                    *b++ = aa[3];
+                    *b++ = aa[2];
+                    *b++ = aa[1];
+                }
+            }
     }
 
     /**
@@ -82,11 +106,16 @@ namespace talcs {
      * @param length the number of samples
      * @param isLittleEndian whether the destination values are little-endian
      */
-    void AudioSampleConverter::convertToInt32(void *dest, const float *src, qint64 length, bool isLittleEndian) {
+    void AudioSampleConverter::convertToInt32(void *dest, const float *src, qint64 length, bool isLittleEndian, bool restrictRange) {
         auto p = reinterpret_cast<qint32 *>(dest);
-        while (--length >= 0)
-            *p++ = isLittleEndian ? (qint32) qToLittleEndian((double) (*src++) * factor32)
-                                  : (qint32) qToBigEndian((double) (*src++) * factor32);
+        if (restrictRange)
+            while (--length >= 0)
+                *p++ = isLittleEndian ? qToLittleEndian(qint32(rangeRestrict(*src++) * factor32))
+                                      : qToBigEndian(qint32(rangeRestrict(*src++) * factor32));
+        else
+            while (--length >= 0)
+                *p++ = isLittleEndian ? qToLittleEndian(qint32((*src++) * factor32))
+                                      : qToBigEndian(qint32((*src++) * factor32));
     }
 
     /**

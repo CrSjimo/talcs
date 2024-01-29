@@ -29,41 +29,46 @@
 
 namespace talcs {
 
-    static const size_t DEVICE_LIST_SIZE = TALCS_ASIO_DEVICE_LIST_SIZE;
+    static const size_t DEVICE_LIST_SIZE = 16;
 
     static ASIOAudioDevicePrivate *m_devices[DEVICE_LIST_SIZE] = {};
 
     static void convertBuffer(void *dest, const float *src, qint64 length, ASIOSampleType type) {
+#ifdef Q_LITTLE_ENDIAN
+        bool isLittleEndian = true;
+#else
+        bool isLittleEndian = false;
+#endif
         switch (type) {
             case ASIOSTInt16LSB:
-                AudioSampleConverter::convertToInt16(dest, src, length, true);
+                AudioSampleConverter::convertToInt16(dest, src, length, isLittleEndian, true);
                 break;
             case ASIOSTInt16MSB:
-                AudioSampleConverter::convertToInt16(dest, src, length, false);
+                AudioSampleConverter::convertToInt16(dest, src, length, !isLittleEndian, true);
                 break;
             case ASIOSTInt24LSB:
-                AudioSampleConverter::convertToInt24(dest, src, length, true);
+                AudioSampleConverter::convertToInt24(dest, src, length, isLittleEndian, true);
                 break;
             case ASIOSTInt24MSB:
-                AudioSampleConverter::convertToInt24(dest, src, length, false);
+                AudioSampleConverter::convertToInt24(dest, src, length, !isLittleEndian, true);
                 break;
             case ASIOSTInt32LSB:
-                AudioSampleConverter::convertToInt32(dest, src, length, true);
+                AudioSampleConverter::convertToInt32(dest, src, length, isLittleEndian, true);
                 break;
             case ASIOSTInt32MSB:
-                AudioSampleConverter::convertToInt32(dest, src, length, false);
+                AudioSampleConverter::convertToInt32(dest, src, length, !isLittleEndian, true);
                 break;
             case ASIOSTFloat32LSB:
-                AudioSampleConverter::convertToFloat32(dest, src, length, true);
+                AudioSampleConverter::convertToFloat32(dest, src, length, isLittleEndian);
                 break;
             case ASIOSTFloat32MSB:
-                AudioSampleConverter::convertToFloat32(dest, src, length, false);
+                AudioSampleConverter::convertToFloat32(dest, src, length, !isLittleEndian);
                 break;
             case ASIOSTFloat64LSB:
-                AudioSampleConverter::convertToFloat64(dest, src, length, true);
+                AudioSampleConverter::convertToFloat64(dest, src, length, isLittleEndian);
                 break;
             case ASIOSTFloat64MSB:
-                AudioSampleConverter::convertToFloat64(dest, src, length, false);
+                AudioSampleConverter::convertToFloat64(dest, src, length, !isLittleEndian);
                 break;
             default:
                 // unsupported sample type
@@ -75,6 +80,7 @@ namespace talcs {
     struct CallbackFunctions {
         static void sampleRateDidChange(ASIOSampleRate sRate) {
             // TODO work on this
+            qDebug() << "ASIOAudioDevice: sampleRateDidChange" << sRate;
         }
 
         static long asioMessage(long selector, long value, void *message, double *opt) {
@@ -193,7 +199,7 @@ namespace talcs {
     /**
      * @class ASIOAudioDevice
      * @brief The audio device using ASIO
-     * @see @link URL https://forums.steinberg .net/c/developer/asio/ @endlink
+     * @see @link URL https://forums.steinberg.net/c/developer/asio/ @endlink
      */
 
     /**
