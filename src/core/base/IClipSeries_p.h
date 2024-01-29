@@ -61,11 +61,10 @@ namespace talcs {
         ClipViewImpl insertClip(qintptr content, qint64 position, qint64 startPos, qint64 length);
         void setClipStartPos(const ClipViewImpl &clipViewImpl, qint64 startPos);
         bool setClipRange(const ClipViewImpl &clipViewImpl, qint64 position, qint64 length);
+        ClipViewImpl setClipContent(const ClipViewImpl &clipViewImpl, qintptr content);
 
         ClipViewImpl findClipByContent(qintptr content) const;
         ClipViewImpl findClipByPosition(qint64 position) const;
-
-        ClipViewImpl nullClipViewImpl() const;
 
         void removeClip(const ClipViewImpl &clipViewImpl);
         void removeAllClips();

@@ -62,6 +62,12 @@ private slots:
         QCOMPARE(series.clips()[0].content(), &src[1]);
         series.removeAllClips();
         QVERIFY(series.insertClip(&src[2], 1024, 0, 2048).isValid());
+
+        series.open(1024, 48000);
+        QVERIFY(series.clips()[0].content()->isOpen());
+        auto clip = series.setClipContent(series.clips()[0], &src[0]);
+        QCOMPARE(clip.content(), &src[0]);
+        QVERIFY(src[0].isOpen());
     }
 
     void clipReading() {
@@ -73,8 +79,11 @@ private slots:
         std::iota(buf2.data(0), buf2.data(0) + 1024, 4096);
         AudioSourceClipSeries series;
         QVERIFY(series.insertClip(&src1, 0, 0, 1024).isValid());
-        QVERIFY(series.insertClip(&src2, 1280, 0, 1024).isValid());
         AudioBuffer tmpBuf(1, 768);
+        series.open(768, 48000);
+        QVERIFY(src1.isOpen());
+        QVERIFY(series.insertClip(&src2, 1280, 0, 1024).isValid());
+        QVERIFY(src2.isOpen());
         series.read(&tmpBuf);
         for (int i = 0; i < 768; i++) {
             QCOMPARE(tmpBuf.constSampleAt(0, i), i);

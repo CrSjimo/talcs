@@ -45,9 +45,11 @@ namespace talcs {
 
         TransportAudioSource *bufferingTarget = nullptr;
 
+        void emitProgressChanged();
+
         void postAddClip(const ClipInterval &clip);
-        void postRemoveClip(const ClipInterval &clip);
-        void postRemoveAllClips();
+        void postRemoveClip(const ClipInterval &clip, bool emitSignal = true);
+        void preRemoveAllClips();
 
         void notifyPause();
         void notifyResume();

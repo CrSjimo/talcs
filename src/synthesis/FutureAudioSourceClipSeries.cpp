@@ -27,25 +27,31 @@ namespace talcs {
 
     FutureAudioSourceClipSeriesPrivate::FutureAudioSourceClipSeriesPrivate() : AudioSourceClipSeriesBase(this) {
     }
+
+    void FutureAudioSourceClipSeriesPrivate::emitProgressChanged() {
+        Q_Q(FutureAudioSourceClipSeries);
+        emit q->progressChanged(cachedLengthAvailable, cachedLengthLoaded, cachedClipsLength, q->effectiveLength());
+    }
+
     void FutureAudioSourceClipSeriesPrivate::postAddClip(const ClipInterval &clip) {
         Q_Q(FutureAudioSourceClipSeries);
         cachedClipsLength += reinterpret_cast<FutureAudioSource *>(clip.content())->length();
-        emit q->progressChanged(cachedLengthAvailable, cachedLengthLoaded, cachedClipsLength, q->effectiveLength());
+        emitProgressChanged();
         QObject::connect(reinterpret_cast<FutureAudioSource *>(clip.content()), &FutureAudioSource::progressChanged, q, [=](int value) {
             cachedLengthLoaded += (value - clipLengthLoadedDict[clip.position()]);
             clipLengthLoadedDict[clip.position()] = value;
-            emit q->progressChanged(cachedLengthAvailable, cachedLengthLoaded, cachedClipsLength, q->effectiveLength());
+            emitProgressChanged();
         });
         QObject::connect(reinterpret_cast<FutureAudioSource *>(clip.content()), &FutureAudioSource::statusChanged, q, [=](FutureAudioSource::Status status) {
             if (status == FutureAudioSource::Ready) {
                 cachedLengthAvailable += clip.length();
                 clipLengthCachedDict[clip.position()] = true;
-                emit q->progressChanged(cachedLengthAvailable, cachedLengthLoaded, cachedClipsLength, q->effectiveLength());
+                emitProgressChanged();
                 checkAndNotify();
             }
         });
     }
-    void FutureAudioSourceClipSeriesPrivate::postRemoveClip(const ClipInterval &clip) {
+    void FutureAudioSourceClipSeriesPrivate::postRemoveClip(const ClipInterval &clip, bool emitSignal) {
         Q_Q(FutureAudioSourceClipSeries);
         QObject::disconnect(reinterpret_cast<FutureAudioSource *>(clip.content()), nullptr, q, nullptr);
         cachedClipsLength -= reinterpret_cast<FutureAudioSource *>(clip.content())->length();
@@ -55,13 +61,15 @@ namespace talcs {
         }
         clipLengthLoadedDict.remove(clip.position());
         clipLengthCachedDict.remove(clip.position());
-        emit q->progressChanged(cachedLengthAvailable, cachedLengthLoaded, cachedClipsLength, q->effectiveLength());
+        if (emitSignal)
+            emitProgressChanged();
     }
-    void FutureAudioSourceClipSeriesPrivate::postRemoveAllClips() {
+    void FutureAudioSourceClipSeriesPrivate::preRemoveAllClips() {
         Q_Q(FutureAudioSourceClipSeries);
         for (auto p = clips.cbegin(); p != clips.cend(); p++) {
-            postRemoveClip(p->interval());
+            postRemoveClip(p->interval(), false);
         }
+        emitProgressChanged();
     }
     void FutureAudioSourceClipSeriesPrivate::notifyPause() {
         if (bufferingTarget && !isPauseRequiredEmitted) {
@@ -171,10 +179,12 @@ namespace talcs {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         if (!d->preInsertClip(content))
-            return d->nullClipViewImpl();
+            return {};
         auto ret = d->insertClip(reinterpret_cast<qintptr>(content), position, startPos, length);
-        d->postAddClip(d->intervalLookup(ret.position()));
-        d->checkAndNotify();
+        if (!ret.isNull()) {
+            d->postAddClip(d->intervalLookup(ret.position()));
+            d->checkAndNotify();
+        }
         return ret;
     }
 
@@ -191,11 +201,30 @@ namespace talcs {
         auto content = ClipViewImpl(clip).content();
         auto oldInterval = d->intervalLookup(d->clipPositionDict.value(content));
         if (d->setClipRange(ClipViewImpl(clip), position, length)) {
-            d->postRemoveClip(oldInterval);
+            d->postRemoveClip(oldInterval, false);
             d->postAddClip({content, position, length});
             return true;
         }
         return false;
+    }
+
+    FutureAudioSourceClipSeries::ClipView
+    FutureAudioSourceClipSeries::setClipContent(const FutureAudioSourceClipSeries::ClipView &clip,
+                                                FutureAudioSource *content) {
+        Q_D(FutureAudioSourceClipSeries);
+        if (content == clip.content())
+            return clip;
+        QMutexLocker locker(&d->mutex);
+        if (!d->preInsertClip(content))
+            return {};
+        auto oldContent = clip.content();
+        auto ret = d->setClipContent(clip, reinterpret_cast<qintptr>(content));
+        if (!ret.isNull()) {
+            d->postRemoveClip({reinterpret_cast<qintptr>(oldContent), ret.position(), ret.length()}, false);
+            d->postAddClip({reinterpret_cast<qintptr>(content), ret.position(), ret.length()});
+            d->checkAndNotify();
+        }
+        return ret;
     }
 
     FutureAudioSourceClipSeries::ClipView FutureAudioSourceClipSeries::findClip(FutureAudioSource *content) const {
@@ -203,7 +232,7 @@ namespace talcs {
         return d->findClipByContent(reinterpret_cast<qintptr>(content));
     }
 
-    FutureAudioSourceClipSeries::ClipView FutureAudioSourceClipSeries::findClip(qint64 position) const {\
+    FutureAudioSourceClipSeries::ClipView FutureAudioSourceClipSeries::findClip(qint64 position) const {
         Q_D(const FutureAudioSourceClipSeries);
         return d->findClipByPosition(position);
     }
@@ -221,7 +250,7 @@ namespace talcs {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         d->removeAllClips();
-        d->postRemoveAllClips();
+        d->preRemoveAllClips();
         d->checkAndNotify();
     }
 

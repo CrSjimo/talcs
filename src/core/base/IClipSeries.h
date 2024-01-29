@@ -104,6 +104,7 @@ namespace talcs {
         virtual ClipView insertClip(T *content, qint64 position, qint64 startPos, qint64 length) = 0;
         virtual void setClipStartPos(const ClipView &clip, qint64 startPos) = 0;
         virtual bool setClipRange(const ClipView &clip, qint64 position, qint64 length) = 0;
+        virtual ClipView setClipContent(const ClipView &clip, T *content) = 0;
 
         virtual ClipView findClip(T *content) const = 0;
         virtual ClipView findClip(qint64 position) const = 0;

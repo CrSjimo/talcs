@@ -53,9 +53,11 @@ namespace talcs {
     }
 
     ClipViewImpl IClipSeriesPrivate::insertClip(qintptr content, qint64 position, qint64 startPos, qint64 length) {
+        if (clipPositionDict.contains(content))
+            return {};
         auto ival = ClipInterval(content, position, length);
         if (qAsConst(clips).overlap_find(ival) != clips.cend())
-            return nullClipViewImpl();
+            return {};
         clips.insert(ival);
         clipPositionDict.insert(content, position);
         clipStartPosDict.insert(content, startPos);
@@ -85,6 +87,20 @@ namespace talcs {
         return true;
     }
 
+    ClipViewImpl IClipSeriesPrivate::setClipContent(const ClipViewImpl &clipViewImpl, qintptr content) {
+        if (content == clipViewImpl.m_content)
+            return clipViewImpl;
+        if (clipPositionDict.contains(content))
+            return {};
+        auto position = clipViewImpl.position();
+        auto startPos = clipViewImpl.startPos();
+        auto length = clipViewImpl.length();
+        removeClip(clipViewImpl);
+        auto ret = insertClip(content, position, startPos, length);
+        Q_ASSERT(!ret.isNull());
+        return ret;
+    }
+
     ClipViewImpl IClipSeriesPrivate::findClipByContent(qintptr content) const {
         auto ret = ClipViewImpl(const_cast<IClipSeriesPrivate *>(this), content);
         if (!ret.isValid())
@@ -95,12 +111,8 @@ namespace talcs {
     ClipViewImpl IClipSeriesPrivate::findClipByPosition(qint64 position) const {
         auto it = findClipIterator(position);
         if (it == clips.cend())
-            return nullClipViewImpl();
+            return {};
         return ClipViewImpl(const_cast<IClipSeriesPrivate *>(this), it->interval().content());
-    }
-
-    ClipViewImpl IClipSeriesPrivate::nullClipViewImpl() const {
-        return ClipViewImpl(const_cast<IClipSeriesPrivate *>(this), 0);
     }
 
     void IClipSeriesPrivate::removeClip(const ClipViewImpl &clipViewImpl) {
@@ -208,7 +220,7 @@ namespace talcs {
      * @fn IClipSeries::ClipView IClipSeries::insertClip(T *content, qint64 position, qint64 startPos, qint64 length)
      * Inserts a clip to the clip series.
      *
-     * If it fails (due to clip overlapping or other reasons), null clip view will be returned.
+     * If it fails (due to clip overlapping, duplicated content, or other reasons), null clip view will be returned.
      */
 
     /**
@@ -221,6 +233,16 @@ namespace talcs {
      * Sets the clip's position in the series and length.
      *
      * If it fails (due to clip overlapping or other reasons), null clip view will be returned.
+     */
+
+    /**
+     * @fn IClipSeries::ClipView IClipSeries::setClipContent(const IClipSeries::ClipView &clip, T *content)
+     * Sets the content of a clip
+     *
+     * After setting, the old clip view becomes invalid.
+     *
+     * If it fails (due to duplicated content or other reasons), null clip view will be returned and the old clip view
+     * remains valid.
      */
 
     /**
