@@ -25,6 +25,15 @@
 
 namespace talcs {
 
+    /**
+     * @class BufferingAudioSource
+     * @brief Buffering when reading from a PositionableAudioSource
+     */
+
+    /**
+     * Constructor.
+     * @overload
+     */
     BufferingAudioSource::BufferingAudioSource(PositionableAudioSource *src, int channelCount, qint64 readAheadSize,
                                                bool autoBuffering, QThreadPool *threadPool) : BufferingAudioSource(src, false, channelCount,
                                                                                                readAheadSize, autoBuffering,
@@ -32,6 +41,15 @@ namespace talcs {
 
     }
 
+    /**
+     * Constructor.
+     * @param src the PositionableAudioSource object from which to read
+     * @param takeOwnership whether to take the ownership of the source
+     * @param channelCount the number of channel to read
+     * @param readAheadSize the size of buffering (if less than bufferSize(), then it will read directly)
+     * @param autoBuffering automatically starts buffering after the source is opened
+     * @param threadPool the thread pool in which runs the buffering task
+     */
     BufferingAudioSource::BufferingAudioSource(PositionableAudioSource *src, bool takeOwnership, int channelCount,
                                                qint64 readAheadSize, bool autoBuffering, QThreadPool *threadPool) : BufferingAudioSource(*new BufferingAudioSourcePrivate) {
         Q_D(BufferingAudioSource);
@@ -46,6 +64,9 @@ namespace talcs {
         d->tailPosition = 0;
     }
 
+    /**
+     * Destructor.
+     */
     BufferingAudioSource::~BufferingAudioSource() {
         BufferingAudioSource::close();
     }
@@ -145,11 +166,17 @@ namespace talcs {
         }
     }
 
+    /**
+     * Gets the buffering size.
+     */
     qint64 BufferingAudioSource::readAheadSize() const {
         Q_D(const BufferingAudioSource);
         return d->readAheadSize;
     }
 
+    /**
+     * Sets the number of channels.
+     */
     void BufferingAudioSource::setChannelCount(int channelCount) {
         Q_D(BufferingAudioSource);
         QMutexLocker locker(&d->mutex);
@@ -166,11 +193,17 @@ namespace talcs {
         }
     }
 
+    /**
+     * Gets the number of channels.
+     */
     int BufferingAudioSource::channelCount() const {
         Q_D(const BufferingAudioSource);
         return d->channelCount;
     }
 
+    /**
+     * Sets the source from which to read from.
+     */
     void BufferingAudioSource::setSource(PositionableAudioSource *src, bool takeOwnership) {
         Q_D(BufferingAudioSource);
         QMutexLocker locker(&d->mutex);
@@ -191,11 +224,17 @@ namespace talcs {
         }
     }
 
+    /**
+     * Gets the source from which to read from.
+     */
     PositionableAudioSource *BufferingAudioSource::source() const {
         Q_D(const BufferingAudioSource);
         return d->src;
     }
 
+    /**
+     * Gets a global thread pool (differs from the QThreadPool::globalInstance).
+     */
     QThreadPool *BufferingAudioSource::threadPool() {
         static QThreadPool *globalThreadPool = nullptr;
         static QMutex globalMtx;
@@ -209,12 +248,20 @@ namespace talcs {
 
     }
 
+    /**
+     * Waits for the current buffering task to finish.
+     * @param deadline the deadline
+     * @return whether the task is finish
+     */
     bool BufferingAudioSource::waitForBuffering(QDeadlineTimer deadline) {
         Q_D(BufferingAudioSource);
         QMutexLocker locker(&d->bufferingTaskMutex);
         return d->bufferingFinished.wait(&d->bufferingTaskMutex, deadline);
     }
 
+    /**
+     * Flushes the buffer.
+     */
     void BufferingAudioSource::flush() {
         Q_D(BufferingAudioSource);
         QMutexLocker locker(&d->mutex);
