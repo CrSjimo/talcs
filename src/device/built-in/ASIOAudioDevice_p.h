@@ -46,7 +46,7 @@ namespace talcs {
         AudioDeviceCallback *audioDeviceCallback = nullptr;
         AudioBuffer audioBuffer;
 
-        QMutex mutex;
+        QRecursiveMutex mutex;
 
         void setIASIOError();
     };

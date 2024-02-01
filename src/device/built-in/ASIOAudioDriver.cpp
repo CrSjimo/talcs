@@ -83,7 +83,7 @@ namespace talcs {
             hKeyInproc.reset(hKey_);
             DWORD valueType = REG_SZ;
             DWORD valueSize = 512;
-            if (::RegQueryValueEx(hKeyInproc.get(), NULL, NULL, &valueType, (LPBYTE) buf, &valueSize) != ERROR_SUCCESS)
+            if (::RegQueryValueExA(hKeyInproc.get(), NULL, NULL, &valueType, (LPBYTE) buf, &valueSize) != ERROR_SUCCESS)
                 return false;
 
             // Then check the existence of DLL file

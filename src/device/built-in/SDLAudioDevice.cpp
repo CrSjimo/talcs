@@ -109,6 +109,7 @@ namespace talcs {
     }
     void SDLAudioDevice::close() {
         Q_D(SDLAudioDevice);
+        SDLAudioDevice::stop();
         SDL_CloseAudioDevice(d->devId);
         reinterpret_cast<SDLAudioDriver *>(d->driver)->removeOpenedDevice(d->devId);
         d->devId = 0;
