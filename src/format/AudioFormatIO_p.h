@@ -20,6 +20,8 @@
 #ifndef TALCS_AUDIOFORMATIO_P_H
 #define TALCS_AUDIOFORMATIO_P_H
 
+#include <QPointer>
+
 #include <TalcsFormat/AudioFormatIO.h>
 namespace talcs {
 
@@ -27,7 +29,7 @@ namespace talcs {
         Q_DECLARE_PUBLIC(AudioFormatIO)
     public:
         AudioFormatIO *q_ptr;
-        QIODevice *stream = nullptr;
+        QPointer<QIODevice> stream;
         QScopedPointer<SndfileHandle> sf;
         QIODevice::OpenMode openMode = QIODevice::NotOpen;
 
