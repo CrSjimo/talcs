@@ -87,6 +87,7 @@ namespace talcs {
         }
 
         void eraseSource(const SrcIt &pos) {
+            setSourceSolo(pos.data(), false);
             sourceDict.remove(pos.data());
             sourceList.erase(pos.m_it);
         }
@@ -121,6 +122,7 @@ namespace talcs {
         void removeAllSources() {
             sourceList.clear();
             sourceDict.clear();
+            soloCounter = 0;
         }
 
         QList<T *> sources() const {

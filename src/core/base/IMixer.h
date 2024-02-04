@@ -32,6 +32,8 @@ namespace talcs {
     struct IMixer {
         class SourceIterator {
         public:
+            SourceIterator() = default;
+
             inline SourceIterator next() const {
                 return SourceIterator(std::next(m_it), m_lis);
             }
@@ -60,7 +62,7 @@ namespace talcs {
             }
 
             IteratorType m_it;
-            const ListType *m_lis;
+            const ListType *m_lis = nullptr;
         };
 
         virtual bool addSource(T *src, bool takeOwnership) = 0;
