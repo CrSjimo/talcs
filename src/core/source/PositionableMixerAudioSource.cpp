@@ -139,16 +139,15 @@ namespace talcs {
             return false;
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
-        if (!d->addSource(src, takeOwnership, isOpen(), bufferSize(), sampleRate()))
-            return false;
         src->setNextReadPosition(nextReadPosition());
-        return true;
+        return d->addSource(src, takeOwnership, isOpen(), bufferSize(), sampleRate());
     }
 
     PositionableMixerAudioSource::SourceIterator
     PositionableMixerAudioSource::appendSource(PositionableAudioSource *src, bool takeOwnership) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
+        src->setNextReadPosition(nextReadPosition());
         return d->insertSource(d->sourceIteratorEnd(), src, takeOwnership, isOpen(), bufferSize(), sampleRate());
     }
 
@@ -156,6 +155,7 @@ namespace talcs {
     PositionableMixerAudioSource::prependSource(PositionableAudioSource *src, bool takeOwnership) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
+        src->setNextReadPosition(nextReadPosition());
         return d->insertSource(d->firstSource(), src, takeOwnership, isOpen(), bufferSize(), sampleRate());
     }
 
@@ -164,6 +164,7 @@ namespace talcs {
                                                PositionableAudioSource *src, bool takeOwnership) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
+        src->setNextReadPosition(nextReadPosition());
         return d->insertSource(pos, src, takeOwnership, isOpen(), bufferSize(), sampleRate());
     }
 
