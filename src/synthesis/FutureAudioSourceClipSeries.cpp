@@ -300,6 +300,8 @@ namespace talcs {
      */
     bool FutureAudioSourceClipSeries::canRead(qint64 from, qint64 length) const {
         Q_D(const FutureAudioSourceClipSeries);
+        if (length == 0)
+            return true;
         FutureAudioSourceClipSeriesPrivate::ClipInterval queryInterval(0, from, length);
         bool flag = true;
         qAsConst(d->clips).overlap_find_all(queryInterval, [=, &flag](const decltype(d->clips)::const_iterator &it) {
