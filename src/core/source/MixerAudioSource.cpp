@@ -194,6 +194,11 @@ namespace talcs {
         return d->isSourceSolo(src);
     }
 
+    bool MixerAudioSource::isMutedBySoloSetting(AudioSource *src) const {
+        Q_D(const MixerAudioSource);
+        return d->isMutedBySoloSetting(src);
+    }
+
     void MixerAudioSource::setGain(float gain) {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);

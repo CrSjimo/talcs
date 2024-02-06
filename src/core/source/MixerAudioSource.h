@@ -61,6 +61,7 @@ namespace talcs {
 
         void setSourceSolo(AudioSource *src, bool isSolo) override;
         bool isSourceSolo(AudioSource *src) const override;
+        bool isMutedBySoloSetting(AudioSource *src) const override;
 
         void setGain(float gain) override;
         float gain() const override;

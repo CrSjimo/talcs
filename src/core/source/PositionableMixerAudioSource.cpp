@@ -237,6 +237,11 @@ namespace talcs {
         return d->isSourceSolo(src);
     }
 
+    bool PositionableMixerAudioSource::isMutedBySoloSetting(PositionableAudioSource *src) const {
+        Q_D(const PositionableMixerAudioSource);
+        return d->isMutedBySoloSetting(src);
+    }
+
     void PositionableMixerAudioSource::setGain(float gain) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);

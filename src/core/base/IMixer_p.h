@@ -158,6 +158,15 @@ namespace talcs {
             return it->isSolo;
         }
 
+        bool isMutedBySoloSetting(T *src) const {
+            if (soloCounter == 0)
+                return false;
+            auto it = sourceDict.find(src);
+            if (it == sourceDict.end())
+                return false;
+            return !it->isSolo;
+        }
+
         bool start(qint64 bufferSize, double sampleRate) {
             if (std::all_of(sourceList.cbegin(), sourceList.cend(),
                             [=](T *src) { return src->open(bufferSize, sampleRate); })) {
