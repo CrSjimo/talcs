@@ -311,8 +311,10 @@ namespace talcs {
         for (qint64 offset = 0; offset < length; offset += frameLength) {
             if (d->isTerminateRequested)
                 return;
-            d->src->read(AudioSourceReadData(&d->buf, startPos + offset, qMin(frameLength, length - offset)));
-            d->tailPosition += qMin(frameLength, length - offset);
+            if (frameLength > length - offset)
+                break;
+            d->src->read(AudioSourceReadData(&d->buf, startPos + offset, frameLength));
+            d->tailPosition += frameLength;
         }
     }
 
