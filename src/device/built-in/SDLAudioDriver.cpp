@@ -143,6 +143,7 @@ namespace talcs {
         if (it == openedDevices.end())
             return;
         it.value()->close();
+        emit it.value()->closed();
     }
 
     /**

@@ -243,12 +243,11 @@ namespace talcs {
 
     void AudioDevice::close() {
         AudioStreamBase::close();
-        emit closed();
     }
 
     /**
      * @fn void AudioDevice::closed()
-     * Emitted when the audio device is closed automatically due to internal reasons or closed manually.
+     * Emitted when the audio device is closed automatically due to internal reasons.
      */
      
 }

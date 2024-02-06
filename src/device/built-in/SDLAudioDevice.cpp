@@ -114,6 +114,7 @@ namespace talcs {
         reinterpret_cast<SDLAudioDriver *>(d->driver)->removeOpenedDevice(d->devId);
         d->devId = 0;
         d->spec = {};
+        AudioDevice::close();
     }
 
     bool SDLAudioDevice::start(AudioDeviceCallback * audioDeviceCallback) {
