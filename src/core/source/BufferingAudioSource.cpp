@@ -300,19 +300,18 @@ namespace talcs {
     }
 
     void BufferingAudioSourceTask::readByFrame(qint64 startPos, qint64 length) const {
-        if (length <= 0)
-            return;
         if (d->src->length() - d->src->nextReadPosition() < length) {
             for (int ch = 0; ch < d->channelCount; ch++)
                 d->buf.clear(ch, startPos + d->src->length() - d->src->nextReadPosition(), length + d->src->nextReadPosition() - d->src->length());
             length = d->src->length() - d->src->nextReadPosition();
         }
-        qint64 frameLength = d->src->bufferSize();
+        if (length <= 0)
+            return;
+        qint64 frameLength = qMin(d->src->bufferSize(), length);
+        length = length - (length % frameLength);
         for (qint64 offset = 0; offset < length; offset += frameLength) {
             if (d->isTerminateRequested)
                 return;
-            if (frameLength > length - offset)
-                break;
             d->src->read(AudioSourceReadData(&d->buf, startPos + offset, frameLength));
             d->tailPosition += frameLength;
         }
