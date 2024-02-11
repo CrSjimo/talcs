@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 # ----------------------------------
 option(TALCS_BUILD_STATIC "Build static libraries" OFF)
 option(TALCS_BUILD_TRANSLATIONS "Build translations" ON)
-option(TALCS_BUILD_TESTS "Build test cases" ON)
+option(TALCS_BUILD_TESTS "Build test cases" OFF)
 option(TALCS_BUILD_DOCUMENTATIONS "Build documentations" OFF)
 option(TALCS_INSTALL "Install library" ON)
 option(TALCS_ENABLE_ASIO "Enable ASIO feature" OFF)
