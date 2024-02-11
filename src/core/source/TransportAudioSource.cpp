@@ -82,8 +82,12 @@ namespace talcs {
         for (int i = 0; i < channelCount; i++) {
             readData.buffer->clear(i, readData.startPos, readData.length);
         }
-        if (!d->isPlaying)
+        if (d->playbackStatus == Paused)
             return readData.length;
+        if (d->playbackStatus == AboutToPlay) {
+            d->playbackStatus = Playing;
+            emit playbackStatusChanged(Playing);
+        }
         if (d->bufferingCounter)
             return readData.length;
         if (d->src) {
@@ -105,6 +109,10 @@ namespace talcs {
         d->position += readData.length;
         if (readData.length != 0)
             d->_q_positionAboutToChange(d->position);
+        if (d->playbackStatus == AboutToPause) {
+            d->playbackStatus = Paused;
+            emit playbackStatusChanged(Paused);
+        }
         return readData.length;
     }
 
@@ -118,7 +126,7 @@ namespace talcs {
     bool TransportAudioSource::open(qint64 bufferSize, double sampleRate) {
         Q_D(TransportAudioSource);
         QMutexLocker locker(&d->mutex);
-        d->isPlaying = false;
+        d->playbackStatus = Paused;
         if (d->src && d->src->open(bufferSize, sampleRate)) {
             return AudioStreamBase::open(bufferSize, sampleRate);
         }
@@ -134,7 +142,7 @@ namespace talcs {
         Q_D(TransportAudioSource);
         if (d->src)
             d->src->close();
-        d->isPlaying = false;
+        d->playbackStatus = Paused;
         AudioStreamBase::close();
     }
 
@@ -168,8 +176,35 @@ namespace talcs {
      */
     void TransportAudioSource::play() {
         Q_D(TransportAudioSource);
-        QMutexLocker locker(&d->mutex);
-        d->isPlaying = true;
+        if (d->playbackStatus != Playing) {
+            d->playbackStatus = AboutToPlay;
+            emit playbackStatusChanged(AboutToPlay);
+        }
+    }
+
+    /**
+     * @enum TransportAudioSource::PlaybackStatus
+     * The playback status of TransportAudioSource
+     *
+     * @var TransportAudioSource::Paused
+     * Paused
+     *
+     * @var TransportAudioSource::AboutToPlay
+     * About to play
+     *
+     * @var TransportAudioSource::Playing
+     * Playing
+     *
+     * @var TransportAudioSource::AboutToPause
+     * About to pause
+     */
+
+    /**
+     * Gets the playback status.
+     */
+    TransportAudioSource::PlaybackStatus TransportAudioSource::playbackStatus() const {
+        Q_D(const TransportAudioSource);
+        return d->playbackStatus;
     }
 
     /**
@@ -177,7 +212,7 @@ namespace talcs {
      */
     bool TransportAudioSource::isPlaying() const {
         Q_D(const TransportAudioSource);
-        return d->isPlaying;
+        return d->playbackStatus == Playing;
     }
 
     /**
@@ -185,8 +220,10 @@ namespace talcs {
      */
     void TransportAudioSource::pause() {
         Q_D(TransportAudioSource);
-        QMutexLocker locker(&d->mutex);
-        d->isPlaying = false;
+        if (d->playbackStatus != Paused) {
+            d->playbackStatus = AboutToPause;
+            emit playbackStatusChanged(AboutToPause);
+        }
     }
 
     /**

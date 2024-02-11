@@ -33,7 +33,7 @@ namespace talcs {
         bool takeOwnership = false;
 
         qint64 position = 0;
-        bool isPlaying = false;
+        std::atomic<TransportAudioSource::PlaybackStatus> playbackStatus = TransportAudioSource::Paused;
         qint64 loopingStart = -1;
         qint64 loopingEnd = -1;
         QMutex mutex;

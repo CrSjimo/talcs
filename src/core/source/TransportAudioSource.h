@@ -46,6 +46,16 @@ namespace talcs {
         void setSource(PositionableAudioSource *src, bool takeOwnership = false);
         PositionableAudioSource *source() const;
 
+        enum PlaybackStatus {
+            Paused,
+            AboutToPlay,
+            Playing,
+            AboutToPause,
+        };
+        Q_ENUM(PlaybackStatus)
+        PlaybackStatus playbackStatus() const;
+
+        [[deprecated("use playbackStatus() instead.")]]
         bool isPlaying() const;
 
         qint64 position() const;
@@ -65,6 +75,7 @@ namespace talcs {
 
     signals:
         void positionAboutToChange(qint64 nextPosition);
+        void playbackStatusChanged(PlaybackStatus playbackStatus);
         void bufferingCounterChanged(int counter);
 
     protected:
