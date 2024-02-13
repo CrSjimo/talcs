@@ -10,6 +10,8 @@ add_subdirectory(FutureAudioSource)
 
 add_subdirectory(Integrated)
 
+add_subdirectory(MetronomeAudioSource)
+
 add_subdirectory(midi)
 
 add_subdirectory(r8brain)
