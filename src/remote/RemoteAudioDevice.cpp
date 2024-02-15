@@ -20,8 +20,15 @@
 #include "RemoteAudioDevice.h"
 #include "RemoteAudioDevice_p.h"
 
+#include <chrono>
+
 #include "RemoteSocket.h"
+
 #include <TalcsCore/AudioSource.h>
+
+#include <boost/interprocess/sync/scoped_lock.hpp>
+#include <boost/interprocess/sync/named_mutex.hpp>
+#include <boost/interprocess/sync/named_condition.hpp>
 
 namespace talcs {
 
@@ -127,40 +134,54 @@ namespace talcs {
         d->socket->unbind("audio", "prepareBuffer");
     }
 
-    void RemoteAudioDevicePrivate::remoteOpenRequired(qint64 bufferSize, double sampleRate, const QString &sharedMemoryKey, int maxChannelCount) {
+    void RemoteAudioDevicePrivate::remoteOpenRequired(qint64 bufferSize, double sampleRate, const QString &ipcKey, int maxChannelCount) {
         Q_Q(RemoteAudioDevice);
+        using namespace boost::interprocess;
         QMutexLocker locker(&mutex);
 
-        sharedMemory.setNativeKey(sharedMemoryKey);
+        sharedMemory.setNativeKey(ipcKey);
         if (sharedMemory.attach()) {
             remoteIsOpened = true;
             sharedAudioData.resize(maxChannelCount);
-            auto *sharedMemoryPtr = reinterpret_cast<char *>(sharedMemory.data());
+            auto *ptr = reinterpret_cast<char *>(sharedMemory.data());
             for (int i = 0; i < maxChannelCount; i++) {
-                sharedAudioData[i] = reinterpret_cast<float *>(sharedMemoryPtr);
-                sharedMemoryPtr += bufferSize * sizeof(float);
+                sharedAudioData[i] = reinterpret_cast<float *>(ptr);
+                ptr += bufferSize * sizeof(float);
             }
-            processInfo = reinterpret_cast<RemoteAudioDevice::ProcessInfo *>(sharedMemoryPtr);
-            buffer = new AudioDataWrapper(sharedAudioData.data(), maxChannelCount, bufferSize);
+            bufferPrepareStatus = reinterpret_cast<char *>(ptr);
+            ptr += sizeof(bool);
+            processInfo = reinterpret_cast<RemoteAudioDevice::ProcessInfo *>(ptr);
+            buffer.reset(new AudioDataWrapper(sharedAudioData.data(), maxChannelCount, bufferSize));
 
             q->setAvailableBufferSizes({bufferSize});
             q->setPreferredBufferSize(bufferSize);
             q->setAvailableSampleRates({sampleRate});
             q->setPreferredSampleRate(sampleRate);
-
-            emit q->remoteOpened(bufferSize, sampleRate, maxChannelCount);
         } else {
-            qWarning() << "RemoteAudioDevice: Cannot attach shared memory" << sharedMemoryKey;
+            qWarning() << "RemoteAudioDevice: Cannot attach shared memory" << ipcKey;
         }
+        prepareBufferMutex.reset(new named_mutex(open_only, ipcKey.toLatin1()));
+        prepareBufferCondition.reset(new named_condition(open_only, (ipcKey + "cv").toLatin1()));
+        prepareBufferProducerThread.reset(QThread::create([this] { remotePrepareBufferProducer(); }));
+        prepareBufferProducerThread->start(QThread::HighestPriority);
+        emit q->remoteOpened(bufferSize, sampleRate, maxChannelCount);
     }
 
     void RemoteAudioDevicePrivate::remoteCloseRequired() {
         Q_Q(RemoteAudioDevice);
         QMutexLocker locker(&mutex);
 
-        delete buffer;
-        buffer = nullptr;
+        if (prepareBufferProducerThread) {
+            prepareBufferProducerThread->requestInterruption();
+            prepareBufferProducerThread->quit();
+            prepareBufferProducerThread->wait();
+        }
+        prepareBufferProducerThread.reset();
+        prepareBufferCondition.reset();
+        prepareBufferMutex.reset();
+        buffer.reset();
         sharedAudioData.clear();
+        bufferPrepareStatus = nullptr;
         processInfo = nullptr;
         sharedMemory.detach();
 
@@ -170,13 +191,34 @@ namespace talcs {
         q->setPreferredSampleRate(0);
         remoteIsOpened = false;
         q->close();
+        emit q->closed();
+    }
+
+    void RemoteAudioDevicePrivate::remotePrepareBufferProducer() {
+        using namespace std::chrono_literals;
+        using namespace boost::interprocess;
+        for (;;) {
+            scoped_lock<named_mutex> lock(*prepareBufferMutex, std::chrono::system_clock::now() + 1000ms);
+            if (prepareBufferProducerThread->isInterruptionRequested())
+                break;
+            if (*bufferPrepareStatus == GoingToClose)
+                break;
+            if (!lock.owns())
+                continue;
+            bool success = prepareBufferCondition->wait_for(lock, 1000ms, [=] { return *bufferPrepareStatus != Prepared; });
+            if (success) {
+                remotePrepareBuffer();
+                *bufferPrepareStatus = Prepared;
+                prepareBufferCondition->notify_one();
+            }
+        }
     }
 
     void RemoteAudioDevicePrivate::remotePrepareBuffer() {
         QMutexLocker locker(&mutex);
         Q_Q(RemoteAudioDevice);
         if (!q->isOpen()) {
-            throw std::runtime_error("Remote audio device not opened.");
+            return;
         }
         if (processInfo->containsInfo) {
             for (auto processInfoCallback: processInfoCallbackList) {
@@ -184,7 +226,7 @@ namespace talcs {
             }
         }
         if (audioDeviceCallback)
-            audioDeviceCallback->workCallback(buffer);
+            audioDeviceCallback->workCallback(buffer.get());
     }
 
     bool RemoteAudioDevice::open(qint64 bufferSize, double sampleRate) {

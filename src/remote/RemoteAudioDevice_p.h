@@ -27,6 +27,11 @@
 #include <TalcsDevice/private/AudioDevice_p.h>
 #include <TalcsRemote/RemoteAudioDevice.h>
 
+namespace boost::interprocess {
+    class named_condition;
+    class named_mutex;
+}
+
 namespace talcs {
     class RemoteAudioDevicePrivate : public AudioDevicePrivate {
         Q_DECLARE_PUBLIC(RemoteAudioDevice);
@@ -36,17 +41,28 @@ namespace talcs {
 
         bool remoteIsOpened = false;
 
+        QScopedPointer<boost::interprocess::named_condition> prepareBufferCondition;
+        QScopedPointer<boost::interprocess::named_mutex> prepareBufferMutex;
         QSharedMemory sharedMemory;
+        enum BufferPrepareStatus {
+            NotPrepared,
+            Prepared,
+            GoingToClose,
+        };
+        char *bufferPrepareStatus;
         QVector<float *> sharedAudioData;
         RemoteAudioDevice::ProcessInfo *processInfo = nullptr;
-        AudioDataWrapper *buffer = nullptr;
+        QScopedPointer<AudioDataWrapper> buffer;
+
+        QScopedPointer<QThread> prepareBufferProducerThread;
 
         AudioDeviceCallback *audioDeviceCallback = nullptr;
 
         QList<RemoteAudioDevice::ProcessInfoCallback *> processInfoCallbackList;
 
-        void remoteOpenRequired(qint64 bufferSize, double sampleRate, const QString &sharedMemoryKey, int maxChannelCount);
+        void remoteOpenRequired(qint64 bufferSize, double sampleRate, const QString &ipcKey, int maxChannelCount);
         void remoteCloseRequired();
+        void remotePrepareBufferProducer();
         void remotePrepareBuffer();
     };
 }
