@@ -13,7 +13,8 @@
       "name": "sdl2",
       "default-features": false
     },
-    "interval-tree"
+    "interval-tree",
+    "boost-interprocess"
   ],
   "overrides": [
     {
