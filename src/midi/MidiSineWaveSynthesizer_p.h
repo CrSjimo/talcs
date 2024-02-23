@@ -20,8 +20,9 @@
 #ifndef TALCS_MIDISINEWAVESYNTHESIZER_P_H
 #define TALCS_MIDISINEWAVESYNTHESIZER_P_H
 
-#include <TalcsMidi/MidiSineWaveSynthesizer.h>
 #include <QMutex>
+
+#include <TalcsMidi/MidiSineWaveSynthesizer.h>
 
 namespace talcs {
     class MidiSineWaveSynthesizerPrivate {

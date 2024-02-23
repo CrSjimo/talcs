@@ -23,9 +23,9 @@
 #include "SDLAudioDriver.h"
 #include "../AudioDriver_p.h"
 
-#include <QThread>
 #include <QMap>
 #include <QMutex>
+#include <QThread>
 
 namespace talcs {
     class SDLEventPoller : public QObject {

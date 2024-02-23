@@ -19,12 +19,11 @@
 
 #include "SDLAudioDriver.h"
 #include "SDLAudioDriver_p.h"
-
 #include "SDLAudioDevice.h"
 
-#include <SDL2/SDL.h>
-
 #include <QDebug>
+
+#include <SDL2/SDL.h>
 
 namespace talcs {
 

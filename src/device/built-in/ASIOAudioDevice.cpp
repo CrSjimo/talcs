@@ -22,10 +22,11 @@
 
 #include <QDebug>
 
-#include "ASIOAudioDriver.h"
 #include <TalcsCore/AudioBuffer.h>
 #include <TalcsCore/AudioSampleConverter.h>
 #include <TalcsCore/AudioSource.h>
+
+#include "ASIOAudioDriver.h"
 
 namespace talcs {
 

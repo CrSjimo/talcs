@@ -20,10 +20,10 @@
 #ifndef TALCS_POSITIONABLEMIXERAUDIOSOURCE_P_H
 #define TALCS_POSITIONABLEMIXERAUDIOSOURCE_P_H
 
+#include <TalcsCore/PositionableMixerAudioSource.h>
 #include <TalcsCore/private/IMixer_p.h>
 #include <TalcsCore/private/MixerAudioSource_p.h>
 #include <TalcsCore/private/PositionableAudioSource_p.h>
-#include <TalcsCore/PositionableMixerAudioSource.h>
 
 namespace talcs {
 

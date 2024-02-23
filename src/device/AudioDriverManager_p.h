@@ -20,9 +20,9 @@
 #ifndef AUDIODRIVERMANAGER_P_H
 #define AUDIODRIVERMANAGER_P_H
 
-#include <TalcsDevice/AudioDriverManager.h>
-
 #include <QList>
+
+#include <TalcsDevice/AudioDriverManager.h>
 
 namespace talcs {
     class AudioDriverManagerPrivate {

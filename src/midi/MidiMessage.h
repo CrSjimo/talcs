@@ -42,9 +42,10 @@
 #ifndef TALCS_MIDIMESSAGE_H
 #define TALCS_MIDIMESSAGE_H
 
-#include <TalcsMidi/TalcsMidiGlobal.h>
 #include <QString>
 #include <QVector>
+
+#include <TalcsMidi/TalcsMidiGlobal.h>
 
 namespace talcs {
 

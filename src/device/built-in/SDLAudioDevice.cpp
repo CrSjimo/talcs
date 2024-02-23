@@ -19,16 +19,16 @@
 
 #include "SDLAudioDevice.h"
 #include "SDLAudioDevice_p.h"
-#include <TalcsCore/InterleavedAudioDataWrapper.h>
 
 #include <cstring>
 
-#include <SDL2/SDL.h>
-
 #include <QDebug>
 
-#include "SDLAudioDriver.h"
+#include <SDL2/SDL.h>
 #include <TalcsCore/AudioSource.h>
+#include <TalcsCore/InterleavedAudioDataWrapper.h>
+
+#include "SDLAudioDriver.h"
 
 namespace talcs {
     static const QList<double> COMMON_SAMPLE_RATES = {8000,   11025,  12000,  16000,  22050,  24000,

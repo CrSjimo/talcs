@@ -20,8 +20,9 @@
 #ifndef TALCS_BUFFERINGAUDIOSOURCE_H
 #define TALCS_BUFFERINGAUDIOSOURCE_H
 
-#include <TalcsCore/PositionableAudioSource.h>
 #include <QDeadlineTimer>
+
+#include <TalcsCore/PositionableAudioSource.h>
 
 class QThreadPool;
 

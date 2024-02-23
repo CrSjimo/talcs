@@ -19,11 +19,10 @@
 
 #include "ASIOAudioDriver.h"
 #include "ASIOAudioDriver_p.h"
-
 #include "ASIOAudioDevice.h"
 
-#include <QFileInfo>
 #include <QDebug>
+#include <QFileInfo>
 
 namespace talcs {
 

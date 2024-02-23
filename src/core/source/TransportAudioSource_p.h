@@ -20,10 +20,10 @@
 #ifndef TALCS_TRANSPORTAUDIOSOURCE_P_H
 #define TALCS_TRANSPORTAUDIOSOURCE_P_H
 
+#include <QMutex>
+
 #include <TalcsCore/TransportAudioSource.h>
 #include <TalcsCore/private/AudioSource_p.h>
-
-#include <QMutex>
 
 namespace talcs {
     class TransportAudioSourcePrivate : public AudioSourcePrivate {

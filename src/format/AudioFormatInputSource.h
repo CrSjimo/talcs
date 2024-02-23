@@ -20,8 +20,8 @@
 #ifndef AUDIOFORMATINPUTSOURCE_H
 #define AUDIOFORMATINPUTSOURCE_H
 
-#include <TalcsCore/PositionableAudioSource.h>
 #include <TalcsCore/DuplicatableObject.h>
+#include <TalcsCore/PositionableAudioSource.h>
 #include <TalcsFormat/TalcsFormatGlobal.h>
 
 namespace talcs {

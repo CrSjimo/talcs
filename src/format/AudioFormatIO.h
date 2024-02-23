@@ -22,8 +22,8 @@
 
 #include <QIODevice>
 
-#include <TalcsCore/ErrorStringProvider.h>
 #include <TalcsCore/DuplicatableObject.h>
+#include <TalcsCore/ErrorStringProvider.h>
 #include <TalcsFormat/TalcsFormatGlobal.h>
 
 class SndfileHandle;

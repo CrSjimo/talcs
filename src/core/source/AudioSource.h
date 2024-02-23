@@ -22,9 +22,9 @@
 
 #include <QScopedPointer>
 
-#include <TalcsCore/IAudioSampleContainer.h>
 #include <TalcsCore/AudioStreamBase.h>
 #include <TalcsCore/DuplicatableObject.h>
+#include <TalcsCore/IAudioSampleContainer.h>
 
 namespace talcs {
 

@@ -20,9 +20,9 @@
 #include "MidiInputDevice.h"
 #include "MidiInputDevice_p.h"
 
-#include <rtmidi/RtMidi.h>
-
 #include <QDebug>
+
+#include <rtmidi/RtMidi.h>
 
 #include "MidiInputDeviceCallback.h"
 

@@ -22,8 +22,8 @@
 
 #include <QPair>
 
-#include <TalcsCore/TalcsCoreGlobal.h>
 #include <TalcsCore/DuplicatableObject.h>
+#include <TalcsCore/TalcsCoreGlobal.h>
 
 namespace talcs {
 

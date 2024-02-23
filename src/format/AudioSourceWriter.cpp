@@ -22,8 +22,8 @@
 
 #include <QMutex>
 
-#include <TalcsCore/InterleavedAudioDataWrapper.h>
 #include <TalcsCore/AudioSource.h>
+#include <TalcsCore/InterleavedAudioDataWrapper.h>
 
 #include "AudioFormatIO.h"
 

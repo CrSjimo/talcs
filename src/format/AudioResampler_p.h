@@ -22,9 +22,9 @@
 
 #include "AudioResampler.h"
 
-#include <CDSPResampler.h>
-
 #include <QVector>
+
+#include <CDSPResampler.h>
 
 namespace talcs {
     class AudioResamplerPrivate {

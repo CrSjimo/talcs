@@ -19,7 +19,6 @@
 
 #include "MemoryAudioSource.h"
 #include "MemoryAudioSource_p.h"
-
 #include "buffer/IAudioSampleContainer.h"
 
 namespace talcs {

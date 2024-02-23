@@ -22,13 +22,12 @@
 
 #include <chrono>
 
-#include "RemoteSocket.h"
-
 #include <TalcsCore/AudioSource.h>
-
-#include <boost/interprocess/sync/scoped_lock.hpp>
-#include <boost/interprocess/sync/named_mutex.hpp>
 #include <boost/interprocess/sync/named_condition.hpp>
+#include <boost/interprocess/sync/named_mutex.hpp>
+#include <boost/interprocess/sync/scoped_lock.hpp>
+
+#include "RemoteSocket.h"
 
 namespace talcs {
 

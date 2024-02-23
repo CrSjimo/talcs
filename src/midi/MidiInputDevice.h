@@ -20,11 +20,11 @@
 #ifndef TALCS_MIDIINPUTDEVICE_H
 #define TALCS_MIDIINPUTDEVICE_H
 
-#include <TalcsMidi/TalcsMidiGlobal.h>
-#include <TalcsCore/NameProvider.h>
-#include <TalcsCore/ErrorStringProvider.h>
-
 #include <QObject>
+
+#include <TalcsCore/ErrorStringProvider.h>
+#include <TalcsCore/NameProvider.h>
+#include <TalcsMidi/TalcsMidiGlobal.h>
 
 namespace talcs {
 

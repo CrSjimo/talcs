@@ -19,7 +19,6 @@
 
 #include "AudioSourceProcessorBase.h"
 #include "AudioSourceProcessorBase_p.h"
-
 #include "source/AudioSource.h"
 
 namespace talcs {

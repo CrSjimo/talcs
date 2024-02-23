@@ -20,11 +20,10 @@
 #ifndef TALCS_METRONOMEAUDIOSOURCE_P_H
 #define TALCS_METRONOMEAUDIOSOURCE_P_H
 
-#include <TalcsCore/MetronomeAudioSource.h>
-
-#include <TalcsCore/private/PositionableAudioSource_p.h>
-
 #include <QMutex>
+
+#include <TalcsCore/MetronomeAudioSource.h>
+#include <TalcsCore/private/PositionableAudioSource_p.h>
 
 namespace talcs {
     class MetronomeAudioSourcePrivate : public PositionableAudioSourcePrivate{

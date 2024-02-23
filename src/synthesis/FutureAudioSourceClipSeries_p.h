@@ -20,8 +20,8 @@
 #ifndef TALCS_FUTUREAUDIOSOURCECLIPSERIES_P_H
 #define TALCS_FUTUREAUDIOSOURCECLIPSERIES_P_H
 
-#include <QMutex>
 #include <QMap>
+#include <QMutex>
 
 #include <TalcsCore/private/AudioSourceClipSeries_p.h>
 #include <TalcsCore/private/PositionableAudioSource_p.h>

@@ -22,8 +22,8 @@
 
 #include <QObject>
 
-#include <TalcsCore/PositionableAudioSource.h>
 #include <TalcsCore/IClipSeries.h>
+#include <TalcsCore/PositionableAudioSource.h>
 #include <TalcsSynthesis/TalcsSynthesisGlobal.h>
 
 namespace talcs {

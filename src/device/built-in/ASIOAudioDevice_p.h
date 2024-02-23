@@ -20,16 +20,14 @@
 #ifndef TALCS_ASIOAUDIODEVICE_P_H
 #define TALCS_ASIOAUDIODEVICE_P_H
 
-#include <TalcsDevice/ASIOAudioDevice.h>
-
-#include <qt_windows.h>
-#include <combaseapi.h>
-#include <iasiodrv.h>
-
 #include <QMutex>
 
 #include <TalcsCore/AudioBuffer.h>
+#include <TalcsDevice/ASIOAudioDevice.h>
 #include <TalcsDevice/private/AudioDevice_p.h>
+#include <combaseapi.h>
+#include <iasiodrv.h>
+#include <qt_windows.h>
 
 namespace talcs {
     class ASIOAudioDevicePrivate : public AudioDevicePrivate {

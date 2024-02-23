@@ -19,6 +19,7 @@
 
 #include "InterleavedAudioDataWrapper.h"
 #include "InterleavedAudioDataWrapper_p.h"
+
 namespace talcs {
 
     /**

@@ -20,9 +20,9 @@
 #ifndef TALCS_SINEWAVEAUDIOSOURCE_H
 #define TALCS_SINEWAVEAUDIOSOURCE_H
 
-#include <TalcsCore/PositionableAudioSource.h>
-
 #include <functional>
+
+#include <TalcsCore/PositionableAudioSource.h>
 
 namespace talcs {
 

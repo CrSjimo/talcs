@@ -20,8 +20,8 @@
 #ifndef TALCS_POSITIONABLEAUDIOSOURCE_P_H
 #define TALCS_POSITIONABLEAUDIOSOURCE_P_H
 
-#include <TalcsCore/private/AudioSource_p.h>
 #include <TalcsCore/PositionableAudioSource.h>
+#include <TalcsCore/private/AudioSource_p.h>
 
 namespace talcs {
 

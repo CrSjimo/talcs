@@ -22,7 +22,6 @@
 
 #include <TalcsCore/InterleavedAudioDataWrapper.h>
 #include <TalcsCore/private/AudioSourceProcessorBase_p.h>
-
 #include <TalcsFormat/AudioSourceWriter.h>
 
 namespace talcs {

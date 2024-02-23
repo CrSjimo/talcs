@@ -22,8 +22,8 @@
 
 #include <cmath>
 
-#include <TalcsCore/MemoryAudioSource.h>
 #include <TalcsCore/AudioBuffer.h>
+#include <TalcsCore/MemoryAudioSource.h>
 
 namespace talcs {
 

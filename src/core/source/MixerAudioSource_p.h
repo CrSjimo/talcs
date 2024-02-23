@@ -23,10 +23,10 @@
 #include <QMutex>
 #include <QObject>
 
+#include <TalcsCore/AudioBuffer.h>
 #include <TalcsCore/MixerAudioSource.h>
 #include <TalcsCore/private/AudioSource_p.h>
 #include <TalcsCore/private/IMixer_p.h>
-#include <TalcsCore/AudioBuffer.h>
 
 namespace talcs {
     class MixerAudioSourcePrivate : public AudioSourcePrivate, public IMixerPrivate<AudioSource> {

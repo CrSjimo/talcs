@@ -42,6 +42,7 @@
 #include "MidiMessage.h"
 
 #include <cmath>
+
 #include <QVector>
 
 namespace talcs {

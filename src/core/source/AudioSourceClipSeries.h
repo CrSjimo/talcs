@@ -20,8 +20,8 @@
 #ifndef AUDIOSOURCECLIPSERIES_H
 #define AUDIOSOURCECLIPSERIES_H
 
-#include <TalcsCore/PositionableAudioSource.h>
 #include <TalcsCore/IClipSeries.h>
+#include <TalcsCore/PositionableAudioSource.h>
 
 namespace talcs {
 

@@ -20,13 +20,13 @@
 #ifndef TALCS_BUFFERINGAUDIOSOURCE_P_H
 #define TALCS_BUFFERINGAUDIOSOURCE_P_H
 
-#include <TalcsCore/BufferingAudioSource.h>
-#include <TalcsCore/private/PositionableAudioSource_p.h>
-#include <TalcsCore/AudioBuffer.h>
-
 #include <QMutex>
 #include <QRunnable>
 #include <QWaitCondition>
+
+#include <TalcsCore/AudioBuffer.h>
+#include <TalcsCore/BufferingAudioSource.h>
+#include <TalcsCore/private/PositionableAudioSource_p.h>
 
 namespace talcs {
 

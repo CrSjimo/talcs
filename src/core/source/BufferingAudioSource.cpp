@@ -20,8 +20,8 @@
 #include "BufferingAudioSource.h"
 #include "BufferingAudioSource_p.h"
 
-#include <QThreadPool>
 #include <QDebug>
+#include <QThreadPool>
 
 namespace talcs {
 

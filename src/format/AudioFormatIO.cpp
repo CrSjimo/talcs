@@ -20,11 +20,11 @@
 #include "AudioFormatIO.h"
 #include "AudioFormatIO_p.h"
 
-#include <sndfile.hh>
-
 #include <QDebug>
-#include <QIODevice>
 #include <QFile>
+#include <QIODevice>
+
+#include <sndfile.hh>
 
 /**
  * If there is no SndFile handle, this will output a warning message and return the given value.

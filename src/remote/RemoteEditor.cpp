@@ -19,7 +19,6 @@
 
 #include "RemoteEditor.h"
 #include "RemoteEditor_p.h"
-
 #include "RemoteSocket.h"
 
 namespace talcs {

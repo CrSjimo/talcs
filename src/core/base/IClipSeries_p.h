@@ -20,13 +20,12 @@
 #ifndef TALCS_ICLIPSERIES_P_H
 #define TALCS_ICLIPSERIES_P_H
 
-#include <TalcsCore/IClipSeries.h>
-
 #include <set>
 
 #include <QHash>
 #include <QScopedPointer>
 
+#include <TalcsCore/IClipSeries.h>
 #include <interval-tree/interval_tree.hpp>
 
 namespace talcs {

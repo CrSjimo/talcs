@@ -21,8 +21,8 @@
 #define TALCS_MULTICHANNELAUDIORESAMPLER_P_H
 
 #include "MultichannelAudioResampler.h"
-
 #include "AudioResampler.h"
+
 #include <TalcsCore/AudioBuffer.h>
 
 namespace talcs {

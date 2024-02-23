@@ -20,9 +20,9 @@
 #include "IAudioSampleContainer.h"
 
 #include <algorithm>
-#include <functional>
 #include <cassert>
 #include <cstring>
+#include <functional>
 
 namespace talcs {
 

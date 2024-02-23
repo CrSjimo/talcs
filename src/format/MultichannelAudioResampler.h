@@ -22,8 +22,8 @@
 
 #include <QScopedPointer>
 
-#include <TalcsFormat/TalcsFormatGlobal.h>
 #include <TalcsCore/AudioSource.h>
+#include <TalcsFormat/TalcsFormatGlobal.h>
 
 namespace talcs {
 

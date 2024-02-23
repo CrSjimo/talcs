@@ -23,6 +23,7 @@
 #include <QPointer>
 
 #include <TalcsFormat/AudioFormatIO.h>
+
 namespace talcs {
 
     class AudioFormatIOPrivate {

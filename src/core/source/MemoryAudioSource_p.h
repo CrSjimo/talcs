@@ -20,10 +20,10 @@
 #ifndef TALCS_MEMORYAUDIOSOURCE_P_H
 #define TALCS_MEMORYAUDIOSOURCE_P_H
 
+#include <QMutex>
+
 #include <TalcsCore/MemoryAudioSource.h>
 #include <TalcsCore/private/PositionableAudioSource_p.h>
-
-#include <QMutex>
 
 namespace talcs {
 

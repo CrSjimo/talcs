@@ -20,13 +20,13 @@
 #ifndef TALCS_AUDIOFORMATINPUTSOURCE_P_H
 #define TALCS_AUDIOFORMATINPUTSOURCE_P_H
 
+#include <QMutex>
+#include <QVector>
+
 #include <TalcsCore/private/PositionableAudioSource_p.h>
 #include <TalcsFormat/AudioFormatInputSource.h>
 
 #include "MultichannelAudioResampler.h"
-
-#include <QMutex>
-#include <QVector>
 
 namespace talcs {
     class AudioFormatIO;

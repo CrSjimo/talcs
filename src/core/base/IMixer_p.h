@@ -20,13 +20,12 @@
 #ifndef TALCS_IMIXER_P_H
 #define TALCS_IMIXER_P_H
 
-#include <TalcsCore/IMixer.h>
-
-#include <QMutex>
 #include <QHash>
 #include <QList>
+#include <QMutex>
 
 #include <TalcsCore/AudioBuffer.h>
+#include <TalcsCore/IMixer.h>
 
 namespace talcs {
 

@@ -25,11 +25,10 @@
 #include <QSet>
 #include <QThread>
 
-#include <rpc/client.h>
-#include <rpc/server.h>
-#include <rpc/rpc_error.h>
-
 #include <TalcsRemote/TalcsRemoteGlobal.h>
+#include <rpc/client.h>
+#include <rpc/rpc_error.h>
+#include <rpc/server.h>
 
 namespace talcs {
 

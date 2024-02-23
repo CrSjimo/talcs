@@ -20,10 +20,10 @@
 #ifndef TALCS_SINEWAVEAUDIOSOURCE_P_H
 #define TALCS_SINEWAVEAUDIOSOURCE_P_H
 
-#include <TalcsCore/private/PositionableAudioSource_p.h>
-#include <TalcsCore/SineWaveAudioSource.h>
-
 #include <QMutex>
+
+#include <TalcsCore/SineWaveAudioSource.h>
+#include <TalcsCore/private/PositionableAudioSource_p.h>
 
 namespace talcs {
 
