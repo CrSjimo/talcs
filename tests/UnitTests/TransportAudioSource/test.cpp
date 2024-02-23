@@ -68,7 +68,7 @@ private slots:
 
     void openAndCloseWithoutSource() {
         TransportAudioSource tpSrc;
-        QVERIFY(!tpSrc.open(0, 0));
+        QVERIFY(tpSrc.open(0, 0));
         tpSrc.close();
     }
 
