@@ -20,7 +20,6 @@
 #ifndef AUDIOFORMATINPUTSOURCE_H
 #define AUDIOFORMATINPUTSOURCE_H
 
-#include <TalcsCore/DuplicatableObject.h>
 #include <TalcsCore/PositionableAudioSource.h>
 #include <TalcsFormat/TalcsFormatGlobal.h>
 
@@ -48,9 +47,6 @@ namespace talcs {
 
         void setStereoize(bool stereoize);
         bool stereoize() const;
-
-        bool isDuplicatable() const override;
-        DuplicatableObject *duplicate() const override;
 
     protected:
         explicit AudioFormatInputSource(AudioFormatInputSourcePrivate &d);

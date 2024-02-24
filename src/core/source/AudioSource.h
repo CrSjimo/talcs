@@ -23,7 +23,6 @@
 #include <QScopedPointer>
 
 #include <TalcsCore/AudioStreamBase.h>
-#include <TalcsCore/DuplicatableObject.h>
 #include <TalcsCore/IAudioSampleContainer.h>
 
 namespace talcs {
@@ -39,7 +38,7 @@ namespace talcs {
 
     class AudioSourcePrivate;
 
-    class TALCSCORE_EXPORT AudioSource : public AudioStreamBase, public DuplicatableObject {
+    class TALCSCORE_EXPORT AudioSource : public AudioStreamBase {
         Q_DECLARE_PRIVATE(AudioSource)
     public:
         AudioSource();

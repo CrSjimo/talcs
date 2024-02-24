@@ -52,10 +52,6 @@ namespace talcs {
 
         static AudioBuffer from(const IAudioSampleProvider &src);
 
-        bool isDuplicatable() const override;
-
-        DuplicatableObject *duplicate() const override;
-
     private:
         QVector<QVector<float>> m_buffer;
     };

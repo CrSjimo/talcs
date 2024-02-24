@@ -116,12 +116,4 @@ namespace talcs {
         return *this;
     }
 
-    bool AudioDataWrapper::isDuplicatable() const {
-        return true;
-    }
-
-    DuplicatableObject *AudioDataWrapper::duplicate() const {
-        return new AudioDataWrapper(*this);
-    }
-
 }

@@ -53,10 +53,6 @@ namespace talcs {
         AudioDataWrapper &operator=(const AudioDataWrapper &other);
         AudioDataWrapper &operator=(AudioDataWrapper &&other);
 
-        bool isDuplicatable() const override;
-
-        DuplicatableObject *duplicate() const override;
-
     private:
         QScopedPointer<AudioDataWrapperPrivate> d;
     };

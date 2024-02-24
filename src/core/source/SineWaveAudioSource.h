@@ -45,8 +45,6 @@ namespace talcs {
 
         void setNextReadPosition(qint64 pos) override;
 
-        bool isDuplicatable() const override;
-        DuplicatableObject *duplicate() const override;
     };
     
 }

@@ -633,22 +633,6 @@ namespace talcs {
         return d->compressionLevel;
     }
 
-    bool AudioFormatIO::isDuplicatable() const {
-        Q_D(const AudioFormatIO);
-        return !d->stream || (qobject_cast<QFile *>(d->stream) && (d->openMode == QIODevice::NotOpen || d->openMode == QIODevice::ReadOnly));
-    }
-
-    DuplicatableObject *AudioFormatIO::duplicate() const {
-        Q_D(const AudioFormatIO);
-        if (!d->stream)
-            return new AudioFormatIO;
-        auto f = qobject_cast<QFile *>(d->stream);
-        if (!f)
-            return nullptr;
-        auto dupFile = new QFile(f->fileName());
-        return new AudioFormatIO(dupFile);
-    }
-
     /**
      * @struct AudioFormatIO::SubtypeInfo
      * @brief The specs of a subtype.

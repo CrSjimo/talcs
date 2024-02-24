@@ -22,12 +22,11 @@
 
 #include <QPair>
 
-#include <TalcsCore/DuplicatableObject.h>
 #include <TalcsCore/TalcsCoreGlobal.h>
 
 namespace talcs {
 
-    class TALCSCORE_EXPORT IAudioSampleProvider : public DuplicatableObject {
+    class TALCSCORE_EXPORT IAudioSampleProvider {
     public:
         virtual ~IAudioSampleProvider() = default;
 

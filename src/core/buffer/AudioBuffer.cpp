@@ -153,12 +153,4 @@ namespace talcs {
         return m_buffer[channel].constData() + startPos;
     }
 
-    bool AudioBuffer::isDuplicatable() const {
-        return true;
-    }
-
-    DuplicatableObject *AudioBuffer::duplicate() const {
-        return new AudioBuffer(*this);
-    }
-
 }
