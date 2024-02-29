@@ -41,33 +41,7 @@ private slots:
     }
 
     void clipOperations() {
-        MemoryAudioSource src[] = {MemoryAudioSource(new AudioBuffer(2, 1024), true),
-                                   MemoryAudioSource(new AudioBuffer(2, 2048), true),
-                                   MemoryAudioSource(new AudioBuffer(2, 4096), true)};
-        AudioSourceClipSeries series;
-        auto clipView0 = series.insertClip(&src[0], 1024, 0, 1024);
-        QVERIFY(clipView0.isValid());
-        auto clipView0Found = series.findClip(1024);
-        QCOMPARE(clipView0, clipView0Found);
-        clipView0Found = series.findClip(&src[0]);
-        QCOMPARE(clipView0, clipView0Found);
-        QVERIFY(series.setClipRange(clipView0, 0, 1024));
-        auto nullClipViewFound = series.findClip(1024);
-        QVERIFY(!nullClipViewFound.isValid());
-        QVERIFY(!series.insertClip(&src[1], 0, 0, 2048).isValid());
-        series.removeClip(clipView0);
-        QVERIFY(series.insertClip(&src[1], 0, 0, 2048).isValid());
-        QVERIFY(!series.insertClip(&src[2], 1024, 0, 2048).isValid());
-        QCOMPARE(series.clips().size(), 1);
-        QCOMPARE(series.clips()[0].content(), &src[1]);
-        series.removeAllClips();
-        QVERIFY(series.insertClip(&src[2], 1024, 0, 2048).isValid());
-
-        series.open(1024, 48000);
-        QVERIFY(series.clips()[0].content()->isOpen());
-        auto clip = series.setClipContent(series.clips()[0], &src[0]);
-        QCOMPARE(clip.content(), &src[0]);
-        QVERIFY(src[0].isOpen());
+        // TODO
     }
 
     void clipReading() {

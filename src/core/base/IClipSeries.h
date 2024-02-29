@@ -50,8 +50,8 @@ namespace talcs {
 
     private:
         friend class IClipSeriesPrivate;
-        explicit ClipViewImpl(IClipSeriesPrivate *d, qintptr content);
-        IClipSeriesPrivate *d;
+        explicit ClipViewImpl(const IClipSeriesPrivate *d, qintptr content);
+        const IClipSeriesPrivate *d;
         qintptr m_content;
     };
 
@@ -107,7 +107,7 @@ namespace talcs {
         virtual ClipView setClipContent(const ClipView &clip, T *content) = 0;
 
         virtual ClipView findClip(T *content) const = 0;
-        virtual ClipView findClip(qint64 position) const = 0;
+        virtual QList<ClipView> findClip(qint64 position) const = 0;
 
         virtual void removeClip(const ClipView &clip) = 0;
         virtual void removeAllClips() = 0;

@@ -66,6 +66,8 @@ namespace talcs {
                 auto clipSrc = reinterpret_cast<PositionableAudioSource *>(clip.content());
                 clipSrc->setNextReadPosition(clipReadPosition);
                 clipSrc->read(clipReadData);
+                for (int ch = 0; ch < readData.buffer->channelCount(); ch++)
+                    readData.buffer->addSampleRange(ch, readData.startPos, readData.length, d->buf, ch, 0);
                 return true;
             });
         d->position += readData.length;
@@ -147,9 +149,14 @@ namespace talcs {
         return d->findClipByContent(reinterpret_cast<qintptr>(content));
     }
 
-    AudioSourceClipSeries::ClipView AudioSourceClipSeries::findClip(qint64 position) const {
+    QList<AudioSourceClipSeries::ClipView> AudioSourceClipSeries::findClip(qint64 position) const {
         Q_D(const AudioSourceClipSeries);
-        return d->findClipByPosition(position);
+        QList<ClipView> list;
+        d->findClipByPosition(position, [&](const ClipViewImpl &clipView) {
+            list.append(clipView);
+            return true;
+        });
+        return list;
     }
 
     void AudioSourceClipSeries::removeClip(const AudioSourceClipSeries::ClipView &clip) {

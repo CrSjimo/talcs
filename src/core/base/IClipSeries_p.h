@@ -63,7 +63,7 @@ namespace talcs {
         ClipViewImpl setClipContent(const ClipViewImpl &clipViewImpl, qintptr content);
 
         ClipViewImpl findClipByContent(qintptr content) const;
-        ClipViewImpl findClipByPosition(qint64 position) const;
+        void findClipByPosition(qint64 position, const std::function<bool(const ClipViewImpl &)> &onFind) const;
 
         void removeClip(const ClipViewImpl &clipViewImpl);
         void removeAllClips();
@@ -72,9 +72,9 @@ namespace talcs {
 
         qint64 effectiveLength() const;
 
-        ClipInterval intervalLookup(qint64 pos) const;
-        ClipIntervalTree::iterator findClipIterator(qint64 pos);
-        ClipIntervalTree::const_iterator findClipIterator(qint64 pos) const;
+        IClipSeriesPrivate::ClipInterval intervalLookup(qint64 pos, qintptr content) const;
+        IClipSeriesPrivate::ClipIntervalTree::iterator findClipIterator(qint64 pos, qintptr content);
+        IClipSeriesPrivate::ClipIntervalTree::const_iterator findClipIterator(qint64 pos, qintptr content) const;
 
     };
 

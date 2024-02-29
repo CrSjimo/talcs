@@ -24,6 +24,7 @@
 
 #include <QMutex>
 
+#include <TalcsCore/AudioBuffer.h>
 #include <TalcsCore/AudioSourceClipSeries.h>
 #include <TalcsCore/private/IClipSeries_p.h>
 #include <TalcsCore/private/PositionableAudioSource_p.h>
@@ -37,6 +38,7 @@ namespace talcs {
         }
 
         bool openAllClips(qint64 bufferSize, double sampleRate) {
+            buf.resize(2, bufferSize);
             for (auto p = d->clips.begin(); p != d->clips.end(); p++) {
                 if (!reinterpret_cast<SourceClass *>(p->interval().content())->open(bufferSize, sampleRate))
                     return false;
@@ -45,6 +47,7 @@ namespace talcs {
         }
 
         void closeAllClips() {
+            buf.resize(0, 0);
             for (auto p = d->clips.begin(); p != d->clips.end(); p++) {
                 reinterpret_cast<SourceClass *>(p->interval().content())->close();
             }
@@ -65,13 +68,18 @@ namespace talcs {
             auto tailCut = qMax(0ll, (clip.position() + clip.length()) - (seriesPosition + seriesReadData.length));
             auto readStart = qMax(0ll, clip.position() - seriesPosition);
             qint64 clipReadPosition = headCut + d->clipStartPosDict.value(clip.content());
+            buf.clear();
+            if (buf.channelCount() < seriesReadData.buffer->channelCount())
+                buf.resize(seriesReadData.buffer->channelCount(), -1);
             return {clipReadPosition, {
-                    seriesReadData.buffer,
+                    &buf,
                     readStart + seriesReadData.startPos,
                     clip.length() - headCut - tailCut,
                     seriesReadData.silentFlags,
             }};
         }
+
+        AudioBuffer buf;
 
     private:
         SeriesClassPrivate *d;
