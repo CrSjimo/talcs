@@ -113,8 +113,6 @@ runs:
       run: |
         mv vcpkg ..
         Write-Output VCPKG_ROOT_DIR=$(Resolve-Path -Path ../vcpkg) >> $env:GITHUB_ENV
-        mv qmsetup ..
-        Write-Output QMSETUP_INSTALLED_DIR=$(Resolve-Path -Path ../qmsetup/installed) >> $env:GITHUB_ENV
 
     - name: Set ASIO SDK directory variable (Windows)
       if: inputs.os == 'windows-latest'
