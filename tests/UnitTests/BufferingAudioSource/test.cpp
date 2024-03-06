@@ -73,6 +73,7 @@ private slots:
         QVERIFY(bufSrc.waitForBuffering(QDeadlineTimer(2000)));
         QCOMPARE(bufSrc.nextReadPosition(), 1919810);
 //        QCOMPARE(src2.nextReadPosition(), 1919810 + 114514);
+        bufSrc.setSource(&src);
     }
 
     void readIdentical() {
