@@ -27,6 +27,32 @@
 
 namespace talcs {
 
+    /**
+     * @class MetronomeAudioSourceBeatDetector
+     * @brief The detector for MetronomeAudioSource
+     */
+
+    /**
+     * @fn void MetronomeAudioSourceBeatDetector::initialize()
+     * Initializes the internal state.
+     */
+
+    /**
+     * @fn void MetronomeAudioSourceBeatDetector::detectInterval(qint64 intervalStart, qint64 intervalLength)
+     * Detects whether beats exists in the interval and updates the internal state.
+     */
+
+    /**
+     * @fn QPair<qint64, bool> MetronomeAudioSourceBeatDetector::nextBeat()
+     * Returns the position and whether it is a major beat of the next beat within the interval given by previous
+     * detectInterval() call. If there is no beat left, then the position should be -1.
+     */
+
+    /**
+     * @class MetronomeAudioSource
+     * @brief The audio source to be used as a metronome
+     */
+
     MetronomeAudioSource::MetronomeAudioSource() : MetronomeAudioSource(*new MetronomeAudioSourcePrivate) {
 
     }
@@ -133,6 +159,10 @@ namespace talcs {
         PositionableAudioSource::setNextReadPosition(pos);
     }
 
+    /**
+     * Sets the source for major beat.
+     * @return true if successful
+     */
     bool MetronomeAudioSource::setMajorBeatSource(PositionableAudioSource *src, bool takeOwnership) {
         Q_D(MetronomeAudioSource);
         QMutexLocker locker(&d->mutex);
@@ -144,11 +174,18 @@ namespace talcs {
         return true;
     }
 
+    /**
+     * Gets the source for major beat.
+     */
     PositionableAudioSource *MetronomeAudioSource::majorBeatSource() const {
         Q_D(const MetronomeAudioSource);
         return d->majorBeatSource;
     }
 
+    /**
+     * Sets the source for minor beat.
+     * @return true if successful
+     */
     bool MetronomeAudioSource::setMinorBeatSource(PositionableAudioSource *src, bool takeOwnership) {
         Q_D(MetronomeAudioSource);
         QMutexLocker locker(&d->mutex);
@@ -160,18 +197,30 @@ namespace talcs {
         return true;
     }
 
+    /**
+     * Gets the source for minor beat.
+     */
     PositionableAudioSource *MetronomeAudioSource::minorBeatSource() const {
         Q_D(const MetronomeAudioSource);
         return d->minorBeatSource;
     }
 
+    /**
+     * Sets the detector.
+     * @see MetronomeAudioSourceBeatDetector
+     */
     void MetronomeAudioSource::setDetector(MetronomeAudioSourceBeatDetector *detector) {
         Q_D(MetronomeAudioSource);
         QMutexLocker locker(&d->mutex);
         d->detector = detector;
-        detector->initialize();
+        if (detector)
+            detector->initialize();
     }
 
+    /**
+     * Gets the detector.
+     * @see MetronomeAudioSourceBeatDetector
+     */
     MetronomeAudioSourceBeatDetector *MetronomeAudioSource::detector() const {
         Q_D(const MetronomeAudioSource);
         return d->detector;
@@ -212,10 +261,16 @@ namespace talcs {
         Func f;
     };
 
+    /**
+     * Creates a built-in major beat source. The returned object is managed by caller.
+     */
     PositionableAudioSource *MetronomeAudioSource::builtInMajorBeatSource() {
         return new BuiltInBeatSource(&generateMajor);
     }
 
+    /**
+     * Creates a built-in minor beat source. The returned object is managed by caller.
+     */
     PositionableAudioSource *MetronomeAudioSource::builtInMinorBeatSource() {
         return new BuiltInBeatSource(&generateMinor);
     }

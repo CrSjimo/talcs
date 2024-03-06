@@ -229,7 +229,7 @@ namespace talcs {
      * @fn IClipSeries::ClipView IClipSeries::insertClip(T *content, qint64 position, qint64 startPos, qint64 length)
      * Inserts a clip to the clip series.
      *
-     * If it fails (due to clip overlapping, duplicated content, or other reasons), null clip view will be returned.
+     * If it fails (due to duplicated content, or other reasons), null clip view will be returned.
      */
 
     /**
@@ -241,7 +241,7 @@ namespace talcs {
      * @fn bool IClipSeries::setClipRange(const IClipSeries::ClipView &clip, qint64 position, qint64 length)
      * Sets the clip's position in the series and length.
      *
-     * If it fails (due to clip overlapping or other reasons), null clip view will be returned.
+     * If it fails (due to some reasons), null clip view will be returned.
      */
 
     /**
