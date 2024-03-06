@@ -14,7 +14,8 @@
       "default-features": false
     },
     "interval-tree",
-    "boost-interprocess"
+    "boost-interprocess",
+    "qmsetup"
   ],
   "overrides": [
     {

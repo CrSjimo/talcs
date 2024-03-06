@@ -56,38 +56,6 @@ runs:
         archives: ${{ inputs.os == 'ubuntu-latest' && 'icu qtbase' || 'qtbase' }}
         cache: true
 
-    - name: Clone QMSetup
-      shell: pwsh
-      run: |
-        git clone https://github.com/stdware/qmsetup.git --recursive
-        cd qmsetup
-        Write-Output QMSETUP_HASH=$(git rev-parse HEAD) >> $env:GITHUB_ENV
-
-    - name: Restore QMSetup from cache
-      id: cache_qmsetup
-      uses: actions/cache/restore@v3
-      with:
-        path: ${{ github.workspace }}/qmsetup/installed
-        key: ${{ runner.os }}-qmsetup-${{ env.QMSETUP_HASH }}
-
-    - name: Build and install QMSetup
-      if: steps.cache_qmsetup.outputs.cache-hit != 'true'
-      shell: pwsh
-      run: |
-        cd qmsetup
-        cmake -B build -G Ninja `
-          -DCMAKE_BUILD_TYPE=Release `
-          -DCMAKE_INSTALL_PREFIX=installed
-        cmake --build build --target install
-
-    - name: Save QMSetup to cache
-      if: steps.cache_qmsetup.outputs.cache-hit != 'true'
-      uses: actions/cache/save@v3
-      with:
-        path: ${{ github.workspace }}/qmsetup/installed
-        key: ${{ runner.os }}-qmsetup-${{ env.QMSETUP_HASH }}
-
-
     - name: Restore vcpkg from cache
       id: cache_vcpkg
       uses: actions/cache/restore@v3
