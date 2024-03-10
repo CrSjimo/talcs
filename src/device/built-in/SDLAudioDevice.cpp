@@ -62,7 +62,7 @@ namespace talcs {
             setErrorString(SDL_GetError());
             return;
         }
-        setChannelCount(preferredSpec.channels);
+        setChannelCount(qMin(quint8(8), preferredSpec.channels));
         if (preferredSpec.samples == 0)
             preferredSpec.samples = 1024;
         setPreferredBufferSize(preferredSpec.samples);
