@@ -122,6 +122,9 @@ if(TALCS_MIDI)
     add_subdirectory(midi)
 endif()
 
+if(TALCS_JUCE_ADAPTER)
+    add_subdirectory(juceadapter)
+endif()
 
 if(TALCS_INSTALL)
     # Add install target
