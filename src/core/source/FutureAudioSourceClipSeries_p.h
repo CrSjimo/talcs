@@ -25,7 +25,7 @@
 
 #include <TalcsCore/private/AudioSourceClipSeries_p.h>
 #include <TalcsCore/private/PositionableAudioSource_p.h>
-#include <TalcsSynthesis/FutureAudioSourceClipSeries.h>
+#include <TalcsCore/FutureAudioSourceClipSeries.h>
 
 namespace talcs {
 

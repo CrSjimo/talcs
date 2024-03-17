@@ -76,7 +76,7 @@ if(TALCS_BUILD_DOCUMENTATIONS)
         CACHE FILEPATH "talcs doxygen tag file path" FORCE
     )
 
-    set(_doc_targets TalcsCore TalcsDevice TalcsFormat TalcsMidi TalcsRemote TalcsSynthesis)
+    set(_doc_targets TalcsCore TalcsDevice TalcsFormat TalcsMidi TalcsRemote)
 
     qm_import(Doxygen)
     qm_setup_doxygen(talcs_RunDoxygen

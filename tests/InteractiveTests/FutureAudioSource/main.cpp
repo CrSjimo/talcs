@@ -44,8 +44,8 @@
 #include <TalcsDevice//AudioSourcePlayback.h>
 #include <TalcsCore/SineWaveAudioSource.h>
 #include <TalcsCore/TransportAudioSource.h>
-#include <TalcsSynthesis/FutureAudioSource.h>
-#include <TalcsSynthesis/FutureAudioSourceClipSeries.h>
+#include <TalcsCore/FutureAudioSource.h>
+#include <TalcsCore/FutureAudioSourceClipSeries.h>
 
 using namespace talcs;
 

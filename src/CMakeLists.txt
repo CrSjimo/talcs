@@ -112,7 +112,6 @@ add_subdirectory(format)
 
 add_subdirectory(remote)
 
-add_subdirectory(synthesis)
 
 add_subdirectory(midi)
 

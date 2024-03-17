@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2023-2024 CrSjimo                                            *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -24,7 +24,7 @@
 
 #include <TalcsCore/IClipSeries.h>
 #include <TalcsCore/PositionableAudioSource.h>
-#include <TalcsSynthesis/TalcsSynthesisGlobal.h>
+#include <TalcsCore/TalcsCoreGlobal.h>
 
 namespace talcs {
 
@@ -34,7 +34,7 @@ namespace talcs {
 
     class TransportAudioSource;
 
-    class TALCSSYNTHESIS_EXPORT FutureAudioSourceClipSeries
+    class TALCSCORE_EXPORT FutureAudioSourceClipSeries
         : public QObject,
           public PositionableAudioSource,
           public IClipSeries<FutureAudioSource> {

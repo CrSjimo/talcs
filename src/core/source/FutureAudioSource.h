@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2023-2024 CrSjimo                                            *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -23,13 +23,13 @@
 #include <QFuture>
 
 #include <TalcsCore/PositionableAudioSource.h>
-#include <TalcsSynthesis/TalcsSynthesisGlobal.h>
+#include <TalcsCore/TalcsCoreGlobal.h>
 
 namespace talcs {
 
     class FutureAudioSourcePrivate;
 
-    class TALCSSYNTHESIS_EXPORT FutureAudioSource : public QObject, public PositionableAudioSource {
+    class TALCSCORE_EXPORT FutureAudioSource : public QObject, public PositionableAudioSource {
         Q_OBJECT
         Q_DECLARE_PRIVATE_D(PositionableAudioSource::d_ptr, FutureAudioSource)
     public:
