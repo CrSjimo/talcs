@@ -11,7 +11,14 @@ option(TALCS_BUILD_TRANSLATIONS "Build translations" ON)
 option(TALCS_BUILD_TESTS "Build test cases" OFF)
 option(TALCS_BUILD_DOCUMENTATIONS "Build documentations" OFF)
 option(TALCS_INSTALL "Install library" ON)
-option(TALCS_ENABLE_ASIO "Enable ASIO feature" OFF)
+
+option(TALCS_DEVICE "Build talcs::Device library" ON)
+option(TALCS_DEVICE_ENABLE_SDL "Enable SDL in talcs::Device library" ON)
+option(TALCS_DEVICE_ENABLE_ASIO "Enable ASIO in talcs::Device library" OFF)
+option(TALCS_FORMAT "Build talcs::Format library" ON)
+option(TALCS_MIDI "Build talcs::Midi library" ON)
+option(TALCS_REMOTE "Build talcs::Remote library" ON)
+
 
 # ----------------------------------
 # CMake Settings

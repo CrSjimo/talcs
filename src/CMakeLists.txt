@@ -92,7 +92,7 @@ macro(talcs_add_library _target)
 
     if(NOT FUNC_NO_SYNC_INCLUDE)
         # Generate a standard include directory in build directory
-        qm_sync_include(. "${TALCS_GENERATED_INCLUDE_DIR}/${_inc_name}" ${_install_options}
+        qm_sync_include(. "${TALCS_GENERATED_INCLUDE_DIR}/${_inc_name}" ${_install_options} FORCE
             ${FUNC_SYNC_INCLUDE_OPTIONS}
         )
         target_include_directories(${_target} PUBLIC
@@ -106,14 +106,22 @@ endmacro()
 # ----------------------------------
 add_subdirectory(core)
 
-add_subdirectory(device)
+if(TALCS_DEVICE)
+    add_subdirectory(device)
+endif()
 
-add_subdirectory(format)
+if(TALCS_FORMAT)
+    add_subdirectory(format)
+endif()
 
-add_subdirectory(remote)
+if(TALCS_REMOTE)
+    add_subdirectory(remote)
+endif()
 
+if(TALCS_MIDI)
+    add_subdirectory(midi)
+endif()
 
-add_subdirectory(midi)
 
 if(TALCS_INSTALL)
     # Add install target
