@@ -22,6 +22,8 @@ if(TALCS_DEVICE_ENABLE_SDL)
     find_package(SDL2 REQUIRED)
     list(APPEND _links_private SDL2::SDL2)
     list(APPEND _defines TALCS_USE_FEATURE_SDL)
+else()
+    list(FILTER _src EXCLUDE REGEX SDL)
 endif()
 
 talcs_add_library(${PROJECT_NAME} AUTOGEN

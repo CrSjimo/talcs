@@ -22,7 +22,9 @@
 
 #include <QDebug>
 
-#include "built-in/SDLAudioDriver.h"
+#ifdef TALCS_USE_FEATURE_SDL
+#    include "built-in/SDLAudioDriver.h"
+#endif
 
 #ifdef TALCS_USE_FEATURE_ASIO
 #    include "built-in/ASIOAudioDriver.h"
@@ -122,9 +124,11 @@ namespace talcs {
      */
     AudioDriverManager *AudioDriverManager::createBuiltInDriverManager(QObject *parent) {
         auto drvMgr = new AudioDriverManager(parent);
+#ifdef TALCS_USE_FEATURE_SDL
         for (auto drv : SDLAudioDriver::getDrivers()) {
             drvMgr->addAudioDriver(drv);
         }
+#endif
 #ifdef TALCS_USE_FEATURE_ASIO
         drvMgr->addAudioDriver(new ASIOAudioDriver);
 #endif
