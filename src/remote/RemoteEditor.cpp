@@ -55,12 +55,7 @@ namespace talcs {
     /**
      * Destructor
      */
-    RemoteEditor::~RemoteEditor() {
-        d->socket->unbind("editor", "putDataToEditor");
-        d->socket->unbind("editor", "getDataFromEditor");
-        d->socket->unbind("editor", "show");
-        d->socket->unbind("editor", "hide");
-    }
+    RemoteEditor::~RemoteEditor() = default;
 
     /**
      * Notifies the remote bridge that something has been changed in the editor.

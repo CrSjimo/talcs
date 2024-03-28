@@ -128,9 +128,6 @@ namespace talcs {
     RemoteAudioDevice::~RemoteAudioDevice() {
         Q_D(RemoteAudioDevice);
         RemoteAudioDevice::close();
-        d->socket->unbind("audio", "openRequired");
-        d->socket->unbind("audio", "closeRequired");
-        d->socket->unbind("audio", "prepareBuffer");
     }
 
     void RemoteAudioDevicePrivate::remoteOpenRequired(qint64 bufferSize, double sampleRate, const QString &ipcKey, int maxChannelCount) {
