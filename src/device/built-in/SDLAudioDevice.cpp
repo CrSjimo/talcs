@@ -130,6 +130,7 @@ namespace talcs {
         SDL_PauseAudioDevice(d->devId, 1);
         if (d->audioDeviceCallback)
             d->audioDeviceCallback->deviceStoppedCallback();
+        d->audioDeviceCallback = nullptr;
         AudioDevice::stop();
     }
     void SDLAudioDevice::lock() {

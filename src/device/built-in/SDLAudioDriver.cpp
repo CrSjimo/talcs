@@ -22,6 +22,7 @@
 #include "SDLAudioDevice.h"
 
 #include <QDebug>
+#include <QTimer>
 
 #include <SDL2/SDL.h>
 
@@ -62,7 +63,10 @@ namespace talcs {
     bool SDLAudioDriver::initialize() {
         Q_D(SDLAudioDriver);
         if (SDL_Init(SDL_INIT_AUDIO) == 0 && SDL_AudioInit(name().toLocal8Bit()) == 0) {
-            d->eventPollerThread->start();
+            QTimer::singleShot(0, [=] {
+                SDL_FlushEvents(SDL_AUDIODEVICEADDED, SDL_AUDIODEVICEREMOVED);
+                d->eventPollerThread->start();
+            });
             return AudioDriver::initialize();
         } else {
             setErrorString(SDL_GetError());
@@ -161,7 +165,6 @@ namespace talcs {
     void SDLEventPoller::start() {
         stopRequested = false;
         SDL_Event e;
-        while (SDL_PollEvent(&e) > 0);
         while (!stopRequested) {
             while (SDL_PollEvent(&e) > 0) {
                 emit event(QByteArray(reinterpret_cast<char *>(&e), sizeof(SDL_Event)));
