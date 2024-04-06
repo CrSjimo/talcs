@@ -74,8 +74,10 @@ runs:
           cd vcpkg
           ${{ inputs.os == 'windows-latest' && './bootstrap-vcpkg.bat' || 'sh ./bootstrap-vcpkg.sh' }}
           cd ..
+        } else {
+          cd vcpkg
+          git pull origin master
         }
-        cd vcpkg
         ./vcpkg install `
           --x-manifest-root=${{ github.workspace }}/scripts/vcpkg-manifest `
           --x-install-root=./installed `
