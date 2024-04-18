@@ -20,6 +20,8 @@
 #ifndef AUDIOSOURCEPLAYBACK_P_H
 #define AUDIOSOURCEPLAYBACK_P_H
 
+#include <QMutex>
+
 #include <TalcsDevice/AudioSourcePlayback.h>
 
 namespace talcs {
@@ -29,6 +31,7 @@ namespace talcs {
     public:
         AudioSourcePlayback *q_ptr;
         AudioSource *src;
+        QMutex mutex;
         bool takeOwnership;
         bool managedByDevice;
     };

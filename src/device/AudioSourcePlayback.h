@@ -36,6 +36,7 @@ namespace talcs {
         ~AudioSourcePlayback();
 
         AudioSource *source() const;
+        void setSource(AudioSource *src, bool takeOwnership = false, bool managedByDevice = true);
 
         bool deviceWillStartCallback(AudioDevice *device) override;
         void deviceStoppedCallback() override;

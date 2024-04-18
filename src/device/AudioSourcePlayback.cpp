@@ -75,8 +75,20 @@ namespace talcs {
         return d->src;
     }
 
+    /**
+     * Sets the AudioSource object used.
+     */
+    void AudioSourcePlayback::setSource(AudioSource *src, bool takeOwnership, bool managedByDevice) {
+        Q_D(AudioSourcePlayback);
+        QMutexLocker locker(&d->mutex);
+        d->src = src;
+        d->takeOwnership = takeOwnership;
+        d->managedByDevice = managedByDevice;
+    }
+
     bool AudioSourcePlayback::deviceWillStartCallback(AudioDevice *device) {
         Q_D(AudioSourcePlayback);
+        QMutexLocker locker(&d->mutex);
         if (d->managedByDevice)
             return d->src->open(device->bufferSize(), device->sampleRate());
         else
@@ -84,12 +96,14 @@ namespace talcs {
     }
     void AudioSourcePlayback::deviceStoppedCallback() {
         Q_D(AudioSourcePlayback);
+        QMutexLocker locker(&d->mutex);
         if (d->managedByDevice)
             d->src->close();
     }
 
     void AudioSourcePlayback::workCallback(const AudioSourceReadData &readData) {
         Q_D(AudioSourcePlayback);
+        QMutexLocker locker(&d->mutex);
         d->src->read(readData);
     }
     
