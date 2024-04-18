@@ -91,11 +91,13 @@ namespace talcs {
     class TALCSDEVICE_EXPORT AudioDeviceLocker {
     public:
         inline explicit AudioDeviceLocker(talcs::AudioDevice *audioDevice) : m_dev(audioDevice) {
-            m_dev->lock();
+            if (m_dev)
+                m_dev->lock();
         }
 
         inline ~AudioDeviceLocker() {
-            m_dev->unlock();
+            if (m_dev)
+                m_dev->unlock();
         }
 
     private:
