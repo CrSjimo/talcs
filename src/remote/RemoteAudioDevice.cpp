@@ -23,6 +23,11 @@
 #include <chrono>
 
 #include <TalcsCore/AudioSource.h>
+#ifdef Q_OS_WIN
+#   include <boost/interprocess/windows_shared_memory.hpp>
+#else
+#   include <boost/interprocess/shared_memory_object.hpp>
+#endif
 #include <boost/interprocess/sync/named_condition.hpp>
 #include <boost/interprocess/sync/named_mutex.hpp>
 #include <boost/interprocess/sync/scoped_lock.hpp>
@@ -134,28 +139,35 @@ namespace talcs {
         Q_Q(RemoteAudioDevice);
         using namespace boost::interprocess;
         QMutexLocker locker(&mutex);
-
-        sharedMemory.setNativeKey(ipcKey);
-        if (sharedMemory.attach()) {
-            remoteIsOpened = true;
-            sharedAudioData.resize(maxChannelCount);
-            auto *ptr = reinterpret_cast<char *>(sharedMemory.data());
-            for (int i = 0; i < maxChannelCount; i++) {
-                sharedAudioData[i] = reinterpret_cast<float *>(ptr);
-                ptr += bufferSize * sizeof(float);
-            }
-            bufferPrepareStatus = reinterpret_cast<char *>(ptr);
-            ptr += sizeof(bool);
-            processInfo = reinterpret_cast<RemoteAudioDevice::ProcessInfo *>(ptr);
-            buffer.reset(new AudioDataWrapper(sharedAudioData.data(), maxChannelCount, bufferSize));
-
-            q->setAvailableBufferSizes({bufferSize});
-            q->setPreferredBufferSize(bufferSize);
-            q->setAvailableSampleRates({sampleRate});
-            q->setPreferredSampleRate(sampleRate);
-        } else {
-            qWarning() << "RemoteAudioDevice: Cannot attach shared memory" << ipcKey;
+        try {
+#ifdef Q_OS_WIN
+            windows_shared_memory sharedMemory(open_only, ipcKey.toUtf8(), read_write);
+#else
+            shared_memory_object sharedMemory(open_only, ipcKey.toUtf8(), read_write);
+#endif
+            region = std::make_unique<mapped_region>(sharedMemory, read_write);
+        } catch (std::exception &e) {
+            qWarning() << "RemoteAudioDevice: Cannot attach shared memory" << ipcKey << e.what();
+            return;
         }
+
+        remoteIsOpened = true;
+        sharedAudioData.resize(maxChannelCount);
+        auto *ptr = reinterpret_cast<char *>(region->get_address());
+        for (int i = 0; i < maxChannelCount; i++) {
+            sharedAudioData[i] = reinterpret_cast<float *>(ptr);
+            ptr += bufferSize * sizeof(float);
+        }
+        bufferPrepareStatus = reinterpret_cast<char *>(ptr);
+        ptr += sizeof(bool);
+        processInfo = reinterpret_cast<RemoteAudioDevice::ProcessInfo *>(ptr);
+        buffer.reset(new AudioDataWrapper(sharedAudioData.data(), maxChannelCount, bufferSize));
+
+        q->setAvailableBufferSizes({bufferSize});
+        q->setPreferredBufferSize(bufferSize);
+        q->setAvailableSampleRates({sampleRate});
+        q->setPreferredSampleRate(sampleRate);
+
         prepareBufferMutex.reset(new named_mutex(open_only, ipcKey.toLatin1()));
         prepareBufferCondition.reset(new named_condition(open_only, (ipcKey + "cv").toLatin1()));
         prepareBufferProducerThread.reset(QThread::create([this] { remotePrepareBufferProducer(); }));
@@ -179,7 +191,7 @@ namespace talcs {
         sharedAudioData.clear();
         bufferPrepareStatus = nullptr;
         processInfo = nullptr;
-        sharedMemory.detach();
+        region.reset();
 
         q->setAvailableBufferSizes({});
         q->setPreferredBufferSize(0);

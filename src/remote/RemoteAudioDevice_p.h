@@ -20,8 +20,9 @@
 #ifndef TALCS_REMOTEAUDIODEVICE_P_H
 #define TALCS_REMOTEAUDIODEVICE_P_H
 
+#include <memory>
+
 #include <QMutex>
-#include <QSharedMemory>
 
 #include <TalcsCore/AudioDataWrapper.h>
 #include <TalcsDevice/private/AudioDevice_p.h>
@@ -30,6 +31,7 @@
 namespace boost::interprocess {
     class named_condition;
     class named_mutex;
+    class mapped_region;
 }
 
 namespace talcs {
@@ -43,7 +45,7 @@ namespace talcs {
 
         QScopedPointer<boost::interprocess::named_condition> prepareBufferCondition;
         QScopedPointer<boost::interprocess::named_mutex> prepareBufferMutex;
-        QSharedMemory sharedMemory;
+        std::unique_ptr<boost::interprocess::mapped_region> region;
         enum BufferPrepareStatus {
             NotPrepared,
             Prepared,
