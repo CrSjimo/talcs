@@ -53,7 +53,8 @@ void testFunc() {
     {
         QFile f("D:\\CloudMusic\\07.恋染色.flac");
         AudioFormatIO io(&f);
-        io.open(QFile::ReadOnly);
+        f.open(QIODevice::ReadOnly);
+        io.open(AbstractAudioFormatIO::Read);
         MyResampler resampler(96000.0 / 44100.0, 1024, 2, &io);
         QVector<float> data(1024 * 2);
         InterleavedAudioDataWrapper wrapper(data.data(), 2, 1024);

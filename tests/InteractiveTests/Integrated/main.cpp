@@ -22,7 +22,7 @@
 #include <TalcsDevice/AudioDevice.h>
 #include <TalcsDevice/AudioDriverManager.h>
 #include <TalcsDevice/AudioSourcePlayback.h>
-#include <TalcsDevice/SDLAudioDriver.h>
+#include <TalcsDevice/AudioDriver.h>
 #include <TalcsCore/MemoryAudioSource.h>
 #include <TalcsCore/PositionableMixerAudioSource.h>
 #include <TalcsCore/SineWaveAudioSource.h>
