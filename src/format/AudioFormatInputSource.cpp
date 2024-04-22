@@ -50,7 +50,7 @@ namespace talcs {
     /**
      * Constructor.
      */
-    AudioFormatInputSource::AudioFormatInputSource(AudioFormatIO *audioFormatIo, bool takeOwnership)
+    AudioFormatInputSource::AudioFormatInputSource(AbstractAudioFormatIO *audioFormatIo, bool takeOwnership)
             : AudioFormatInputSource(*new AudioFormatInputSourcePrivate) {
         setAudioFormatIo(audioFormatIo, takeOwnership);
     }
@@ -121,7 +121,7 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         if (!d->io)
             return false;
-        if (d->io->open(QIODevice::ReadOnly)) {
+        if (d->io->open(AbstractAudioFormatIO::Read)) {
             d->ratio = sampleRate / d->io->sampleRate();
             d->resampler.reset(new AudioFormatInputSourcePrivate::AudioFormatInputResampler(d->ratio, bufferSize,
                                                                                         d->io->channelCount(), d));
@@ -146,7 +146,7 @@ namespace talcs {
      *
      * Note that this function should not be called when the source is open.
      */
-    void AudioFormatInputSource::setAudioFormatIo(AudioFormatIO *audioFormatIo, bool takeOwnership) {
+    void AudioFormatInputSource::setAudioFormatIo(AbstractAudioFormatIO *audioFormatIo, bool takeOwnership) {
         Q_ASSERT(!isOpen());
         if (isOpen()) {
             qWarning() << "Cannot set audio format io when source is opened.";
@@ -165,7 +165,7 @@ namespace talcs {
     /**
      * Gets the AudioFormatIO that is currently being used.
      */
-    AudioFormatIO *AudioFormatInputSource::audioFormatIo() const {
+    AbstractAudioFormatIO *AudioFormatInputSource::audioFormatIo() const {
         Q_D(const AudioFormatInputSource);
         return d->io;
     }

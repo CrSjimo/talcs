@@ -26,12 +26,12 @@
 namespace talcs {
 
     class AudioFormatInputSourcePrivate;
-    class AudioFormatIO;
+    class AbstractAudioFormatIO;
 
     class TALCSFORMAT_EXPORT AudioFormatInputSource : public PositionableAudioSource {
         Q_DECLARE_PRIVATE(AudioFormatInputSource);
     public:
-        explicit AudioFormatInputSource(AudioFormatIO *audioFormatIo = nullptr, bool takeOwnership = false);
+        explicit AudioFormatInputSource(AbstractAudioFormatIO *audioFormatIo = nullptr, bool takeOwnership = false);
         ~AudioFormatInputSource() override;
 
         qint64 read(const AudioSourceReadData &readData) override;
@@ -40,8 +40,8 @@ namespace talcs {
         bool open(qint64 bufferSize, double sampleRate) override;
         void close() override;
 
-        void setAudioFormatIo(AudioFormatIO *audioFormatIo, bool takeOwnership = false);
-        AudioFormatIO *audioFormatIo() const;
+        void setAudioFormatIo(AbstractAudioFormatIO *audioFormatIo, bool takeOwnership = false);
+        AbstractAudioFormatIO *audioFormatIo() const;
 
         void flush();
 

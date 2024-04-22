@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2024 CrSjimo                                                 *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,38 +17,11 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_SDLAUDIODRIVER_H
-#define TALCS_SDLAUDIODRIVER_H
+//
+// Created by Crs_1 on 2024/4/22.
+//
 
-#include <TalcsDevice/AudioDriver.h>
+#include "AbstractAudioFormatIO.h"
 
 namespace talcs {
-    class SDLAudioDriverPrivate;
-    class SDLAudioDriverEventPoller;
-    class SDLAudioDevice;
-
-    class TALCSDEVICE_EXPORT SDLAudioDriver : public AudioDriver {
-        Q_OBJECT
-        Q_DECLARE_PRIVATE(SDLAudioDriver)
-        friend class SDLAudioDevice;
-
-    public:
-        explicit SDLAudioDriver(QObject *parent = nullptr);
-        ~SDLAudioDriver() override;
-
-        bool initialize() override;
-        void finalize() override;
-        QStringList devices() const override;
-        QString defaultDevice() const override;
-        AudioDevice *createDevice(const QString &name) override;
-
-        static QList<SDLAudioDriver *> getDrivers();
-
-    protected:
-        SDLAudioDriver(SDLAudioDriverPrivate &d, QObject *parent);
-        void addOpenedDevice(quint32 devId, SDLAudioDevice *dev);
-        void removeOpenedDevice(quint32 devId);
-    };
-}
-
-#endif // TALCS_SDLAUDIODRIVER_H
+} // talcs

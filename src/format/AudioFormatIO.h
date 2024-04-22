@@ -20,10 +20,12 @@
 #ifndef TALCS_AUDIOFORMATIO_H
 #define TALCS_AUDIOFORMATIO_H
 
-#include <QIODevice>
+#include <QList>
+#include <QScopedPointer>
 
 #include <TalcsCore/ErrorStringProvider.h>
 #include <TalcsFormat/TalcsFormatGlobal.h>
+#include <TalcsFormat/AbstractAudioFormatIO.h>
 
 class SndfileHandle;
 class QIODevice;
@@ -32,12 +34,12 @@ namespace talcs {
 
     class AudioFormatIOPrivate;
 
-    class TALCSFORMAT_EXPORT AudioFormatIO : public ErrorStringProvider {
+    class TALCSFORMAT_EXPORT AudioFormatIO : public AbstractAudioFormatIO, public ErrorStringProvider {
         Q_DECLARE_PRIVATE(AudioFormatIO)
     public:
         explicit AudioFormatIO(QIODevice *stream = nullptr);
 
-        ~AudioFormatIO();
+        ~AudioFormatIO() override;
 
         void setStream(QIODevice *stream);
         QIODevice *stream() const;
@@ -123,20 +125,20 @@ namespace talcs {
             ByteOrderMask = 0x30000000
         };
 
-        bool open(QIODevice::OpenMode openMode);
-        bool open(QIODevice::OpenMode openMode, int format, int channels, double sampleRate);
-        QIODevice::OpenMode openMode() const;
-        void close();
+        bool open(OpenMode openMode) override;
+        bool open(OpenMode openMode, int format, int channels, double sampleRate) override;
+        OpenMode openMode() const override;
+        void close() override;
 
-        int channelCount() const;
-        double sampleRate() const;
+        int channelCount() const override;
+        double sampleRate() const override;
 
         int format() const;
         MajorFormat majorFormat() const;
         Subtype subtype() const;
         ByteOrder byteOrder() const;
 
-        qint64 length() const;
+        qint64 length() const override;
 
         enum MetaData {
             Title       = 0x01,
@@ -154,10 +156,10 @@ namespace talcs {
         void setMetaData(MetaData metaDataType, const QString &str);
         QString getMetaData(MetaData metaDataType) const;
 
-        qint64 read(float *ptr, qint64 length);
-        qint64 write(const float *ptr, qint64 length);
-        qint64 seek(qint64 pos);
-        qint64 pos();
+        qint64 read(float *ptr, qint64 length) override;
+        qint64 write(const float *ptr, qint64 length) override;
+        qint64 seek(qint64 pos) override;
+        qint64 pos() const override;
 
         void setAutoClip(bool autoClip);
         bool autoClip() const;

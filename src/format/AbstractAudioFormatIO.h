@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2024 CrSjimo                                                 *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,26 +17,40 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_ASIOAUDIODRIVER_H
-#define TALCS_ASIOAUDIODRIVER_H
+#ifndef TALCS_ABSTRACTAUDIOFORMATIO_H
+#define TALCS_ABSTRACTAUDIOFORMATIO_H
 
-#include <TalcsDevice/AudioDriver.h>
+#include <QtGlobal>
 
 namespace talcs {
-    class ASIOAudioDriverPrivate;
 
-    class TALCSDEVICE_EXPORT ASIOAudioDriver : public AudioDriver {
-        Q_OBJECT
-        Q_DECLARE_PRIVATE(ASIOAudioDriver)
+    class AbstractAudioFormatIO {
     public:
-        ASIOAudioDriver(QObject *parent = nullptr);
-        ~ASIOAudioDriver() override;
-        bool initialize() override;
-        void finalize() override;
-        QStringList devices() const override;
-        QString defaultDevice() const override;
-        AudioDevice *createDevice(const QString &name) override;
-    };
-}
+        virtual ~AbstractAudioFormatIO() = default;
 
-#endif // TALCS_ASIOAUDIODRIVER_H
+        enum OpenModeFlag {
+            NotOpen = 0x00,
+            Read = 0x01,
+            Write = 0x02,
+        };
+
+        Q_DECLARE_FLAGS(OpenMode, OpenModeFlag)
+
+        virtual bool open(OpenMode mode) = 0;
+        virtual bool open(OpenMode mode, int format, int channels, double sampleRate) = 0;
+        virtual OpenMode openMode() const = 0;
+        virtual void close() = 0;
+
+        virtual int channelCount() const = 0;
+        virtual double sampleRate() const = 0;
+        virtual qint64 length() const = 0;
+
+        virtual qint64 read(float *ptr, qint64 length) = 0;
+        virtual qint64 write(const float *ptr, qint64 length) = 0;
+        virtual qint64 seek(qint64 pos) = 0;
+        virtual qint64 pos() const = 0;
+    };
+
+} // talcs
+
+#endif //TALCS_ABSTRACTAUDIOFORMATIO_H

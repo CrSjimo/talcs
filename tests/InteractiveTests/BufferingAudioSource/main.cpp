@@ -41,6 +41,7 @@ int main(int argc, char **argv) {
     QApplication a(argc, argv);
     QFile f("C:\\CloudMusic\\07.恋染色.flac");
     AudioFormatIO io(&f);
+    f.open(QIODevice::ReadOnly);
     AudioFormatInputSource src(&io);
     BufferingAudioSource bufSrc(&src, 2, 114514);
     auto mgr = AudioDriverManager::createBuiltInDriverManager();

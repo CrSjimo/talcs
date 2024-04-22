@@ -100,6 +100,7 @@ int main(int argc, char **argv) {
             delete file;
         }
         file = new QFile(fileName);
+        file->open(QIODevice::ReadOnly);
         audioFormatIo = new AudioFormatIO(file);
         src = new AudioFormatInputSource(audioFormatIo);
         tpSrc.setSource(src);

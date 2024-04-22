@@ -50,8 +50,8 @@ namespace talcs {
     /**
      * Constructor.
      *
-     * Note that the stream must be closed, and it will cause undefined behavior to set one stream to multiple
-     * AudioFormatIO.
+     * The open mode of the QIODevice object should be properly set.
+     *
      * @param stream the QIODevice to access. This object will not take the ownership of the QIODevice object.
      * @see setStream()
      */
@@ -68,14 +68,13 @@ namespace talcs {
      * If the AudioFormatIO object is not close, it will be closed now.
      */
     AudioFormatIO::~AudioFormatIO() {
-        close();
+        AudioFormatIO::close();
     }
 
     /**
      * Dynamically sets the device.
      *
-     * Note that this function will neither change the open mode of the original QIODevice object, nor set the open
-     * mode of the original stream to the new stream.
+     * The open mode of the QIODevice object should be properly set.
      *
      * @see AudioFormatIO()
      */
@@ -133,26 +132,26 @@ namespace talcs {
         [](void *d) { return reinterpret_cast<AudioFormatIOPrivate *>(d)->sfVioTell(); }};
 
     /**
-     * Opens the device and initialize libsndfile with default format, number of channels and sample rate, usually
+     * Initialize libsndfile with default format, number of channels and sample rate, usually
      * used for reading.
      * @return true if successful
      */
-    bool AudioFormatIO::open(QIODevice::OpenMode openMode) {
+    bool AudioFormatIO::open(OpenMode openMode) {
         return open(openMode, 0, 0, 0);
     }
 
     /**
-     * Opens the device and initialize libsndfile with specified format, number of channels and sample rate.
+     * Initialize libsndfile with specified format, number of channels and sample rate.
      * @return true if successful
      */
-    bool AudioFormatIO::open(QIODevice::OpenMode openMode, int format, int channels, double sampleRate) {
+    bool AudioFormatIO::open(OpenMode openMode, int format, int channels, double sampleRate) {
         Q_D(AudioFormatIO);
         close();
         int sfOpenMode = 0;
-        if (openMode.testFlag(QIODevice::ReadOnly)) {
+        if (openMode.testFlag(Read)) {
             sfOpenMode |= SFM_READ;
         }
-        if (openMode.testFlag(QIODevice::WriteOnly) || openMode.testFlag(QIODevice::Append) || openMode.testFlag(QIODevice::Truncate)) {
+        if (openMode.testFlag(Write)) {
             sfOpenMode |= SFM_WRITE;
         }
         if (sfOpenMode == 0) {
@@ -165,10 +164,12 @@ namespace talcs {
             setErrorString("AudioFormatIO: Cannot open because stream is null.");
             return false;
         }
-        if (!d->stream->open(openMode)) {
-            setErrorString(d->stream->errorString());
+        if (!d->stream->openMode()) {
+            qWarning() << "AudioFormatIO: Cannot open because stream is not opened.";
+            setErrorString("AudioFormatIO: Cannot open because stream is not opened.");
             return false;
         }
+        d->stream->seek(0);
         d->sf.reset(new SndfileHandle(sfVio, d, sfOpenMode, format, channels, (int) sampleRate));
         if (!d->sf->rawHandle()) {
             setErrorString(d->sf->strError());
@@ -182,7 +183,7 @@ namespace talcs {
     /**
      * Gets the open mode of the stream.
      */
-    QIODevice::OpenMode AudioFormatIO::openMode() const {
+    AbstractAudioFormatIO::OpenMode AudioFormatIO::openMode() const {
         Q_D(const AudioFormatIO);
         return d->openMode;
     }
@@ -195,9 +196,7 @@ namespace talcs {
     void AudioFormatIO::close() {
         Q_D(AudioFormatIO);
         d->sf.reset();
-        if (d->stream)
-            d->stream->close();
-        d->openMode = QIODevice::NotOpen;
+        d->openMode = NotOpen;
         clearErrorString();
     }
 
@@ -586,8 +585,8 @@ namespace talcs {
     /**
      * Gets the position of the file pointer measured in samples.
      */
-    qint64 AudioFormatIO::pos() {
-        Q_D(AudioFormatIO);
+    qint64 AudioFormatIO::pos() const {
+        Q_D(const AudioFormatIO);
         TEST_IS_OPEN(0)
         return d->sf->seek(0, SF_SEEK_CUR);
     }
@@ -690,10 +689,10 @@ namespace talcs {
                 }
             }
             formatInfo.byteOrders.append(DefaultOrder);
-            sfinfo.format = formatInfo.majorFormat | formatInfo.subtypes[0].subtype | LittleEndian;
+            sfinfo.format = static_cast<int>(formatInfo.majorFormat) | static_cast<int>(formatInfo.subtypes[0].subtype) | LittleEndian;
             if (sf_format_check(&sfinfo))
                 formatInfo.byteOrders.append(LittleEndian);
-            sfinfo.format = formatInfo.majorFormat | formatInfo.subtypes[0].subtype | BigEndian;
+            sfinfo.format = static_cast<int>(formatInfo.majorFormat) | static_cast<int>(formatInfo.subtypes[0].subtype) | BigEndian;
             if (sf_format_check(&sfinfo))
                 formatInfo.byteOrders.append(BigEndian);
             if (formatInfo.byteOrders.size() == 3)

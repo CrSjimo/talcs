@@ -46,7 +46,8 @@ int main(int argc, char **argv) {
     QFile f(fileName);
     AudioFormatIO io(&f);
     AudioFormatInputSource src(&io);
-    io.open(QIODevice::ReadOnly);
+    f.open(QIODevice::ReadOnly);
+    io.open(AbstractAudioFormatIO::Read);
     auto sampleRate = io.sampleRate();
     src.open(4096, sampleRate);
 

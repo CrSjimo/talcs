@@ -34,7 +34,7 @@ namespace talcs {
     class AudioFormatInputSourcePrivate : public PositionableAudioSourcePrivate {
         Q_DECLARE_PUBLIC(AudioFormatInputSource);
     public:
-        AudioFormatIO *io = nullptr;
+        AbstractAudioFormatIO *io = nullptr;
         bool takeOwnership;
         double ratio = 0;
 

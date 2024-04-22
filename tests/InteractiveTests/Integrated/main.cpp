@@ -198,6 +198,7 @@ int main(int argc, char **argv) {
             auto audioFile = new QFile(audioFileNameJsonVal.toString());
             qDebug() << audioFileNameJsonVal.toString();
             srcFileList.append(audioFile);
+            audioFile->open(QIODevice::ReadOnly);
             srcIoList.append(new AudioFormatIO(audioFile));
         }
         int trkCnt = 0;
@@ -432,7 +433,8 @@ int main(int argc, char **argv) {
 
         QFile exportFile(exportFileName);
         AudioFormatIO exportIO(&exportFile);
-        exportIO.open(QFile::WriteOnly, AudioFormatIO::WAV | AudioFormatIO::PCM_24, 2, curSampleRate);
+        exportFile.open(QIODevice::WriteOnly);
+        exportIO.open(AbstractAudioFormatIO::Write, AudioFormatIO::WAV | AudioFormatIO::PCM_24, 2, curSampleRate);
 
         transportSrc.open(65536, curSampleRate);
         transportSrc.setPosition(0);

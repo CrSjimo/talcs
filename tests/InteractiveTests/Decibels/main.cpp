@@ -47,6 +47,7 @@ using namespace talcs;
 int main(int argc, char **argv) {
     QApplication a(argc, argv);
     QFile f(QFileDialog::getOpenFileName());
+    f.open(QIODevice::ReadOnly);
     AudioFormatIO audioFormatIo(&f);
     AudioFormatInputSource src(&audioFormatIo);
     TransportAudioSource tpSrc(&src);

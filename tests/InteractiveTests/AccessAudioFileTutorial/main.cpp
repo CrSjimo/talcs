@@ -79,6 +79,7 @@ void selectFile() {
     stopPlay();
     filenameLabel->setText(filename);
     inputFile->setFileName(filename);
+    inputFile->open(QIODevice::ReadOnly);
     tpSrc->setPosition(0);
 }
 
@@ -90,7 +91,8 @@ void exportAudio() {
 
     QFile exportFile(exportFileName);
     AudioFormatIO exportIO(&exportFile);
-    exportIO.open(QFile::WriteOnly, AudioFormatIO::WAV | AudioFormatIO::PCM_24, 2, 44100);
+    exportFile.open(QIODevice::WriteOnly);
+    exportIO.open(AbstractAudioFormatIO::Write, AudioFormatIO::WAV | AudioFormatIO::PCM_24, 2, 44100);
     tpSrc->open(4096, 44100);
     tpSrc->setPosition(0);
     tpSrc->play();

@@ -32,7 +32,7 @@ namespace talcs {
         AudioFormatIO *q_ptr;
         QPointer<QIODevice> stream;
         QScopedPointer<SndfileHandle> sf;
-        QIODevice::OpenMode openMode = QIODevice::NotOpen;
+        AbstractAudioFormatIO::OpenMode openMode = AbstractAudioFormatIO::NotOpen;
 
         double compressionLevel = 0.0;
 

@@ -180,6 +180,7 @@ void SimpleAudioApplicationWindow::openFile() {
     m_playPauseButton->setEnabled(false);
     m_transportSlider->setEnabled(false);
     m_audioFile->setFileName(m_fileDialog->selectedFiles()[0]);
+    m_audioFile->open(QIODevice::ReadOnly);
     if (!m_dev)
         return;
     if (!m_tpSrc->open(m_dev->bufferSize(), m_dev->sampleRate())) {
