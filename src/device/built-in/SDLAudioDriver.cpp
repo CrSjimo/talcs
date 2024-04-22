@@ -17,14 +17,14 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#include "SDLAudioDriver.h"
 #include "SDLAudioDriver_p.h"
-#include "SDLAudioDevice.h"
 
 #include <QDebug>
 #include <QTimer>
 
 #include <SDL2/SDL.h>
+
+#include "SDLAudioDevice_p.h"
 
 namespace talcs {
 

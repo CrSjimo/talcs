@@ -17,7 +17,6 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#include "ASIOAudioDevice.h"
 #include "ASIOAudioDevice_p.h"
 
 #include <QDebug>
@@ -26,7 +25,7 @@
 #include <TalcsCore/AudioSampleConverter.h>
 #include <TalcsCore/AudioSource.h>
 
-#include "ASIOAudioDriver.h"
+#include "ASIOAudioDriver_p.h"
 
 namespace talcs {
 
@@ -73,7 +72,8 @@ namespace talcs {
                 break;
             default:
                 // unsupported sample type
-                Q_ASSERT(false);
+                // we just do nothing
+                void(0);
         }
     }
 

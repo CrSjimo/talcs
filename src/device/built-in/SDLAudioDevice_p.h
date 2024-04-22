@@ -22,10 +22,31 @@
 
 #include <SDL2/SDL.h>
 
-#include "../AudioDevice_p.h"
-#include "SDLAudioDevice.h"
+#include <TalcsDevice/private/AudioDevice_p.h>
 
 namespace talcs {
+
+    class SDLAudioDevicePrivate;
+    class SDLAudioDriver;
+
+    class SDLAudioDevice : public AudioDevice {
+        Q_OBJECT
+        Q_DECLARE_PRIVATE(SDLAudioDevice)
+    public:
+        ~SDLAudioDevice() override;
+        bool start(AudioDeviceCallback *audioDeviceCallback) override;
+        void stop() override;
+        bool open(qint64 bufferSize, double sampleRate) override;
+        void close() override;
+        void lock() override;
+        void unlock() override;
+        bool openControlPanel() override;
+
+    protected:
+        friend class SDLAudioDriver;
+        SDLAudioDevice(const QString &name, SDLAudioDriver *driver);
+    };
+
     class SDLAudioDevicePrivate : public AudioDevicePrivate {
         Q_DECLARE_PUBLIC(SDLAudioDevice)
     public:

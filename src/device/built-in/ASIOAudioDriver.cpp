@@ -17,12 +17,12 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#include "ASIOAudioDriver.h"
 #include "ASIOAudioDriver_p.h"
-#include "ASIOAudioDevice.h"
 
 #include <QDebug>
 #include <QFileInfo>
+
+#include "ASIOAudioDevice_p.h"
 
 namespace talcs {
 

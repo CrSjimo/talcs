@@ -20,12 +20,27 @@
 #ifndef TALCS_ASIOAUDIODRIVER_P_H
 #define TALCS_ASIOAUDIODRIVER_P_H
 
-#include "ASIOAudioDriver.h"
-#include "../AudioDriver_p.h"
+#include <TalcsDevice/private/AudioDriver_p.h>
 
 #include <qt_windows.h>
 
 namespace talcs {
+
+    class ASIOAudioDriverPrivate;
+
+    class ASIOAudioDriver : public AudioDriver {
+        Q_OBJECT
+        Q_DECLARE_PRIVATE(ASIOAudioDriver)
+    public:
+        ASIOAudioDriver(QObject *parent = nullptr);
+        ~ASIOAudioDriver() override;
+        bool initialize() override;
+        void finalize() override;
+        QStringList devices() const override;
+        QString defaultDevice() const override;
+        AudioDevice *createDevice(const QString &name) override;
+    };
+
     static const int MAXPATHLEN = 512;
     static const int MAXDRVNAMELEN = 128;
 

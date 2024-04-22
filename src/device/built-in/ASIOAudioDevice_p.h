@@ -23,11 +23,34 @@
 #include <QMutex>
 
 #include <TalcsCore/AudioBuffer.h>
-#include <TalcsDevice/ASIOAudioDevice.h>
 #include <TalcsDevice/private/AudioDevice_p.h>
 #include <combaseapi.h>
 #include <iasiodrv.h>
 #include <qt_windows.h>
+
+
+namespace talcs {
+    class ASIOAudioDevicePrivate;
+    class ASIOAudioDriver;
+
+    class ASIOAudioDevice : public AudioDevice {
+        Q_OBJECT
+        Q_DECLARE_PRIVATE(ASIOAudioDevice)
+    public:
+        ~ASIOAudioDevice() override;
+        bool start(AudioDeviceCallback *audioDeviceCallback) override;
+        void stop() override;
+        bool open(qint64 bufferSize, double sampleRate) override;
+        void close() override;
+        void lock() override;
+        void unlock() override;
+        bool openControlPanel() override;
+
+    protected:
+        friend class ASIOAudioDriver;
+        ASIOAudioDevice(const QString &name, IASIO *iasio, ASIOAudioDriver *driver);
+    };
+}
 
 namespace talcs {
     class ASIOAudioDevicePrivate : public AudioDevicePrivate {

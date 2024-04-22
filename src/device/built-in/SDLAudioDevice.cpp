@@ -17,7 +17,6 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#include "SDLAudioDevice.h"
 #include "SDLAudioDevice_p.h"
 
 #include <cstring>
@@ -25,10 +24,11 @@
 #include <QDebug>
 
 #include <SDL2/SDL.h>
+
 #include <TalcsCore/AudioSource.h>
 #include <TalcsCore/InterleavedAudioDataWrapper.h>
 
-#include "SDLAudioDriver.h"
+#include "SDLAudioDriver_p.h"
 
 namespace talcs {
     static const QList<double> COMMON_SAMPLE_RATES = {8000,   11025,  12000,  16000,  22050,  24000,

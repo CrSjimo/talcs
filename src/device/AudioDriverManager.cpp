@@ -23,11 +23,11 @@
 #include <QDebug>
 
 #ifdef TALCS_USE_FEATURE_SDL
-#    include "built-in/SDLAudioDriver.h"
+#    include <TalcsDevice/private/SDLAudioDriver_p.h>
 #endif
 
 #ifdef TALCS_USE_FEATURE_ASIO
-#    include "built-in/ASIOAudioDriver.h"
+#    include <TalcsDevice/private/ASIOAudioDriver_p.h>
 #endif
 
 namespace talcs {
