@@ -34,7 +34,7 @@ namespace talcs {
     class TALCSJUCEADAPTER_EXPORT JuceAudioSource : public AudioSource {
         Q_DECLARE_PRIVATE(JuceAudioSource)
     public:
-        JuceAudioSource(juce::AudioSource *src);
+        explicit JuceAudioSource(juce::AudioSource *src);
         ~JuceAudioSource() override;
 
         bool open(qint64 bufferSize, double sampleRate) override;

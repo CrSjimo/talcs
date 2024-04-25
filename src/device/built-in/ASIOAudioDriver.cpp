@@ -82,7 +82,7 @@ namespace talcs {
             hKeyInproc.reset(hKey_);
             DWORD valueType = REG_SZ;
             DWORD valueSize = 512;
-            if (::RegQueryValueExA(hKeyInproc.get(), NULL, NULL, &valueType, (LPBYTE) buf, &valueSize) != ERROR_SUCCESS)
+            if (::RegQueryValueExA(hKeyInproc.get(), nullptr, nullptr, &valueType, (LPBYTE) buf, &valueSize) != ERROR_SUCCESS)
                 return false;
 
             // Then check the existence of DLL file
@@ -110,7 +110,7 @@ namespace talcs {
         // Get CLSID
         valueType = REG_SZ;
         valueSize = 256;
-        if (::RegQueryValueExA(hKeySub.get(), "clsid", NULL, &valueType, (LPBYTE) buf, &valueSize) != ERROR_SUCCESS)
+        if (::RegQueryValueExA(hKeySub.get(), "clsid", nullptr, &valueType, (LPBYTE) buf, &valueSize) != ERROR_SUCCESS)
             return;
         if (!checkDriverCOMClass(buf))
             return;
@@ -121,7 +121,7 @@ namespace talcs {
         // Get driver name
         valueType = REG_SZ;
         valueSize = 256;
-        if (::RegQueryValueExA(hKeySub.get(), "description", NULL, &valueType, (LPBYTE) buf, &valueSize) == ERROR_SUCCESS) {
+        if (::RegQueryValueExA(hKeySub.get(), "description", nullptr, &valueType, (LPBYTE) buf, &valueSize) == ERROR_SUCCESS) {
             driverName = buf;
         } else {
             driverName = keyName;
@@ -147,7 +147,7 @@ namespace talcs {
             d->createDriverSpec(hKeyEnum.get(), keyname);
         }
         if (!d->asioDriverSpecs.isEmpty())
-            ::CoInitialize(NULL);
+            ::CoInitialize(nullptr);
         return AudioDriver::initialize();
     }
     void ASIOAudioDriver::finalize() {
@@ -172,7 +172,7 @@ namespace talcs {
             if (spec.driverName != name)
                 continue;
             void *iasio;
-            if (::CoCreateInstance(spec.clsid, NULL, CLSCTX_INPROC_SERVER, spec.clsid, &iasio) != S_OK)
+            if (::CoCreateInstance(spec.clsid, nullptr, CLSCTX_INPROC_SERVER, spec.clsid, &iasio) != S_OK)
                 return nullptr;
             return new ASIOAudioDevice(name, (IASIO *) iasio, this);
         }

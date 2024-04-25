@@ -21,7 +21,6 @@
 #include "AudioFormatIO_p.h"
 
 #include <QDebug>
-#include <QFile>
 #include <QIODevice>
 
 #include <sndfile.hh>

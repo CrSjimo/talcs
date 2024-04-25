@@ -34,7 +34,7 @@ namespace talcs {
     class TALCSJUCEADAPTER_EXPORT JucePositionableAudioSource : public PositionableAudioSource {
         Q_DECLARE_PRIVATE(JucePositionableAudioSource)
     public:
-        JucePositionableAudioSource(juce::PositionableAudioSource *src);
+        explicit JucePositionableAudioSource(juce::PositionableAudioSource *src);
         ~JucePositionableAudioSource() override;
 
         bool open(qint64 bufferSize, double sampleRate) override;

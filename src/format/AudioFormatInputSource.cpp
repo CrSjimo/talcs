@@ -30,11 +30,11 @@
 namespace talcs {
 
     static inline qint64 outPositionToIn(qint64 position, double ratio) {
-        return qRound64(position / ratio);
+        return qRound64(static_cast<double>(position) / ratio);
     }
 
     static inline qint64 inPositionToOut(qint64 position, double ratio) {
-        return qRound64(position * ratio);
+        return qRound64(static_cast<double>(position) * ratio);
     }
 
     /**
@@ -73,7 +73,7 @@ namespace talcs {
 
     void AudioFormatInputSourcePrivate::AudioFormatInputResampler::read(const AudioSourceReadData &readData) {
         d->io->seek(d->inPosition);
-        tmpBuf.resize(readData.length * channelCount());
+        tmpBuf.resize(static_cast<int>(readData.length * channelCount()));
         auto inLength = d->io->read(tmpBuf.data(), readData.length);
         InterleavedAudioDataWrapper wrapper(tmpBuf.data(), channelCount(), readData.length);
         for (int i = 0; i < channelCount(); i++) {

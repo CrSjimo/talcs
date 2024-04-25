@@ -183,6 +183,7 @@ namespace talcs {
 
     template<>
     constexpr ASIOCallbacks getASIOCallbacks<-1>(int deviceIndex) {
+        Q_UNUSED(deviceIndex)
         return {};
     }
 
@@ -305,7 +306,7 @@ namespace talcs {
             }
             d->channelInfoList.append(channelInfo);
         }
-        if (d->iasio->createBuffers(d->bufferInfoList.data(), activeChannelCount(), bufferSize, &d->callbacks) != ASE_OK) {
+        if (d->iasio->createBuffers(d->bufferInfoList.data(), activeChannelCount(), static_cast<long>(bufferSize), &d->callbacks) != ASE_OK) {
             d->setIASIOError();
             return false;
         }

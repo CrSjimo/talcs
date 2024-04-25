@@ -36,7 +36,7 @@ namespace talcs {
 
     AudioDevice::~AudioDevice() = default;
 
-    AudioDevice::AudioDevice(AudioDevicePrivate &d, QObject *parent) : d_ptr(&d) {
+    AudioDevice::AudioDevice(AudioDevicePrivate &d, QObject *parent) : QObject(parent), d_ptr(&d) {
         d.q_ptr = this;
     }
 

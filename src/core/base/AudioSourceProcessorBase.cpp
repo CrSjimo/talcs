@@ -40,7 +40,7 @@ namespace talcs {
 
     AudioSourceProcessorBase::AudioSourceProcessorBase(AudioSourceProcessorBasePrivate &d, AudioSource *src,
                                                        qint64 length, QObject *parent)
-        : d_ptr(&d) {
+        : QObject(parent), d_ptr(&d) {
         d.q_ptr = this;
         d.src = src;
         d.length = length;

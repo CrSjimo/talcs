@@ -79,7 +79,7 @@ namespace talcs {
      * @return the device name, or null string if this driver does not support specifying default device
      */
     QString AudioDriver::defaultDevice() const {
-        return QString();
+        return {};
     }
 
     /**

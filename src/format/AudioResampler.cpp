@@ -37,7 +37,7 @@ namespace talcs {
     AudioResampler::AudioResampler(double ratio, qint64 bufferSize) : d(new AudioResamplerPrivate) {
         Q_ASSERT(ratio > 0.0);
         d->ratio = ratio;
-        d->bufferSize = bufferSize;
+        d->bufferSize = static_cast<int>(bufferSize);
         if (qFuzzyCompare(ratio, 1.0)) {
             d->copyOnly = true;
             return;

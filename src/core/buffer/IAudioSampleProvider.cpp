@@ -145,11 +145,11 @@ namespace talcs {
                 auto sample = constSampleAt(channel, startPos + i);
                 s += sample * sample;
             }
-            return std::sqrt(s / length);
+            return std::sqrt(s / static_cast<float>(length));
         } else {
             auto p = readPointerTo(channel, startPos);
             return std::sqrt(
-                std::accumulate(p, p + length, 0.0f, [](float sum, float num) { return sum + num * num; }) / length);
+                std::accumulate(p, p + length, 0.0f, [](float sum, float num) { return sum + num * num; }) / static_cast<float>(length));
         }
     }
 

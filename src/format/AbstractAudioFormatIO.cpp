@@ -17,10 +17,6 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-//
-// Created by Crs_1 on 2024/4/22.
-//
-
 #include "AbstractAudioFormatIO.h"
 
 namespace talcs {
