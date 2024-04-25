@@ -19,7 +19,6 @@
 
 #include "PositionableMixerAudioSource.h"
 #include "PositionableMixerAudioSource_p.h"
-#include "buffer/AudioBuffer.h"
 
 namespace talcs {
 
@@ -70,7 +69,7 @@ namespace talcs {
         }
     }
 
-    qint64 PositionableMixerAudioSource::read(const AudioSourceReadData &readData) {
+    qint64 PositionableMixerAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(PositionableMixerAudioSource);
         qint64 readLength;
         auto channelCount = readData.buffer->channelCount();

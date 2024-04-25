@@ -39,7 +39,9 @@ namespace talcs {
 
         bool open(qint64 bufferSize, double sampleRate) override;
         void close() override;
-        qint64 read(const AudioSourceReadData &readData) override;
+
+    protected:
+        qint64 processReading(const AudioSourceReadData &readData) override;
     };
 
 } // talcs

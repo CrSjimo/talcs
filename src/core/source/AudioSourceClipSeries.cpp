@@ -52,7 +52,7 @@ namespace talcs {
     AudioSourceClipSeries::~AudioSourceClipSeries() {
         AudioSourceClipSeries::close();
     }
-    qint64 AudioSourceClipSeries::read(const AudioSourceReadData &readData) {
+    qint64 AudioSourceClipSeries::processReading(const AudioSourceReadData &readData) {
         Q_D(AudioSourceClipSeries);
         AudioSourceClipSeriesPrivate::ClipInterval readDataInterval(0, d->position, readData.length);
         for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
@@ -95,7 +95,7 @@ namespace talcs {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         if (d->openAllClips(bufferSize, sampleRate))
-            return AudioStreamBase::open(bufferSize, sampleRate);
+            return AudioSource::open(bufferSize, sampleRate);
         return false;
     }
 
@@ -108,7 +108,7 @@ namespace talcs {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         d->closeAllClips();
-        AudioStreamBase::close();
+        AudioSource::close();
     }
 
     AudioSourceClipSeries::ClipView

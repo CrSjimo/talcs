@@ -40,7 +40,6 @@ namespace talcs {
 
         ~BufferingAudioSource() override;
 
-        qint64 read(const AudioSourceReadData &readData) override;
         qint64 length() const override;
         void setNextReadPosition(qint64 pos) override;
 
@@ -64,6 +63,7 @@ namespace talcs {
 
     protected:
         explicit BufferingAudioSource(BufferingAudioSourcePrivate &d);
+        qint64 processReading(const AudioSourceReadData &readData) override;
     };
 
 } // talcs

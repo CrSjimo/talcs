@@ -40,7 +40,7 @@ namespace talcs {
         AudioStreamBase::close();
     }
 
-    qint64 JuceAudioSource::read(const AudioSourceReadData &readData) {
+    qint64 JuceAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(JuceAudioSource);
         if (readData.length > d->buf.getNumSamples() || readData.buffer->channelCount() > d->buf.getNumChannels()) {
             d->buf.setSize(readData.buffer->channelCount(), readData.length);

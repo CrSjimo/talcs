@@ -19,7 +19,6 @@
 
 #include "MemoryAudioSource.h"
 #include "MemoryAudioSource_p.h"
-#include "buffer/IAudioSampleContainer.h"
 
 namespace talcs {
 
@@ -76,7 +75,7 @@ namespace talcs {
         return oldBuffer;
     }
 
-    qint64 MemoryAudioSource::read(const AudioSourceReadData &readData) {
+    qint64 MemoryAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(MemoryAudioSource);
         QMutexLocker locker(&d->mutex);
         auto bufferLength = length();

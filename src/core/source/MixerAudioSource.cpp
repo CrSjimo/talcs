@@ -67,7 +67,7 @@ namespace talcs {
         }
     }
 
-    qint64 MixerAudioSource::read(const AudioSourceReadData &readData) {
+    qint64 MixerAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(MixerAudioSource);
         qint64 readLength = readData.length;
         auto channelCount = readData.buffer->channelCount();

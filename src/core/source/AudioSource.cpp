@@ -73,8 +73,24 @@ namespace talcs {
     }
     AudioSource::~AudioSource() = default;
 
+    bool AudioSource::open(qint64 bufferSize, double sampleRate) {
+        Q_D(AudioSource);
+        QMutexLocker locker(&d->filterMutex);
+        if (d->filter.loadRelaxed() && !d->filter.loadRelaxed()->open(bufferSize, sampleRate)) {
+            return false;
+        }
+        return AudioStreamBase::open(bufferSize, sampleRate);
+    }
+
+    void AudioSource::close() {
+        Q_D(AudioSource);
+        QMutexLocker locker(&d->filterMutex);
+        if (d->filter.loadRelaxed())
+            d->filter.loadRelaxed()->close();
+        AudioStreamBase::close();
+    }
+
     /**
-     * @fn qint64 AudioSource::read(const AudioSourceReadData &readData)
      * Reads audio data from the source.
      *
      * See @ref doc/reading_from_a_source.md "Reading from a source" for detailed descriptions.
@@ -82,5 +98,28 @@ namespace talcs {
      * @param readData see docs in class AudioSourceReadData
      * @returns the actual length of audio read measured in samples
      */
-     
+    qint64 AudioSource::read(const AudioSourceReadData &readData) {
+        Q_D(AudioSource);
+        qint64 l = processReading(readData);
+        if (!d->filter) return l;
+        QMutexLocker locker(&d->filterMutex);
+        if (d->filter.loadRelaxed()) {
+            d->filter.loadRelaxed()->read({readData.buffer, readData.startPos, l, readData.silentFlags});
+        }
+        return l;
+    }
+
+    void AudioSource::setReadingFilter(AudioSource *filter) {
+        Q_D(AudioSource);
+        QMutexLocker locker(&d->filterMutex);
+        d->filter = filter;
+        if (isOpen())
+            filter->open(bufferSize(), sampleRate());
+    }
+
+    AudioSource *AudioSource::readingFilter() const {
+        Q_D(const AudioSource);
+        return d->filter;
+    }
+
 }

@@ -60,6 +60,7 @@ private slots:
         QCOMPARE(src.sampleRate(), 44100);
         mixer.close();
         QVERIFY(!src.isOpen());
+        mixer.removeAllSources();
     }
 
     void openAndCloseMixer_PositionableMixerAudioSource() {
@@ -81,6 +82,7 @@ private slots:
         QCOMPARE(src.sampleRate(), 44100);
         mixer.close();
         QVERIFY(!src.isOpen());
+        mixer.removeAllSources();
     }
 
     void syncPosition() {
@@ -94,6 +96,7 @@ private slots:
         src.open(1024, 44100);
         src.setNextReadPosition(19260817);
         QCOMPARE(src.nextReadPosition(), 19260817);
+        mixer.removeAllSources();
     }
 
     void readingRange_MixerAudioSource() {
@@ -115,6 +118,7 @@ private slots:
         mixer.removeSource(src + 2);
         src[1].setNextReadPosition(1024);
         QCOMPARE(mixer.read({&tmpBuf, 0, 1536}), 1024);
+        mixer.removeAllSources();
     }
 
     void readingRange_PositionableMixerAudioSource() {
@@ -132,6 +136,7 @@ private slots:
         QCOMPARE(src[0].nextReadPosition(), 2048);
         QCOMPARE(src[1].nextReadPosition(), 2048);
         QCOMPARE(src[2].nextReadPosition(), 2048);
+        mixer.removeAllSources();
     }
 
     void mixing() {
@@ -152,6 +157,7 @@ private slots:
             QCOMPARE(tmpBuf.data(i)[0], 30 * i + 3);
         }
         QCOMPARE(tmpBuf.data(3)[0], 0);
+        mixer.removeAllSources();
     }
 
     void channelRouting() {
@@ -180,6 +186,7 @@ private slots:
         mixer.setNextReadPosition(0);
         mixer.read(&tmpBuf);
         QCOMPARE(tmpBuf.data(2)[0], 2);
+        mixer.removeAllSources();
     }
 
     void addingAndRemovingSources() {
@@ -228,6 +235,7 @@ private slots:
 
         QCOMPARE(mixer.findSource(nullptr).data(), nullptr);
         QCOMPARE(mixer.findSource(src + 1), itList[1]);
+        mixer.removeAllSources();
     }
 
     void soloAndMuteTest() {
@@ -265,6 +273,7 @@ private slots:
         mixer.read(&tmpBuf);
         QCOMPARE(tmpBuf.data(0)[0], 21);
         QCOMPARE(tmpBuf.data(1)[0], 0);
+        mixer.removeAllSources();
     }
 
     void gainAndPanTest() {
@@ -293,6 +302,7 @@ private slots:
         mixer.read(&tmpBuf);
         QCOMPARE(tmpBuf.data(0)[0], 33);
         QCOMPARE(tmpBuf.data(1)[0], 66);
+        mixer.removeAllSources();
     }
 
     void metering() {
@@ -313,6 +323,7 @@ private slots:
         QCOMPARE(vec[0], 3);
         QCOMPARE(vec[1], 33);
         QCOMPARE(vec[2], 0);
+        mixer.removeAllSources();
     }
 
 };

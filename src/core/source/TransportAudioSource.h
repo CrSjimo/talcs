@@ -39,7 +39,6 @@ namespace talcs {
         explicit TransportAudioSource(QObject *parent = nullptr);
         explicit TransportAudioSource(PositionableAudioSource *src, bool takeOwnership = false, QObject *parent = nullptr);
         ~TransportAudioSource() override;
-        qint64 read(const AudioSourceReadData &readData) override;
         bool open(qint64 bufferSize, double sampleRate) override;
         void close() override;
 
@@ -80,6 +79,7 @@ namespace talcs {
 
     protected:
         TransportAudioSource(TransportAudioSourcePrivate &d, QObject *parent);
+        qint64 processReading(const AudioSourceReadData &readData) override;
     };
 
     class TransportAudioSourceStateSaverPrivate;

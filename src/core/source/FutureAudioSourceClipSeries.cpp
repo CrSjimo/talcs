@@ -117,7 +117,7 @@ namespace talcs {
         FutureAudioSourceClipSeries::close();
     }
 
-    qint64 FutureAudioSourceClipSeries::read(const AudioSourceReadData &readData) {
+    qint64 FutureAudioSourceClipSeries::processReading(const AudioSourceReadData &readData) {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         FutureAudioSourceClipSeriesPrivate::ClipInterval readDataInterval(0, d->position, readData.length);
@@ -163,7 +163,7 @@ namespace talcs {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         if (d->openAllClips(bufferSize, sampleRate))
-            return AudioStreamBase::open(bufferSize, sampleRate);
+            return AudioSource::open(bufferSize, sampleRate);
         return false;
     }
 
@@ -171,7 +171,7 @@ namespace talcs {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         d->closeAllClips();
-        AudioStreamBase::close();
+        AudioSource::close();
     }
 
     FutureAudioSourceClipSeries::ClipView

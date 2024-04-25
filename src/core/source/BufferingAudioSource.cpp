@@ -71,7 +71,7 @@ namespace talcs {
         BufferingAudioSource::close();
     }
 
-    qint64 BufferingAudioSource::read(const AudioSourceReadData &readData) {
+    qint64 BufferingAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(BufferingAudioSource);
         QMutexLocker locker(&d->mutex);
         Q_ASSERT(isOpen());
@@ -141,13 +141,14 @@ namespace talcs {
             if (d->autoBuffering)
                 d->commitBufferingTask(false);
         }
-        return AudioStreamBase::open(bufferSize, sampleRate);
+        return AudioSource::open(bufferSize, sampleRate);
     }
 
     void BufferingAudioSource::close() {
         Q_D(BufferingAudioSource);
         QMutexLocker locker(&d->mutex);
         flush();
+        AudioSource::close();
     }
 
     void BufferingAudioSource::setReadAheadSize(qint64 size) {

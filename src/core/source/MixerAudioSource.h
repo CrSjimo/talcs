@@ -37,7 +37,6 @@ namespace talcs {
         ~MixerAudioSource() override;
 
         bool open(qint64 bufferSize, double sampleRate) override;
-        qint64 read(const AudioSourceReadData &readData) override;
         void close() override;
 
         bool addSource(AudioSource *src, bool takeOwnership = false) override;
@@ -83,6 +82,7 @@ namespace talcs {
 
     protected:
         explicit MixerAudioSource(MixerAudioSourcePrivate &d, QObject *parent);
+        qint64 processReading(const AudioSourceReadData &readData) override;
     };
 }
 

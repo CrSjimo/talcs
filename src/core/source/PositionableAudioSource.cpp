@@ -59,11 +59,12 @@ namespace talcs {
     }
 
     PositionableAudioSourceStateSaver::PositionableAudioSourceStateSaver(PositionableAudioSource *src)
-        : d(new PositionableAudioSourceStateSaverPrivate{src, src->nextReadPosition()}) {
+        : d(new PositionableAudioSourceStateSaverPrivate{src, src ? src->nextReadPosition() : 0}) {
     }
 
     PositionableAudioSourceStateSaver::~PositionableAudioSourceStateSaver() {
-        d->src->setNextReadPosition(d->position);
+        if (d->src)
+            d->src->setNextReadPosition(d->position);
     }
     
 }

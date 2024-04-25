@@ -43,11 +43,18 @@ namespace talcs {
     public:
         AudioSource();
         virtual ~AudioSource();
-        virtual qint64 read(const AudioSourceReadData &readData) = 0;
+        bool open(qint64 bufferSize, double sampleRate) override;
+        void close() override;
+        qint64 read(const AudioSourceReadData &readData);
+
+        void setReadingFilter(AudioSource *filter);
+        AudioSource *readingFilter() const;
 
     protected:
         explicit AudioSource(AudioSourcePrivate &d);
         QScopedPointer<AudioSourcePrivate> d_ptr;
+
+        virtual qint64 processReading(const AudioSourceReadData &readData) = 0;
     };
     
 }

@@ -34,7 +34,6 @@ namespace talcs {
     public:
         AudioSourceClipSeries();
         ~AudioSourceClipSeries() override;
-        qint64 read(const AudioSourceReadData &readData) override;
         qint64 length() const override;
         qint64 nextReadPosition() const override;
         void setNextReadPosition(qint64 pos) override;
@@ -54,6 +53,7 @@ namespace talcs {
 
     protected:
         explicit AudioSourceClipSeries(AudioSourceClipSeriesPrivate &d);
+        qint64 processReading(const AudioSourceReadData &readData) override;
     };
 
 }

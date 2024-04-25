@@ -56,7 +56,7 @@ namespace talcs {
 
     }
 
-    qint64 MidiSineWaveSynthesizer::read(const AudioSourceReadData &readData) {
+    qint64 MidiSineWaveSynthesizer::processReading(const AudioSourceReadData &readData) {
         QMutexLocker locker(&d->mutex);
         static const double PI = 3.14159265358979323846;
         if (d->note == -1) {

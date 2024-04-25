@@ -73,7 +73,7 @@ namespace talcs {
         return x >= l && x < r;
     }
 
-    qint64 TransportAudioSource::read(const AudioSourceReadData &readData) {
+    qint64 TransportAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(TransportAudioSource);
         if (d->position == d->loopingStart && d->position == d->loopingEnd)
             return 0;
@@ -130,7 +130,7 @@ namespace talcs {
         if (d->src && !d->src->open(bufferSize, sampleRate)) {
             return false;
         }
-        return AudioStreamBase::open(bufferSize, sampleRate);
+        return AudioSource::open(bufferSize, sampleRate);
     }
 
     /**
@@ -143,7 +143,7 @@ namespace talcs {
         if (d->src)
             d->src->close();
         d->playbackStatus = Paused;
-        AudioStreamBase::close();
+        AudioSource::close();
     }
 
     /**
@@ -315,12 +315,14 @@ namespace talcs {
         emit q->positionAboutToChange(pos);
     }
 
-    TransportAudioSourceStateSaver::TransportAudioSourceStateSaver(TransportAudioSource *src): d(new TransportAudioSourceStateSaverPrivate{src, src->position(), src->loopingRange()}) {
+    TransportAudioSourceStateSaver::TransportAudioSourceStateSaver(TransportAudioSource *src): d(new TransportAudioSourceStateSaverPrivate{src, src ? src->position() : 0, src ? src->loopingRange() : QPair<qint64, qint64>()}) {
     }
 
     TransportAudioSourceStateSaver::~TransportAudioSourceStateSaver() {
-        d->src->setPosition(d->position);
-        d->src->setLoopingRange(d->loopingRange.first, d->loopingRange.second);
+        if (d->src) {
+            d->src->setPosition(d->position);
+            d->src->setLoopingRange(d->loopingRange.first, d->loopingRange.second);
+        }
     }
     
 }

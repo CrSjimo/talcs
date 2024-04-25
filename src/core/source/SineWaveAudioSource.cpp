@@ -53,7 +53,7 @@ namespace talcs {
         return AudioSource::open(bufferSize, sampleRate);
     }
 
-    qint64 SineWaveAudioSource::read(const AudioSourceReadData &readData) {
+    qint64 SineWaveAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(SineWaveAudioSource);
         QMutexLocker locker(&d->mutex);
         static const double PI = 3.14159265358979323846;
@@ -66,7 +66,7 @@ namespace talcs {
         }
         if (readData.silentFlags != -1) {
             for (qint64 i = 0; i < readData.length; i++) {
-                float sample = sin(2 * PI * d->freq(pos + i) / sr);
+                auto sample = static_cast<float>(std::sin(2 * PI * d->freq(pos + i) / sr));
                 for (int ch = 0; ch < channelCount; ch++) {
                     if ((1 << ch) & readData.silentFlags)
                         continue;
@@ -88,7 +88,7 @@ namespace talcs {
      * @see SineWaveAudioSource(double)
      */
     void SineWaveAudioSource::setFrequency(double frequency) {
-        setFrequency([frequency](qint64 pos) { return frequency * pos; });
+        setFrequency([frequency](qint64 pos) { return frequency * static_cast<double>(pos); });
     }
 
     /**

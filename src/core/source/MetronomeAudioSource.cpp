@@ -78,7 +78,7 @@ namespace talcs {
         if (d->minorBeatSource)
             if (!d->minorBeatSource->open(bufferSize, sampleRate))
                 return false;
-        return AudioStreamBase::open(bufferSize, sampleRate);
+        return AudioSource::open(bufferSize, sampleRate);
     }
 
     void MetronomeAudioSource::close() {
@@ -88,10 +88,10 @@ namespace talcs {
             d->majorBeatSource->close();
         if (d->minorBeatSource)
             d->minorBeatSource->close();
-        AudioStreamBase::close();
+        AudioSource::close();
     }
 
-    qint64 MetronomeAudioSource::read(const AudioSourceReadData &readData) {
+    qint64 MetronomeAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(MetronomeAudioSource);
         QMutexLocker locker(&d->mutex);
         if (!d->detector) {
@@ -230,22 +230,22 @@ namespace talcs {
     static const double FACTOR = 3.0 * std::sqrt(3.0) / 8.0;
 
     static float generateMajor(qint64 i, double sampleRate) {
-        return FACTOR * (1 - i / 0.1 / sampleRate) * (std::sin(2.0 * PI * 1200.0 * i / sampleRate) + 0.25 * std::sin(2.0 * PI * 3600 * i / sampleRate));
+        return static_cast<float>(FACTOR * (1 - static_cast<double>(i) / 0.1 / sampleRate) * (std::sin(2.0 * PI * 1200.0 * static_cast<double>(i) / sampleRate) + 0.25 * std::sin(2.0 * PI * 3600 * static_cast<double>(i) / sampleRate)));
     }
 
     static float generateMinor(qint64 i, double sampleRate) {
-        return FACTOR * (1 - i / 0.1 / sampleRate) * std::sin(2.0 * PI * 800.0 * i / sampleRate);
+        return static_cast<float>(FACTOR * (1 - static_cast<double>(i) / 0.1 / sampleRate) * std::sin(2.0 * PI * 800.0 * static_cast<double>(i) / sampleRate));
     }
 
     class BuiltInBeatSource : public MemoryAudioSource {
     public:
         using Func = float(*)(qint64, double);
-        BuiltInBeatSource(Func f) : f(f), MemoryAudioSource(&buf) {
+        explicit BuiltInBeatSource(Func f) : f(f), MemoryAudioSource(&buf) {
         }
-        ~BuiltInBeatSource() = default;
+        ~BuiltInBeatSource() override = default;
 
         bool open(qint64 bufferSize, double sampleRate) override {
-            buf.resize(2, 0.1 * sampleRate);
+            buf.resize(2, static_cast<qint64>(0.1 * sampleRate));
             for (int i = 0; i < buf.sampleCount(); i++) {
                 buf.sampleAt(0, i) = buf.sampleAt(1, i) = f(i, sampleRate);
             }

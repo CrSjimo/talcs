@@ -133,7 +133,7 @@ namespace talcs {
         d->futureWatcher->setFuture(future);
     }
 
-    qint64 FutureAudioSource::read(const AudioSourceReadData &readData) {
+    qint64 FutureAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(FutureAudioSource);
         QMutexLocker locker(&d->mutex);
         if (d->src) {
@@ -170,17 +170,15 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         switch (status()) {
             case Running:
-                return d->callbacks.preloadingOpen(bufferSize, sampleRate) &&
-                       AudioStreamBase::open(bufferSize, sampleRate);
             case Paused:
                 return d->callbacks.preloadingOpen(bufferSize, sampleRate) &&
-                       AudioStreamBase::open(bufferSize, sampleRate);
+                       AudioSource::open(bufferSize, sampleRate);
             case Cancelled:
                 return false;
             case Ready:
                 if (d->src->open(bufferSize, sampleRate)) {
                     d->src->setNextReadPosition(d->position);
-                    return AudioStreamBase::open(bufferSize, sampleRate);
+                    return AudioSource::open(bufferSize, sampleRate);
                 }
                 return false;
             default:
@@ -193,8 +191,6 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         switch (status()) {
             case Running:
-                d->callbacks.preloadingClose();
-                break;
             case Paused:
                 d->callbacks.preloadingClose();
                 break;
@@ -204,7 +200,7 @@ namespace talcs {
                 source()->close();
                 break;
         }
-        AudioStreamBase::close();
+        talcs::AudioSource::close();
     }
 
     /**

@@ -31,16 +31,16 @@ namespace talcs {
     bool JucePositionableAudioSource::open(qint64 bufferSize, double sampleRate) {
         Q_D(JucePositionableAudioSource);
         d->src->prepareToPlay(bufferSize, sampleRate);
-        return AudioStreamBase::open(bufferSize, sampleRate);
+        return AudioSource::open(bufferSize, sampleRate);
     }
 
     void JucePositionableAudioSource::close() {
         Q_D(JucePositionableAudioSource);
         d->src->releaseResources();
-        AudioStreamBase::close();
+        AudioSource::close();
     }
 
-    qint64 JucePositionableAudioSource::read(const AudioSourceReadData &readData) {
+    qint64 JucePositionableAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(JucePositionableAudioSource);
         if (readData.length > d->buf.getNumSamples() || readData.buffer->channelCount() > d->buf.getNumChannels()) {
             d->buf.setSize(readData.buffer->channelCount(), readData.length);

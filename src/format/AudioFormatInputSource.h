@@ -34,7 +34,6 @@ namespace talcs {
         explicit AudioFormatInputSource(AbstractAudioFormatIO *audioFormatIo = nullptr, bool takeOwnership = false);
         ~AudioFormatInputSource() override;
 
-        qint64 read(const AudioSourceReadData &readData) override;
         qint64 length() const override;
         void setNextReadPosition(qint64 pos) override;
         bool open(qint64 bufferSize, double sampleRate) override;
@@ -50,6 +49,7 @@ namespace talcs {
 
     protected:
         explicit AudioFormatInputSource(AudioFormatInputSourcePrivate &d);
+        qint64 processReading(const AudioSourceReadData &readData) override;
     };
     
 }

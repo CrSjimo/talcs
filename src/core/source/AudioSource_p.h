@@ -20,6 +20,8 @@
 #ifndef TALCS_AUDIOSOURCE_P_H
 #define TALCS_AUDIOSOURCE_P_H
 
+#include <QMutex>
+
 #include <TalcsCore/AudioSource.h>
 
 namespace talcs {
@@ -28,6 +30,9 @@ namespace talcs {
         Q_DECLARE_PUBLIC(AudioSource)
     public:
         AudioSource *q_ptr;
+
+        QMutex filterMutex;
+        QAtomicPointer<AudioSource> filter = nullptr;
     };
     
 }

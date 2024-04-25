@@ -83,7 +83,7 @@ namespace talcs {
         d->inPosition += inLength;
     }
 
-    qint64 AudioFormatInputSource::read(const AudioSourceReadData &readData) {
+    qint64 AudioFormatInputSource::processReading(const AudioSourceReadData &readData) {
         Q_D(AudioFormatInputSource);
         QMutexLocker locker(&d->mutex);
         Q_ASSERT(d->io && isOpen());
@@ -126,7 +126,7 @@ namespace talcs {
             d->resampler.reset(new AudioFormatInputSourcePrivate::AudioFormatInputResampler(d->ratio, bufferSize,
                                                                                         d->io->channelCount(), d));
             d->io->seek(outPositionToIn(d->position, d->ratio));
-            return AudioStreamBase::open(bufferSize, sampleRate);
+            return AudioSource::open(bufferSize, sampleRate);
         } else
             return false;
     }
@@ -139,6 +139,7 @@ namespace talcs {
         d->io->close();
         d->ratio = 0;
         d->resampler.reset();
+        AudioSource::close();
     }
 
     /**
