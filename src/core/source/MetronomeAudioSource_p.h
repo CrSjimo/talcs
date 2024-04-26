@@ -23,10 +23,10 @@
 #include <QMutex>
 
 #include <TalcsCore/MetronomeAudioSource.h>
-#include <TalcsCore/private/PositionableAudioSource_p.h>
+#include <TalcsCore/private/AudioSource_p.h>
 
 namespace talcs {
-    class MetronomeAudioSourcePrivate : public PositionableAudioSourcePrivate{
+    class MetronomeAudioSourcePrivate : public AudioSourcePrivate {
         Q_DECLARE_PUBLIC(MetronomeAudioSource);
     public:
         QMutex mutex;
@@ -34,7 +34,7 @@ namespace talcs {
         bool takeOwnershipOfMajor = false;
         PositionableAudioSource *minorBeatSource = nullptr;
         bool takeOwnershipOfMinor = false;
-        MetronomeAudioSourceBeatDetector *detector = nullptr;
+        MetronomeAudioSourceDetector *detector = nullptr;
 
         bool tailIsMajor = false;
         bool tailIsMinor = false;

@@ -20,20 +20,26 @@
 #ifndef TALCS_METRONOMEAUDIOSOURCE_H
 #define TALCS_METRONOMEAUDIOSOURCE_H
 
-#include <TalcsCore/PositionableAudioSource.h>
+#include <TalcsCore/AudioSource.h>
 
 namespace talcs {
 
-    class MetronomeAudioSourceBeatDetector {
-    public:
-        virtual void initialize() = 0;
-        virtual void detectInterval(qint64 intervalStart, qint64 intervalLength) = 0;
-        virtual QPair<qint64, bool> nextBeat() = 0;
+    struct MetronomeAudioSourceDetectorMessage {
+        qint64 position;
+        bool isMajor;
     };
+
+    class MetronomeAudioSourceDetector {
+    public:
+        virtual void detectInterval(qint64 intervalLength) = 0;
+        virtual MetronomeAudioSourceDetectorMessage nextMessage() = 0;
+    };
+
+    class PositionableAudioSource;
 
     class MetronomeAudioSourcePrivate;
 
-    class TALCSCORE_EXPORT MetronomeAudioSource : public PositionableAudioSource {
+    class TALCSCORE_EXPORT MetronomeAudioSource : public AudioSource {
         Q_DECLARE_PRIVATE(MetronomeAudioSource)
     public:
         MetronomeAudioSource();
@@ -41,17 +47,14 @@ namespace talcs {
 
         bool open(qint64 bufferSize, double sampleRate) override;
         void close() override;
-        qint64 length() const override;
-        qint64 nextReadPosition() const override;
-        void setNextReadPosition(qint64 pos) override;
 
         bool setMajorBeatSource(PositionableAudioSource *src, bool takeOwnership = false);
         PositionableAudioSource *majorBeatSource() const;
         bool setMinorBeatSource(PositionableAudioSource *src, bool takeOwnership = false);
         PositionableAudioSource *minorBeatSource() const;
 
-        void setDetector(MetronomeAudioSourceBeatDetector *detector);
-        MetronomeAudioSourceBeatDetector *detector() const;
+        void setDetector(MetronomeAudioSourceDetector *detector);
+        MetronomeAudioSourceDetector *detector() const;
 
         static PositionableAudioSource *builtInMajorBeatSource();
         static PositionableAudioSource *builtInMinorBeatSource();

@@ -22,6 +22,7 @@
 
 #include <cmath>
 
+#include <TalcsCore/PositionableAudioSource.h>
 #include <TalcsCore/AudioBuffer.h>
 #include <TalcsCore/MemoryAudioSource.h>
 
@@ -65,7 +66,7 @@ namespace talcs {
             delete d->minorBeatSource;
     }
 
-    MetronomeAudioSource::MetronomeAudioSource(MetronomeAudioSourcePrivate &d) : PositionableAudioSource(d) {
+    MetronomeAudioSource::MetronomeAudioSource(MetronomeAudioSourcePrivate &d) : AudioSource(d) {
         MetronomeAudioSource::close();
     }
 
@@ -98,12 +99,11 @@ namespace talcs {
             for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
                 readData.buffer->clear(ch, readData.startPos, readData.length);
             }
-            d->position += readData.length;
             return readData.length;
         }
-        d->detector->detectInterval(d->position, readData.length);
-        QPair<qint64, bool> beat = d->detector->nextBeat();
-        qint64 tailLength = beat.first != -1 ? beat.first - d->position : readData.length;
+        d->detector->detectInterval(readData.length);
+        auto beat = d->detector->nextMessage();
+        qint64 tailLength = beat.position != -1 ? beat.position : readData.length;
         auto tailSrc = d->tailIsMajor ? d->majorBeatSource : d->tailIsMinor ? d->minorBeatSource : nullptr;
         if (tailSrc) {
             qint64 tailReadLength = tailSrc->read({readData.buffer, readData.startPos, tailLength, readData.silentFlags});
@@ -119,44 +119,31 @@ namespace talcs {
             }
             d->tailIsMajor = d->tailIsMinor = false;
         }
-        while (beat.first != -1) {
-            qint64 beatStart = beat.first;
-            bool isMajor = beat.second;
-            beat = d->detector->nextBeat();
-            qint64 beatLength = beat.first != -1 ? beat.first - beatStart : d->position + readData.length - beatStart;
+        while (beat.position != -1) {
+            qint64 beatStart = beat.position;
+            bool isMajor = beat.isMajor;
+            beat = d->detector->nextMessage();
+            qint64 beatLength = beat.position != -1 ? beat.position - beatStart : readData.length - beatStart;
             auto beatSource = isMajor ? d->majorBeatSource : d->minorBeatSource;
             d->tailIsMajor = isMajor;
             d->tailIsMinor = !isMajor;
             if (beatSource) {
                 beatSource->setNextReadPosition(0);
-                qint64 beatReadLength = beatSource->read({readData.buffer, readData.startPos + beatStart - d->position, beatLength, readData.silentFlags});
+                qint64 beatReadLength = beatSource->read({readData.buffer, readData.startPos + beatStart, beatLength, readData.silentFlags});
                 if (beatReadLength < beatLength) {
                     for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
-                        readData.buffer->clear(ch, readData.startPos + beatStart - d->position, beatLength - beatReadLength);
+                        readData.buffer->clear(ch, readData.startPos + beatStart, beatLength - beatReadLength);
                     }
                     d->tailIsMajor = d->tailIsMinor = false;
                 }
             } else {
                 for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
-                    readData.buffer->clear(ch, readData.startPos + beatStart - d->position, beatLength);
+                    readData.buffer->clear(ch, readData.startPos + beatStart, beatLength);
                 }
                 d->tailIsMajor = d->tailIsMinor = false;
             }
         }
-        d->position += readData.length;
         return readData.length;
-    }
-
-    qint64 MetronomeAudioSource::length() const {
-        return std::numeric_limits<qint64>::max();
-    }
-
-    qint64 MetronomeAudioSource::nextReadPosition() const {
-        return PositionableAudioSource::nextReadPosition();
-    }
-
-    void MetronomeAudioSource::setNextReadPosition(qint64 pos) {
-        PositionableAudioSource::setNextReadPosition(pos);
     }
 
     /**
@@ -209,19 +196,17 @@ namespace talcs {
      * Sets the detector.
      * @see MetronomeAudioSourceBeatDetector
      */
-    void MetronomeAudioSource::setDetector(MetronomeAudioSourceBeatDetector *detector) {
+    void MetronomeAudioSource::setDetector(MetronomeAudioSourceDetector *detector) {
         Q_D(MetronomeAudioSource);
         QMutexLocker locker(&d->mutex);
         d->detector = detector;
-        if (detector)
-            detector->initialize();
     }
 
     /**
      * Gets the detector.
      * @see MetronomeAudioSourceBeatDetector
      */
-    MetronomeAudioSourceBeatDetector *MetronomeAudioSource::detector() const {
+    MetronomeAudioSourceDetector *MetronomeAudioSource::detector() const {
         Q_D(const MetronomeAudioSource);
         return d->detector;
     }

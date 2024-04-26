@@ -28,28 +28,27 @@
 
 using namespace talcs;
 
-class Detector : public MetronomeAudioSourceBeatDetector {
+class Detector : public MetronomeAudioSourceDetector {
 public:
-    void initialize() override {
-        currentPos = -1;
-        end = 0;
-    }
-
-    void detectInterval(qint64 intervalStart, qint64 intervalLength) override {
-        currentPos = intervalStart / 24000 * 24000;
-        if (currentPos < intervalStart)
+    void detectInterval(qint64 intervalLength) override {
+        currentPos = pos / 24000 * 24000;
+        if (currentPos < pos)
             currentPos += 24000;
-        end = intervalStart + intervalLength;
+        end = pos + intervalLength;
         if (currentPos >= end)
             currentPos = -1;
+        posDelta = intervalLength;
     }
 
-    QPair<qint64, bool> nextBeat() override {
-        if (currentPos == -1)
+    MetronomeAudioSourceDetectorMessage nextMessage() override {
+        if (currentPos == -1) {
+            pos += posDelta;
+            posDelta = 0;
             return {-1, false};
-        QPair<qint64, bool> ret = {currentPos, false};
+        }
+        MetronomeAudioSourceDetectorMessage ret = {currentPos - pos, false};
         if (currentPos % 96000 == 0)
-            ret.second = true;
+            ret.isMajor = true;
         currentPos += 24000;
         if (currentPos >= end)
             currentPos = -1;
@@ -57,6 +56,8 @@ public:
     }
 
 private:
+    qint64 pos = 0;
+    qint64 posDelta = 0;
     qint64 currentPos = -1;
     qint64 end = 0;
 
