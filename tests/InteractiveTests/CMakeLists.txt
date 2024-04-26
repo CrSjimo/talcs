@@ -22,4 +22,6 @@ add_subdirectory(RemoteAudioDevice)
 
 add_subdirectory(SimpleAudioApplication)
 
-add_subdirectory(AudioProcessorVisualization)
+add_subdirectory(AudioProcessorVisualization)add_subdirectory(AudioProcessorVisualization)
+
+add_subdirectory(AudioSourceReadingFilter)
