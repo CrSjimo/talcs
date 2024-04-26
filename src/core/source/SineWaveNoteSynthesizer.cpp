@@ -17,6 +17,8 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
+#include <cmath>
+
 #include <QList>
 
 #include "SineWaveNoteSynthesizer.h"
