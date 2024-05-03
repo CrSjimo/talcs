@@ -434,7 +434,7 @@ int main(int argc, char **argv) {
         QFile exportFile(exportFileName);
         AudioFormatIO exportIO(&exportFile);
         exportFile.open(QIODevice::WriteOnly);
-        exportIO.open(AbstractAudioFormatIO::Write, AudioFormatIO::WAV | AudioFormatIO::PCM_24, 2, curSampleRate);
+        exportIO.AbstractAudioFormatIO::open(AbstractAudioFormatIO::Write, AudioFormatIO::WAV | AudioFormatIO::PCM_24, 2, curSampleRate);
 
         transportSrc.open(65536, curSampleRate);
         transportSrc.setPosition(0);

@@ -20,4 +20,12 @@
 #include "AbstractAudioFormatIO.h"
 
 namespace talcs {
+
+    bool AbstractAudioFormatIO::open(AbstractAudioFormatIO::OpenMode mode, int format, int channelCount, double sampleRate)  {
+        setFormat(format);
+        setChannelCount(channelCount);
+        setSampleRate(sampleRate);
+        return open(mode);
+    }
+
 } // talcs

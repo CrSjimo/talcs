@@ -131,19 +131,10 @@ namespace talcs {
         [](void *d) { return reinterpret_cast<AudioFormatIOPrivate *>(d)->sfVioTell(); }};
 
     /**
-     * Initialize libsndfile with default format, number of channels and sample rate, usually
-     * used for reading.
-     * @return true if successful
-     */
-    bool AudioFormatIO::open(OpenMode openMode) {
-        return open(openMode, 0, 0, 0);
-    }
-
-    /**
      * Initialize libsndfile with specified format, number of channels and sample rate.
      * @return true if successful
      */
-    bool AudioFormatIO::open(OpenMode openMode, int format, int channels, double sampleRate) {
+    bool AudioFormatIO::open(OpenMode openMode) {
         Q_D(AudioFormatIO);
         close();
         int sfOpenMode = 0;
@@ -169,7 +160,7 @@ namespace talcs {
             return false;
         }
         d->stream->seek(0);
-        d->sf.reset(new SndfileHandle(sfVio, d, sfOpenMode, format, channels, (int) sampleRate));
+        d->sf.reset(new SndfileHandle(sfVio, d, sfOpenMode, d->format, d->channelCount, (int) d->sampleRate));
         if (!d->sf->rawHandle()) {
             setErrorString(d->sf->strError());
             return false;
@@ -199,6 +190,11 @@ namespace talcs {
         clearErrorString();
     }
 
+    void AudioFormatIO::setChannelCount(int channelCount) {
+        Q_D(AudioFormatIO);
+        d->channelCount = channelCount;
+    }
+
     /**
      * Gets the number of channels.
      *
@@ -208,6 +204,11 @@ namespace talcs {
         Q_D(const AudioFormatIO);
         TEST_IS_OPEN(0)
         return d->sf->channels();
+    }
+
+    void AudioFormatIO::setSampleRate(double sampleRate) {
+        Q_D(AudioFormatIO);
+        d->sampleRate = sampleRate;
     }
 
     /**
@@ -442,6 +443,11 @@ namespace talcs {
      * Byte order mask
      */
 
+
+    void AudioFormatIO::setFormat(int format) {
+        Q_D(AudioFormatIO);
+        d->format = format;
+    }
 
     /**
      * Gets the format code (the combination of major format, subtype and byte order).

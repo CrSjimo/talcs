@@ -34,6 +34,10 @@ namespace talcs {
         QScopedPointer<SndfileHandle> sf;
         AbstractAudioFormatIO::OpenMode openMode = AbstractAudioFormatIO::NotOpen;
 
+        int channelCount = 0;
+        int format = 0;
+        double sampleRate = 0.0;
+
         double compressionLevel = 0.0;
 
         int64_t sfVioGetFilelen() const;

@@ -20,11 +20,11 @@
 #ifndef TALCS_ABSTRACTAUDIOFORMATIO_H
 #define TALCS_ABSTRACTAUDIOFORMATIO_H
 
-#include <QtGlobal>
+#include <TalcsFormat/TalcsFormatGlobal.h>
 
 namespace talcs {
 
-    class AbstractAudioFormatIO {
+    class TALCSFORMAT_EXPORT AbstractAudioFormatIO {
     public:
         virtual ~AbstractAudioFormatIO() = default;
 
@@ -37,12 +37,19 @@ namespace talcs {
         Q_DECLARE_FLAGS(OpenMode, OpenModeFlag)
 
         virtual bool open(OpenMode mode) = 0;
-        virtual bool open(OpenMode mode, int format, int channels, double sampleRate) = 0;
+        bool open(OpenMode mode, int format, int channelCount, double sampleRate);
         virtual OpenMode openMode() const = 0;
         virtual void close() = 0;
 
+        virtual int format() const = 0;
+        virtual void setFormat(int format) = 0;
+
         virtual int channelCount() const = 0;
+        virtual void setChannelCount(int channelCount) = 0;
+
         virtual double sampleRate() const = 0;
+        virtual void setSampleRate(double sampleRate) = 0;
+
         virtual qint64 length() const = 0;
 
         virtual qint64 read(float *ptr, qint64 length) = 0;

@@ -126,14 +126,17 @@ namespace talcs {
         };
 
         bool open(OpenMode openMode) override;
-        bool open(OpenMode openMode, int format, int channels, double sampleRate) override;
         OpenMode openMode() const override;
         void close() override;
 
+        void setChannelCount(int channelCount) override;
         int channelCount() const override;
+
+        void setSampleRate(double sampleRate) override;
         double sampleRate() const override;
 
-        int format() const;
+        void setFormat(int format) override;
+        int format() const override;
         MajorFormat majorFormat() const;
         Subtype subtype() const;
         ByteOrder byteOrder() const;

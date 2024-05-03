@@ -92,7 +92,7 @@ void exportAudio() {
     QFile exportFile(exportFileName);
     AudioFormatIO exportIO(&exportFile);
     exportFile.open(QIODevice::WriteOnly);
-    exportIO.open(AbstractAudioFormatIO::Write, AudioFormatIO::WAV | AudioFormatIO::PCM_24, 2, 44100);
+    exportIO.AbstractAudioFormatIO::open(AbstractAudioFormatIO::Write, AudioFormatIO::WAV | AudioFormatIO::PCM_24, 2, 44100);
     tpSrc->open(4096, 44100);
     tpSrc->setPosition(0);
     tpSrc->play();
