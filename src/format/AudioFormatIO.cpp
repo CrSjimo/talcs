@@ -673,10 +673,18 @@ namespace talcs {
     QList<AudioFormatIO::FormatInfo> AudioFormatIO::availableFormats() {
         QList<FormatInfo> formatInfoList;
         SF_INFO sfinfo = {};
-        int majorTypeCnt, subTypeCnt;
+        int simpleFormatCnt, majorTypeCnt, subTypeCnt;
+        sf_command(nullptr, SFC_GET_SIMPLE_FORMAT_COUNT, &simpleFormatCnt, sizeof(int));
         sf_command(nullptr, SFC_GET_FORMAT_MAJOR_COUNT, &majorTypeCnt, sizeof(int));
         sf_command(nullptr, SFC_GET_FORMAT_SUBTYPE_COUNT, &subTypeCnt, sizeof(int));
         sfinfo.channels = 1;
+        QHash<int, QString> simpleFormatExtensions;
+        for (int i = 0; i < simpleFormatCnt; i++) {
+            SF_FORMAT_INFO  formatInfo = {};
+            formatInfo.format = i;
+            sf_command(nullptr, SFC_GET_SIMPLE_FORMAT, &formatInfo, sizeof(formatInfo));
+            simpleFormatExtensions.insert(formatInfo.format, formatInfo.extension);
+        }
         for (int i = 0; i < majorTypeCnt; i++) {
             SF_FORMAT_INFO info = {};
             FormatInfo formatInfo = {};
@@ -690,7 +698,14 @@ namespace talcs {
                 sf_command(nullptr, SFC_GET_FORMAT_SUBTYPE, &info, sizeof(info));
                 sfinfo.format = formatInfo.majorFormat | info.format;
                 if (sf_format_check(&sfinfo)) {
-                    formatInfo.subtypes.append({(Subtype) info.format, info.name, info.extension});
+                    QStringList subtypeExtensions;
+                    auto simpleFormatExtension = simpleFormatExtensions.value(sfinfo.format);
+                    if (!simpleFormatExtension.isEmpty() && simpleFormatExtension != formatInfo.extension)
+                        subtypeExtensions.append(simpleFormatExtension);
+                    auto subtypeExtension = QString(info.extension);
+                    if (!subtypeExtension.isEmpty() && subtypeExtension != simpleFormatExtension)
+                        subtypeExtensions.append(subtypeExtension);
+                    formatInfo.subtypes.append({(Subtype) info.format, info.name, subtypeExtensions});
                 }
             }
             formatInfo.byteOrders.append(DefaultOrder);

@@ -110,9 +110,9 @@ void SimpleAudioApplicationWindow::setFileDialogFilters() {
         QStringList extensions = {"*." + type.extension};
         allExtensions.insert("*." + type.extension);
         for (const auto &subtype: type.subtypes) {
-            if (!subtype.extension.isEmpty()) {
-                extensions.append("*." + subtype.extension);
-                allExtensions.insert("*." + subtype.extension);
+            for (const auto &extension : subtype.extensions) {
+                extensions.append("*." + extension);
+                allExtensions.insert("*." + extension);
             }
         }
         filters.append(QString("%1 (%2)").arg(type.name, extensions.join(" ")));

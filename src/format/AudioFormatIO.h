@@ -173,7 +173,7 @@ namespace talcs {
         struct SubtypeInfo {
             Subtype subtype;
             QString name;
-            QString extension;
+            QStringList extensions;
         };
 
         struct FormatInfo {
