@@ -34,6 +34,7 @@ macro(talcs_add_library _target)
 
     if(WIN32 AND NOT FUNC_NO_WIN_RC AND(${_type} STREQUAL "SHARED"))
         qm_add_win_rc(${_target}
+            NAME ${TALCS_INSTALL_NAME}
             DESCRIPTION ${TALCS_PROJECT_DESCRIPTION}
             COPYRIGHT ${TALCS_PROJECT_COPYRIGHT}
         )
