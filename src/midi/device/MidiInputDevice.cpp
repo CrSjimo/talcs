@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2023-2024 CrSjimo                                            *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -22,52 +22,49 @@
 
 #include <QDebug>
 
-#include <rtmidi/RtMidi.h>
-
-#include "MidiInputDeviceCallback.h"
+#include "MidiMessageListener.h"
 
 namespace talcs {
-    MidiInputDevice::MidiInputDevice(int deviceIndex, QObject *parent) : QObject(parent), d(new MidiInputDevicePrivate) {
+    MidiInputDevice::MidiInputDevice(int deviceIndex, QObject *parent) : QObject(parent), d_ptr(new MidiInputDevicePrivate) {
+        Q_D(MidiInputDevice);
+        d->q_ptr = this;
         d->portNumber = deviceIndex;
         try {
             d->midi.reset(new RtMidiIn);
-            setName(d->midi->getPortName(deviceIndex).c_str());
+            setName(QString::fromStdString(d->midi->getPortName(deviceIndex)));
         } catch (RtMidiError &e) {
-            setErrorString(e.getMessage().c_str());
+            setErrorString(QString::fromStdString(e.getMessage()));
         }
     }
 
     MidiInputDevice::~MidiInputDevice() = default;
 
-    static void rtmidiCallback(double timeStamp, std::vector<unsigned char> *message, void *userData) {
+    void MidiInputDevicePrivate::rtmidiCallback(double timeStamp, std::vector<unsigned char> *message, void *userData) {
         auto d = reinterpret_cast<MidiInputDevicePrivate *>(userData);
-        MidiMessage msg(message->data(), message->size(), timeStamp);
-        std::for_each(d->listeners.begin(), d->listeners.end(), [&](MidiInputDeviceCallback *cb) {
-            cb->workCallback(msg);
-        });
+        qDebug() << timeStamp;
+        MidiMessage msg(message->data(), static_cast<int>(message->size()), timeStamp);
+        d->listener.messageCallback(msg);
     }
 
-    static void rtmidiErrorCallback(RtMidiError::Type type, const std::string &errorText, void *userData) {
-        Q_UNUSED(type);
+    void MidiInputDevicePrivate::rtmidiErrorCallback(RtMidiError::Type type, const std::string &errorText, void *userData) {
+        Q_UNUSED(type)
         auto d = reinterpret_cast<MidiInputDevicePrivate *>(userData);
-        std::for_each(d->listeners.begin(), d->listeners.end(), [&](MidiInputDeviceCallback *cb) {
-            cb->errorCallback(errorText.c_str());
-        });
+        d->q_ptr->setErrorString(QString::fromStdString(errorText));
+        d->listener.errorCallback(QString::fromStdString(errorText));
     }
 
     bool MidiInputDevice::open() {
+        Q_D(MidiInputDevice);
         if (!d->midi)
             return false;
         try {
             d->midi->openPort(d->portNumber);
             d->midi->ignoreTypes(false, false, false);
-            std::for_each(d->listeners.begin(), d->listeners.end(), [&](MidiInputDeviceCallback *cb) {
-                cb->deviceWillStartCallback(this);
-            });
-            d->midi->setCallback(&rtmidiCallback, d.data());
-            d->midi->setErrorCallback(&rtmidiErrorCallback, d.data());
+            d->listener.deviceWillStartCallback(this);
+            d->midi->setCallback(&MidiInputDevicePrivate::rtmidiCallback, d);
+            d->midi->setErrorCallback(&MidiInputDevicePrivate::rtmidiErrorCallback, d);
         } catch (RtMidiError &e) {
-            setErrorString(e.getMessage().c_str());
+            setErrorString(QString::fromStdString(e.getMessage()));
             return false;
         }
         setErrorString({});
@@ -75,37 +72,34 @@ namespace talcs {
     }
 
     bool MidiInputDevice::isOpen() const {
+        Q_D(const MidiInputDevice);
         return d->midi && d->midi->isPortOpen();
     }
 
     void MidiInputDevice::close() {
+        Q_D(MidiInputDevice);
         if (d->midi)
             d->midi->closePort();
-        std::for_each(d->listeners.begin(), d->listeners.end(), [&](MidiInputDeviceCallback *cb) {
-            cb->deviceStoppedCallback();
-        });
+        d->listener.deviceStoppedCallback();
         setErrorString({});
     }
 
-    void MidiInputDevice::addListener(MidiInputDeviceCallback *callback) {
-        d->listeners.append(callback);
-    }
-
-    void MidiInputDevice::removeListener(MidiInputDeviceCallback *callback) {
-        d->listeners.removeOne(callback);
+    MidiMessageListener *MidiInputDevice::listener() const {
+        Q_D(const MidiInputDevice);
+        return &d->listener;
     }
 
     QStringList MidiInputDevice::devices() {
         QStringList a;
         try {
             RtMidiIn tmp;
-            int count = tmp.getPortCount();
+            int count = static_cast<int>(tmp.getPortCount());
             a.reserve(count);
             for (int i = 0; i < count; i++) {
-                a.append(tmp.getPortName(i).c_str());
+                a.append(QString::fromStdString(tmp.getPortName(i)));
             }
         } catch (RtMidiError &e) {
-            qWarning() << "MidiInputDevice:" << e.getMessage().c_str();
+            qWarning() << "MidiInputDevice:" << QString::fromStdString(e.getMessage());
         }
         return a;
     }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2024 CrSjimo                                                 *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,20 +17,24 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_MIDIINPUTDEVICE_P_H
-#define TALCS_MIDIINPUTDEVICE_P_H
 
-#include <TalcsMidi/MidiInputDevice.h>
+#ifndef TALCS_ABSTRACTMIDIMESSAGEINTEGRATOR_P_H
+#define TALCS_ABSTRACTMIDIMESSAGEINTEGRATOR_P_H
 
-class RtMidiIn;
+#include <TalcsMidi/AbstractMidiMessageIntegrator.h>
+
+#include <QMutex>
+
+#include <TalcsCore/private/AudioSource_p.h>
 
 namespace talcs {
-    class MidiInputDevicePrivate {
+    class AbstractMidiMessageIntegratorPrivate : public AudioSourcePrivate {
+        Q_DECLARE_PUBLIC(AbstractMidiMessageIntegrator)
     public:
-        int portNumber;
-        QScopedPointer<RtMidiIn> midi;
-        QList<MidiInputDeviceCallback *> listeners;
+        QMutex mutex;
+        AudioMidiStream *stream = nullptr;
+        bool takeOwnership = false;
     };
 }
 
-#endif //TALCS_MIDIINPUTDEVICE_P_H
+#endif //TALCS_ABSTRACTMIDIMESSAGEINTEGRATOR_P_H

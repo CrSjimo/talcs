@@ -17,46 +17,24 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_SINEWAVENOTESYNTHESIZER_H
-#define TALCS_SINEWAVENOTESYNTHESIZER_H
+#ifndef TALCS_AUDIOMIDISTREAM_P_H
+#define TALCS_AUDIOMIDISTREAM_P_H
 
-#include <TalcsCore/AudioSource.h>
+#include <QMutex>
+
+#include <TalcsMidi/AudioMidiStream.h>
 
 namespace talcs {
 
-    struct SineWaveNoteSynthesizerDetectorMessage {
-        qint64 position;
-        double frequency;
-        double velocity;
-        bool isNoteOn;
-    };
-
-    class SineWaveNoteSynthesizerDetector {
+    class AudioMidiStreamPrivate {
+        Q_DECLARE_PUBLIC(AudioMidiStream)
     public:
-        virtual void detectInterval(qint64 intervalLength) = 0;
-        virtual SineWaveNoteSynthesizerDetectorMessage nextMessage() = 0;
-    };
+        AudioMidiStream *q_ptr;
 
-    class SineWaveNoteSynthesizerPrivate;
-
-    class TALCSCORE_EXPORT SineWaveNoteSynthesizer : public AudioSource {
-        Q_DECLARE_PRIVATE(SineWaveNoteSynthesizer)
-    public:
-        explicit SineWaveNoteSynthesizer();
-        ~SineWaveNoteSynthesizer() override;
-
-        bool open(qint64 bufferSize, double sampleRate) override;
-        void close() override;
-
-        void setDetector(SineWaveNoteSynthesizerDetector *detector);
-        SineWaveNoteSynthesizerDetector *detector() const;
-
-    protected:
-        explicit SineWaveNoteSynthesizer(SineWaveNoteSynthesizerPrivate &d);
-        qint64 processReading(const AudioSourceReadData &readData) override;
-
+        QMutex filterMutex;
+        QAtomicPointer<AudioMidiStream> filter = nullptr;
     };
 
 }
 
-#endif //TALCS_SINEWAVENOTESYNTHESIZER_H
+#endif // TALCS_AUDIOMIDISTREAM_P_H

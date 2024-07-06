@@ -22,7 +22,7 @@
 #include <QCoreApplication>
 #include <QDebug>
 
-#include <TalcsCore/SineWaveNoteSynthesizer.h>
+#include <TalcsCore/NoteSynthesizer.h>
 #include <TalcsDevice/AudioDriverManager.h>
 #include <TalcsDevice/AudioDriver.h>
 #include <TalcsDevice/AudioDevice.h>
@@ -34,7 +34,7 @@ static inline double calcFreq(int key) {
     return 440.0 * std::pow(2.0, (key - 69) / 12.0);
 }
 
-class Detector : public SineWaveNoteSynthesizerDetector {
+class Detector : public NoteSynthesizerDetector {
 public:
     void detectInterval(qint64 intervalLength) override {
         currentPos = pos / 12000 * 12000;
@@ -46,7 +46,7 @@ public:
         posDelta = intervalLength;
     }
 
-    SineWaveNoteSynthesizerDetectorMessage nextMessage() override {
+    NoteSynthesizerDetectorMessage nextMessage() override {
         if (!retQueue.isEmpty()) {
             return retQueue.takeFirst();
         }
@@ -55,7 +55,7 @@ public:
             posDelta = 0;
             return {-1, false};
         }
-        SineWaveNoteSynthesizerDetectorMessage ret = {currentPos - pos, 0, 0.5, true};
+        NoteSynthesizerDetectorMessage ret = {currentPos - pos, 0, 0.5, true};
         switch (currentPos % (12000 * 8)) {
             case 12000 * 0:
                 ret.frequency = calcFreq(60);
@@ -104,7 +104,7 @@ public:
         return ret;
     }
 
-    QList<SineWaveNoteSynthesizerDetectorMessage> retQueue;
+    QList<NoteSynthesizerDetectorMessage> retQueue;
 
 private:
     qint64 pos = 0;
@@ -125,7 +125,10 @@ int main(int argc, char **argv) {
     dev->open(dev->preferredBufferSize(), 48000);
 
     Detector detector;
-    SineWaveNoteSynthesizer src;
+    NoteSynthesizer src;
+    src.setAttackRate(std::pow(0.99, 20000.0 / 48000.0));
+    src.setReleaseRate(std::pow(0.99, 20000.0 / 48000.0));
+    src.setGenerator(NoteSynthesizer::Square);
     src.setDetector(&detector);
     AudioSourcePlayback playback(&src);
     dev->start(&playback);

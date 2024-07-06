@@ -26,4 +26,4 @@ add_subdirectory(AudioProcessorVisualization)
 
 add_subdirectory(AudioSourceReadingFilter)
 
-add_subdirectory(SineWaveNoteSynthesizer)
+add_subdirectory(NoteSynthesizer)

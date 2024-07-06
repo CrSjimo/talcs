@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2024 CrSjimo                                                 *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,40 +17,18 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_MIDIINPUTDEVICE_H
-#define TALCS_MIDIINPUTDEVICE_H
+#ifndef TALCS_INTEGRATEDMIDIMESSAGE_H
+#define TALCS_INTEGRATEDMIDIMESSAGE_H
 
-#include <QObject>
-
-#include <TalcsCore/ErrorStringProvider.h>
-#include <TalcsCore/NameProvider.h>
-#include <TalcsMidi/TalcsMidiGlobal.h>
+#include <TalcsMidi/MidiMessage.h>
 
 namespace talcs {
 
-    class MidiInputDeviceCallback;
-
-    class MidiInputDevicePrivate;
-
-    class TALCSMIDI_EXPORT MidiInputDevice : public QObject, public NameProvider, public ErrorStringProvider {
-        Q_OBJECT
-    public:
-        explicit MidiInputDevice(int deviceIndex, QObject *parent = nullptr);
-        ~MidiInputDevice();
-
-        bool open();
-        bool isOpen() const;
-        void close();
-
-        void addListener(MidiInputDeviceCallback *callback);
-        void removeListener(MidiInputDeviceCallback *callback);
-
-        static QStringList devices();
-
-    private:
-        QScopedPointer<MidiInputDevicePrivate> d;
+    struct IntegratedMidiMessage {
+        qint64 position;
+        MidiMessage message;
     };
 
 } // talcs
 
-#endif //TALCS_MIDIINPUTDEVICE_H
+#endif //TALCS_INTEGRATEDMIDIMESSAGE_H

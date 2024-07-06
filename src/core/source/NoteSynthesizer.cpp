@@ -21,35 +21,78 @@
 
 #include <QList>
 
-#include "SineWaveNoteSynthesizer.h"
-#include "SineWaveNoteSynthesizer_p.h"
+#include "NoteSynthesizer.h"
+#include "NoteSynthesizer_p.h"
 
 namespace talcs {
-    SineWaveNoteSynthesizer::SineWaveNoteSynthesizer() : SineWaveNoteSynthesizer(*new SineWaveNoteSynthesizerPrivate) {
+    NoteSynthesizer::NoteSynthesizer() : NoteSynthesizer(*new NoteSynthesizerPrivate) {
 
     }
 
-    SineWaveNoteSynthesizer::SineWaveNoteSynthesizer(SineWaveNoteSynthesizerPrivate &d) : AudioSource(d) {
+    NoteSynthesizer::NoteSynthesizer(NoteSynthesizerPrivate &d) : AudioSource(d) {
 
     }
 
-    SineWaveNoteSynthesizer::~SineWaveNoteSynthesizer() {
+    NoteSynthesizer::~NoteSynthesizer() {
 
     }
 
-    bool SineWaveNoteSynthesizer::open(qint64 bufferSize, double sampleRate) {
-        Q_D(SineWaveNoteSynthesizer);
-        d->rate = std::pow(0.99, 20000.0 / sampleRate);
+    bool NoteSynthesizer::open(qint64 bufferSize, double sampleRate) {
+        Q_D(NoteSynthesizer);
         return AudioSource::open(bufferSize, sampleRate);
     }
 
-    void SineWaveNoteSynthesizer::close() {
+    void NoteSynthesizer::close() {
         AudioSource::close();
     }
 
-    qint64 SineWaveNoteSynthesizer::processReading(const AudioSourceReadData &readData) {
-        static const double PI = std::acos(-1);
-        Q_D(SineWaveNoteSynthesizer);
+    void NoteSynthesizer::setAttackRate(double rate) {
+        Q_D(NoteSynthesizer);
+        d->attackRate = rate;
+    }
+
+    double NoteSynthesizer::attackRate() const {
+        Q_D(const NoteSynthesizer);
+        return d->attackRate;
+    }
+
+    void NoteSynthesizer::setReleaseRate(double rate) {
+        Q_D(NoteSynthesizer);
+        d->releaseRate = rate;
+    }
+
+    double NoteSynthesizer::releaseRate() const {
+        Q_D(const NoteSynthesizer);
+        return d->releaseRate;
+    }
+
+
+    void NoteSynthesizer::setGenerator(NoteSynthesizer::Generator g) {
+        switch (g) {
+            case Sine:
+                setGenerator(NoteSynthesizerPrivate::GenerateSineWave());
+                break;
+            case Square:
+                setGenerator(NoteSynthesizerPrivate::GenerateSquareWave());
+                break;
+            case Triangle:
+                setGenerator(NoteSynthesizerPrivate::GenerateTriangleWave());
+                break;
+            case Sawtooth:
+                setGenerator(NoteSynthesizerPrivate::GenerateSawtoothWave());
+                break;
+            default:
+                Q_UNREACHABLE();
+        }
+    }
+
+    void NoteSynthesizer::setGenerator(const NoteSynthesizer::GeneratorFunction &g) {
+        Q_D(NoteSynthesizer);
+        d->generatorFunction = g;
+    }
+
+    qint64 NoteSynthesizer::processReading(const AudioSourceReadData &readData) {
+        Q_D(NoteSynthesizer);
         QMutexLocker locker(&d->mutex);
         for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
             readData.buffer->clear(ch, readData.startPos, readData.length);
@@ -61,9 +104,9 @@ namespace talcs {
         for (auto msg = d->detector->nextMessage(); ; msg = d->detector->nextMessage()) {
             for (;currentPos < (msg.position != -1 ? msg.position : readData.length); currentPos++) {
                 for (auto &keyInfo : d->keys) {
-                    double vel = keyInfo.nextVel(d->rate);
+                    double vel = keyInfo.nextVel();
                     for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
-                        readData.buffer->sampleAt(ch, readData.startPos + currentPos) += vel * std::sin(2.0 * PI * keyInfo.frequency / sampleRate() * double(keyInfo.x));
+                        readData.buffer->sampleAt(ch, readData.startPos + currentPos) += static_cast<float>(vel * d->generatorFunction(keyInfo.frequency / sampleRate(), keyInfo.x));
                     }
                 }
                 d->keys.erase(std::remove_if(d->keys.begin(), d->keys.end(), [&](const auto &item) {
@@ -74,7 +117,7 @@ namespace talcs {
                 return qFuzzyCompare(item.frequency, msg.frequency);
             });
             if (msg.isNoteOn) {
-                d->keys.append({msg.frequency, msg.velocity, .0, 0, true});
+                d->keys.append({d, msg.frequency, msg.velocity, .0, 0, true});
             } else {
                 if (it != d->keys.end())
                     it->isAttack = false;
@@ -85,14 +128,14 @@ namespace talcs {
         return readData.length;
     }
 
-    void SineWaveNoteSynthesizer::setDetector(SineWaveNoteSynthesizerDetector *detector) {
-        Q_D(SineWaveNoteSynthesizer);
+    void NoteSynthesizer::setDetector(NoteSynthesizerDetector *detector) {
+        Q_D(NoteSynthesizer);
         QMutexLocker locker(&d->mutex);
         d->detector = detector;
     }
 
-    SineWaveNoteSynthesizerDetector *SineWaveNoteSynthesizer::detector() const {
-        Q_D(const SineWaveNoteSynthesizer);
+    NoteSynthesizerDetector *NoteSynthesizer::detector() const {
+        Q_D(const NoteSynthesizer);
         return d->detector;
     }
 } // talcs

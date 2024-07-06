@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2023-2024 CrSjimo                                            *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,24 +17,40 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_MIDISINEWAVESYNTHESIZER_P_H
-#define TALCS_MIDISINEWAVESYNTHESIZER_P_H
+#ifndef TALCS_MIDIINPUTDEVICE_H
+#define TALCS_MIDIINPUTDEVICE_H
 
-#include <QMutex>
+#include <QObject>
 
-#include <TalcsMidi/MidiSineWaveSynthesizer.h>
+#include <TalcsCore/ErrorStringProvider.h>
+#include <TalcsCore/NameProvider.h>
+#include <TalcsMidi/TalcsMidiGlobal.h>
 
 namespace talcs {
-    class MidiSineWaveSynthesizerPrivate {
+
+    class MidiMessageListener;
+
+    class MidiInputDevicePrivate;
+
+    class TALCSMIDI_EXPORT MidiInputDevice : public QObject, public NameProvider, public ErrorStringProvider {
+        Q_OBJECT
+        Q_DECLARE_PRIVATE(MidiInputDevice)
     public:
-        QMutex mutex;
-        double phase = 0;
+        explicit MidiInputDevice(int deviceIndex, QObject *parent = nullptr);
+        ~MidiInputDevice() override;
 
-        int note = -1;
-        int velocity = 0;
-        double fadeIn = 0.0;
-        double fadeOut = 0.0;
+        bool open();
+        bool isOpen() const;
+        void close();
+
+        MidiMessageListener *listener() const;
+
+        static QStringList devices();
+
+    private:
+        QScopedPointer<MidiInputDevicePrivate> d_ptr;
     };
-}
 
-#endif //TALCS_MIDISINEWAVESYNTHESIZER_P_H
+} // talcs
+
+#endif //TALCS_MIDIINPUTDEVICE_H

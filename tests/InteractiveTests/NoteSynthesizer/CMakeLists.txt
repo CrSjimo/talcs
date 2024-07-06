@@ -1,4 +1,4 @@
-project(tst_talcs_SineWaveNoteSynthesizer)
+project(tst_talcs_NoteSynthesizer)
 
 file(GLOB _src *.h *.cpp)
 

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2023-2024 CrSjimo                                            *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,8 +17,10 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_MIDIINPUTDEVICECALLBACK_H
-#define TALCS_MIDIINPUTDEVICECALLBACK_H
+#ifndef TALCS_MIDIMESSAGELISTENER_H
+#define TALCS_MIDIMESSAGELISTENER_H
+
+#include <QScopedPointer>
 
 #include <TalcsMidi/MidiMessage.h>
 
@@ -26,14 +28,34 @@ namespace talcs {
 
     class MidiInputDevice;
 
-    class TALCSMIDI_EXPORT MidiInputDeviceCallback {
+    class MidiMessageListenerPrivate;
+
+    class TALCSMIDI_EXPORT MidiMessageListener {
+        Q_DECLARE_PRIVATE(MidiMessageListener)
     public:
-        virtual void deviceWillStartCallback(MidiInputDevice *device) = 0;
-        virtual void deviceStoppedCallback() = 0;
-        virtual void workCallback(const MidiMessage &message) = 0;
-        virtual void errorCallback(const QString &errorString) = 0;
+        explicit MidiMessageListener();
+        virtual ~MidiMessageListener();
+
+        bool deviceWillStartCallback(MidiInputDevice *device);
+        void deviceStoppedCallback();
+        bool messageCallback(const MidiMessage &message);
+        void errorCallback(const QString &errorString);
+
+        void addFilter(MidiMessageListener *filter);
+        void removeFilter(MidiMessageListener *filter);
+
+    protected:
+        virtual bool processDeviceWillStart(MidiInputDevice *device) = 0;
+        virtual void processDeviceStopped() = 0;
+        virtual bool processMessage(const MidiMessage &message) = 0;
+        virtual void processError(const QString &errorString) = 0;
+
+        explicit MidiMessageListener(MidiMessageListenerPrivate &d);
+
+        QScopedPointer<MidiMessageListenerPrivate> d_ptr;
+
     };
 
 } // talcs
 
-#endif //TALCS_MIDIINPUTDEVICECALLBACK_H
+#endif //TALCS_MIDIMESSAGELISTENER_H

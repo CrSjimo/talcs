@@ -17,48 +17,38 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_SINEWAVENOTESYNTHESIZER_P_H
-#define TALCS_SINEWAVENOTESYNTHESIZER_P_H
+#ifndef TALCS_ABSTRACTMIDIMESSAGEINTEGRATOR_H
+#define TALCS_ABSTRACTMIDIMESSAGEINTEGRATOR_H
 
-#include <QList>
-
-#include <TalcsCore/SineWaveNoteSynthesizer.h>
-#include <TalcsCore/private/AudioSource_p.h>
+#include <TalcsCore/AudioSource.h>
+#include <TalcsMidi/IntegratedMidiMessage.h>
 
 namespace talcs {
 
-    class SineWaveNoteSynthesizerPrivate : public AudioSourcePrivate {
-        Q_DECLARE_PUBLIC(SineWaveNoteSynthesizer);
+    class AudioMidiStream;
+
+    class AbstractMidiMessageIntegratorPrivate;
+
+    class TALCSMIDI_EXPORT AbstractMidiMessageIntegrator : public AudioSource {
+        Q_DECLARE_PRIVATE(AbstractMidiMessageIntegrator)
     public:
-        QMutex mutex;
-        SineWaveNoteSynthesizerDetector *detector = nullptr;
-        struct KeyInfo {
-            double frequency;
-            double velFactor;
-            double vel;
-            qint64 x;
-            bool isAttack;
-            inline double nextVel(double rate_) {
-                double ret = vel;
-                if (isAttack && vel < velFactor) {
-                    if (qFuzzyIsNull(vel))
-                        vel = .005;
-                    vel /= rate_;
-                    if (vel > velFactor)
-                        vel = velFactor;
-                } else {
-                    vel *= rate_;
-                    if (vel < .005)
-                        vel = .0;
-                }
-                x++;
-                return ret;
-            }
-        };
-        double rate = .0;
-        QList<KeyInfo> keys;
+        explicit AbstractMidiMessageIntegrator();
+        ~AbstractMidiMessageIntegrator() override;
+
+        bool open(qint64 bufferSize, double sampleRate) override;
+        void close() override;
+
+        void setStream(AudioMidiStream *stream, bool takeOwnership = false);
+        AudioMidiStream *stream() const;
+
+    protected:
+        qint64 processReading(const AudioSourceReadData &readData) override;
+
+        virtual QList<IntegratedMidiMessage> fetch(qint64 length) = 0;
+
+        explicit AbstractMidiMessageIntegrator(AbstractMidiMessageIntegratorPrivate &d);
     };
 
-}
+} // talcs
 
-#endif //TALCS_SINEWAVENOTESYNTHESIZER_P_H
+#endif //TALCS_ABSTRACTMIDIMESSAGEINTEGRATOR_H

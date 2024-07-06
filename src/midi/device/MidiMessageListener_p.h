@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2024 CrSjimo                                                 *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,40 +17,24 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#include <QApplication>
-#include <QDebug>
+#ifndef TALCS_MIDIMESSAGELISTENER_P_H
+#define TALCS_MIDIMESSAGELISTENER_P_H
 
-#include <TalcsMidi/MidiMessage.h>
-#include <TalcsMidi/MidiInputDevice.h>
+#include <QList>
+#include <QMutex>
 
-#include <TalcsDevice/AudioDriverManager.h>
-#include <TalcsDevice/AudioDriver.h>
-#include <TalcsDevice/AudioDevice.h>
-#include <TalcsDevice/AudioSourcePlayback.h>
+#include <TalcsMidi/MidiMessageListener.h>
 
-using namespace talcs;
+namespace talcs {
 
+    class MidiMessageListenerPrivate {
+        Q_DECLARE_PUBLIC(MidiMessageListener)
+    public:
+        MidiMessageListener *q_ptr;
+        QList<MidiMessageListener *> filters;
+        QMutex filterMutex;
+    };
 
-int main(int argc, char **argv) {
-    QApplication a(argc, argv);
-    auto msg = MidiMessage::noteOn(1, 60, quint8(100));
-    qDebug() << msg.getDescription();
-    msg = MidiMessage::midiMachineControlCommand(talcs::MidiMessage::mmc_pause);
-    qDebug() << msg.getRawData() << msg.getRawDataSize();
-    qDebug() << MidiInputDevice::devices();
-    MidiInputDevice dev(1);
-
-//    auto mgr = AudioDriverManager::createBuiltInDriverManager();
-//    auto drv = mgr->driver(mgr->drivers()[0]);
-//    drv->initialize();
-//    auto audioDev = drv->defaultDevice().isEmpty() ? drv->createDevice(drv->devices()[0]) : drv->createDevice(drv->defaultDevice());
-
-//    auto midiSynth = new MidiSineWaveSynthesizer;
-//    auto playback = new AudioSourcePlayback(midiSynth);
-//    dev.addListener(midiSynth);
-
-//    audioDev->open(audioDev->preferredBufferSize(), audioDev->preferredSampleRate());
-//    audioDev->start(playback);
-    dev.open();
-    return a.exec();
 }
+
+#endif //TALCS_MIDIMESSAGELISTENER_P_H

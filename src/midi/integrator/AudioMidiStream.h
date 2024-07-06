@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2024 CrSjimo                                                 *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,7 +17,41 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#include "MidiInputDeviceCallback.h"
+#ifndef TALCS_AUDIOMIDISTREAM_H
+#define TALCS_AUDIOMIDISTREAM_H
+
+#include <TalcsCore/AudioSource.h>
+#include <TalcsMidi/IntegratedMidiMessage.h>
 
 namespace talcs {
+
+    class AudioMidiStreamPrivate;
+
+    class TALCSMIDI_EXPORT AudioMidiStream : public AudioStreamBase {
+        Q_DECLARE_PRIVATE(AudioMidiStream)
+    public:
+        explicit AudioMidiStream();
+
+        virtual ~AudioMidiStream();
+
+        bool open(qint64 bufferSize, double sampleRate) override;
+
+        void close() override;
+
+        qint64 read(const AudioSourceReadData &readData, const QList<IntegratedMidiMessage> &midiEvents);
+
+        void setReadingFilter(AudioMidiStream *filter);
+
+        AudioMidiStream *readingFilter() const;
+
+    protected:
+        explicit AudioMidiStream(AudioMidiStreamPrivate &d);
+        QScopedPointer<AudioMidiStreamPrivate> d_ptr;
+
+        virtual qint64 processReading(const AudioSourceReadData &readData, const QList<IntegratedMidiMessage> &midiEvents) = 0;
+
+    };
+
 } // talcs
+
+#endif //TALCS_AUDIOMIDISTREAM_H

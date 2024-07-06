@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2022-2023 CrSjimo                                            *
+ * Copyright (c) 2024 CrSjimo                                                 *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,10 +17,12 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
+/* This file is migrated from the JUCE library -- under ISC License */
+
 /*
   ==============================================================================
 
-   This file is migrated from the JUCE library.
+   This file is part of the JUCE library.
    Copyright (c) 2022 - Raw Material Software Limited
 
    JUCE is an open source library subject to commercial or open-source

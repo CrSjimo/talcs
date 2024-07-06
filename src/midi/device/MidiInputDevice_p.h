@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2023-2024 CrSjimo                                            *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,41 +17,48 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_MIDISINEWAVESYNTHESIZER_H
-#define TALCS_MIDISINEWAVESYNTHESIZER_H
+#ifndef TALCS_MIDIINPUTDEVICE_P_H
+#define TALCS_MIDIINPUTDEVICE_P_H
 
-#include <TalcsCore/AudioSource.h>
-#include <TalcsMidi/MidiInputDeviceCallback.h>
+#include <TalcsMidi/MidiInputDevice.h>
+
+#include <rtmidi/RtMidi.h>
+
+#include <TalcsMidi/MidiMessageListener.h>
+
+class RtMidiIn;
 
 namespace talcs {
 
-    class MidiSineWaveSynthesizerPrivate;
-
-    class TALCSMIDI_EXPORT MidiSineWaveSynthesizer : public AudioSource, public MidiInputDeviceCallback {
-    public:
-        MidiSineWaveSynthesizer();
-
-        bool open(qint64 bufferSize, double sampleRate) override;
-
-        void close() override;
-
-        ~MidiSineWaveSynthesizer() override;
-
-        void deviceWillStartCallback(MidiInputDevice *device) override;
-
-        void deviceStoppedCallback() override;
-
-        void workCallback(const MidiMessage &message) override;
-
-        void errorCallback(const QString &errorString) override;
-
+    class MidiInputDeviceRootListener : public MidiMessageListener {
     protected:
-        qint64 processReading(const AudioSourceReadData &readData) override;
+        bool processDeviceWillStart(MidiInputDevice *device) override {
+            return true;
+        }
 
-    private:
-        QScopedPointer<MidiSineWaveSynthesizerPrivate> d;
+        void processDeviceStopped() override {
+        }
+
+        bool processMessage(const MidiMessage &message) override {
+            return false;
+        }
+
+        void processError(const QString &errorString) override {
+
+        }
     };
 
-} // talcs
+    class MidiInputDevicePrivate {
+        Q_DECLARE_PUBLIC(MidiInputDevice)
+    public:
+        MidiInputDevice *q_ptr;
+        int portNumber;
+        QScopedPointer<RtMidiIn> midi;
+        mutable MidiInputDeviceRootListener listener;
 
-#endif //TALCS_MIDISINEWAVESYNTHESIZER_H
+        static void rtmidiCallback(double timeStamp, std::vector<unsigned char> *message, void *userData);
+        static void rtmidiErrorCallback(RtMidiError::Type type, const std::string &errorText, void *userData);
+    };
+}
+
+#endif //TALCS_MIDIINPUTDEVICE_P_H
