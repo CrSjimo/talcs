@@ -82,7 +82,7 @@ namespace talcs {
                 setGenerator(NoteSynthesizerPrivate::GenerateSawtoothWave());
                 break;
             default:
-                Q_UNREACHABLE();
+                setGenerator(NoteSynthesizerPrivate::GenerateSineWave());
         }
     }
 

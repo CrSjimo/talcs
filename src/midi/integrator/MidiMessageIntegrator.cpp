@@ -41,6 +41,11 @@ namespace talcs {
         AbstractMidiMessageIntegrator::close();
     }
 
+    void MidiMessageIntegrator::flush() {
+        Q_D(MidiMessageIntegrator);
+        d->queue.clear();
+    }
+
     bool MidiMessageIntegrator::processDeviceWillStart(MidiInputDevice *device) {
         Q_D(MidiMessageIntegrator);
         d->queue.clear();

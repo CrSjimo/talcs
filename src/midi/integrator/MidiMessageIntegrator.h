@@ -37,6 +37,8 @@ namespace talcs {
 
         void close() override;
 
+        void flush();
+
     protected:
         bool processDeviceWillStart(MidiInputDevice *device) override;
         void processDeviceStopped() override;

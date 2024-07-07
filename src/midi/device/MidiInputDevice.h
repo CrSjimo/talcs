@@ -39,6 +39,8 @@ namespace talcs {
         explicit MidiInputDevice(int deviceIndex, QObject *parent = nullptr);
         ~MidiInputDevice() override;
 
+        int deviceIndex() const;
+
         bool open();
         bool isOpen() const;
         void close();

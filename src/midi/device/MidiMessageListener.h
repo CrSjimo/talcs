@@ -45,10 +45,10 @@ namespace talcs {
         void removeFilter(MidiMessageListener *filter);
 
     protected:
-        virtual bool processDeviceWillStart(MidiInputDevice *device) = 0;
-        virtual void processDeviceStopped() = 0;
-        virtual bool processMessage(const MidiMessage &message) = 0;
-        virtual void processError(const QString &errorString) = 0;
+        virtual bool processDeviceWillStart(MidiInputDevice *device);
+        virtual void processDeviceStopped();
+        virtual bool processMessage(const MidiMessage &message);
+        virtual void processError(const QString &errorString);
 
         explicit MidiMessageListener(MidiMessageListenerPrivate &d);
 

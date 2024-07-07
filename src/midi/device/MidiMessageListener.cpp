@@ -75,6 +75,17 @@ namespace talcs {
         d->filters.removeOne(filter);
     }
 
+    bool MidiMessageListener::processDeviceWillStart(MidiInputDevice *device) {
+        return true;
+    }
+    void MidiMessageListener::processDeviceStopped() {
+    }
+    bool MidiMessageListener::processMessage(const MidiMessage &message) {
+        return false;
+    }
+    void MidiMessageListener::processError(const QString &errorString) {
+    }
+
     MidiMessageListener::MidiMessageListener(MidiMessageListenerPrivate &d) : d_ptr(&d) {
         d.q_ptr = this;
     }

@@ -30,31 +30,13 @@ class RtMidiIn;
 
 namespace talcs {
 
-    class MidiInputDeviceRootListener : public MidiMessageListener {
-    protected:
-        bool processDeviceWillStart(MidiInputDevice *device) override {
-            return true;
-        }
-
-        void processDeviceStopped() override {
-        }
-
-        bool processMessage(const MidiMessage &message) override {
-            return false;
-        }
-
-        void processError(const QString &errorString) override {
-
-        }
-    };
-
     class MidiInputDevicePrivate {
         Q_DECLARE_PUBLIC(MidiInputDevice)
     public:
         MidiInputDevice *q_ptr;
         int portNumber;
         QScopedPointer<RtMidiIn> midi;
-        mutable MidiInputDeviceRootListener listener;
+        mutable MidiMessageListener listener;
 
         static void rtmidiCallback(double timeStamp, std::vector<unsigned char> *message, void *userData);
         static void rtmidiErrorCallback(RtMidiError::Type type, const std::string &errorText, void *userData);

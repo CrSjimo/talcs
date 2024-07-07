@@ -37,7 +37,9 @@ namespace talcs {
         }
     }
 
-    MidiInputDevice::~MidiInputDevice() = default;
+    MidiInputDevice::~MidiInputDevice() {
+        close();
+    }
 
     void MidiInputDevicePrivate::rtmidiCallback(double timeStamp, std::vector<unsigned char> *message, void *userData) {
         auto d = reinterpret_cast<MidiInputDevicePrivate *>(userData);
@@ -50,6 +52,11 @@ namespace talcs {
         auto d = reinterpret_cast<MidiInputDevicePrivate *>(userData);
         d->q_ptr->setErrorString(QString::fromStdString(errorText));
         d->listener.errorCallback(QString::fromStdString(errorText));
+    }
+
+    int MidiInputDevice::deviceIndex() const {
+        Q_D(const MidiInputDevice);
+        return d->portNumber;
     }
 
     bool MidiInputDevice::open() {
