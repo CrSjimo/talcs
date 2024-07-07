@@ -51,7 +51,7 @@ namespace talcs {
         QMutexLocker locker(&d->filterMutex);
         return std::any_of(d->filters.cbegin(), d->filters.cend(), [&message](MidiMessageListener *filter) {
             return filter->messageCallback(message);
-        }) && processMessage(message);
+        }) || processMessage(message);
     }
 
     void MidiMessageListener::errorCallback(const QString &errorString) {

@@ -48,7 +48,7 @@ namespace talcs {
                     vel /= d->attackRate;
                     if (vel > velFactor)
                         vel = velFactor;
-                } else {
+                } else if (!isAttack) {
                     vel *= d->releaseRate;
                     if (vel < .005)
                         vel = .0;
@@ -58,7 +58,7 @@ namespace talcs {
             }
         };
         double attackRate = .005;
-        double releaseRate = 0;
+        double releaseRate = .0;
         QList<KeyInfo> keys;
 
         struct GenerateSineWave {

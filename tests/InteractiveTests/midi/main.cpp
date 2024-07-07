@@ -20,8 +20,12 @@
 #include <QApplication>
 #include <QDebug>
 
+#include <TalcsCore/NoteSynthesizer.h>
+
 #include <TalcsMidi/MidiMessage.h>
 #include <TalcsMidi/MidiInputDevice.h>
+#include <TalcsMidi/MidiMessageIntegrator.h>
+#include <TalcsMidi/MidiNoteSynthesizer.h>
 
 #include <TalcsDevice/AudioDriverManager.h>
 #include <TalcsDevice/AudioDriver.h>
@@ -40,17 +44,24 @@ int main(int argc, char **argv) {
     qDebug() << MidiInputDevice::devices();
     MidiInputDevice dev(1);
 
-//    auto mgr = AudioDriverManager::createBuiltInDriverManager();
-//    auto drv = mgr->driver(mgr->drivers()[0]);
-//    drv->initialize();
-//    auto audioDev = drv->defaultDevice().isEmpty() ? drv->createDevice(drv->devices()[0]) : drv->createDevice(drv->defaultDevice());
+    auto mgr = AudioDriverManager::createBuiltInDriverManager();
+    auto drv = mgr->driver(mgr->drivers()[0]);
+    drv->initialize();
+    auto audioDev = drv->defaultDevice().isEmpty() ? drv->createDevice(drv->devices()[0]) : drv->createDevice(drv->defaultDevice());
 
-//    auto midiSynth = new MidiSineWaveSynthesizer;
-//    auto playback = new AudioSourcePlayback(midiSynth);
-//    dev.addListener(midiSynth);
+    auto src = new MidiMessageIntegrator;
+    auto midiSynth = new MidiNoteSynthesizer;
+    src->setStream(midiSynth);
 
-//    audioDev->open(audioDev->preferredBufferSize(), audioDev->preferredSampleRate());
-//    audioDev->start(playback);
+    midiSynth->noteSynthesizer()->setGenerator(talcs::NoteSynthesizer::Square);
+    midiSynth->noteSynthesizer()->setAttackRate(std::pow(0.99, 20000.0 / 48000.0));
+    midiSynth->noteSynthesizer()->setReleaseRate(std::pow(0.99, 20000.0 / 48000.0));
+
+    auto playback = new AudioSourcePlayback(src);
+    dev.listener()->addFilter(src);
+
+    audioDev->open(audioDev->preferredBufferSize(), audioDev->preferredSampleRate());
+    audioDev->start(playback);
     dev.open();
     return a.exec();
 }

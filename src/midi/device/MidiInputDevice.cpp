@@ -41,7 +41,6 @@ namespace talcs {
 
     void MidiInputDevicePrivate::rtmidiCallback(double timeStamp, std::vector<unsigned char> *message, void *userData) {
         auto d = reinterpret_cast<MidiInputDevicePrivate *>(userData);
-        qDebug() << timeStamp;
         MidiMessage msg(message->data(), static_cast<int>(message->size()), timeStamp);
         d->listener.messageCallback(msg);
     }

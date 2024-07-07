@@ -126,8 +126,8 @@ int main(int argc, char **argv) {
 
     Detector detector;
     NoteSynthesizer src;
-    src.setAttackRate(std::pow(0.99, 20000.0 / 48000.0));
-    src.setReleaseRate(std::pow(0.99, 20000.0 / 48000.0));
+//    src.setAttackRate(std::pow(0.99, 20000.0 / 48000.0));
+//    src.setReleaseRate(std::pow(0.99, 20000.0 / 48000.0));
     src.setGenerator(NoteSynthesizer::Square);
     src.setDetector(&detector);
     AudioSourcePlayback playback(&src);
