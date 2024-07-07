@@ -20,6 +20,8 @@
 #ifndef TALCS_NoteSynthesizer_P_H
 #define TALCS_NoteSynthesizer_P_H
 
+#include <cmath>
+
 #include <QList>
 
 #include <TalcsCore/NoteSynthesizer.h>
