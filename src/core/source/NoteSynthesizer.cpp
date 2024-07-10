@@ -113,17 +113,28 @@ namespace talcs {
                     return qFuzzyIsNull(item.vel);
                 }), d->keys.end());
             }
-            auto it = std::find_if(d->keys.begin(), d->keys.end(), [&](const auto &item) {
-                return qFuzzyCompare(item.frequency, msg.frequency);
-            });
-            if (msg.isNoteOn) {
-                d->keys.append({d, msg.frequency, msg.velocity, .0, 0, true});
-            } else {
-                if (it != d->keys.end())
-                    it->isAttack = false;
-            }
             if (msg.position == -1)
                 break;
+            if (qFuzzyIsNull(msg.frequency) && !msg.isNoteOn) { // All notes off
+                for (auto &key : d->keys) {
+                    key.isAttack = false;
+                }
+            } else {
+                auto it = std::find_if(d->keys.begin(), d->keys.end(), [&](const auto &item) {
+                    return qFuzzyCompare(item.frequency, msg.frequency);
+                });
+                if (msg.isNoteOn) {
+                    if (it != d->keys.end()) {
+                        it->velFactor = msg.velocity;
+                        it->isAttack = true;
+                    } else {
+                        d->keys.append({d, msg.frequency, msg.velocity, .0, 0, true});
+                    }
+                } else {
+                    if (it != d->keys.end())
+                        it->isAttack = false;
+                }
+            }
         }
         return readData.length;
     }
@@ -137,5 +148,17 @@ namespace talcs {
     NoteSynthesizerDetector *NoteSynthesizer::detector() const {
         Q_D(const NoteSynthesizer);
         return d->detector;
+    }
+
+    void NoteSynthesizer::flush(bool force) {
+        Q_D(NoteSynthesizer);
+        QMutexLocker locker(&d->mutex);
+        if (force) {
+            d->keys.clear();
+        } else {
+            for (auto &key : d->keys)
+                key.isAttack = false;
+        }
+
     }
 } // talcs

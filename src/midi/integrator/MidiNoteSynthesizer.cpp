@@ -71,18 +71,22 @@ namespace talcs {
     }
 
     NoteSynthesizerDetectorMessage MidiNoteSynthesizerPrivate::nextMessage() {
-        while (midiEventsIterator != midiEvents.cend() && !midiEventsIterator->message.isNoteOnOrOff())
+        while (midiEventsIterator != midiEvents.cend()) {
+            if (midiEventsIterator->message.isSysEx() && *midiEventsIterator->message.getSysExData() == 0xf7)
+                return {(midiEventsIterator++)->position, NoteSynthesizerDetectorMessage::AllNotesOff};
+            if (midiEventsIterator->message.isNoteOnOrOff()) {
+                NoteSynthesizerDetectorMessage ret = {
+                    midiEventsIterator->position,
+                    MidiMessage::getMidiNoteInHertz(midiEventsIterator->message.getNoteNumber(), frequencyOfA),
+                    midiEventsIterator->message.getFloatVelocity(),
+                    midiEventsIterator->message.isNoteOn(),
+                };
+                midiEventsIterator++;
+                return ret;
+            }
             midiEventsIterator++;
-        if (midiEventsIterator == midiEvents.cend())
-            return {-1};
-        NoteSynthesizerDetectorMessage ret = {
-            midiEventsIterator->position,
-            MidiMessage::getMidiNoteInHertz(midiEventsIterator->message.getNoteNumber(), frequencyOfA),
-            midiEventsIterator->message.getFloatVelocity(),
-            midiEventsIterator->message.isNoteOn(),
-        };
-        midiEventsIterator++;
-        return ret;
+        }
+        return NoteSynthesizerDetectorMessage::Null;
     }
 
     qint64 MidiNoteSynthesizer::processReading(const AudioSourceReadData &readData, const QList<IntegratedMidiMessage> &midiEvents) {

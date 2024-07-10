@@ -25,6 +25,20 @@
 namespace talcs {
 
     struct NoteSynthesizerDetectorMessage {
+        enum SpecialValueNull {
+            Null,
+        };
+        enum SpecialValueAllNotesOff {
+            AllNotesOff,
+        };
+        NoteSynthesizerDetectorMessage(SpecialValueNull null) : position(-1) {
+        }
+        NoteSynthesizerDetectorMessage(qint64 position, SpecialValueAllNotesOff allNotesOff) : position(position), frequency(.0), isNoteOn(false) {
+        }
+        NoteSynthesizerDetectorMessage(qint64 position, double frequency, bool isNoteOn) : position(position), frequency(frequency), velocity(1.), isNoteOn(isNoteOn) {
+        }
+        NoteSynthesizerDetectorMessage(qint64 position, double frequency, double velocity, bool isNoteOn) : position(position), frequency(frequency), velocity(velocity), isNoteOn(isNoteOn) {
+        }
         qint64 position;
         double frequency;
         double velocity;
@@ -67,6 +81,8 @@ namespace talcs {
 
         void setDetector(NoteSynthesizerDetector *detector);
         NoteSynthesizerDetector *detector() const;
+
+        void flush(bool force = false);
 
     protected:
         explicit NoteSynthesizer(NoteSynthesizerPrivate &d);

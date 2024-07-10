@@ -53,7 +53,7 @@ public:
         if (currentPos == -1) {
             pos += posDelta;
             posDelta = 0;
-            return {-1, false};
+            return NoteSynthesizerDetectorMessage::Null;
         }
         NoteSynthesizerDetectorMessage ret = {currentPos - pos, 0, 0.5, true};
         switch (currentPos % (12000 * 8)) {
