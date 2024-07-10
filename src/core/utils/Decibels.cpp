@@ -23,17 +23,17 @@
 
 namespace talcs {
 
-    float Decibels::decibelsToGain(float decibels, float minusInfinityDb) {
-        return decibels > minusInfinityDb ? std::pow (10.0f, decibels * .1f) : .0f;
+    float Decibels::decibelsToGain(double decibels, double minusInfinityDb) {
+        return static_cast<float>(decibels > minusInfinityDb ? std::pow (10.0, decibels * .1) : .0);
     }
-    float Decibels::gainToDecibels(float gain, float minusInfinityDb) {
-        return gain > .0f ? qMax (minusInfinityDb, std::log10 (gain) * 10.0f) : minusInfinityDb;
+    double Decibels::gainToDecibels(float gain, double minusInfinityDb) {
+        return gain > .0f ? qMax (minusInfinityDb, std::log10 (gain) * 10.0) : minusInfinityDb;
     }
-    QString Decibels::toString(float decibels, int precision, float minusInfinityDb) {
+    QString Decibels::toString(double decibels, int precision, double minusInfinityDb) {
         if (decibels <= minusInfinityDb)
             return "-INF dB";
         QString s;
-        if (decibels >= .0f)
+        if (decibels >= .0)
             s += "+";
         if (precision <= 0)
             s += QString::number(int(decibels));

@@ -28,9 +28,9 @@ namespace talcs {
 
     class TALCSCORE_EXPORT Decibels {
     public:
-        static float decibelsToGain(float decibels, float minusInfinityDb = -96);
-        static float gainToDecibels(float gain, float minusInfinityDb = -96);
-        static QString toString(float decibels, int precision = 1, float minusInfinityDb = -96);
+        static float decibelsToGain(double decibels, double minusInfinityDb = -96);
+        static double gainToDecibels(float gain, double minusInfinityDb = -96);
+        static QString toString(double decibels, int precision = 1, double minusInfinityDb = -96);
     };
 
 }
