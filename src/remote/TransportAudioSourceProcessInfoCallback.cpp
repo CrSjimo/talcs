@@ -42,8 +42,8 @@ namespace talcs {
      *   - If the remote audio context is playing, the source will be played and the position will be synchronized with
      *     the remote audio context.
      */
-    void TransportAudioSourceProcessInfoCallback::onThisBlockProcessInfo(const RemoteAudioDevice::ProcessInfo &processInfo) {
-        if (processInfo.status == RemoteAudioDevice::ProcessInfo::NotPlaying) {
+    void TransportAudioSourceProcessInfoCallback::onThisBlockProcessInfo(const RemoteProcessInfo &processInfo) {
+        if (processInfo.status == RemoteProcessInfo::NotPlaying) {
             if (m_tpSrc->isPlaying() && !m_isPaused)
                 m_tpSrc->pause();
             m_isPaused = true;

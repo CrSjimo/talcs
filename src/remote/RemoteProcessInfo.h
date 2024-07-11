@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2024 CrSjimo                                                 *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,42 +17,51 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_REMOTEAUDIODEVICE_H
-#define TALCS_REMOTEAUDIODEVICE_H
+#ifndef TALCS_REMOTEPROCESSINFO_H
+#define TALCS_REMOTEPROCESSINFO_H
 
-#include <TalcsDevice/AudioDevice.h>
-#include <TalcsRemote/RemoteProcessInfo.h>
+#include <TalcsRemote/TalcsRemoteGlobal.h>
 
 namespace talcs {
 
-    class RemoteAudioDevicePrivate;
-    class RemoteSocket;
+    struct RemoteMidiMessage {
+        int64_t size;
+        int64_t position;
+        char data[1];
+    };
 
-    class TALCSREMOTE_EXPORT RemoteAudioDevice : public AudioDevice {
-        Q_OBJECT
-        Q_DECLARE_PRIVATE(RemoteAudioDevice)
+    struct RemoteMidiMessageList {
+        int64_t size;
+        RemoteMidiMessage messages[1];
+    };
+
+    struct RemoteProcessInfo {
+        int containsInfo;
+
+        //== Playback Status Info ==//
+        enum PlaybackStatus {
+            NotPlaying,
+            Playing,
+            RealtimePlaying,
+        };
+        PlaybackStatus status;
+
+        //== Timeline Info ==//
+        int timeSignatureNumerator;
+        int timeSignatureDenominator;
+        double tempo;
+
+        int64_t position;
+
+        //== MIDI ==//
+        RemoteMidiMessageList midiMessages;
+    };
+
+    class RemoteProcessInfoCallback {
     public:
-
-    public:
-        explicit RemoteAudioDevice(RemoteSocket *socket, const QString &name, QObject *parent = nullptr);
-        ~RemoteAudioDevice() override;
-
-        bool open(qint64 bufferSize, double sampleRate) override;
-        void close() override;
-
-        void addProcessInfoCallback(RemoteProcessInfoCallback *callback);
-        void removeProcessInfoCallback(RemoteProcessInfoCallback *callback);
-
-        bool start(AudioDeviceCallback *audioDeviceCallback) override;
-        void stop() override;
-
-        void lock() override;
-        void unlock() override;
-
-    signals:
-        void remoteOpened(qint64 bufferSize, double sampleRate, int maxChannelCount);
+        virtual void onThisBlockProcessInfo(const RemoteProcessInfo &processInfo) = 0;
     };
 
 }
 
-#endif // TALCS_REMOTEAUDIODEVICE_H
+#endif //TALCS_REMOTEPROCESSINFO_H

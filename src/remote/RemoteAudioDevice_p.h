@@ -53,14 +53,14 @@ namespace talcs {
         };
         char *bufferPrepareStatus;
         QVector<float *> sharedAudioData;
-        RemoteAudioDevice::ProcessInfo *processInfo = nullptr;
+        RemoteProcessInfo *processInfo = nullptr;
         QScopedPointer<AudioDataWrapper> buffer;
 
         QScopedPointer<QThread> prepareBufferProducerThread;
 
         AudioDeviceCallback *audioDeviceCallback = nullptr;
 
-        QList<RemoteAudioDevice::ProcessInfoCallback *> processInfoCallbackList;
+        QList<RemoteProcessInfoCallback *> processInfoCallbackList;
 
         void remoteOpenRequired(qint64 bufferSize, double sampleRate, const QString &ipcKey, int maxChannelCount);
         void remoteCloseRequired();

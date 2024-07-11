@@ -7,7 +7,7 @@ find_package(rpclib REQUIRED)
 
 talcs_add_library(${PROJECT_NAME} AUTOGEN
     SOURCES ${_src}
-    LINKS talcs::Device rpclib::rpc
+    LINKS talcs::Device talcs::Midi rpclib::rpc
     LINKS_PRIVATE Boost::boost
     QT_INCLUDE_PRIVATE Core
 )

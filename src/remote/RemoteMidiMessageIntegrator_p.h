@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2024 CrSjimo                                                 *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,42 +17,20 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_REMOTEAUDIODEVICE_H
-#define TALCS_REMOTEAUDIODEVICE_H
+#ifndef TALCS_REMOTEMIDIMESSAGEINTEGRATOR_P_H
+#define TALCS_REMOTEMIDIMESSAGEINTEGRATOR_P_H
 
-#include <TalcsDevice/AudioDevice.h>
-#include <TalcsRemote/RemoteProcessInfo.h>
+#include <TalcsRemote/RemoteMidiMessageIntegrator.h>
+
+#include <TalcsMidi/private/AbstractMidiMessageIntegrator_p.h>
 
 namespace talcs {
-
-    class RemoteAudioDevicePrivate;
-    class RemoteSocket;
-
-    class TALCSREMOTE_EXPORT RemoteAudioDevice : public AudioDevice {
-        Q_OBJECT
-        Q_DECLARE_PRIVATE(RemoteAudioDevice)
+    class RemoteMidiMessageIntegratorPrivate : public AbstractMidiMessageIntegratorPrivate {
+        Q_DECLARE_PUBLIC(RemoteMidiMessageIntegrator)
     public:
-
-    public:
-        explicit RemoteAudioDevice(RemoteSocket *socket, const QString &name, QObject *parent = nullptr);
-        ~RemoteAudioDevice() override;
-
-        bool open(qint64 bufferSize, double sampleRate) override;
-        void close() override;
-
-        void addProcessInfoCallback(RemoteProcessInfoCallback *callback);
-        void removeProcessInfoCallback(RemoteProcessInfoCallback *callback);
-
-        bool start(AudioDeviceCallback *audioDeviceCallback) override;
-        void stop() override;
-
-        void lock() override;
-        void unlock() override;
-
-    signals:
-        void remoteOpened(qint64 bufferSize, double sampleRate, int maxChannelCount);
+        QList<IntegratedMidiMessage> midiMessages;
+        QMutex mutex;
     };
-
 }
 
-#endif // TALCS_REMOTEAUDIODEVICE_H
+#endif //TALCS_REMOTEMIDIMESSAGEINTEGRATOR_P_H

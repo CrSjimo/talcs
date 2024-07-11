@@ -160,7 +160,7 @@ namespace talcs {
         }
         bufferPrepareStatus = reinterpret_cast<char *>(ptr);
         ptr += sizeof(bool);
-        processInfo = reinterpret_cast<RemoteAudioDevice::ProcessInfo *>(ptr);
+        processInfo = reinterpret_cast<RemoteProcessInfo *>(ptr);
         buffer.reset(new AudioDataWrapper(sharedAudioData.data(), maxChannelCount, bufferSize));
 
         q->setAvailableBufferSizes({bufferSize});
@@ -259,7 +259,7 @@ namespace talcs {
     /**
      * Adds a ProcessInfoCallback.
      */
-    void RemoteAudioDevice::addProcessInfoCallback(RemoteAudioDevice::ProcessInfoCallback *callback) {
+    void RemoteAudioDevice::addProcessInfoCallback(RemoteProcessInfoCallback *callback) {
         Q_D(RemoteAudioDevice);
         d->processInfoCallbackList.append(callback);
     }
@@ -267,7 +267,7 @@ namespace talcs {
     /**
      * Removes a ProcessInfoCallback.
      */
-    void RemoteAudioDevice::removeProcessInfoCallback(RemoteAudioDevice::ProcessInfoCallback *callback) {
+    void RemoteAudioDevice::removeProcessInfoCallback(RemoteProcessInfoCallback *callback) {
         Q_D(RemoteAudioDevice);
         d->processInfoCallbackList.removeOne(callback);
     }
