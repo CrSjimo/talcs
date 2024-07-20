@@ -19,6 +19,7 @@ option(TALCS_FORMAT "Build talcs::Format library" ON)
 option(TALCS_MIDI "Build talcs::Midi library" ON)
 option(TALCS_REMOTE "Build talcs::Remote library" ON)
 option(TALCS_JUCE_ADAPTER "Build talcs::JuceAdapter library" OFF)
+option(TALCS_DSPX "Build talcs::Dspx library" OFF)
 
 
 # ----------------------------------

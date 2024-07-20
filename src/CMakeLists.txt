@@ -127,6 +127,10 @@ if(TALCS_JUCE_ADAPTER)
     add_subdirectory(juceadapter)
 endif()
 
+if(TALCS_DSPX)
+    add_subdirectory(dspx)
+endif()
+
 if(TALCS_INSTALL)
     # Add install target
     set(_install_dir ${CMAKE_INSTALL_LIBDIR}/cmake/${TALCS_INSTALL_NAME})
