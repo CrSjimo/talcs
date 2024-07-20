@@ -26,7 +26,7 @@
 #include <TalcsCore/private/PositionableAudioSource_p.h>
 #include <TalcsFormat/AudioFormatInputSource.h>
 
-#include "MultichannelAudioResampler.h"
+#include <TalcsFormat/MultichannelAudioResampler.h>
 
 namespace talcs {
     class AudioFormatIO;

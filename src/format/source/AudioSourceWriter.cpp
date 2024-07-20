@@ -25,7 +25,7 @@
 #include <TalcsCore/AudioSource.h>
 #include <TalcsCore/InterleavedAudioDataWrapper.h>
 
-#include "AudioFormatIO.h"
+#include <TalcsFormat/AudioFormatIO.h>
 
 namespace talcs {
 
