@@ -95,8 +95,8 @@ namespace talcs {
             return SrcIt(std::find(sourceList.cbegin(), sourceList.cend(), src), &sourceList);
         }
 
-        void moveSource(const SrcIt &pos, const SrcIt &target) {
-            sourceList.splice(pos.m_it, sourceList, target.m_it);
+        void moveSource(const SrcIt &pos, const SrcIt &first, const SrcIt &last) {
+            sourceList.splice(pos.m_it, sourceList, first.m_it, last.m_it);
         }
 
         void swapSource(const SrcIt &first, const SrcIt &second) {
@@ -136,6 +136,13 @@ namespace talcs {
             if (sourceList.empty())
                 return sourceIteratorEnd();
             return sourceIteratorEnd().previous();
+        }
+
+        SrcIt sourceAt(int index) const {
+            auto it = sourceList.cbegin();
+            while (index--)
+                it++;
+            return SrcIt(it, &sourceList);
         }
 
         int soloCounter = 0;

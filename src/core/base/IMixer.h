@@ -74,12 +74,13 @@ namespace talcs {
         virtual void eraseSource(const SourceIterator &srcIt) = 0;
         virtual void removeAllSources() = 0;
 
-        virtual void moveSource(const SourceIterator &pos, const SourceIterator &target) = 0;
+        virtual void moveSource(const SourceIterator &pos, const SourceIterator &first, const SourceIterator &last) = 0;
         virtual void swapSource(const SourceIterator &first, const SourceIterator &second) = 0;
 
         virtual QList<T *> sources() const = 0;
         virtual SourceIterator firstSource() const = 0;
         virtual SourceIterator lastSource() const = 0;
+        virtual SourceIterator sourceAt(int index) const = 0;
         virtual SourceIterator findSource(T *src) const = 0;
 
         virtual SourceIterator nullIterator() const = 0;

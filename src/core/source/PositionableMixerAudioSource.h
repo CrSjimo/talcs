@@ -50,12 +50,13 @@ namespace talcs {
         void eraseSource(const SourceIterator &srcIt) override;
         void removeAllSources() override;
 
-        void moveSource(const SourceIterator &pos, const SourceIterator &target) override;
+        void moveSource(const SourceIterator &pos, const SourceIterator &first, const SourceIterator &last) override;
         void swapSource(const SourceIterator &first, const SourceIterator &second) override;
 
         QList<PositionableAudioSource *> sources() const override;
         SourceIterator firstSource() const override;
         SourceIterator lastSource() const override;
+        SourceIterator sourceAt(int index) const override;
         SourceIterator findSource(PositionableAudioSource *src) const override;
 
         SourceIterator nullIterator() const override;

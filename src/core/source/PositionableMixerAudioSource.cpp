@@ -184,11 +184,10 @@ namespace talcs {
         d->removeAllSources();
     }
 
-    void PositionableMixerAudioSource::moveSource(const PositionableMixerAudioSource::SourceIterator &pos,
-                                                  const PositionableMixerAudioSource::SourceIterator &target) {
+    void PositionableMixerAudioSource::moveSource(const PositionableMixerAudioSource::SourceIterator &pos, const SourceIterator &first, const SourceIterator &last) {
         Q_D(PositionableMixerAudioSource);
         QMutexLocker locker(&d->mutex);
-        d->moveSource(pos, target);
+        d->moveSource(pos, first, last);
     }
 
     void PositionableMixerAudioSource::swapSource(const PositionableMixerAudioSource::SourceIterator &first,
@@ -211,6 +210,11 @@ namespace talcs {
     PositionableMixerAudioSource::SourceIterator PositionableMixerAudioSource::lastSource() const {
         Q_D(const PositionableMixerAudioSource);
         return d->lastSource();
+    }
+
+    PositionableMixerAudioSource::SourceIterator PositionableMixerAudioSource::sourceAt(int index) const {
+        Q_D(const PositionableMixerAudioSource);
+        return d->sourceAt(index);
     }
 
     PositionableMixerAudioSource::SourceIterator

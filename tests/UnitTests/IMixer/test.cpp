@@ -225,7 +225,7 @@ private slots:
         QCOMPARE(mixer.lastSource(), itList[3]);
         QCOMPARE(mixer.findSource(src + 2), itList[2]);
 
-        mixer.moveSource(itList[1], itList[3]);
+        mixer.moveSource(itList[1], itList[3], mixer.nullIterator());
         QList<PositionableAudioSource *> expectedSrcList = {src, src + 3, src + 1, src + 2};
         QCOMPARE(mixer.sources(), expectedSrcList);
 
