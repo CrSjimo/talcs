@@ -104,14 +104,14 @@ namespace talcs {
             setErrorString(SDL_GetError());
             return false;
         }
-        reinterpret_cast<SDLAudioDriver *>(d->driver)->addOpenedDevice(d->devId, this);
+        static_cast<SDLAudioDriver *>(d->driver)->addOpenedDevice(d->devId, this);
         return AudioStreamBase::open(bufferSize, sampleRate);
     }
     void SDLAudioDevice::close() {
         Q_D(SDLAudioDevice);
         SDLAudioDevice::stop();
         SDL_CloseAudioDevice(d->devId);
-        reinterpret_cast<SDLAudioDriver *>(d->driver)->removeOpenedDevice(d->devId);
+        static_cast<SDLAudioDriver *>(d->driver)->removeOpenedDevice(d->devId);
         d->devId = 0;
         d->spec = {};
         AudioDevice::close();

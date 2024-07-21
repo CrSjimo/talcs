@@ -235,6 +235,8 @@ namespace talcs {
         }
         if (audioDeviceCallback)
             audioDeviceCallback->workCallback(buffer.get());
+        else
+            buffer->clear();
     }
 
     bool RemoteAudioDevice::open(qint64 bufferSize, double sampleRate) {
