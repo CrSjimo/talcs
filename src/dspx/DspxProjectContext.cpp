@@ -20,10 +20,6 @@
 #include "DspxProjectContext.h"
 #include "DspxProjectContext_p.h"
 
-#include <TalcsCore/MixerAudioSource.h>
-#include <TalcsCore/PositionableMixerAudioSource.h>
-#include <TalcsCore/TransportAudioSource.h>
-
 #include <TalcsDspx/DspxTrackContext.h>
 
 namespace talcs {

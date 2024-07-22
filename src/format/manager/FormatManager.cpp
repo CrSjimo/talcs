@@ -35,6 +35,7 @@ namespace talcs {
     void FormatManager::addEntry(FormatEntry *entry) {
         Q_D(FormatManager);
         d->entries.append(entry);
+        entry->setParent(this);
         for (const auto &extensionHint : entry->extensionHints()) {
             if (!d->extensionHintDict.contains(extensionHint))
                 d->extensionHintDict.insert(extensionHint, entry);

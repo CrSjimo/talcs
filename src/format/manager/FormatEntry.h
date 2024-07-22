@@ -22,11 +22,13 @@
 
 #include <QObject>
 
+#include <TalcsFormat/TalcsFormatGlobal.h>
+
 namespace talcs {
 
     class AbstractAudioFormatIO;
 
-    class FormatEntry : public QObject {
+    class TALCSFORMAT_EXPORT FormatEntry : public QObject {
         Q_OBJECT
     public:
         ~FormatEntry() override;

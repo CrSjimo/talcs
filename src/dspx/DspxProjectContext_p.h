@@ -23,6 +23,9 @@
 #include <memory>
 
 #include <TalcsCore/BufferingAudioSource.h>
+#include <TalcsCore/MixerAudioSource.h>
+#include <TalcsCore/PositionableMixerAudioSource.h>
+#include <TalcsCore/TransportAudioSource.h>
 
 #include <TalcsDspx/DspxProjectContext.h>
 
