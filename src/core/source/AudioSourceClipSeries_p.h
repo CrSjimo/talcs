@@ -64,17 +64,19 @@ namespace talcs {
 
         QPair<qint64, AudioSourceReadData> calculateClipReadData(const IClipSeriesPrivate::ClipInterval &clip, qint64 seriesPosition,
                                                                         const AudioSourceReadData &seriesReadData) {
+            auto contentLength = reinterpret_cast<PositionableAudioSource *>(clip.content())->length();
+            auto corrLen = qMin(clip.length(), contentLength - d->clipStartPosDict.value(clip.content()));
             auto headCut = qMax(0ll, seriesPosition - clip.position());
-            auto tailCut = qMax(0ll, (clip.position() + clip.length()) - (seriesPosition + seriesReadData.length));
+            auto tailCut = qMax(0ll, (clip.position() + corrLen) - (seriesPosition + seriesReadData.length));
             auto readStart = qMax(0ll, clip.position() - seriesPosition);
-            qint64 clipReadPosition = headCut + d->clipStartPosDict.value(clip.content());
+            qint64 clipReadPosition = qMin(headCut + d->clipStartPosDict.value(clip.content()), contentLength);
             buf.clear();
             if (buf.channelCount() < seriesReadData.buffer->channelCount())
                 buf.resize(seriesReadData.buffer->channelCount(), -1);
             return {clipReadPosition, {
                     &buf,
                     readStart + seriesReadData.startPos,
-                    clip.length() - headCut - tailCut,
+                    qMax(0ll, corrLen - headCut - tailCut),
                     seriesReadData.silentFlags,
             }};
         }
