@@ -188,7 +188,7 @@ namespace talcs {
             tmpBuf.resize(0, 0);
         }
 
-        qint64 mix(const AudioSourceReadData &readData, qint64 readLength) {
+        inline qint64 mix(const AudioSourceReadData &readData, qint64 readLength) {
             auto channelCount = readData.buffer->channelCount();
             auto gainLeftRight = applyGainAndPan(gain, pan);
             int routeCnt = 0;
@@ -196,6 +196,19 @@ namespace talcs {
             for (auto src: sourceList) {
                 auto srcInfo = sourceDict.value(src);
                 bool isMutedBySoloSetting = (soloCounter && !srcInfo.isSolo);
+
+                if (sourceList.size() == 1) { // fast-read
+                    actualReadLength = src->read(AudioSourceReadData(readData.buffer, readData.startPos, readLength, isMutedBySoloSetting ? -1 : silentFlags));
+                    for (int i = 0; i < channelCount; i++) {
+                        if (((1 << i) & silentFlags) != 0) {
+                            readData.buffer->clear(i, readData.startPos, readLength);
+                        } else {
+                            auto gainCh = i == 0 ? gainLeftRight.first : i == 1 ? gainLeftRight.second : gain;
+                            readData.buffer->gainSampleRange(i, readData.startPos, readLength, gainCh);
+                        }
+                    }
+                    break;
+                }
                 tmpBuf.clear();
                 actualReadLength = qMax(
                         src->read(AudioSourceReadData(&tmpBuf, 0, readLength, isMutedBySoloSetting ? -1 : silentFlags)),
