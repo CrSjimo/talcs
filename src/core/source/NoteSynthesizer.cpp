@@ -88,6 +88,7 @@ namespace talcs {
 
     void NoteSynthesizer::setGenerator(const NoteSynthesizer::GeneratorFunction &g) {
         Q_D(NoteSynthesizer);
+        QMutexLocker locker(&d->mutex);
         d->generatorFunction = g;
     }
 

@@ -58,7 +58,7 @@ namespace talcs {
         int clipLen() const;
 
         bool setPathLoad(const QString &path, const QVariant &data = {});
-        bool setPathOpen(const QString &path, const QString &selectedFilter, QVariant &data);
+        bool setPathOpen(const QString &path, const QString &selectedFilter, QVariant &data, QWidget *win);
         QString path() const;
 
         void updatePosition();

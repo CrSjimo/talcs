@@ -129,7 +129,7 @@ namespace talcs {
         return true;
     }
 
-    bool DspxAudioClipContext::setPathOpen(const QString &path, const QString &filter, QVariant &data) {
+    bool DspxAudioClipContext::setPathOpen(const QString &path, const QString &filter, QVariant &data, QWidget *win) {
         Q_D(DspxAudioClipContext);
         auto formatManager = d->trackContext->projectContext()->formatManager();
         if (!formatManager)
@@ -137,7 +137,7 @@ namespace talcs {
         AbstractAudioFormatIO *io = nullptr;
         for (auto entry : formatManager->entries()) {
             if (filter.isEmpty() || entry->filters().contains(filter)) {
-                io = entry->getFormatLoad(path, data);
+                io = entry->getFormatOpen(path, data, win);
                 if (io)
                     break;
             }
