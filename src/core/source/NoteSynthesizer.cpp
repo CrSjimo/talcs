@@ -25,6 +25,62 @@
 #include "NoteSynthesizer_p.h"
 
 namespace talcs {
+
+    /**
+     * @struct NoteSynthesizerDetectorMessage
+     * The message produced by NoteSynthesizerDetector.
+     *
+     * @var NoteSynthesizerDetectorMessage::position
+     * The position of the message relative to the start of interval. If the message is null, this value will be -1.
+     *
+     * @var NoteSynthesizerDetectorMessage::frequency
+     * The frequency (Hz) of the note. If the message is all-notes-off, this value will be 0.0.
+     *
+     * @var NoteSynthesizerDetectorMessage::velocity
+     * The velocity (gain) of the note sound. Ranged between 0.0 and 1.0.
+     *
+     * @var NoteSynthesizerDetectorMessage::isNoteOn
+     * The message is whether note-on of note-off.
+     */
+
+    /**
+     * @fn NoteSynthesizerDetectorMessage::NoteSynthesizerDetectorMessage(SpecialValueNull)
+     * Constructor of null message.
+     */
+
+    /**
+     * @fn NoteSynthesizerDetectorMessage::NoteSynthesizerDetectorMessage(qint64 position, SpecialValueAllNotesOff)
+     * Constructor of all-notes-off message.
+     */
+
+    /**
+     * @fn NoteSynthesizerDetectorMessage::NoteSynthesizerDetectorMessage(qint64 position, double frequency, bool isNoteOn)
+     * Constructor. The velocity is 1.0 by default.
+     */
+
+    /**
+     * @fn NoteSynthesizerDetectorMessage::NoteSynthesizerDetectorMessage(qint64 position, double frequency, double velocity, bool isNoteOn)
+     * Constructor.
+     */
+
+    /**
+     * @class NoteSynthesizerDetector
+     * @brief The detector for NoteSynthesizer
+     */
+
+    /**
+     * @fn void NoteSynthesizerDetector::detectInterval(qint64 intervalLength)
+     * Detects notes in the interval and updates the internal state.
+     */
+
+    /**
+     * @fn NoteSynthesizerDetectorMessage NoteSynthesizerDetector::nextMessage()
+     * Returns the next message within the interval. If there is no more message left, returns null message.
+     */
+
+    /**
+     * Constructor.
+     */
     NoteSynthesizer::NoteSynthesizer() : NoteSynthesizer(*new NoteSynthesizerPrivate) {
 
     }
@@ -33,9 +89,10 @@ namespace talcs {
 
     }
 
-    NoteSynthesizer::~NoteSynthesizer() {
-
-    }
+    /**
+     * Destructor.
+     */
+    NoteSynthesizer::~NoteSynthesizer() = default;
 
     bool NoteSynthesizer::open(qint64 bufferSize, double sampleRate) {
         Q_D(NoteSynthesizer);
@@ -46,27 +103,79 @@ namespace talcs {
         AudioSource::close();
     }
 
+    /**
+     * Sets the attack rate of the synthesizer.
+     *
+     * When attacking, the gain of next value is the gain of previous value divided by the rate.
+     */
     void NoteSynthesizer::setAttackRate(double rate) {
         Q_D(NoteSynthesizer);
         d->attackRate = rate;
     }
 
+    /**
+     * Gets the attack rate of the synthesizer.
+     */
     double NoteSynthesizer::attackRate() const {
         Q_D(const NoteSynthesizer);
         return d->attackRate;
     }
 
+    /**
+     * Sets the release rate of the synthesizer.
+     *
+     * When releasing, the gain of next value is the gain of previous value multiplied by the rate.
+     */
     void NoteSynthesizer::setReleaseRate(double rate) {
         Q_D(NoteSynthesizer);
         d->releaseRate = rate;
     }
 
+    void NoteSynthesizer::setDecayRate(double rate) {
+        Q_D(NoteSynthesizer);
+        d->decayRate = rate;
+    }
+    double NoteSynthesizer::decayRate() const {
+        Q_D(const NoteSynthesizer);
+        return d->decayRate;
+    }
+    void NoteSynthesizer::setDecayRatio(double ratio) {
+        Q_D(NoteSynthesizer);
+        d->decayRatio = ratio;
+    }
+    double NoteSynthesizer::decayRatio() const {
+        Q_D(const NoteSynthesizer);
+        return d->decayRatio;
+    }
+
+    /**
+     * Gets the release rate.
+     */
     double NoteSynthesizer::releaseRate() const {
         Q_D(const NoteSynthesizer);
         return d->releaseRate;
     }
 
+    /**
+     * @enum NoteSynthesizer::Generator
+     * Pre-defined generator patterns.
+     *
+     * @var NoteSynthesizer::Sine
+     * Sine wave.
+     *
+     * @var NoteSynthesizer::Square
+     * Square wave.
+     *
+     * @var NoteSynthesizer::Triangle
+     * Triangle wave.
+     *
+     * @var NoteSynthesizer::Sawtooth
+     * Sawtooth wave.
+     */
 
+    /**
+     * Sets the generator to a pre-defined pattern.
+     */
     void NoteSynthesizer::setGenerator(NoteSynthesizer::Generator g) {
         switch (g) {
             case Sine:
@@ -86,6 +195,17 @@ namespace talcs {
         }
     }
 
+    /**
+     * Sets the generator to a custom function.
+     * @param g the generator function. The first parameter is frequency (unit: sample^(-1), not Hz) and the second
+     * parameter is the position in sample.
+     *
+     * For example, if this generator generates sine wave, the function will be:
+     *
+     * @code
+     * [](double f, qint64 x) { return std::sin(2.0 * PI * f * double(x)); }
+     * @endcode
+     */
     void NoteSynthesizer::setGenerator(const NoteSynthesizer::GeneratorFunction &g) {
         Q_D(NoteSynthesizer);
         QMutexLocker locker(&d->mutex);
@@ -111,46 +231,58 @@ namespace talcs {
                     }
                 }
                 d->keys.erase(std::remove_if(d->keys.begin(), d->keys.end(), [&](const auto &item) {
-                    return qFuzzyIsNull(item.vel);
+                    return qFuzzyIsNull(item.envelop);
                 }), d->keys.end());
             }
             if (msg.position == -1)
                 break;
-            if (qFuzzyIsNull(msg.frequency) && !msg.isNoteOn) { // All notes off
+            if (qFuzzyIsNull(msg.frequency) && msg.messageType == NoteSynthesizerDetectorMessage::NoteOff) { // All notes off
                 for (auto &key : d->keys) {
-                    key.isAttack = false;
+                    key.state = NoteSynthesizerPrivate::KeyInfo::Release;
                 }
             } else {
                 auto it = std::find_if(d->keys.begin(), d->keys.end(), [&](const auto &item) {
                     return qFuzzyCompare(item.frequency, msg.frequency);
                 });
-                if (msg.isNoteOn) {
-                    if (it != d->keys.end()) {
-                        it->velFactor = msg.velocity;
-                        it->isAttack = true;
-                    } else {
-                        d->keys.append({d, msg.frequency, msg.velocity, .0, 0, true});
-                    }
-                } else {
+                if (msg.messageType == NoteSynthesizerDetectorMessage::NoteOff) {
                     if (it != d->keys.end())
-                        it->isAttack = false;
+                        it->state = NoteSynthesizerPrivate::KeyInfo::Release;
+                } else {
+                    if (it != d->keys.end()) {
+                        if (msg.messageType == NoteSynthesizerDetectorMessage::NoteOn || it->state == NoteSynthesizerPrivate::KeyInfo::Release) {
+                            it->vel = msg.velocity;
+                            it->state = NoteSynthesizerPrivate::KeyInfo::Attack;
+                        }
+                    } else {
+                        d->keys.append({d, msg.frequency, msg.velocity, {}, {}, {}});
+                    }
                 }
             }
         }
         return readData.length;
     }
 
+    /**
+     * Sets the NoteSynthesizerDetector detector.
+     */
     void NoteSynthesizer::setDetector(NoteSynthesizerDetector *detector) {
         Q_D(NoteSynthesizer);
         QMutexLocker locker(&d->mutex);
         d->detector = detector;
     }
 
+    /**
+     * Gets the NoteSynthesizerDetector detector.
+     */
     NoteSynthesizerDetector *NoteSynthesizer::detector() const {
         Q_D(const NoteSynthesizer);
         return d->detector;
     }
 
+    /**
+     * Flushes all notes that are being played.
+     * @param force if true, the notes will be hard-interrupted, or if false, an all-notes-off message will be applied.
+     */
     void NoteSynthesizer::flush(bool force) {
         Q_D(NoteSynthesizer);
         QMutexLocker locker(&d->mutex);
@@ -158,7 +290,7 @@ namespace talcs {
             d->keys.clear();
         } else {
             for (auto &key : d->keys)
-                key.isAttack = false;
+                key.state = NoteSynthesizerPrivate::KeyInfo::Release;
         }
 
     }

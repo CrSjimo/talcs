@@ -31,18 +31,23 @@ namespace talcs {
         enum SpecialValueAllNotesOff {
             AllNotesOff,
         };
-        NoteSynthesizerDetectorMessage(SpecialValueNull null) : position(-1) {
+        enum MessageType {
+            NoteOff,
+            NoteOn,
+            NoteOnIfNotPlaying,
+        };
+        NoteSynthesizerDetectorMessage(SpecialValueNull null = {}) : position(-1), frequency{}, velocity{}, messageType{} {
         }
-        NoteSynthesizerDetectorMessage(qint64 position, SpecialValueAllNotesOff allNotesOff) : position(position), frequency(.0), isNoteOn(false) {
+        NoteSynthesizerDetectorMessage(qint64 position, SpecialValueAllNotesOff allNotesOff) : position(position), frequency(.0), velocity{}, messageType(NoteOff) {
         }
-        NoteSynthesizerDetectorMessage(qint64 position, double frequency, bool isNoteOn) : position(position), frequency(frequency), velocity(1.), isNoteOn(isNoteOn) {
+        NoteSynthesizerDetectorMessage(qint64 position, double frequency, MessageType messageType) : position(position), frequency(frequency), velocity(1.), messageType(messageType) {
         }
-        NoteSynthesizerDetectorMessage(qint64 position, double frequency, double velocity, bool isNoteOn) : position(position), frequency(frequency), velocity(velocity), isNoteOn(isNoteOn) {
+        NoteSynthesizerDetectorMessage(qint64 position, double frequency, double velocity, MessageType messageType) : position(position), frequency(frequency), velocity(velocity), messageType(messageType) {
         }
         qint64 position;
         double frequency;
         double velocity;
-        bool isNoteOn;
+        MessageType messageType;
     };
 
     class NoteSynthesizerDetector {
@@ -64,6 +69,12 @@ namespace talcs {
 
         void setAttackRate(double rate);
         double attackRate() const;
+
+        void setDecayRate(double rate);
+        double decayRate() const;
+        void setDecayRatio(double ratio);
+        double decayRatio() const;
+
         void setReleaseRate(double rate);
         double releaseRate() const;
 

@@ -32,34 +32,48 @@ namespace talcs {
     class NoteSynthesizerPrivate : public AudioSourcePrivate {
         Q_DECLARE_PUBLIC(NoteSynthesizer);
     public:
+        constexpr static const double INITIAL_RATIO = .00390625;
         QMutex mutex;
         NoteSynthesizerDetector *detector = nullptr;
 
         struct KeyInfo {
             NoteSynthesizerPrivate *d;
             double frequency;
-            double velFactor;
             double vel;
+            double envelop;
             qint64 x;
-            bool isAttack;
+            enum State {
+                Attack,
+                Decay,
+                Release,
+            } state;
             inline double nextVel() {
-                double ret = vel;
-                if (isAttack && vel < velFactor) {
-                    if (qFuzzyIsNull(vel))
-                        vel = .005;
-                    vel /= d->attackRate;
-                    if (vel > velFactor)
-                        vel = velFactor;
-                } else if (!isAttack) {
-                    vel *= d->releaseRate;
-                    if (vel < .005)
-                        vel = .0;
+                double ret = envelop * vel;
+                switch (state) {
+                    case Attack:
+                        if (qFuzzyIsNull(envelop))
+                            envelop = INITIAL_RATIO;
+                        envelop /= d->attackRate;
+                        if (envelop > 1.0) {
+                            state = Decay;
+                        }
+                        break;
+                    case Decay:
+                        if (envelop > d->decayRatio)
+                            envelop *= d->decayRate;
+                        break;
+                    case Release:
+                        envelop *= d->releaseRate;
+                        if (envelop < INITIAL_RATIO)
+                            envelop = .0;
                 }
                 x++;
                 return ret;
             }
         };
-        double attackRate = .005;
+        double attackRate = INITIAL_RATIO;
+        double decayRate = 1.0;
+        double decayRatio = 1.0;
         double releaseRate = .0;
         QList<KeyInfo> keys;
 

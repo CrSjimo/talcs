@@ -79,7 +79,7 @@ namespace talcs {
                     midiEventsIterator->position,
                     MidiMessage::getMidiNoteInHertz(midiEventsIterator->message.getNoteNumber(), frequencyOfA),
                     midiEventsIterator->message.getFloatVelocity(),
-                    midiEventsIterator->message.isNoteOn(),
+                    midiEventsIterator->message.isNoteOn() ? NoteSynthesizerDetectorMessage::NoteOn : NoteSynthesizerDetectorMessage::NoteOff,
                 };
                 midiEventsIterator++;
                 return ret;
