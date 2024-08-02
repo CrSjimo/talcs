@@ -67,16 +67,17 @@ namespace talcs {
         bool open(qint64 bufferSize, double sampleRate) override;
         void close() override;
 
-        void setAttackRate(double rate);
-        double attackRate() const;
+        void setAttackTime(qint64 t);
+        qint64 attackTime() const;
 
-        void setDecayRate(double rate);
-        double decayRate() const;
+        void setDecayTime(qint64 t);
+        qint64 decayTime() const;
+
         void setDecayRatio(double ratio);
         double decayRatio() const;
 
-        void setReleaseRate(double rate);
-        double releaseRate() const;
+        void setReleaseTime(qint64 t);
+        qint64 releaseTime() const;
 
         enum Generator {
             Sine,

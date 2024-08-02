@@ -55,45 +55,45 @@ public:
             posDelta = 0;
             return NoteSynthesizerDetectorMessage::Null;
         }
-        NoteSynthesizerDetectorMessage ret = {currentPos - pos, 0, 0.5, true};
+        NoteSynthesizerDetectorMessage ret = {currentPos - pos, 0, 0.5, NoteSynthesizerDetectorMessage::NoteOn};
         switch (currentPos % (12000 * 8)) {
             case 12000 * 0:
                 ret.frequency = calcFreq(60);
-                ret.isNoteOn = true;
+                ret.messageType = NoteSynthesizerDetectorMessage::NoteOn;
                 break;
             case 12000 * 1:
                 ret.frequency = calcFreq(60);
-                ret.isNoteOn = false;
-                retQueue.append({currentPos - pos, calcFreq(60), 0.5, true});
+                ret.messageType = NoteSynthesizerDetectorMessage::NoteOff;
+                retQueue.append({currentPos - pos, calcFreq(60), 0.5, NoteSynthesizerDetectorMessage::NoteOn});
                 break;
             case 12000 * 2:
                 ret.frequency = calcFreq(60);
-                ret.isNoteOn = false;
-                retQueue.append({currentPos - pos, calcFreq(67), 0.5, true});
+                ret.messageType = NoteSynthesizerDetectorMessage::NoteOff;
+                retQueue.append({currentPos - pos, calcFreq(67), 0.5, NoteSynthesizerDetectorMessage::NoteOn});
                 break;
             case 12000 * 3:
                 ret.frequency = calcFreq(67);
-                ret.isNoteOn = false;
-                retQueue.append({currentPos - pos, calcFreq(67), 0.5, true});
+                ret.messageType = NoteSynthesizerDetectorMessage::NoteOff;
+                retQueue.append({currentPos - pos, calcFreq(67), 0.5, NoteSynthesizerDetectorMessage::NoteOn});
                 break;
             case 12000 * 4:
                 ret.frequency = calcFreq(67);
-                ret.isNoteOn = false;
-                retQueue.append({currentPos - pos, calcFreq(69), 0.5, true});
+                ret.messageType = NoteSynthesizerDetectorMessage::NoteOff;
+                retQueue.append({currentPos - pos, calcFreq(69), 0.5, NoteSynthesizerDetectorMessage::NoteOn});
                 break;
             case 12000 * 5:
                 ret.frequency = calcFreq(69);
-                ret.isNoteOn = false;
-                retQueue.append({currentPos - pos, calcFreq(69), 0.5, true});
+                ret.messageType = NoteSynthesizerDetectorMessage::NoteOff;
+                retQueue.append({currentPos - pos, calcFreq(69), 0.5, NoteSynthesizerDetectorMessage::NoteOn});
                 break;
             case 12000 * 6:
                 ret.frequency = calcFreq(69);
-                ret.isNoteOn = false;
-                retQueue.append({currentPos - pos, calcFreq(67), 0.5, true});
+                ret.messageType = NoteSynthesizerDetectorMessage::NoteOff;
+                retQueue.append({currentPos - pos, calcFreq(67), 0.5, NoteSynthesizerDetectorMessage::NoteOn});
                 break;
             case 12000 * 7:
                 ret.frequency = calcFreq(67);
-                ret.isNoteOn = false;
+                ret.messageType = NoteSynthesizerDetectorMessage::NoteOff;
                 break;
             default:
                 Q_UNREACHABLE();
@@ -126,9 +126,9 @@ int main(int argc, char **argv) {
 
     Detector detector;
     NoteSynthesizer src;
-//    src.setAttackRate(std::pow(0.99, 20000.0 / 48000.0));
-//    src.setReleaseRate(std::pow(0.99, 20000.0 / 48000.0));
-    src.setGenerator(NoteSynthesizer::Square);
+    src.setAttackTime(0);
+    src.setReleaseTime(0);
+    src.setGenerator(NoteSynthesizer::Sine);
     src.setDetector(&detector);
     AudioSourcePlayback playback(&src);
     dev->start(&playback);

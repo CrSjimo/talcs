@@ -53,10 +53,13 @@ namespace talcs {
                     case Attack:
                         if (qFuzzyIsNull(envelop))
                             envelop = INITIAL_RATIO;
-                        envelop /= d->attackRate;
+                        envelop *= d->attackRate;
                         if (envelop > 1.0) {
+                            envelop = 1.0;
                             state = Decay;
                         }
+                        if (d->attackTime == 0)
+                            ret = vel;
                         break;
                     case Decay:
                         if (envelop > d->decayRatio)
@@ -71,10 +74,17 @@ namespace talcs {
                 return ret;
             }
         };
-        double attackRate = INITIAL_RATIO;
-        double decayRate = 1.0;
+        qint64 attackTime = .0;
+        qint64 decayTime = .0;
+        qint64 releaseTime = .0;
+
+        double attackRate;
+        double decayRate;
         double decayRatio = 1.0;
-        double releaseRate = .0;
+        double releaseRate;
+
+        void updateRates();
+
         QList<KeyInfo> keys;
 
         struct GenerateSineWave {

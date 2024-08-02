@@ -86,7 +86,7 @@ namespace talcs {
     }
 
     NoteSynthesizer::NoteSynthesizer(NoteSynthesizerPrivate &d) : AudioSource(d) {
-
+        d.updateRates();
     }
 
     /**
@@ -104,44 +104,35 @@ namespace talcs {
     }
 
     /**
-     * Sets the attack rate of the synthesizer.
-     *
-     * When attacking, the gain of next value is the gain of previous value divided by the rate.
+     * Sets the attack time (in sample).
      */
-    void NoteSynthesizer::setAttackRate(double rate) {
+    void NoteSynthesizer::setAttackTime(qint64 t) {
         Q_D(NoteSynthesizer);
-        d->attackRate = rate;
+        d->attackTime = t;
+        d->updateRates();
     }
 
     /**
-     * Gets the attack rate of the synthesizer.
+     * Gets the attack time (in sample).
      */
-    double NoteSynthesizer::attackRate() const {
+    qint64 NoteSynthesizer::attackTime() const {
         Q_D(const NoteSynthesizer);
-        return d->attackRate;
+        return d->attackTime;
     }
 
-    /**
-     * Sets the release rate of the synthesizer.
-     *
-     * When releasing, the gain of next value is the gain of previous value multiplied by the rate.
-     */
-    void NoteSynthesizer::setReleaseRate(double rate) {
+    void NoteSynthesizer::setDecayTime(qint64 t) {
         Q_D(NoteSynthesizer);
-        d->releaseRate = rate;
+        d->decayTime = t;
+        d->updateRates();
     }
-
-    void NoteSynthesizer::setDecayRate(double rate) {
-        Q_D(NoteSynthesizer);
-        d->decayRate = rate;
-    }
-    double NoteSynthesizer::decayRate() const {
+    qint64 NoteSynthesizer::decayTime() const {
         Q_D(const NoteSynthesizer);
-        return d->decayRate;
+        return d->decayTime;
     }
     void NoteSynthesizer::setDecayRatio(double ratio) {
         Q_D(NoteSynthesizer);
         d->decayRatio = ratio;
+        d->updateRates();
     }
     double NoteSynthesizer::decayRatio() const {
         Q_D(const NoteSynthesizer);
@@ -149,11 +140,26 @@ namespace talcs {
     }
 
     /**
-     * Gets the release rate.
+     * Sets the release time (in sample).
      */
-    double NoteSynthesizer::releaseRate() const {
+    void NoteSynthesizer::setReleaseTime(qint64 t) {
+        Q_D(NoteSynthesizer);
+        d->releaseTime = t;
+        d->updateRates();
+    }
+
+    /**
+     * Gets the release time (in sample).
+     */
+    qint64 NoteSynthesizer::releaseTime() const {
         Q_D(const NoteSynthesizer);
-        return d->releaseRate;
+        return d->releaseTime;
+    }
+
+    void NoteSynthesizerPrivate::updateRates() {
+        attackRate = std::pow(INITIAL_RATIO, -1.0 / attackTime);
+        decayRate = std::pow(decayRatio, 1.0 / decayTime);
+        releaseRate = std::pow(INITIAL_RATIO / decayRatio, 1.0 / releaseTime);
     }
 
     /**
