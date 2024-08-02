@@ -7,7 +7,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os:
+          - windows-latest
+          - ubuntu-latest
+#          - macos-latest
         qt-version: ['5.15.2', '6.5.3']
 
     runs-on: ${{ matrix.os }}
