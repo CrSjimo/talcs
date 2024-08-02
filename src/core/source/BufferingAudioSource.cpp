@@ -151,6 +151,9 @@ namespace talcs {
         AudioSource::close();
     }
 
+    /**
+     * Sets the buffering size.
+     */
     void BufferingAudioSource::setReadAheadSize(qint64 size) {
         Q_D(BufferingAudioSource);
         QMutexLocker locker(&d->mutex);

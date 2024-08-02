@@ -45,8 +45,8 @@ namespace talcs {
 
     /**
      * @fn QPair<qint64, bool> MetronomeAudioSourceBeatDetector::nextBeat()
-     * Returns the position and whether it is a major beat of the next beat within the interval given by previous
-     * detectInterval() call. If there is no beat left, then the position should be -1.
+     * Returns the position (relative to the start of interval) and whether it is a major beat of the next beat within
+     * the interval given by previous detectInterval() call. If there is no beat left, then the position should be -1.
      */
 
     /**
@@ -211,7 +211,7 @@ namespace talcs {
         return d->detector;
     }
 
-    static const double PI = 3.14159265358979323846;
+    static const double PI = std::acos(-1);
     static const double FACTOR = 3.0 * std::sqrt(3.0) / 8.0;
 
     static float generateMajor(qint64 i, double sampleRate) {

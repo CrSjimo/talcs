@@ -60,6 +60,9 @@ namespace talcs {
     /**
      * @class AudioSource
      * @brief Base class for sources from which audio data can be streamly read
+     *
+     * An AudioSource object can be filtered. In this case, the audio data produced by processReading() will be sent to
+     * the filter's read() function.
      */
 
     /**
@@ -109,6 +112,9 @@ namespace talcs {
         }
     }
 
+    /**
+     * Sets the reading filter.
+     */
     void AudioSource::setReadingFilter(AudioSource *filter) {
         Q_D(AudioSource);
         QMutexLocker locker(&d->filterMutex);
@@ -117,9 +123,17 @@ namespace talcs {
             filter->open(bufferSize(), sampleRate());
     }
 
+    /**
+     * Gets the reading filter.
+     */
     AudioSource *AudioSource::readingFilter() const {
         Q_D(const AudioSource);
         return d->filter;
     }
+
+    /**
+     * @fn qint64 AudioSource::processReading(const AudioSourceReadData &readData)
+     * Derived classes override this function to produce audio.
+     */
 
 }
