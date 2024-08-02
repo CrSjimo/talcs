@@ -56,8 +56,6 @@ int main(int argc, char **argv) {
     src->setStream(midiSynth);
 
     midiSynth->noteSynthesizer()->setGenerator(talcs::NoteSynthesizer::Square);
-    midiSynth->noteSynthesizer()->setAttackRate(std::pow(0.99, 20000.0 / 48000.0));
-    midiSynth->noteSynthesizer()->setReleaseRate(std::pow(0.99, 20000.0 / 48000.0));
 
     auto playback = new AudioSourcePlayback(src);
     dev.listener()->addFilter(src);
