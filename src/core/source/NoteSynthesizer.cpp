@@ -233,40 +233,65 @@ namespace talcs {
                 for (auto &keyInfo : d->keys) {
                     double vel = keyInfo.nextVel();
                     for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
-                        readData.buffer->sampleAt(ch, readData.startPos + currentPos) += static_cast<float>(vel * d->generatorFunction(keyInfo.frequency / sampleRate(), keyInfo.x));
+                        readData.buffer->sampleAt(ch, readData.startPos + currentPos) += static_cast<float>(vel * d->generatorFunction(keyInfo.integration));
                     }
                 }
                 d->keys.erase(std::remove_if(d->keys.begin(), d->keys.end(), [&](const auto &item) {
                     return qFuzzyIsNull(item.envelop);
                 }), d->keys.end());
             }
-            if (msg.position == -1)
+            if (msg.isNull())
                 break;
-            if (qFuzzyIsNull(msg.frequency) && msg.messageType == NoteSynthesizerDetectorMessage::NoteOff) { // All notes off
-                for (auto &key : d->keys) {
-                    key.state = NoteSynthesizerPrivate::KeyInfo::Release;
-                }
-            } else {
-                auto it = std::find_if(d->keys.begin(), d->keys.end(), [&](const auto &item) {
-                    return qFuzzyCompare(item.frequency, msg.frequency);
-                });
-                if (msg.messageType == NoteSynthesizerDetectorMessage::NoteOff) {
-                    if (it != d->keys.end())
-                        it->state = NoteSynthesizerPrivate::KeyInfo::Release;
-                } else {
-                    if (it != d->keys.end()) {
-                        if (msg.messageType == NoteSynthesizerDetectorMessage::NoteOn || it->state == NoteSynthesizerPrivate::KeyInfo::Release) {
-                            it->vel = msg.velocity;
-                            it->state = NoteSynthesizerPrivate::KeyInfo::Attack;
-                        }
-                    } else {
-                        d->keys.append({d, msg.frequency, msg.velocity, {}, {}, {}});
-                    }
-                }
+
+            switch (msg.messageType) {
+                case NoteSynthesizerDetectorMessage::NoteMessage:
+                    d->handleNoteMessage(msg.note);
+                    break;
+                case NoteSynthesizerDetectorMessage::PitchMessage:
+                    d->handlePitchMessage(msg.pitch);
+                    break;
+                case NoteSynthesizerDetectorMessage::VolumeMessage:
+                    d->handleVolumeMessage(msg.volume);
+                    break;
             }
+
         }
         return readData.length;
     }
+
+    void NoteSynthesizerPrivate::handleNoteMessage(const NoteSynthesizerDetectorMessage::Note &msg) {
+        if (qFuzzyIsNull(msg.frequency) && msg.messageType == NoteSynthesizerDetectorMessage::NoteOff) { // All notes off
+            for (auto &key : keys) {
+                key.state = NoteSynthesizerPrivate::KeyInfo::Release;
+            }
+        } else {
+            auto it = std::find_if(keys.begin(), keys.end(), [&](const auto &item) {
+                return qFuzzyCompare(item.frequency, msg.frequency);
+            });
+            if (msg.messageType == NoteSynthesizerDetectorMessage::NoteOff) {
+                if (it != keys.end())
+                    it->state = NoteSynthesizerPrivate::KeyInfo::Release;
+            } else {
+                if (it != keys.end()) {
+                    if (msg.messageType == NoteSynthesizerDetectorMessage::NoteOn || it->state == NoteSynthesizerPrivate::KeyInfo::Release) {
+                        it->vel = msg.velocity;
+                        it->state = NoteSynthesizerPrivate::KeyInfo::Attack;
+                    }
+                } else {
+                    keys.append({this, msg.frequency, msg.velocity, {}, {}, {}});
+                }
+            }
+        }
+    }
+
+    void NoteSynthesizerPrivate::handlePitchMessage(const NoteSynthesizerDetectorMessage::Pitch &msg) {
+        deltaPitch = msg.deltaPitch;
+    }
+
+    void NoteSynthesizerPrivate::handleVolumeMessage(const NoteSynthesizerDetectorMessage::Volume &msg) {
+        volume = msg.volume;
+    }
+
 
     /**
      * Sets the NoteSynthesizerDetector detector.

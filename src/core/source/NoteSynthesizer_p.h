@@ -42,6 +42,7 @@ namespace talcs {
             double vel;
             double envelop;
             qint64 x;
+            double integration;
             enum State {
                 Attack,
                 Decay,
@@ -71,7 +72,9 @@ namespace talcs {
                             envelop = .0;
                 }
                 x++;
-                return ret;
+                integration += frequency / d->q_func()->sampleRate() * std::pow(2, d->deltaPitch / 12.0);
+                integration = std::fmod(integration, 1.0);
+                return ret * d->volume;
             }
         };
         qint64 attackTime = .0;
@@ -83,50 +86,67 @@ namespace talcs {
         double decayRatio = 1.0;
         double releaseRate;
 
+        double deltaPitch = 0.0;
+        double volume = 1.0;
+
         void updateRates();
 
         QList<KeyInfo> keys;
 
         struct GenerateSineWave {
-            inline double operator()(double f, qint64 x) {
+            inline double operator()(double integration) {
                 static const double PI = std::acos(-1);
-                return std::sin(2.0 * PI * f * double(x));
+                return std::sin(2.0 * PI * integration);
             }
         };
 
         struct GenerateSquareWave {
-            inline double operator()(double f, qint64 x) {
-                double period = 1.0 / f;
-                double t = fmod(x, period);
-                return (t < period / 2) ? 1.0 : -1.0;
+            inline double operator()(double integration) {
+                double t = std::fmod(integration, 1.0);
+                if (t < -0.5) {
+                    return 1.0;
+                } else if (t < 0.0) {
+                    return -1.0;
+                } else if (t < 0.5) {
+                    return 1.0;
+                } else {
+                    return -1.0;
+                }
             }
         };
 
         struct GenerateTriangleWave {
-            inline double operator()(double f, qint64 x) {
-                double period = 1.0 / f;
-                double t = fmod(x, period);
-                double normalized_t = t / period;
-
-                if (normalized_t < 0.25) {
-                    return 4.0 * normalized_t;
-                } else if (normalized_t < 0.75) {
-                    return 2.0 - 4.0 * normalized_t;
+            inline double operator()(double integration) {
+                double t = std::fmod(integration, 1.0);
+                if (t < -0.75) {
+                    return 4.0 * (t + 1.0);
+                } else if (t < -0.25) {
+                    return -4.0 * (t + 0.5);
+                } else if (t < 0.25) {
+                    return 4.0 * t;
+                } else if (t < 0.75) {
+                    return -4.0 * (t - 0.5);
                 } else {
-                    return -4.0 + 4.0 * normalized_t;
+                    return 4.0 * (t - 1.0);
                 }
             }
         };
 
         struct GenerateSawtoothWave {
-            inline double operator()(double f, qint64 x) {
-                double period = 1.0 / f;
-                double t = fmod(x, period);
-                return 2.0 * (t / period) - 1.0;
+            inline double operator()(double integration) {
+                double t = std::fmod(integration, 1.0);
+                if (t < 0)
+                    return 2 * t + 1;
+                else
+                    return 2 * t - 1;
             }
         };
 
         NoteSynthesizer::GeneratorFunction generatorFunction = GenerateSineWave();
+
+        void handleNoteMessage(const NoteSynthesizerDetectorMessage::Note &msg);
+        void handlePitchMessage(const NoteSynthesizerDetectorMessage::Pitch &msg);
+        void handleVolumeMessage(const NoteSynthesizerDetectorMessage::Volume &msg);
 
     };
 

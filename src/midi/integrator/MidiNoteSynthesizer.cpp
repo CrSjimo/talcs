@@ -75,12 +75,15 @@ namespace talcs {
             if (midiEventsIterator->message.isSysEx() && *midiEventsIterator->message.getSysExData() == 0xf7)
                 return {(midiEventsIterator++)->position, NoteSynthesizerDetectorMessage::AllNotesOff};
             if (midiEventsIterator->message.isNoteOnOrOff()) {
-                NoteSynthesizerDetectorMessage ret = {
-                    midiEventsIterator->position,
+                NoteSynthesizerDetectorMessage ret = { midiEventsIterator->position, {
                     MidiMessage::getMidiNoteInHertz(midiEventsIterator->message.getNoteNumber(), frequencyOfA),
                     midiEventsIterator->message.getFloatVelocity(),
                     midiEventsIterator->message.isNoteOn() ? NoteSynthesizerDetectorMessage::NoteOn : NoteSynthesizerDetectorMessage::NoteOff,
-                };
+                }};
+                midiEventsIterator++;
+                return ret;
+            } else if (midiEventsIterator->message.isPitchWheel()) {
+                NoteSynthesizerDetectorMessage ret = { midiEventsIterator->position, NoteSynthesizerDetectorMessage::Pitch{(midiEventsIterator->message.getPitchWheelValue() - 8192) / 16383.0 * 2.0}};
                 midiEventsIterator++;
                 return ret;
             }

@@ -55,45 +55,45 @@ public:
             posDelta = 0;
             return NoteSynthesizerDetectorMessage::Null;
         }
-        NoteSynthesizerDetectorMessage ret = {currentPos - pos, 0, 0.5, NoteSynthesizerDetectorMessage::NoteOn};
+        NoteSynthesizerDetectorMessage ret = {currentPos - pos, {0, 0.5, NoteSynthesizerDetectorMessage::NoteOn}};
         switch (currentPos % (12000 * 8)) {
             case 12000 * 0:
-                ret.frequency = calcFreq(60);
-                ret.messageType = NoteSynthesizerDetectorMessage::NoteOn;
+                ret.note.frequency = calcFreq(60);
+                ret.note.messageType = NoteSynthesizerDetectorMessage::NoteOn;
                 break;
             case 12000 * 1:
-                ret.frequency = calcFreq(60);
-                ret.messageType = NoteSynthesizerDetectorMessage::NoteOff;
-                retQueue.append({currentPos - pos, calcFreq(60), 0.5, NoteSynthesizerDetectorMessage::NoteOn});
+                ret.note.frequency = calcFreq(60);
+                ret.note.messageType = NoteSynthesizerDetectorMessage::NoteOff;
+                retQueue.append({currentPos - pos, {calcFreq(60), 0.5, NoteSynthesizerDetectorMessage::NoteOn}});
                 break;
             case 12000 * 2:
-                ret.frequency = calcFreq(60);
-                ret.messageType = NoteSynthesizerDetectorMessage::NoteOff;
-                retQueue.append({currentPos - pos, calcFreq(67), 0.5, NoteSynthesizerDetectorMessage::NoteOn});
+                ret.note.frequency = calcFreq(60);
+                ret.note.messageType = NoteSynthesizerDetectorMessage::NoteOff;
+                retQueue.append({currentPos - pos, {calcFreq(67), 0.5, NoteSynthesizerDetectorMessage::NoteOn}});
                 break;
             case 12000 * 3:
-                ret.frequency = calcFreq(67);
-                ret.messageType = NoteSynthesizerDetectorMessage::NoteOff;
-                retQueue.append({currentPos - pos, calcFreq(67), 0.5, NoteSynthesizerDetectorMessage::NoteOn});
+                ret.note.frequency = calcFreq(67);
+                ret.note.messageType = NoteSynthesizerDetectorMessage::NoteOff;
+                retQueue.append({currentPos - pos, {calcFreq(67), 0.5, NoteSynthesizerDetectorMessage::NoteOn}});
                 break;
             case 12000 * 4:
-                ret.frequency = calcFreq(67);
-                ret.messageType = NoteSynthesizerDetectorMessage::NoteOff;
-                retQueue.append({currentPos - pos, calcFreq(69), 0.5, NoteSynthesizerDetectorMessage::NoteOn});
+                ret.note.frequency = calcFreq(67);
+                ret.note.messageType = NoteSynthesizerDetectorMessage::NoteOff;
+                retQueue.append({currentPos - pos, {calcFreq(69), 0.5, NoteSynthesizerDetectorMessage::NoteOn}});
                 break;
             case 12000 * 5:
-                ret.frequency = calcFreq(69);
-                ret.messageType = NoteSynthesizerDetectorMessage::NoteOff;
-                retQueue.append({currentPos - pos, calcFreq(69), 0.5, NoteSynthesizerDetectorMessage::NoteOn});
+                ret.note.frequency = calcFreq(69);
+                ret.note.messageType = NoteSynthesizerDetectorMessage::NoteOff;
+                retQueue.append({currentPos - pos, {calcFreq(69), 0.5, NoteSynthesizerDetectorMessage::NoteOn}});
                 break;
             case 12000 * 6:
-                ret.frequency = calcFreq(69);
-                ret.messageType = NoteSynthesizerDetectorMessage::NoteOff;
-                retQueue.append({currentPos - pos, calcFreq(67), 0.5, NoteSynthesizerDetectorMessage::NoteOn});
+                ret.note.frequency = calcFreq(69);
+                ret.note.messageType = NoteSynthesizerDetectorMessage::NoteOff;
+                retQueue.append({currentPos - pos, {calcFreq(67), 0.5, NoteSynthesizerDetectorMessage::NoteOn}});
                 break;
             case 12000 * 7:
-                ret.frequency = calcFreq(67);
-                ret.messageType = NoteSynthesizerDetectorMessage::NoteOff;
+                ret.note.frequency = calcFreq(67);
+                ret.note.messageType = NoteSynthesizerDetectorMessage::NoteOff;
                 break;
             default:
                 Q_UNREACHABLE();

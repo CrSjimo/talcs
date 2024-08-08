@@ -32,22 +32,54 @@ namespace talcs {
             AllNotesOff,
         };
         enum MessageType {
+            NoteMessage,
+            PitchMessage,
+            VolumeMessage,
+        };
+        enum NoteMessageType {
             NoteOff,
             NoteOn,
             NoteOnIfNotPlaying,
         };
-        NoteSynthesizerDetectorMessage(SpecialValueNull null = {}) : position(-1), frequency{}, velocity{}, messageType{} {
+
+        struct Note {
+            Note(SpecialValueAllNotesOff allNotesOff) : frequency(.0), velocity{}, messageType(NoteOff){
+            }
+            Note(double frequency, NoteMessageType messageType) : frequency(frequency), velocity(1.), messageType(messageType){
+            }
+            Note(double frequency, double velocity, NoteMessageType messageType) : frequency(frequency), velocity(velocity), messageType(messageType) {
+            }
+
+            double frequency;
+            double velocity;
+            NoteMessageType messageType;
+        };
+        struct Pitch {
+            double deltaPitch;
+        };
+        struct Volume {
+            double volume;
+        };
+        NoteSynthesizerDetectorMessage(SpecialValueNull null = {}) : position(-1), messageType{}, pitch{} {
         }
-        NoteSynthesizerDetectorMessage(qint64 position, SpecialValueAllNotesOff allNotesOff) : position(position), frequency(.0), velocity{}, messageType(NoteOff) {
+        NoteSynthesizerDetectorMessage(qint64 position, Note note) : position(position), messageType(NoteMessage), note(note) {
         }
-        NoteSynthesizerDetectorMessage(qint64 position, double frequency, MessageType messageType) : position(position), frequency(frequency), velocity(1.), messageType(messageType) {
+        NoteSynthesizerDetectorMessage(qint64 position, Pitch pitch) : position(position), messageType(PitchMessage), pitch(pitch) {
         }
-        NoteSynthesizerDetectorMessage(qint64 position, double frequency, double velocity, MessageType messageType) : position(position), frequency(frequency), velocity(velocity), messageType(messageType) {
+        NoteSynthesizerDetectorMessage(qint64 position, Volume volume) : position(position), messageType(VolumeMessage), volume(volume) {
         }
+
+        constexpr bool isNull() noexcept {
+            return position == -1;
+        }
+
         qint64 position;
-        double frequency;
-        double velocity;
         MessageType messageType;
+        union {
+            Note note;
+            Pitch pitch;
+            Volume volume;
+        };
     };
 
     class NoteSynthesizerDetector {
@@ -86,7 +118,7 @@ namespace talcs {
             Sawtooth,
         };
 
-        using GeneratorFunction = std::function<double(double, qint64)>;
+        using GeneratorFunction = std::function<double(double)>;
 
         void setGenerator(Generator);
         void setGenerator(const GeneratorFunction &);
