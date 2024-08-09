@@ -29,15 +29,16 @@
 
 namespace talcs {
 
+    constexpr static const double INITIAL_RATIO = .00390625;
+
     class NoteSynthesizerPrivate : public AudioSourcePrivate {
         Q_DECLARE_PUBLIC(NoteSynthesizer);
     public:
-        constexpr static const double INITIAL_RATIO = .00390625;
         QMutex mutex;
         NoteSynthesizerDetector *detector = nullptr;
 
         struct KeyInfo {
-            NoteSynthesizerPrivate *d;
+            const NoteSynthesizerPrivate *d;
             double frequency;
             double vel;
             double envelop;
@@ -48,48 +49,13 @@ namespace talcs {
                 Decay,
                 Release,
             } state;
-            inline double nextVel() {
-                double ret = envelop * vel;
-                switch (state) {
-                    case Attack:
-                        if (qFuzzyIsNull(envelop))
-                            envelop = INITIAL_RATIO;
-                        envelop *= d->attackRate;
-                        if (envelop > 1.0) {
-                            envelop = 1.0;
-                            state = Decay;
-                        }
-                        if (d->attackTime == 0)
-                            ret = vel;
-                        break;
-                    case Decay:
-                        if (envelop > d->decayRatio)
-                            envelop *= d->decayRate;
-                        break;
-                    case Release:
-                        envelop *= d->releaseRate;
-                        if (envelop < INITIAL_RATIO)
-                            envelop = .0;
-                }
-                x++;
-                integration += frequency / d->q_func()->sampleRate() * std::pow(2, d->deltaPitch / 12.0);
-                integration = std::fmod(integration, 1.0);
-                return ret * d->volume;
-            }
+            inline double nextVel();
         };
-        qint64 attackTime = .0;
-        qint64 decayTime = .0;
-        qint64 releaseTime = .0;
 
-        double attackRate;
-        double decayRate;
-        double decayRatio = 1.0;
-        double releaseRate;
+        NoteSynthesizerConfig config;
 
         double deltaPitch = 0.0;
         double volume = 1.0;
-
-        void updateRates();
 
         QList<KeyInfo> keys;
 
@@ -142,13 +108,62 @@ namespace talcs {
             }
         };
 
-        NoteSynthesizer::GeneratorFunction generatorFunction = GenerateSineWave();
+        inline double generate(double integration) const;
 
         void handleNoteMessage(const NoteSynthesizerDetectorMessage::Note &msg);
         void handlePitchMessage(const NoteSynthesizerDetectorMessage::Pitch &msg);
         void handleVolumeMessage(const NoteSynthesizerDetectorMessage::Volume &msg);
 
     };
+
+    class NoteSynthesizerConfigData : public QSharedData {
+    public:
+        qint64 attackTime{};
+        qint64 decayTime{};
+        qint64 releaseTime{};
+
+        double decayRatio = 1.0;
+
+        double attackRate;
+        double decayRate;
+        double releaseRate;
+
+        NoteSynthesizer::GeneratorFunction generatorFunction = NoteSynthesizerPrivate::GenerateSineWave();
+
+        void updateRates();
+    };
+
+    double NoteSynthesizerPrivate::KeyInfo::nextVel()  {
+        double ret = envelop * vel;
+        switch (state) {
+            case Attack:
+                if (qFuzzyIsNull(envelop))
+                    envelop = INITIAL_RATIO;
+                envelop *= d->config.d->attackRate;
+                if (envelop > 1.0) {
+                    envelop = 1.0;
+                    state = Decay;
+                }
+                if (d->config.d->attackTime == 0)
+                    ret = vel;
+                break;
+            case Decay:
+                if (envelop > d->config.d->decayRatio)
+                    envelop *= d->config.d->decayRate;
+                break;
+            case Release:
+                envelop *= d->config.d->releaseRate;
+                if (envelop < INITIAL_RATIO)
+                    envelop = .0;
+        }
+        x++;
+        integration += frequency / d->q_func()->sampleRate() * std::pow(2, d->deltaPitch / 12.0);
+        integration = std::fmod(integration, 1.0);
+        return ret * d->volume;
+    }
+    double NoteSynthesizerPrivate::generate(double integration) const {
+        return config.d->generatorFunction(integration);
+    }
 
 }
 

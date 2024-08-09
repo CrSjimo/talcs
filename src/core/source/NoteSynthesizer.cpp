@@ -78,6 +78,59 @@ namespace talcs {
      * Returns the next message within the interval. If there is no more message left, returns null message.
      */
 
+    NoteSynthesizerConfig::NoteSynthesizerConfig() : d(new NoteSynthesizerConfigData) {
+        d->updateRates();
+    }
+    void NoteSynthesizerConfig::setAttackTime(qint64 t) {
+        d->attackTime = t;
+        d->updateRates();
+    }
+    qint64 NoteSynthesizerConfig::attackTime() const {
+        return d->attackTime;
+    }
+    void NoteSynthesizerConfig::setDecayTime(qint64 t) {
+        d->decayTime = t;
+        d->updateRates();
+    }
+    qint64 NoteSynthesizerConfig::decayTime() const {
+        return d->decayTime;
+    }
+    void NoteSynthesizerConfig::setDecayRatio(double ratio) {
+        d->decayRatio = ratio;
+        d->updateRates();
+    }
+    double NoteSynthesizerConfig::decayRatio() const {
+        return d->decayRatio;
+    }
+    void NoteSynthesizerConfig::setReleaseTime(qint64 t) {
+        d->releaseTime = t;
+        d->updateRates();
+    }
+    qint64 NoteSynthesizerConfig::releaseTime() const {
+        return d->releaseTime;
+    }
+    void NoteSynthesizerConfig::setGenerator(NoteSynthesizer::Generator g) {
+        switch (g) {
+            case NoteSynthesizer::Generator::Sine:
+                setGenerator(NoteSynthesizerPrivate::GenerateSineWave());
+                break;
+            case NoteSynthesizer::Generator::Square:
+                setGenerator(NoteSynthesizerPrivate::GenerateSquareWave());
+                break;
+            case NoteSynthesizer::Generator::Triangle:
+                setGenerator(NoteSynthesizerPrivate::GenerateTriangleWave());
+                break;
+            case NoteSynthesizer::Generator::Sawtooth:
+                setGenerator(NoteSynthesizerPrivate::GenerateSawtoothWave());
+                break;
+            default:
+                setGenerator(NoteSynthesizerPrivate::GenerateSineWave());
+        }
+    }
+    void NoteSynthesizerConfig::setGenerator(const NoteSynthesizer::GeneratorFunction &g) {
+        d->generatorFunction = g;
+    }
+
     /**
      * Constructor.
      */
@@ -86,7 +139,7 @@ namespace talcs {
     }
 
     NoteSynthesizer::NoteSynthesizer(NoteSynthesizerPrivate &d) : AudioSource(d) {
-        d.updateRates();
+
     }
 
     /**
@@ -108,8 +161,8 @@ namespace talcs {
      */
     void NoteSynthesizer::setAttackTime(qint64 t) {
         Q_D(NoteSynthesizer);
-        d->attackTime = t;
-        d->updateRates();
+        QMutexLocker locker(&d->mutex);
+        d->config.setAttackTime(t);
     }
 
     /**
@@ -117,26 +170,26 @@ namespace talcs {
      */
     qint64 NoteSynthesizer::attackTime() const {
         Q_D(const NoteSynthesizer);
-        return d->attackTime;
+        return d->config.attackTime();
     }
 
     void NoteSynthesizer::setDecayTime(qint64 t) {
         Q_D(NoteSynthesizer);
-        d->decayTime = t;
-        d->updateRates();
+        QMutexLocker locker(&d->mutex);
+        d->config.setDecayTime(t);
     }
     qint64 NoteSynthesizer::decayTime() const {
         Q_D(const NoteSynthesizer);
-        return d->decayTime;
+        return d->config.decayTime();
     }
     void NoteSynthesizer::setDecayRatio(double ratio) {
         Q_D(NoteSynthesizer);
-        d->decayRatio = ratio;
-        d->updateRates();
+        QMutexLocker locker(&d->mutex);
+        d->config.setDecayRatio(ratio);
     }
     double NoteSynthesizer::decayRatio() const {
         Q_D(const NoteSynthesizer);
-        return d->decayRatio;
+        return d->config.decayRatio();
     }
 
     /**
@@ -144,8 +197,8 @@ namespace talcs {
      */
     void NoteSynthesizer::setReleaseTime(qint64 t) {
         Q_D(NoteSynthesizer);
-        d->releaseTime = t;
-        d->updateRates();
+        QMutexLocker locker(&d->mutex);
+        d->config.setReleaseTime(t);
     }
 
     /**
@@ -153,13 +206,13 @@ namespace talcs {
      */
     qint64 NoteSynthesizer::releaseTime() const {
         Q_D(const NoteSynthesizer);
-        return d->releaseTime;
+        return d->config.releaseTime();
     }
 
-    void NoteSynthesizerPrivate::updateRates() {
-        attackRate = std::pow(INITIAL_RATIO, -1.0 / attackTime);
-        decayRate = std::pow(decayRatio, 1.0 / decayTime);
-        releaseRate = std::pow(INITIAL_RATIO / decayRatio, 1.0 / releaseTime);
+    void NoteSynthesizerConfigData::updateRates() {
+        attackRate = std::pow(INITIAL_RATIO, -1.0 / static_cast<double>(attackTime));
+        decayRate = std::pow(decayRatio, 1.0 / static_cast<double>(decayTime));
+        releaseRate = std::pow(INITIAL_RATIO / decayRatio, 1.0 / static_cast<double>(releaseTime));
     }
 
     /**
@@ -183,22 +236,9 @@ namespace talcs {
      * Sets the generator to a pre-defined pattern.
      */
     void NoteSynthesizer::setGenerator(NoteSynthesizer::Generator g) {
-        switch (g) {
-            case Sine:
-                setGenerator(NoteSynthesizerPrivate::GenerateSineWave());
-                break;
-            case Square:
-                setGenerator(NoteSynthesizerPrivate::GenerateSquareWave());
-                break;
-            case Triangle:
-                setGenerator(NoteSynthesizerPrivate::GenerateTriangleWave());
-                break;
-            case Sawtooth:
-                setGenerator(NoteSynthesizerPrivate::GenerateSawtoothWave());
-                break;
-            default:
-                setGenerator(NoteSynthesizerPrivate::GenerateSineWave());
-        }
+        Q_D(NoteSynthesizer);
+        QMutexLocker locker(&d->mutex);
+        d->config.setGenerator(g);
     }
 
     /**
@@ -215,7 +255,17 @@ namespace talcs {
     void NoteSynthesizer::setGenerator(const NoteSynthesizer::GeneratorFunction &g) {
         Q_D(NoteSynthesizer);
         QMutexLocker locker(&d->mutex);
-        d->generatorFunction = g;
+        d->config.setGenerator(g);
+    }
+
+    void NoteSynthesizer::setConfig(const NoteSynthesizerConfig &config) {
+        Q_D(NoteSynthesizer);
+        QMutexLocker locker(&d->mutex);
+        d->config = config;
+    }
+    NoteSynthesizerConfig NoteSynthesizer::config() const {
+        Q_D(const NoteSynthesizer);
+        return d->config;
     }
 
     qint64 NoteSynthesizer::processReading(const AudioSourceReadData &readData) {
@@ -233,7 +283,7 @@ namespace talcs {
                 for (auto &keyInfo : d->keys) {
                     double vel = keyInfo.nextVel();
                     for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
-                        readData.buffer->sampleAt(ch, readData.startPos + currentPos) += static_cast<float>(vel * d->generatorFunction(keyInfo.integration));
+                        readData.buffer->sampleAt(ch, readData.startPos + currentPos) += static_cast<float>(vel * d->generate(keyInfo.integration));
                     }
                 }
                 d->keys.erase(std::remove_if(d->keys.begin(), d->keys.end(), [&](const auto &item) {
@@ -325,4 +375,5 @@ namespace talcs {
         }
 
     }
+
 } // talcs

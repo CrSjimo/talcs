@@ -20,6 +20,8 @@
 #ifndef TALCS_NOTESYNTHESIZER_H
 #define TALCS_NOTESYNTHESIZER_H
 
+#include <QSharedDataPointer>
+
 #include <TalcsCore/AudioSource.h>
 
 namespace talcs {
@@ -90,6 +92,8 @@ namespace talcs {
 
     class NoteSynthesizerPrivate;
 
+    class NoteSynthesizerConfig;
+
     class TALCSCORE_EXPORT NoteSynthesizer : public AudioSource {
         Q_DECLARE_PRIVATE(NoteSynthesizer)
     public:
@@ -123,6 +127,9 @@ namespace talcs {
         void setGenerator(Generator);
         void setGenerator(const GeneratorFunction &);
 
+        void setConfig(const NoteSynthesizerConfig &config);
+        NoteSynthesizerConfig config() const;
+
         void setDetector(NoteSynthesizerDetector *detector);
         NoteSynthesizerDetector *detector() const;
 
@@ -132,6 +139,32 @@ namespace talcs {
         explicit NoteSynthesizer(NoteSynthesizerPrivate &d);
         qint64 processReading(const AudioSourceReadData &readData) override;
 
+    };
+
+    class NoteSynthesizerConfigData;
+
+    class NoteSynthesizerConfig {
+        friend class NoteSynthesizerPrivate;
+    public:
+        NoteSynthesizerConfig();
+
+        void setAttackTime(qint64 t);
+        qint64 attackTime() const;
+
+        void setDecayTime(qint64 t);
+        qint64 decayTime() const;
+
+        void setDecayRatio(double ratio);
+        double decayRatio() const;
+
+        void setReleaseTime(qint64 t);
+        qint64 releaseTime() const;
+
+        void setGenerator(NoteSynthesizer::Generator);
+        void setGenerator(const NoteSynthesizer::GeneratorFunction &);
+
+    private:
+        QSharedDataPointer<NoteSynthesizerConfigData> d;
     };
 
 }
