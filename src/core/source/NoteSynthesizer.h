@@ -143,10 +143,14 @@ namespace talcs {
 
     class NoteSynthesizerConfigData;
 
-    class NoteSynthesizerConfig {
+    class TALCSCORE_EXPORT NoteSynthesizerConfig {
         friend class NoteSynthesizerPrivate;
     public:
         NoteSynthesizerConfig();
+        NoteSynthesizerConfig(const NoteSynthesizerConfig &o);
+        ~NoteSynthesizerConfig();
+
+        NoteSynthesizerConfig &operator=(const NoteSynthesizerConfig &o);
 
         void setAttackTime(qint64 t);
         qint64 attackTime() const;

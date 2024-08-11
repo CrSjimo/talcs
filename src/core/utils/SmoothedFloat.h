@@ -31,14 +31,17 @@ namespace talcs {
     class TALCSCORE_EXPORT SmoothedFloat {
     public:
         SmoothedFloat();
+        SmoothedFloat(const SmoothedFloat &o);
         SmoothedFloat(float initialValue);
         ~SmoothedFloat();
+
+        SmoothedFloat &operator=(const SmoothedFloat &o);
 
         void setRampLength(int steps);
 
         void setTargetValue(float value);
         void setCurrentAndTargetValue(float value);
-        SmoothedFloat &operator=(float value) {
+        inline SmoothedFloat &operator=(float value) {
             setTargetValue(value);
             return *this;
         }

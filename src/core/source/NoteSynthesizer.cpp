@@ -81,6 +81,13 @@ namespace talcs {
     NoteSynthesizerConfig::NoteSynthesizerConfig() : d(new NoteSynthesizerConfigData) {
         d->updateRates();
     }
+
+    NoteSynthesizerConfig::NoteSynthesizerConfig(const NoteSynthesizerConfig &o) = default;
+
+    NoteSynthesizerConfig::~NoteSynthesizerConfig() = default;
+
+    NoteSynthesizerConfig &NoteSynthesizerConfig::operator=(const NoteSynthesizerConfig &o) = default;
+
     void NoteSynthesizerConfig::setAttackTime(qint64 t) {
         d->attackTime = t;
         d->updateRates();

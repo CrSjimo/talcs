@@ -25,11 +25,15 @@ namespace talcs {
     SmoothedFloat::SmoothedFloat() : d(new SmoothedFloatPrivate) {
     }
 
+    SmoothedFloat::SmoothedFloat(const SmoothedFloat &o) = default;
+
     SmoothedFloat::SmoothedFloat(float initialValue) : d(new SmoothedFloatPrivate) {
         d->currentValue = d->targetValue = initialValue;
     }
 
     SmoothedFloat::~SmoothedFloat() = default;
+
+    SmoothedFloat &SmoothedFloat::operator=(const SmoothedFloat &o) = default;
 
     void SmoothedFloatPrivate::setStepSize() {
         stepSize = (targetValue - currentValue) / float(countdown);
