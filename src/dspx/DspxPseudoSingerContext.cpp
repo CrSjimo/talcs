@@ -17,76 +17,46 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#include "DspxTrackContext.h"
-#include "DspxTrackContext_p.h"
+#include "DspxPseudoSingerContext.h"
+#include "DspxPseudoSingerContext_p.h"
 
 #include <TalcsCore/PositionableMixerAudioSource.h>
 #include <TalcsCore/AudioSourceClipSeries.h>
 
-#include <TalcsDspx/DspxProjectContext.h>
-#include <TalcsDspx/DspxAudioClipContext.h>
-#include <TalcsDspx/private/DspxAudioClipContext_p.h>
+#include <TalcsDspx/DspxTrackContext.h>
+#include <TalcsDspx/private/DspxSingingClipContext_p.h>
+#include <TalcsDspx/DspxNoteContext.h>
 
 namespace talcs {
-    DspxTrackContext::DspxTrackContext(DspxProjectContext *projectContext) : QObject(projectContext), d_ptr(new DspxTrackContextPrivate) {
-        Q_D(DspxTrackContext);
+    DspxPseudoSingerContext::DspxPseudoSingerContext(DspxTrackContext *trackContext) : QObject(trackContext), d_ptr(new DspxPseudoSingerContextPrivate) {
+        Q_D(DspxPseudoSingerContext);
         d->q_ptr = this;
-
-        d->controlMixer = std::make_unique<PositionableMixerAudioSource>();
-        d->trackMixer = std::make_unique<PositionableMixerAudioSource>();
         d->clipSeries = std::make_unique<AudioSourceClipSeries>();
-
-        d->trackMixer->addSource(d->clipSeries.get());
-        d->controlMixer->addSource(d->trackMixer.get());
-
-        d->projectContext = projectContext;
+        trackContext->trackMixer()->addSource(d->clipSeries.get());
+        d->trackContext = trackContext;
     }
 
-    DspxTrackContext::~DspxTrackContext() {
-
+    DspxPseudoSingerContext::~DspxPseudoSingerContext() {
+        Q_D(DspxPseudoSingerContext);
+        d->trackContext->trackMixer()->removeSource(d->clipSeries.get());
     }
 
-    PositionableMixerAudioSource *DspxTrackContext::controlMixer() const {
-        Q_D(const DspxTrackContext);
-        return d->controlMixer.get();
+    DspxTrackContext *DspxPseudoSingerContext::trackContext() const {
+        Q_D(const DspxPseudoSingerContext);
+        return d->trackContext;
     }
 
-    PositionableMixerAudioSource *DspxTrackContext::trackMixer() const {
-        Q_D(const DspxTrackContext);
-        return d->trackMixer.get();
-    }
-
-    AudioSourceClipSeries *DspxTrackContext::clipSeries() const {
-        Q_D(const DspxTrackContext);
-        return d->clipSeries.get();
-    }
-
-    DspxProjectContext *DspxTrackContext::projectContext() const {
-        Q_D(const DspxTrackContext);
-        return d->projectContext;
-    }
-
-    void DspxTrackContext::setData(const QVariant &data) {
-        Q_D(DspxTrackContext);
-        d->data = data;
-    }
-
-    QVariant DspxTrackContext::data() const {
-        Q_D(const DspxTrackContext);
-        return d->data;
-    }
-
-    DspxAudioClipContext *DspxTrackContext::addAudioClip(int id) {
-        Q_D(DspxTrackContext);
-        auto clip = new DspxAudioClipContext(this);
+    DspxSingingClipContext *DspxPseudoSingerContext::addSingingClip(int id) {
+        Q_D(DspxPseudoSingerContext);
+        auto clip = new DspxSingingClipContext(this);
         auto clipView = d->clipSeries->insertClip(clip->controlMixer(), 0, 0, 1);
         d->clips.insert(id, clip);
         clip->d_func()->clipView = clipView;
         return clip;
     }
 
-    void DspxTrackContext::removeAudioClip(int id) {
-        Q_D(DspxTrackContext);
+    void DspxPseudoSingerContext::removeSingingClip(int id) {
+        Q_D(DspxPseudoSingerContext);
         Q_ASSERT(d->clips.contains(id));
         auto clip = d->clips.value(id);
         d->clips.remove(id);
@@ -94,8 +64,17 @@ namespace talcs {
         delete clip;
     }
 
-    QList<DspxAudioClipContext *> DspxTrackContext::clips() const {
-        Q_D(const DspxTrackContext);
+    QList<DspxSingingClipContext *> DspxPseudoSingerContext::clips() const {
+        Q_D(const DspxPseudoSingerContext);
         return d->clips.values();
     }
-} // talcs
+
+    void DspxPseudoSingerContext::setConfig(const NoteSynthesizerConfig &config) {
+
+    }
+
+    NoteSynthesizerConfig DspxPseudoSingerContext::config() const {
+        Q_D(const DspxPseudoSingerContext);
+        return d->config;
+    }
+}

@@ -17,49 +17,64 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_DSPXTRACKCONTEXT_H
-#define TALCS_DSPXTRACKCONTEXT_H
-
-#include <QObject>
-
-#include <TalcsDspx/TalcsDspxGlobal.h>
+#include "DspxNoteContext.h"
+#include "DspxNoteContext_p.h"
 
 namespace talcs {
 
-    class PositionableMixerAudioSource;
-    class AudioSourceClipSeries;
+    DspxNoteContext::DspxNoteContext(DspxSingingClipContext *singingClipContext) {
 
-    class DspxProjectContext;
-    class DspxAudioClipContext;
+    }
 
-    class DspxTrackContextPrivate;
+    DspxNoteContext::~DspxNoteContext() {
 
-    class TALCSDSPX_EXPORT DspxTrackContext : public QObject {
-        Q_OBJECT
-        Q_DECLARE_PRIVATE(DspxTrackContext)
-        friend class DspxProjectContext;
-    public:
-        ~DspxTrackContext() override;
+    }
 
-        PositionableMixerAudioSource *controlMixer() const;
-        PositionableMixerAudioSource *trackMixer() const;
-        AudioSourceClipSeries *clipSeries() const;
+    DspxSingingClipContext *DspxNoteContext::singingClipContext() const {
+        return nullptr;
+    }
 
-        DspxProjectContext *projectContext() const;
+    void DspxNoteContext::setPos(int pos) {
 
-        void setData(const QVariant &data);
-        QVariant data() const;
+    }
 
-        DspxAudioClipContext *addAudioClip(int id);
-        void removeAudioClip(int id);
+    int DspxNoteContext::pos() const {
+        return 0;
+    }
 
-        QList<DspxAudioClipContext *> clips() const;
+    void DspxNoteContext::setLength(int length) {
 
-    private:
-        explicit DspxTrackContext(DspxProjectContext *projectContext);
-        QScopedPointer<DspxTrackContextPrivate> d_ptr;
-    };
+    }
 
-} // talcs
+    int DspxNoteContext::length() const {
+        return 0;
+    }
 
-#endif //TALCS_DSPXTRACKCONTEXT_H
+    void DspxNoteContext::updatePosition() {
+
+    }
+
+    void DspxNoteContext::setKeyCent(int cent) {
+
+    }
+
+    int DspxNoteContext::keyCent() const {
+        return 0;
+    }
+
+    void DspxNoteContext::addPitchAnchor(int pos, const QVariant &anchorData) {
+
+    }
+
+    void DspxNoteContext::removePitchAnchor(int pos) {
+
+    }
+
+    void DspxNoteContext::addEnergyAnchor(int pos, const QVariant &anchorData) {
+
+    }
+
+    void DspxNoteContext::removeEnergyAnchor(int pos) {
+
+    }
+}

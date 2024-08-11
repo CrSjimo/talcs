@@ -83,14 +83,24 @@ namespace talcs {
         return d->formatManager;
     }
 
-    void DspxProjectContext::setTimeConverter(const std::function<qint64(int)> &converter) {
+    void DspxProjectContext::setTimeConverter(const DspxProjectContext::TimeConverter &converter) {
         Q_D(DspxProjectContext);
         d->timeConverter = converter;
     }
 
-    std::function<qint64(int)> DspxProjectContext::timeConverter() const {
+    DspxProjectContext::TimeConverter DspxProjectContext::timeConverter() const {
         Q_D(const DspxProjectContext);
         return d->timeConverter;
+    }
+
+    void DspxProjectContext::setInterpolator(const DspxProjectContext::Interpolator &interpolator) {
+        Q_D(DspxProjectContext);
+        d->interpolator = interpolator;
+    }
+
+    DspxProjectContext::Interpolator DspxProjectContext::interpolator() const {
+        Q_D(const DspxProjectContext);
+        return d->interpolator;
     }
 
     void DspxProjectContext::setBufferingReadAheadSize(qint64 size) {

@@ -17,49 +17,17 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_DSPXTRACKCONTEXT_H
-#define TALCS_DSPXTRACKCONTEXT_H
+#ifndef TALCS_DSPXNOTECONTEXT_P_H
+#define TALCS_DSPXNOTECONTEXT_P_H
 
-#include <QObject>
-
-#include <TalcsDspx/TalcsDspxGlobal.h>
+#include <TalcsDspx/DspxNoteContext.h>
 
 namespace talcs {
-
-    class PositionableMixerAudioSource;
-    class AudioSourceClipSeries;
-
-    class DspxProjectContext;
-    class DspxAudioClipContext;
-
-    class DspxTrackContextPrivate;
-
-    class TALCSDSPX_EXPORT DspxTrackContext : public QObject {
-        Q_OBJECT
-        Q_DECLARE_PRIVATE(DspxTrackContext)
-        friend class DspxProjectContext;
+    class DspxNoteContextPrivate {
+        Q_DECLARE_PUBLIC(DspxNoteContext)
     public:
-        ~DspxTrackContext() override;
-
-        PositionableMixerAudioSource *controlMixer() const;
-        PositionableMixerAudioSource *trackMixer() const;
-        AudioSourceClipSeries *clipSeries() const;
-
-        DspxProjectContext *projectContext() const;
-
-        void setData(const QVariant &data);
-        QVariant data() const;
-
-        DspxAudioClipContext *addAudioClip(int id);
-        void removeAudioClip(int id);
-
-        QList<DspxAudioClipContext *> clips() const;
-
-    private:
-        explicit DspxTrackContext(DspxProjectContext *projectContext);
-        QScopedPointer<DspxTrackContextPrivate> d_ptr;
+        DspxNoteContext *q_ptr;
     };
+}
 
-} // talcs
-
-#endif //TALCS_DSPXTRACKCONTEXT_H
+#endif //TALCS_DSPXNOTECONTEXT_P_H

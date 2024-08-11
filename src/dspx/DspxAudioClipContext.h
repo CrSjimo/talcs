@@ -39,7 +39,6 @@ namespace talcs {
         Q_DECLARE_PRIVATE(DspxAudioClipContext)
         friend class DspxTrackContext;
     public:
-        explicit DspxAudioClipContext(DspxTrackContext *trackContext);
         ~DspxAudioClipContext() override;
 
         PositionableMixerAudioSource *controlMixer() const;
@@ -67,6 +66,7 @@ namespace talcs {
         QVariant data() const;
 
     private:
+        explicit DspxAudioClipContext(DspxTrackContext *trackContext);
         QScopedPointer<DspxAudioClipContextPrivate> d_ptr;
 
     };

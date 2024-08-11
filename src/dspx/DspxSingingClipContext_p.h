@@ -17,49 +17,38 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_DSPXTRACKCONTEXT_H
-#define TALCS_DSPXTRACKCONTEXT_H
+#ifndef TALCS_DSPXSINGINGCLIPCONTEXT_P_H
+#define TALCS_DSPXSINGINGCLIPCONTEXT_P_H
 
-#include <QObject>
+#include <memory>
 
-#include <TalcsDspx/TalcsDspxGlobal.h>
+#include <QVariant>
+
+#include <TalcsCore/AudioSourceClipSeries.h>
+
+#include <TalcsDspx/DspxSingingClipContext.h>
 
 namespace talcs {
-
-    class PositionableMixerAudioSource;
-    class AudioSourceClipSeries;
-
-    class DspxProjectContext;
-    class DspxAudioClipContext;
-
-    class DspxTrackContextPrivate;
-
-    class TALCSDSPX_EXPORT DspxTrackContext : public QObject {
-        Q_OBJECT
-        Q_DECLARE_PRIVATE(DspxTrackContext)
-        friend class DspxProjectContext;
+    class DspxSingingClipContextPrivate {
+        Q_DECLARE_PUBLIC(DspxSingingClipContext)
     public:
-        ~DspxTrackContext() override;
+        DspxSingingClipContext *q_ptr;
 
-        PositionableMixerAudioSource *controlMixer() const;
-        PositionableMixerAudioSource *trackMixer() const;
-        AudioSourceClipSeries *clipSeries() const;
+        AudioSourceClipSeries::ClipView clipView;
 
-        DspxProjectContext *projectContext() const;
+        std::unique_ptr<AudioSourceClipSeries> noteClipSeries;
+        std::unique_ptr<PositionableMixerAudioSource> controlMixer;
 
-        void setData(const QVariant &data);
-        QVariant data() const;
+        DspxPseudoSingerContext *pseudoSingerContext;
 
-        DspxAudioClipContext *addAudioClip(int id);
-        void removeAudioClip(int id);
+        int startTick = 0;
+        int clipStartTick = 0;
+        int clipLenTick = 0;
 
-        QList<DspxAudioClipContext *> clips() const;
+        QVariant data;
 
-    private:
-        explicit DspxTrackContext(DspxProjectContext *projectContext);
-        QScopedPointer<DspxTrackContextPrivate> d_ptr;
+        QMap<int, DspxNoteContext *> notes;
     };
+}
 
-} // talcs
-
-#endif //TALCS_DSPXTRACKCONTEXT_H
+#endif //TALCS_DSPXSINGINGCLIPCONTEXT_P_H

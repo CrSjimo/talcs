@@ -51,7 +51,8 @@ namespace talcs {
         std::unique_ptr<MixerAudioSource> preMixer;
 
         FormatManager *formatManager = nullptr;
-        std::function<qint64(int)> timeConverter = [](int) { return 0; };
+        DspxProjectContext::TimeConverter timeConverter = [](int) { return 0; };
+        DspxProjectContext::Interpolator interpolator = [](int, const QVariant &, int, const QVariant &, int){ return 0; };
         qint64 bufferingReadAheadSize = 0;
 
         QList<DspxTrackContext *> tracks;

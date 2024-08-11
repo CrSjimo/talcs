@@ -17,8 +17,8 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_DSPXTRACKCONTEXT_H
-#define TALCS_DSPXTRACKCONTEXT_H
+#ifndef TALCS_DSPXSINGINGCLIPCONTEXT_H
+#define TALCS_DSPXSINGINGCLIPCONTEXT_H
 
 #include <QObject>
 
@@ -27,39 +27,48 @@
 namespace talcs {
 
     class PositionableMixerAudioSource;
-    class AudioSourceClipSeries;
+    class DspxPseudoSingerContext;
+    class DspxNoteContext;
 
-    class DspxProjectContext;
-    class DspxAudioClipContext;
+    class DspxSingingClipContextPrivate;
 
-    class DspxTrackContextPrivate;
-
-    class TALCSDSPX_EXPORT DspxTrackContext : public QObject {
+    class TALCSDSPX_EXPORT DspxSingingClipContext : public QObject {
         Q_OBJECT
-        Q_DECLARE_PRIVATE(DspxTrackContext)
-        friend class DspxProjectContext;
+        Q_DECLARE_PRIVATE(DspxSingingClipContext)
+        friend class DspxPseudoSingerContext;
+        friend class DspxNoteContext;
     public:
-        ~DspxTrackContext() override;
+        ~DspxSingingClipContext() override;
+
+        DspxPseudoSingerContext *pseudoSingerContext() const;
 
         PositionableMixerAudioSource *controlMixer() const;
-        PositionableMixerAudioSource *trackMixer() const;
-        AudioSourceClipSeries *clipSeries() const;
 
-        DspxProjectContext *projectContext() const;
+        void setStart(int tick);
+        int start() const;
+
+        void setClipStart(int tick);
+        int clipStart() const;
+
+        void setClipLen(int tick);
+        int clipLen() const;
+
+        void updatePosition();
 
         void setData(const QVariant &data);
         QVariant data() const;
 
-        DspxAudioClipContext *addAudioClip(int id);
-        void removeAudioClip(int id);
+        DspxNoteContext *addNote(int id);
+        void removeNote(int id);
 
-        QList<DspxAudioClipContext *> clips() const;
+        QList<DspxNoteContext *> notes() const;
 
     private:
-        explicit DspxTrackContext(DspxProjectContext *projectContext);
-        QScopedPointer<DspxTrackContextPrivate> d_ptr;
+        explicit DspxSingingClipContext(DspxPseudoSingerContext *pseudoSingerContext);
+        QScopedPointer<DspxSingingClipContextPrivate> d_ptr;
+
     };
 
 } // talcs
 
-#endif //TALCS_DSPXTRACKCONTEXT_H
+#endif //TALCS_DSPXSINGINGCLIPCONTEXT_H

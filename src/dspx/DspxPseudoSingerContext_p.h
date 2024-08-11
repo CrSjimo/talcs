@@ -17,49 +17,34 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_DSPXTRACKCONTEXT_H
-#define TALCS_DSPXTRACKCONTEXT_H
+#ifndef TALCS_DSPXPSEUDOSINGERCONTEXT_P_H
+#define TALCS_DSPXPSEUDOSINGERCONTEXT_P_H
 
-#include <QObject>
+#include <memory>
 
-#include <TalcsDspx/TalcsDspxGlobal.h>
+#include <QMap>
+
+#include <TalcsCore/NoteSynthesizer.h>
+
+#include <TalcsDspx/DspxPseudoSingerContext.h>
 
 namespace talcs {
 
-    class PositionableMixerAudioSource;
     class AudioSourceClipSeries;
 
-    class DspxProjectContext;
-    class DspxAudioClipContext;
-
-    class DspxTrackContextPrivate;
-
-    class TALCSDSPX_EXPORT DspxTrackContext : public QObject {
-        Q_OBJECT
-        Q_DECLARE_PRIVATE(DspxTrackContext)
-        friend class DspxProjectContext;
+    class DspxPseudoSingerContextPrivate {
+        Q_DECLARE_PUBLIC(DspxPseudoSingerContext);
     public:
-        ~DspxTrackContext() override;
+        DspxPseudoSingerContext *q_ptr;
 
-        PositionableMixerAudioSource *controlMixer() const;
-        PositionableMixerAudioSource *trackMixer() const;
-        AudioSourceClipSeries *clipSeries() const;
+        std::unique_ptr<AudioSourceClipSeries> clipSeries;
 
-        DspxProjectContext *projectContext() const;
+        DspxTrackContext *trackContext;
 
-        void setData(const QVariant &data);
-        QVariant data() const;
+        QMap<int, DspxSingingClipContext *> clips;
 
-        DspxAudioClipContext *addAudioClip(int id);
-        void removeAudioClip(int id);
-
-        QList<DspxAudioClipContext *> clips() const;
-
-    private:
-        explicit DspxTrackContext(DspxProjectContext *projectContext);
-        QScopedPointer<DspxTrackContextPrivate> d_ptr;
+        NoteSynthesizerConfig config;
     };
+}
 
-} // talcs
-
-#endif //TALCS_DSPXTRACKCONTEXT_H
+#endif //TALCS_DSPXPSEUDOSINGERCONTEXT_P_H

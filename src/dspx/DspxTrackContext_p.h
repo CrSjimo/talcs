@@ -24,8 +24,6 @@
 
 #include <QVariant>
 
-#include <TalcsCore/AudioSourceClipSeries.h>
-
 #include <TalcsDspx/DspxTrackContext.h>
 
 namespace talcs {
@@ -42,7 +40,7 @@ namespace talcs {
 
         QVariant data;
 
-        QMap<int, QPair<DspxAudioClipContext *, AudioSourceClipSeries::ClipView>> clips;
+        QMap<int, DspxAudioClipContext *> clips;
 
     };
 }

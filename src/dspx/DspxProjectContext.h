@@ -56,8 +56,14 @@ namespace talcs {
         void setFormatManager(FormatManager *formatManager);
         FormatManager *formatManager() const;
 
-        void setTimeConverter(const std::function<qint64(int)> &converter);
-        std::function<qint64(int)> timeConverter() const;
+        using TimeConverter = std::function<qint64(int)>;
+        void setTimeConverter(const TimeConverter &converter);
+        TimeConverter timeConverter() const;
+
+        using Interpolator = std::function<int(int, const QVariant &, int, const QVariant &, int)>;
+        void setInterpolator(const Interpolator &interpolator);
+        Interpolator interpolator() const;
+
 
         void setBufferingReadAheadSize(qint64 size);
         qint64 bufferingReadAheadSize() const;
