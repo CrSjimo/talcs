@@ -156,10 +156,12 @@ namespace talcs {
 
     bool NoteSynthesizer::open(qint64 bufferSize, double sampleRate) {
         Q_D(NoteSynthesizer);
+        flush(true);
         return AudioSource::open(bufferSize, sampleRate);
     }
 
     void NoteSynthesizer::close() {
+        flush(true);
         AudioSource::close();
     }
 
@@ -289,8 +291,11 @@ namespace talcs {
             for (;currentPos < (msg.position != -1 ? msg.position : readData.length); currentPos++) {
                 for (auto &keyInfo : d->keys) {
                     double vel = keyInfo.nextVel();
+                    if (readData.silentFlags == -1)
+                        continue;
+                    auto generatedSample = static_cast<float>(vel * d->generate(keyInfo.integration));
                     for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
-                        readData.buffer->sampleAt(ch, readData.startPos + currentPos) += static_cast<float>(vel * d->generate(keyInfo.integration));
+                        readData.buffer->sampleAt(ch, readData.startPos + currentPos) += generatedSample;
                     }
                 }
                 d->keys.erase(std::remove_if(d->keys.begin(), d->keys.end(), [&](const auto &item) {
