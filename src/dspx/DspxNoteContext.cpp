@@ -22,12 +22,16 @@
 
 #include <limits>
 
+#include <TalcsCore/AudioBuffer.h>
+
 #include <TalcsDspx/private/DspxSingingClipContext_p.h>
 #include <TalcsDspx/DspxPseudoSingerContext.h>
 #include <TalcsDspx/DspxTrackContext.h>
 #include <TalcsDspx/DspxProjectContext.h>
 
 namespace talcs {
+
+    static AudioBuffer dummyBuffer;
 
     double getFrequencyFromCent(int cent) {
         return 440.0 * std::pow(2.0, (cent / 100.0 - 69.0) / 12.0);
@@ -48,7 +52,13 @@ namespace talcs {
     }
 
     void DspxNoteContextSynthesizer::setNextReadPosition(qint64 pos) {
+        if (pos == PositionableAudioSource::nextReadPosition())
+            return;
+        PositionableAudioSource::setNextReadPosition(0);
+        d->noteSynthesizer->flush(true);
+        d->noteSynthesizer->read({&dummyBuffer, 0, pos, -1});
         PositionableAudioSource::setNextReadPosition(pos);
+
     }
 
     void DspxNoteContextSynthesizer::detectInterval(qint64 intervalLength) {
@@ -76,7 +86,9 @@ namespace talcs {
     }
 
     qint64 DspxNoteContextSynthesizer::processReading(const AudioSourceReadData &readData) {
-        return d->noteSynthesizer->read(readData);
+        d->noteSynthesizer->read(readData);
+        PositionableAudioSource::setNextReadPosition(PositionableAudioSource::nextReadPosition() + readData.length);
+        return readData.length;
     }
 
 
@@ -117,7 +129,6 @@ namespace talcs {
         if (d->lengthTick != tick) {
             d->lengthTick = tick;
             updatePosition();
-            d->synthesizer->setNextReadPosition(0);
         }
     }
 
@@ -135,12 +146,15 @@ namespace talcs {
         auto firstSample = convertTime(d->singingClipContext->start() + d->posTick) - clipPositionSample;
         auto lastSample = convertTime(d->singingClipContext->start() + d->posTick + d->lengthTick) + d->noteSynthesizer->releaseTime() - clipPositionSample;
         clipSeries->setClipRange(d->clipView, firstSample, qMax(qint64(1), lastSample - firstSample));
+        d->synthesizer->setNextReadPosition(0);
     }
 
     void DspxNoteContext::setKeyCent(int cent) {
         Q_D(DspxNoteContext);
-        d->keyCent = cent;
-        d->synthesizer->setNextReadPosition(0);
+        if (d->keyCent != cent) {
+            d->keyCent = cent;
+            d->synthesizer->setNextReadPosition(0);
+        }
     }
 
     int DspxNoteContext::keyCent() const {
