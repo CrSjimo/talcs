@@ -27,6 +27,7 @@
 namespace talcs {
 
     class DspxSingingClipContext;
+    class DspxPseudoSingerContext;
 
     class DspxNoteContextPrivate;
 
@@ -34,15 +35,16 @@ namespace talcs {
         Q_OBJECT
         Q_DECLARE_PRIVATE(DspxNoteContext)
         friend class DspxSingingClipContext;
+        friend class DspxPseudoSingerContext;
     public:
         ~DspxNoteContext() override;
 
         DspxSingingClipContext *singingClipContext() const;
 
-        void setPos(int pos);
+        void setPos(int tick);
         int pos() const;
 
-        void setLength(int length);
+        void setLength(int tick);
         int length() const;
 
         void updatePosition();
@@ -52,9 +54,11 @@ namespace talcs {
 
         void addPitchAnchor(int pos, const QVariant &anchorData);
         void removePitchAnchor(int pos);
+        void clearPitchAnchor();
 
         void addEnergyAnchor(int pos, const QVariant &anchorData);
         void removeEnergyAnchor(int pos);
+        void clearEnergyAnchor();
 
     private:
         explicit DspxNoteContext(DspxSingingClipContext *singingClipContext);

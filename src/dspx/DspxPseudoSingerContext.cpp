@@ -25,7 +25,7 @@
 
 #include <TalcsDspx/DspxTrackContext.h>
 #include <TalcsDspx/private/DspxSingingClipContext_p.h>
-#include <TalcsDspx/DspxNoteContext.h>
+#include <TalcsDspx/private/DspxNoteContext_p.h>
 
 namespace talcs {
     DspxPseudoSingerContext::DspxPseudoSingerContext(DspxTrackContext *trackContext) : QObject(trackContext), d_ptr(new DspxPseudoSingerContextPrivate) {
@@ -70,7 +70,14 @@ namespace talcs {
     }
 
     void DspxPseudoSingerContext::setConfig(const NoteSynthesizerConfig &config) {
-
+        Q_D(DspxPseudoSingerContext);
+        d->config = config;
+        for (auto clip : clips()) {
+            for (auto note : clip->notes()) {
+                note->d_func()->noteSynthesizer->setConfig(config);
+                note->updatePosition();
+            }
+        }
     }
 
     NoteSynthesizerConfig DspxPseudoSingerContext::config() const {

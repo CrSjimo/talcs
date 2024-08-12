@@ -25,7 +25,7 @@
 #include <TalcsDspx/DspxProjectContext.h>
 #include <TalcsDspx/DspxTrackContext.h>
 #include <TalcsDspx/private/DspxPseudoSingerContext_p.h>
-#include <TalcsDspx/DspxNoteContext.h>
+#include <TalcsDspx/private/DspxNoteContext_p.h>
 
 namespace talcs {
 
@@ -115,14 +115,26 @@ namespace talcs {
     }
 
     DspxNoteContext *DspxSingingClipContext::addNote(int id) {
-        return nullptr;
+        Q_D(DspxSingingClipContext);
+        auto note = new DspxNoteContext(this);
+        auto noteClipView = d->noteClipSeries->insertClip(note->d_func()->synthesizer.get(), 0, 0, 1);
+        d->notes.insert(id, note);
+        note->d_func()->clipView = noteClipView;
+        note->d_func()->noteSynthesizer->setConfig(d->pseudoSingerContext->config());
+        return note;
     }
 
     void DspxSingingClipContext::removeNote(int id) {
-
+        Q_D(DspxSingingClipContext);
+        Q_ASSERT(d->notes.contains(id));
+        auto note = d->notes.value(id);
+        d->notes.remove(id);
+        d->noteClipSeries->removeClip(note->d_func()->clipView);
+        delete note;
     }
 
     QList<DspxNoteContext *> DspxSingingClipContext::notes() const {
-        return QList<DspxNoteContext *>();
+        Q_D(const DspxSingingClipContext);
+        return d->notes.values();
     }
 }

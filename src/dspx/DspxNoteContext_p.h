@@ -20,13 +20,59 @@
 #ifndef TALCS_DSPXNOTECONTEXT_P_H
 #define TALCS_DSPXNOTECONTEXT_P_H
 
+#include <memory>
+
+#include <QVariant>
+
+#include <TalcsCore/PositionableAudioSource.h>
+#include <TalcsCore/AudioSourceClipSeries.h>
+#include <TalcsCore/NoteSynthesizer.h>
+
 #include <TalcsDspx/DspxNoteContext.h>
 
 namespace talcs {
+
+    class DspxNoteContextSynthesizer : public talcs::PositionableAudioSource, public talcs::NoteSynthesizerDetector {
+    public:
+        bool open(qint64 bufferSize, double sampleRate) override;
+        void close() override;
+
+        qint64 length() const override;
+
+        void setNextReadPosition(qint64 pos) override;
+
+        void detectInterval(qint64 intervalLength) override;
+        NoteSynthesizerDetectorMessage nextMessage() override;
+
+        DspxNoteContextPrivate *d;
+        QList<NoteSynthesizerDetectorMessage> messages;
+        QList<NoteSynthesizerDetectorMessage>::const_iterator messageIterator;
+
+    protected:
+        qint64 processReading(const AudioSourceReadData &readData) override;
+    };
+
     class DspxNoteContextPrivate {
         Q_DECLARE_PUBLIC(DspxNoteContext)
     public:
         DspxNoteContext *q_ptr;
+
+        AudioSourceClipSeries::ClipView clipView;
+
+        std::unique_ptr<NoteSynthesizer> noteSynthesizer;
+        std::unique_ptr<DspxNoteContextSynthesizer> synthesizer;
+
+        DspxSingingClipContext *singingClipContext;
+
+        int posTick = 0;
+        int lengthTick = 0;
+
+        int keyCent = 0;
+
+        QVariant data;
+
+        QMap<int, QVariant> pitchAnchors;
+        QMap<int, QVariant> energyAnchors;
     };
 }
 
