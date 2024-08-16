@@ -17,7 +17,7 @@ option(TALCS_DEVICE_ENABLE_SDL "Enable SDL in talcs::Device library" ON)
 option(TALCS_DEVICE_ENABLE_ASIO "Enable ASIO in talcs::Device library" OFF)
 option(TALCS_FORMAT "Build talcs::Format library" ON)
 option(TALCS_MIDI "Build talcs::Midi library" ON)
-option(TALCS_REMOTE "Build talcs::Remote library" ON)
+option(TALCS_REMOTE "Build talcs::Remote library" OFF)
 option(TALCS_JUCE_ADAPTER "Build talcs::JuceAdapter library" OFF)
 option(TALCS_DSPX "Build talcs::Dspx library" OFF)
 
