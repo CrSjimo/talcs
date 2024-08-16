@@ -13,64 +13,82 @@
 ## Modules
 
 - Core
+  
+  The core module includes basic buffers, sources, and utilities for audio processing. The core module is required by all other modules.
 
-  The core module includes basic buffers, sources and utilities for audio processing.
+- Essential Modules
+  
+  - Device
+    
+    The device module includes functionalities for outputting audio to the device.
+  
+  - Format
+    
+    The format module includes functionalities for accessing formatted audio files.
+  
+  - MIDI
+    
+    The MIDI module can process MIDI messages, read inputs from MIDI devices, and do MIDI-related audio processing.
 
-- Device
+- Additional Modules
+  
+  - Remote (requires: Device, MIDI)
+    
+    The remote module provides interfaces to communicate with the remote audio bridge. See [talcs-remote](https://github.com/CrSjimo/talcs-remote).
+  
+  - JUCE Adapter
+    
+    The JUCE adapter module provides adapters for some classes in [JUCE](https://github.com/juce-framework/JUCE).
+  
+  - DSPX (requires: Format)
+    
+    The DSPX module includes classes for building up the audio-processing context in [DSPX](https://github.com/diffscope/opendspx/) editor applications.
 
-  The device module includes functionalities of outputting audio to the device.
+Essential modules will be built by default, and additional modules will not be built by default. To enable or disable the build of a module, set the corresponding CMake option on or off.
 
-- Format
+The device module provides two internal implementations: SDL and ASIO. SDL is enabled and ASIO is disabled by default. To enable or disable, set the CMake option `TALCS_DEVICE_ENABLE_SDL` and `TALCS_DEVICE_ENABLE_ASIO` on or off.
 
-  The format module includes functionalities of accessing formatted audio files.
-
-- Remote
-
-  The remote module provides interfaces to communicate with the remote audio bridge. See [talcs-remote](https://github.com/CrSjimo/talcs-remote).
-
-- Synthesis
-
-  The synthesis module provides interfaces for asynchronous audio synthesizers.
-
-## Documentation
+## API Documentation
 
 [Documentation homepage](https://talcs.sjimo.dev/)
 
 ## Dependencies
 
-- [Qt 5.15.2](https://qt-project.org/)
-
-  A cross-platform application development framework
+- [Qt](https://qt-project.org/) (tested on 5.15.2 and 6.5.3)
 
 - [5cript/interval-tree](https://github.com/5cript/interval-tree)
 
-  A C++ header only interval tree implementation.
+- [libsdl-org/SDL](https://github.com/libsdl-org/SDL) (used by: Device)
 
-- [libsdl-org/SDL](https://github.com/libsdl-org/SDL)
+- [libsndfile/libsndfile](https://github.com/libsndfile/libsndfile) (used by: Format)
 
-  Simple Directmedia Layer
+- [ASIO SDK](https://www.steinberg.net/developers/) <i>(optional)</i> (used by: Device)
 
-- [libsndfile/libsndfile](https://github.com/libsndfile/libsndfile)
+- [avaneev/r8brain-free-src](https://github.com/avaneev/r8brain-free-src) (used by: Format)
 
-  A C library for reading and writing sound files containing sampled audio data.
+- [thestk/rtmidi](https://github.com/thestk/rtmidi) (used by: MIDI)
 
-- [ASIO SDK](https://www.steinberg.net/developers/) <i>(optional)</i>
+- [rpclib/rpclib](https://github.com/rpclib/rpclib) (used by: Remote)
 
-  Audio Stream Input/Output (ASIO) is a protocol allowing communication between a software application and a computer’s sound card.
+- [Boost](https://www.boost.org/) (used by: Remote)
 
-- [avaneev/r8brain-free-src](https://github.com/avaneev/r8brain-free-src)
+- [JUCE](https://github.com/juce-framework/JUCE) (used by: JUCE Adapter)
 
-  High-quality pro audio resampler / sample rate converter C++ library. Very fast, for both audio resampling and time-series interpolation.
+- Build Dependencies
+  
+  - [qmsetup](https://github.com/stdware/qmsetup)
+  
+  - [Doxygen](https://www.doxygen.nl/) <i>(optional)</i>
 
-- [rpclib/rpclib](https://github.com/rpclib/rpclib)
+TALCS uses vcpkg to manage dependency libraries, except Qt, ASIO SDK, r8brain, and JUCE:
 
-  rpclib is a modern C++ msgpack-RPC server and client library
+- The port files of interval-tree and qmsetup are in [stdware/vcpkg-overlay](https://github.com/stdware/vcpkg-overlay). The documentation about how to install libraries is also in this repository. This repository is included as a submodule in `scripts/vcpkg`.
 
-## Build Dependencies
+- ASIO SDK should be downloaded manually from [Steinberg's official website](https://www.steinberg.net/asiosdk) and configured in CMake option `TALCS_ASIOSDK_DIR`. 
 
-- [Doxygen](https://www.doxygen.nl/) <i>(optional)</i>
+- r8brain is included as a submodule in the TALCS repository.
 
-- [qmsetup](https://github.com/stdware/qmsetup)
+- JUCE should be manually specified in the CMake option `JUCE_DIR` to make CMake find it.
 
 ## License of TALCS
 
