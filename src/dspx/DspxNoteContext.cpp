@@ -20,6 +20,8 @@
 #include "DspxNoteContext.h"
 #include "DspxNoteContext_p.h"
 
+#include <cmath>
+
 #include <limits>
 
 #include <TalcsCore/AudioBuffer.h>
