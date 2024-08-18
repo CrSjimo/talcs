@@ -57,7 +57,7 @@ namespace talcs {
         d->midiMessages.clear();
         if (processInfo.containsInfo) {
             auto midiMessagesRawData = &processInfo.midiMessages;
-            d->midiMessages.reserve(static_cast<int>(midiMessagesRawData->size));
+            d->midiMessages.reserve(midiMessagesRawData->size);
             auto midiMessagesRawDataPointer = reinterpret_cast<const char *>(midiMessagesRawData->messages);
             for (int i = 0; i < midiMessagesRawData->size; i++) {
                 auto midiMessageRawData = reinterpret_cast<const RemoteMidiMessage *>(midiMessagesRawDataPointer);

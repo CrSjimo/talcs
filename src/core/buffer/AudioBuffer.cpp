@@ -42,7 +42,7 @@ namespace talcs {
     }
 
     float &AudioBuffer::sampleAt(int channel, qint64 pos) {
-        return m_buffer[channel][static_cast<int>(pos)];
+        return m_buffer[channel][pos];
     }
     float AudioBuffer::constSampleAt(int channel, qint64 pos) const {
         return m_buffer.at(channel).at(static_cast<int>(pos));
@@ -74,7 +74,7 @@ namespace talcs {
         }
         if (newSampleCount != -1) {
             for (auto &vec : m_buffer) {
-                vec.resize(static_cast<int>(newSampleCount));
+                vec.resize(newSampleCount);
             }
         }
     }

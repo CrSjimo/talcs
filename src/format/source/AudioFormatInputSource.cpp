@@ -73,7 +73,7 @@ namespace talcs {
 
     void AudioFormatInputSourcePrivate::AudioFormatInputResampler::read(const AudioSourceReadData &readData) {
         d->io->seek(d->inPosition);
-        tmpBuf.resize(static_cast<int>(readData.length * channelCount()));
+        tmpBuf.resize(readData.length * channelCount());
         auto inLength = d->io->read(tmpBuf.data(), readData.length);
         InterleavedAudioDataWrapper wrapper(tmpBuf.data(), channelCount(), readData.length);
         for (int i = 0; i < channelCount(); i++) {
