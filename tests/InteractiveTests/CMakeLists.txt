@@ -27,3 +27,5 @@ add_subdirectory(AudioProcessorVisualization)
 add_subdirectory(AudioSourceReadingFilter)
 
 add_subdirectory(NoteSynthesizer)
+
+add_subdirectory(WaveformPainter)

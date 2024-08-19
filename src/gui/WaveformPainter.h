@@ -22,6 +22,8 @@
 
 #include <QObject>
 
+#include <TalcsGui/TalcsGuiGlobal.h>
+
 class QPainter;
 
 namespace talcs {
@@ -30,7 +32,7 @@ namespace talcs {
 
     class WaveformPainterPrivate;
 
-    class WaveformPainter : public QObject {
+    class TALCSGUI_EXPORT WaveformPainter : public QObject {
         Q_OBJECT
         Q_DECLARE_PRIVATE(WaveformPainter)
     public:

@@ -24,6 +24,7 @@
 
 #include <QRect>
 #include <QPainter>
+#include <QDebug>
 
 #include <TalcsCore/PositionableAudioSource.h>
 
@@ -33,7 +34,8 @@ namespace talcs {
         d->q_ptr = this;
         d->worker.d = d;
         d->worker.moveToThread(&d->workerThread);
-        d->workerThread.start();
+
+        connect(&d->worker, &WaveformPainterWorker::workRequired, &d->worker, &WaveformPainterWorker::work);
     }
 
     WaveformPainter::~WaveformPainter() {
@@ -43,9 +45,40 @@ namespace talcs {
         d->workerThread.wait();
     }
 
+    template <typename T, typename S>
+    constexpr auto divideCeiling(T a, S b) {
+        return a / b + (a % b != 0);
+    }
+
     void WaveformPainter::setSource(PositionableAudioSource *src, int channelCount, qint64 length, bool mergeChannels) {
         Q_D(WaveformPainter);
+        d->isInterrupted = true;
+        d->workerThread.quit();
+        d->workerThread.wait();
+        d->src = src;
+        d->channelCount = channelCount;
+        d->length = length;
+        d->mergeChannels = mergeChannels;
 
+        d->mipmap16.resize(mergeChannels ? 1 : channelCount);
+        for (auto &mipmap : d->mipmap16) {
+            mipmap.clear();
+            mipmap.resize(divideCeiling(length, 16));
+        }
+        d->mipmap256.resize(mergeChannels ? 1 : channelCount);
+        for (auto &mipmap : d->mipmap256) {
+            mipmap.clear();
+            mipmap.resize(divideCeiling(length, 256));
+        }
+        d->mipmap4096.resize(mergeChannels ? 1 : channelCount);
+        for (auto &mipmap : d->mipmap4096) {
+            mipmap.clear();
+            mipmap.resize(divideCeiling(length, 4096));
+        }
+
+        d->buf.resize(channelCount, src->bufferSize() / 16 * 16);
+
+        d->workerThread.start();
     }
 
     void WaveformPainter::startLoad(qint64 startPosHint, qint64 length) {
@@ -59,20 +92,16 @@ namespace talcs {
         d->isInterrupted = true;
     }
 
-    template <typename T, typename S>
-    constexpr auto divideCeiling(T a, S b) {
-        return a / b + (a % b != 0);
-    }
-
     void mergeChannels(AudioBuffer &buf, qint64 sampleCount) {
-        for (int ch = 0; ch < buf.channelCount(); ch++) {
+        int chCnt = buf.channelCount();
+        for (int ch = 0; ch < chCnt; ch++) {
             if (ch == 0)
-                std::transform(buf.readPointerTo(0, 0), buf.readPointerTo(0, sampleCount), buf.writePointerTo(0, 0), [ch](float v) {
-                    return static_cast<float>(v / static_cast<double>(ch));
+                std::transform(buf.readPointerTo(0, 0), buf.readPointerTo(0, sampleCount), buf.writePointerTo(0, 0), [chCnt](float v) {
+                    return static_cast<float>(v / static_cast<double>(chCnt));
                 });
             else
-                std::transform(buf.readPointerTo(ch, 0), buf.readPointerTo(ch, sampleCount), buf.readPointerTo(0, 0), buf.writePointerTo(0, 0), [ch](float v, float v0) {
-                    return static_cast<float>(v / static_cast<double>(ch)) + v0;
+                std::transform(buf.readPointerTo(ch, 0), buf.readPointerTo(ch, sampleCount), buf.readPointerTo(0, 0), buf.writePointerTo(0, 0), [chCnt](float v, float v0) {
+                    return static_cast<float>(v / static_cast<double>(chCnt)) + v0;
                 });
         }
 
@@ -85,23 +114,23 @@ namespace talcs {
         d->src->setNextReadPosition(startPos);
 
         auto index16 = initialIndex16;
-        for (; startPos < length; startPos += d->buf.sampleCount()) {
-            auto actualReadLength = std::min(d->buf.sampleCount(), length - startPos);
+        for (auto curPos = startPos; curPos < startPos + length; curPos += d->buf.sampleCount()) {
+            auto actualReadLength = std::min(d->buf.sampleCount(), startPos + length - curPos);
             d->src->read({&d->buf, 0, actualReadLength});
             if (d->mergeChannels)
                 mergeChannels(d->buf, actualReadLength);
             for (qint64 sampleIndex = 0; sampleIndex < actualReadLength; sampleIndex += 16, index16++) {
                 for (int ch = 0; ch < (d->mergeChannels ? 1 : d->buf.channelCount()); ch++) {
-                    auto bufMinMax = d->buf.findMinMax(ch, index16, std::min(actualReadLength - sampleIndex, qint64(16)));
-                    d->mipmap16[ch][index16].first = static_cast<qint8>(qBound(-128, static_cast<int>(std::floor(bufMinMax.first * 127.0)), 127));
-                    d->mipmap16[ch][index16].second = static_cast<qint8>(qBound(-128, static_cast<int>(std::ceil(bufMinMax.second * 127.0)), 127));
+                    auto bufMinMax = d->buf.findMinMax(ch, sampleIndex, std::min(actualReadLength - sampleIndex, qint64(16)));
+                    d->mipmap16[ch][index16].first = static_cast<qint8>(qBound(-128, static_cast<int>(std::floor((bufMinMax.first + 1.0f) * 127.5)) - 128, 127));
+                    d->mipmap16[ch][index16].second = static_cast<qint8>(qBound(-128, static_cast<int>(std::ceil((bufMinMax.second + 1.0f) * 127.5)) - 128, 127));
                 }
             }
         }
 
         auto index256 = startPos / 256;
         auto length256 = divideCeiling(length, 256);
-        for (qint64 i = 0; i < length256; i++) {
+        for (qint64 i = 0; i < length256; i++, index256++) {
             for (int ch = 0; ch < (d->mergeChannels ? 1 : d->buf.channelCount()); ch++) {
                 auto firstIt = d->mipmap16[ch].begin() + index256 * 16;
                 d->mipmap256[ch][index256].first = std::min_element(firstIt, firstIt + std::min<qint64>(d->mipmap16[ch].end() - firstIt, 16), [](auto a, auto b) {
@@ -115,7 +144,7 @@ namespace talcs {
 
         auto index4096 = startPos / 4096;
         auto length4096 = divideCeiling(length, 4096);
-        for (qint64 i = 0; i < length4096; i++) {
+        for (qint64 i = 0; i < length4096; i++, index4096++) {
             for (int ch = 0; ch < (d->mergeChannels ? 1 : d->buf.channelCount()); ch++) {
                 auto firstIt = d->mipmap256[ch].begin() + index4096 * 16;
                 d->mipmap4096[ch][index4096].first = std::min_element(firstIt, firstIt + std::min<qint64>(d->mipmap256[ch].end() - firstIt, 16), [](auto a, auto b) {
@@ -135,23 +164,24 @@ namespace talcs {
         Q_D(const WaveformPainter);
         auto startPos = static_cast<qint64>(std::round(startPosSecond * d->src->sampleRate()));
         auto length = static_cast<qint64>(std::round(startPosSecond * d->src->sampleRate()));
+        // TODO bound check
         QPair<qint8, qint8> ret;
-        const QVector<QPair<qint8, qint8>> *mipmap;
-        int mipmapSize;
-        if (length >= 4096) {
-            mipmap = &d->mipmap4096[channel];
-            mipmapSize = 4096;
-        } else if (length >= 256) {
-            mipmap = &d->mipmap256[channel];
-            mipmapSize = 256;
-        } else {
-            mipmap = &d->mipmap16[channel];
-            mipmapSize = 16;
-        }
-        auto initialIndex = startPos / mipmapSize;
-        for (auto i = initialIndex; i < (startPos + length) / mipmapSize; i++) {
-            ret.first = std::min(ret.first, (*mipmap)[i - initialIndex].first);
-            ret.second = std::max(ret.second, (*mipmap)[i - initialIndex].second);
+        auto initialIndex = startPos / 16;
+        auto endIndex = (startPos + length) / 16;
+        for (auto i = initialIndex; i < endIndex; i++) {
+            if (i % 256 && endIndex - i > 256) {
+                ret.first = std::min(ret.first, d->mipmap4096[channel][i / 256].first);
+                ret.second = std::max(ret.second, d->mipmap4096[channel][i / 256].second);
+                i += 256;
+            } else if (i % 16 && endIndex - i > 16) {
+                ret.first = std::min(ret.first, d->mipmap256[channel][i / 16].first);
+                ret.second = std::max(ret.second, d->mipmap256[channel][i / 16].second);
+                i += 16;
+            } else {
+                ret.first = std::min(ret.first, d->mipmap16[channel][i].first);
+                ret.second = std::max(ret.second, d->mipmap16[channel][i].second);
+                i += 1;
+            }
         }
         return ret;
     }
@@ -159,29 +189,30 @@ namespace talcs {
     void WaveformPainter::paint(QPainter *painter, const QRect &rect, double startPosSecond, double lengthSecond, int channel, double verticalScale) const {
         Q_D(const WaveformPainter);
         auto unitLengthSecond = lengthSecond / rect.width();
-        auto unitLength = static_cast<qint64>(std::round(unitLengthSecond));
-        const QVector<QPair<qint8, qint8>> *mipmap;
-        int mipmapSize;
-        if (unitLength >= 4096) {
-            mipmap = &d->mipmap4096[channel];
-            mipmapSize = 4096;
-        } else if (unitLength >= 256) {
-            mipmap = &d->mipmap256[channel];
-            mipmapSize = 256;
-        } else {
-            mipmap = &d->mipmap16[channel];
-            mipmapSize = 16;
-        }
+        auto unitLength = static_cast<qint64>(std::round(unitLengthSecond * d->src->sampleRate()));
+        // TODO bound check
         for (int x = rect.left(); x <= rect.right(); x++) {
             QPair<qint8, qint8> ret;
             auto startPos = static_cast<qint64>(std::round(startPosSecond * d->src->sampleRate()));
-            auto initialIndex = startPos / mipmapSize;
-            for (auto i = initialIndex; i < (startPos + unitLength) / mipmapSize; i++) {
-                ret.first = std::min(ret.first, (*mipmap)[i - initialIndex].first);
-                ret.second = std::max(ret.second, (*mipmap)[i - initialIndex].second);
+            auto initialIndex = startPos / 16;
+            auto endIndex = (startPos + unitLength) / 16;
+            for (auto i = initialIndex; i < endIndex;) {
+                if (i % 256 && endIndex - i > 256) {
+                    ret.first = std::min(ret.first, d->mipmap4096[channel][i / 256].first);
+                    ret.second = std::max(ret.second, d->mipmap4096[channel][i / 256].second);
+                    i += 256;
+                } else if (i % 16 && endIndex - i > 16) {
+                    ret.first = std::min(ret.first, d->mipmap256[channel][i / 16].first);
+                    ret.second = std::max(ret.second, d->mipmap256[channel][i / 16].second);
+                    i += 16;
+                } else {
+                    ret.first = std::min(ret.first, d->mipmap16[channel][i].first);
+                    ret.second = std::max(ret.second, d->mipmap16[channel][i].second);
+                    i += 1;
+                }
             }
             startPosSecond += unitLengthSecond;
-            painter->drawLine(QLineF(x, rect.top() + 1.0 / 255.0 * (255 - ret.first), x, rect.top() + 1.0 / 255.0 * (255 - ret.second)));
+            painter->drawRect(QRectF(x, rect.top() + 1.0 / 255.0 * (128 - ret.second) * rect.height(), 1, rect.top() + 1.0 / 255.0 * (ret.second - ret.first) * rect.height()));
         }
     }
 
