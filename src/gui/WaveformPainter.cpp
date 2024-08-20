@@ -21,6 +21,7 @@
 #include "WaveformPainter_p.h"
 
 #include <algorithm>
+#include <cmath>
 
 #include <QRect>
 #include <QPainter>
