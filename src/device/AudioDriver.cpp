@@ -83,6 +83,23 @@ namespace talcs {
     }
 
     /**
+     * Creates a default device.
+     *
+     * The behavior of the device created by this function might be different from the device created by calling
+     * createDevice() with defaultDevice(). Therefore, please use this function to create default device, and use
+     * defaultDevice() when you only want to know the name of default device.
+     *
+     * AudioDevice::name() of the created device may also differ from deviceName().
+     *
+     * Whether the return value of this function is null should be the same as whether the return value of defaultDevice()
+     * is null.
+     * @see createDevice(), defaultDevice()
+     */
+    AudioDevice *AudioDriver::createDefaultDevice() {
+        return nullptr;
+    }
+
+    /**
      * @fn AudioDevice *AudioDriver::createDevice(const QString &name)
      * Creates an audio device.
      *

@@ -96,7 +96,10 @@ namespace talcs {
     bool OutputContext::setDevice(const QString &deviceName) {
         Q_D(OutputContext);
         std::unique_ptr<talcs::AudioDevice> dev;
-        dev.reset(d->driver->createDevice(deviceName));
+        if (deviceName.isEmpty())
+            dev.reset(d->driver->createDefaultDevice());
+        else
+            dev.reset(d->driver->createDevice(deviceName));
         if (!dev || !dev->isInitialized()) {
             return false;
         }
@@ -133,7 +136,7 @@ namespace talcs {
             }
             if (i == -1) {
                 if (!d->driver->defaultDevice().isEmpty())
-                    currentDevice.reset(d->driver->createDevice(d->driver->defaultDevice()));
+                    currentDevice.reset(d->driver->createDefaultDevice());
             } else {
                 currentDevice.reset(d->driver->createDevice(d->driver->devices()[i]));
             }

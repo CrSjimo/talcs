@@ -46,6 +46,7 @@ namespace talcs {
 
         virtual QStringList devices() const = 0;
         virtual QString defaultDevice() const;
+        virtual AudioDevice *createDefaultDevice();
         virtual AudioDevice *createDevice(const QString &name) = 0;
 
     signals:

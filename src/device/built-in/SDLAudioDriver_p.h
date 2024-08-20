@@ -43,6 +43,7 @@ namespace talcs {
         void finalize() override;
         QStringList devices() const override;
         QString defaultDevice() const override;
+        AudioDevice * createDefaultDevice() override;
         AudioDevice *createDevice(const QString &name) override;
 
         static QList<SDLAudioDriver *> getDrivers();

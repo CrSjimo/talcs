@@ -101,6 +101,12 @@ namespace talcs {
             return {};
         }
     }
+
+    AudioDevice *SDLAudioDriver::createDefaultDevice() {
+        auto dev = new SDLAudioDevice({}, this);
+        return dev;
+    }
+
     AudioDevice *SDLAudioDriver::createDevice(const QString &name) {
         auto dev = new SDLAudioDevice(name, this);
         return dev;

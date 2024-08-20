@@ -48,19 +48,30 @@ namespace talcs {
         Q_D(SDLAudioDevice);
         setName(name);
         setDriver(driver);
-        auto devName = name.toUtf8().data();
         SDL_AudioSpec preferredSpec;
-        int cnt = SDL_GetNumAudioDevices(0);
-        int devIndex = 0;
-        for (int i = 0; i < cnt; i++) {
-            if (std::strcmp(devName, SDL_GetAudioDeviceName(i, 0)) == 0) {
-                devIndex = i;
-                break;
+        char *devName;
+        if (name.isEmpty()) {
+            SDL_AudioSpec spec;
+            if (SDL_GetDefaultAudioInfo(&devName, &spec, 0) == 0) {
+                SDL_free(devName);
+            } else {
+                setErrorString(SDL_GetError());
+                return;
             }
-        }
-        if (SDL_GetAudioDeviceSpec(devIndex, 0, &preferredSpec) != 0) {
-            setErrorString(SDL_GetError());
-            return;
+        } else {
+            int cnt = SDL_GetNumAudioDevices(0);
+            int devIndex = 0;
+            devName = name.toUtf8().data();
+            for (int i = 0; i < cnt; i++) {
+                if (std::strcmp(devName, SDL_GetAudioDeviceName(i, 0)) == 0) {
+                    devIndex = i;
+                    break;
+                }
+            }
+            if (SDL_GetAudioDeviceSpec(devIndex, 0, &preferredSpec) != 0) {
+                setErrorString(SDL_GetError());
+                return;
+            }
         }
         setChannelCount(qMin(quint8(8), preferredSpec.channels));
         if (preferredSpec.samples == 0)
@@ -99,7 +110,7 @@ namespace talcs {
         };
         d->spec.userdata = d;
 
-        d->devId = SDL_OpenAudioDevice(name().toUtf8().data(), 0, &d->spec, nullptr, 0);
+        d->devId = SDL_OpenAudioDevice(name().isEmpty() ? nullptr : name().toUtf8().data(), 0, &d->spec, nullptr, 0);
         if (d->devId == 0) {
             setErrorString(SDL_GetError());
             return false;
