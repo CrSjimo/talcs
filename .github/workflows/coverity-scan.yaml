@@ -26,7 +26,12 @@ jobs:
           cmake -B build -G Ninja `
             -DCMAKE_BUILD_TYPE=RelWithDebInfo `
             -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT_DIR }}/scripts/buildsystems/vcpkg.cmake" `
-            -Dqmsetup_DIR=${{ env.QMSETUP_INSTALLED_DIR }}/lib/cmake/qmsetup
+            -DTALCS_BUILD_TESTS:BOOL=ON `
+            -DTALCS_ENABLE_ASIO:BOOL=ON `
+            -DTALCS_REMOTE:BOOL=ON `
+            -DTALCS_DSPX:BOOL=ON `
+            -DTALCS_GUI:BOOL=ON `
+            -DTALCS_ASIOSDK_DIR=${{ env.ASIOSDK_DIR }}
           
       - name: Build TALCS with Coverity Scan
         uses: vapier/coverity-scan-action@v1

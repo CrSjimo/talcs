@@ -1,5 +1,7 @@
 project(tst_talcs_AudioProcessorVisualization)
 
+talcs_skip_without(FORMAT)
+
 set(CMAKE_AUTOUIC on)
 set(CMAKE_AUTOMOC on)
 set(CMAKE_AUTORCC on)

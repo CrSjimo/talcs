@@ -1,5 +1,7 @@
 project(tst_talcs_r8brain)
 
+talcs_skip_without(FORMAT)
+
 file(GLOB _src *.h *.cpp)
 
 add_executable(${PROJECT_NAME} ${_src})

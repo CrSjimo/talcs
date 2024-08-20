@@ -1,5 +1,7 @@
 project(tst_talcs_AccessAudioFileTutorial)
 
+talcs_skip_without(DEVICE FORMAT)
+
 file(GLOB _src *.h *.cpp)
 
 add_executable(${PROJECT_NAME} ${_src})

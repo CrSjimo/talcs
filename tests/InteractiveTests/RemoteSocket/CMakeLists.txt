@@ -1,5 +1,7 @@
 project(tst_talcs_RemoteSocket)
 
+talcs_skip_without(DEVICE FORMAT REMOTE)
+
 file(GLOB _src *.h *.cpp)
 
 add_executable(${PROJECT_NAME} ${_src})

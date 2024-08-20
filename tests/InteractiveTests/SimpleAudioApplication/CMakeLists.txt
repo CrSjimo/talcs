@@ -1,5 +1,7 @@
 project(tst_talcs_SimpleAudioApplication)
 
+talcs_skip_without(DEVICE FORMAT)
+
 set(CMAKE_AUTOUIC on)
 set(CMAKE_AUTOMOC on)
 set(CMAKE_AUTORCC on)
