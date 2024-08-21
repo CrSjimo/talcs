@@ -203,8 +203,10 @@ namespace talcs {
         auto unitLengthSecond = lengthSecond / rect.width();
         for (int x = rect.left(); x <= rect.right(); x++) {
             auto ret = getMinMaxFromMipmap(startPosSecond, unitLengthSecond, channel);
+            auto minValue = std::max(-128.0, ret.first * verticalScale);
+            auto maxValue = std::min(127.0, ret.second * verticalScale);
             startPosSecond += unitLengthSecond;
-            painter->drawRect(QRectF(x, rect.top() + 1.0 / 255.0 * (128 - ret.second) * rect.height(), 1, rect.top() + 1.0 / 255.0 * (ret.second - ret.first) * rect.height()));
+            painter->drawRect(QRectF(x, rect.top() + 1.0 / 255.0 * (128 - maxValue) * rect.height(), 1, rect.top() + 1.0 / 255.0 * (maxValue - minValue) * rect.height()));
         }
     }
 

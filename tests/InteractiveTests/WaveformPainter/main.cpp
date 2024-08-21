@@ -25,6 +25,7 @@
 #include <QGridLayout>
 #include <QSlider>
 #include <QElapsedTimer>
+#include <QOpenGLWidget>
 
 #include <TalcsFormat/AudioFormatIO.h>
 #include <TalcsFormat/AudioFormatInputSource.h>
@@ -37,10 +38,11 @@ static WaveformPainter waveformPainter;
 static int startPosSecond = 0;
 static int lengthSecond = 1;
 
-class DemoWidget : public QWidget {
+class DemoWidget : public QOpenGLWidget {
 protected:
-    void paintEvent(QPaintEvent *event) override {
+    void paintGL() override {
         QPainter painter(this);
+        painter.setPen(Qt::NoPen);
         painter.setBrush(Qt::blue);
         QElapsedTimer timer;
         timer.start();
