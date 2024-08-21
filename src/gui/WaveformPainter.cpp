@@ -125,8 +125,8 @@ namespace talcs {
             for (qint64 sampleIndex = 0; sampleIndex < actualReadLength; sampleIndex += 16, index16++) {
                 for (int ch = 0; ch < (d->mergeChannels ? 1 : d->buf.channelCount()); ch++) {
                     auto bufMinMax = d->buf.findMinMax(ch, sampleIndex, std::min(actualReadLength - sampleIndex, qint64(16)));
-                    d->mipmap16[ch][index16].first = static_cast<qint8>(qBound(-128, static_cast<int>(std::floor((bufMinMax.first + 1.0f) * 127.5)) - 128, 127));
-                    d->mipmap16[ch][index16].second = static_cast<qint8>(qBound(-128, static_cast<int>(std::ceil((bufMinMax.second + 1.0f) * 127.5)) - 128, 127));
+                    d->mipmap16[ch][index16].first = static_cast<qint8>(qBound(-128, static_cast<int>(bufMinMax.first * 127.4999), 127));
+                    d->mipmap16[ch][index16].second = static_cast<qint8>(qBound(-128, static_cast<int>(bufMinMax.second * 127.4999), 127));
                 }
             }
         }
@@ -206,7 +206,7 @@ namespace talcs {
             auto minValue = std::max(-128.0, ret.first * verticalScale);
             auto maxValue = std::min(127.0, ret.second * verticalScale);
             startPosSecond += unitLengthSecond;
-            painter->drawRect(QRectF(x, rect.top() + 1.0 / 255.0 * (128 - maxValue) * rect.height(), 1, rect.top() + 1.0 / 255.0 * (maxValue - minValue) * rect.height()));
+            painter->drawRect(QRectF(x, rect.top() + 1.0 / 255.0 * (128 - maxValue) * rect.height(), 1, std::max(1.0, rect.top() + 1.0 / 255.0 * (maxValue - minValue) * rect.height())));
         }
     }
 

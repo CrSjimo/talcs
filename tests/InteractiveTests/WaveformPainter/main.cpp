@@ -80,10 +80,10 @@ int main(int argc, char **argv) {
 
     widget.setLayout(mainLayout);
 
+    widget.show();
 
     QObject::connect(&waveformPainter, &WaveformPainter::loadFinished, &widget, [&](qint64 startPos, qint64 length) {
         qDebug() << startPos << length;
-        widget.show();
     });
 
     QObject::connect(startPosSlider, &QSlider::valueChanged, [=](int value) {
