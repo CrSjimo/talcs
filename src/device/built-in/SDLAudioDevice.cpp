@@ -51,8 +51,7 @@ namespace talcs {
         SDL_AudioSpec preferredSpec;
         char *devName;
         if (name.isEmpty()) {
-            SDL_AudioSpec spec;
-            if (SDL_GetDefaultAudioInfo(&devName, &spec, 0) == 0) {
+            if (SDL_GetDefaultAudioInfo(&devName, &preferredSpec, 0) == 0) {
                 SDL_free(devName);
             } else {
                 setErrorString(SDL_GetError());
