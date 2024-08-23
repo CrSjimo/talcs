@@ -77,7 +77,10 @@ namespace talcs {
             mipmap.resize(divideCeiling(length, 4096));
         }
 
-        d->buf.resize(channelCount, src->bufferSize() / 16 * 16);
+        if (src)
+            d->buf.resize(channelCount, src->bufferSize() / 16 * 16);
+        else
+            d->buf.resize(channelCount, 0);
 
         d->workerThread.start();
     }
@@ -169,6 +172,8 @@ namespace talcs {
 
     QPair<qint8, qint8> WaveformPainter::getMinMaxFromMipmap(double startPosSecond, double lengthSecond, int channel) const {
         Q_D(const WaveformPainter);
+        if (!d->src)
+            return {0, 0};
         auto startPos = static_cast<qint64>(std::round(startPosSecond * d->src->sampleRate()));
         auto length = static_cast<qint64>(std::round(lengthSecond * d->src->sampleRate()));
         if (startPos >= d->length)
