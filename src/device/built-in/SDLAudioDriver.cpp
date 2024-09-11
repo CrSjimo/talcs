@@ -151,8 +151,9 @@ namespace talcs {
         auto it = openedDevices.find(devId);
         if (it == openedDevices.end())
             return;
-        it.value()->close();
-        emit it.value()->closed();
+        auto dev = it.value();
+        dev->close();
+        emit dev->closed();
     }
 
     /**
