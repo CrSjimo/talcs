@@ -27,13 +27,13 @@ namespace talcs {
 
     class AudioSourceWriterPrivate;
     class AudioSource;
-    class AudioFormatIO;
+    class AbstractAudioFormatIO;
 
     class TALCSFORMAT_EXPORT AudioSourceWriter : public AudioSourceProcessorBase {
         Q_OBJECT
         Q_DECLARE_PRIVATE(AudioSourceWriter)
     public:
-        AudioSourceWriter(AudioSource *src, AudioFormatIO *outFile, qint64 length, QObject *parent = nullptr);
+        AudioSourceWriter(AudioSource *src, AbstractAudioFormatIO *outFile, qint64 length, QObject *parent = nullptr);
         ~AudioSourceWriter() override;
 
     protected:

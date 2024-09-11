@@ -46,7 +46,7 @@ namespace talcs {
      *
      * Note that this object does not take the ownership of both objects.
      */
-    AudioSourceWriter::AudioSourceWriter(AudioSource *src, AudioFormatIO *outFile, qint64 length, QObject *parent)
+    AudioSourceWriter::AudioSourceWriter(AudioSource *src, AbstractAudioFormatIO *outFile, qint64 length, QObject *parent)
         : AudioSourceProcessorBase(*new AudioSourceWriterPrivate, src, length, parent) {
         Q_D(AudioSourceWriter);
         d->outFile = outFile;
@@ -66,8 +66,7 @@ namespace talcs {
 
     bool AudioSourceWriter::processBlock(qint64 processedSampleCount, qint64 samplesToProcess) {
         Q_D(AudioSourceWriter);
-        d->outFile->write(d->buf->data(), samplesToProcess);
-        return true;
+        return samplesToProcess == d->outFile->write(d->buf->data(), samplesToProcess);
     }
 
     void AudioSourceWriter::processWillFinish() {

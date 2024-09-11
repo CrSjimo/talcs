@@ -29,7 +29,7 @@ namespace talcs {
     class AudioSourceWriterPrivate: public AudioSourceProcessorBasePrivate {
     public:
         InterleavedAudioDataWrapper *buf = nullptr;
-        AudioFormatIO *outFile;
+        AbstractAudioFormatIO *outFile;
     };
     
 }
