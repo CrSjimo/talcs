@@ -49,8 +49,8 @@ namespace talcs {
         setName(name);
         setDriver(driver);
         SDL_AudioSpec preferredSpec;
-        char *devName;
         if (name.isEmpty()) {
+            char *devName;
             if (SDL_GetDefaultAudioInfo(&devName, &preferredSpec, 0) == 0) {
                 SDL_free(devName);
             } else {
@@ -60,7 +60,7 @@ namespace talcs {
         } else {
             int cnt = SDL_GetNumAudioDevices(0);
             int devIndex = 0;
-            devName = name.toUtf8().data();
+            auto devName = name.toUtf8();
             for (int i = 0; i < cnt; i++) {
                 if (std::strcmp(devName, SDL_GetAudioDeviceName(i, 0)) == 0) {
                     devIndex = i;
@@ -114,14 +114,15 @@ namespace talcs {
             setErrorString(SDL_GetError());
             return false;
         }
-        static_cast<SDLAudioDriver *>(d->driver)->addOpenedDevice(d->devId, this);
+        static_cast<SDLAudioDriver *>(d->driver.data())->addOpenedDevice(d->devId, this);
         return AudioStreamBase::open(bufferSize, sampleRate);
     }
     void SDLAudioDevice::close() {
         Q_D(SDLAudioDevice);
         SDLAudioDevice::stop();
         SDL_CloseAudioDevice(d->devId);
-        static_cast<SDLAudioDriver *>(d->driver)->removeOpenedDevice(d->devId);
+        if (d->driver)
+            static_cast<SDLAudioDriver *>(d->driver.data())->removeOpenedDevice(d->devId);
         d->devId = 0;
         d->spec = {};
         AudioDevice::close();

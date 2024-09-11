@@ -20,6 +20,8 @@
 #include "AudioDevice.h"
 #include "AudioDevice_p.h"
 
+#include <TalcsDevice/AudioDriver.h>
+
 namespace talcs {
 
     /**

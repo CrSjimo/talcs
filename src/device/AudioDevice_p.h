@@ -20,6 +20,8 @@
 #ifndef AUDIODEVICE_P_H
 #define AUDIODEVICE_P_H
 
+#include <QPointer>
+
 #include <TalcsDevice/AudioDevice.h>
 
 namespace talcs {
@@ -28,7 +30,8 @@ namespace talcs {
         Q_DECLARE_PUBLIC(AudioDevice)
     public:
         AudioDevice *q_ptr;
-        AudioDriver *driver;
+
+        QPointer<AudioDriver> driver;
         int channelCount = 0;
         int activeChannelCount = -1;
         QList<qint64> availableBufferSizes;
