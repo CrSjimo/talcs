@@ -20,6 +20,8 @@
 #include "OutputContext.h"
 #include "OutputContext_p.h"
 
+#include <QDebug>
+
 #include <TalcsCore/MixerAudioSource.h>
 
 #include <TalcsDevice/AudioDriverManager.h>
@@ -209,6 +211,15 @@ namespace talcs {
 
     void OutputContextPrivate::handleDeviceHotPlug() {
         Q_Q(OutputContext);
+        auto deviceList = driver->devices();
+        if (device && deviceList.contains(device->name()) && !device->isOpen()) {
+            auto savedBufferSize = adoptedBufferSize == 0 ? device->preferredBufferSize() : adoptedBufferSize;
+            auto savedSampleRate = qFuzzyIsNull(adoptedSampleRate) ? device->preferredSampleRate() : adoptedSampleRate;
+            if (!device->open(savedBufferSize, savedSampleRate) && !device->open(device->preferredBufferSize(), device->preferredSampleRate())) {
+                qWarning() << "OutputContext: Tried to reopen current device after hot-plugged, but failed.";
+            }
+            postSetDevice();
+        }
         switch (hotPlugNotificationMode) {
             case OutputContext::Omni:
                 emit q->deviceHotPlugged();
