@@ -138,6 +138,14 @@ namespace talcs {
         d->generatorFunction = g;
     }
 
+    void NoteSynthesizerConfig::setAmplitude(float amplitude) {
+        d->amplitude = amplitude;
+    }
+
+    float NoteSynthesizerConfig::amplitude() const {
+        return d->amplitude;
+    }
+
     /**
      * Constructor.
      */
@@ -265,6 +273,17 @@ namespace talcs {
         Q_D(NoteSynthesizer);
         QMutexLocker locker(&d->mutex);
         d->config.setGenerator(g);
+    }
+
+    void NoteSynthesizer::setAmplitude(float amplitude) {
+        Q_D(NoteSynthesizer);
+        QMutexLocker locker(&d->mutex);
+        d->config.setAmplitude(amplitude);
+    }
+
+    float NoteSynthesizer::amplitude() const {
+        Q_D(const NoteSynthesizer);
+        return d->config.amplitude();
     }
 
     void NoteSynthesizer::setConfig(const NoteSynthesizerConfig &config) {

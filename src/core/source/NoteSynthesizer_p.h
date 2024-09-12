@@ -128,6 +128,8 @@ namespace talcs {
         double decayRate;
         double releaseRate;
 
+        float amplitude = 1.0;
+
         NoteSynthesizer::GeneratorFunction generatorFunction = NoteSynthesizerPrivate::GenerateSineWave();
 
         void updateRates();
@@ -159,7 +161,7 @@ namespace talcs {
         x++;
         integration += frequency / d->q_func()->sampleRate() * std::pow(2, d->deltaPitch / 12.0);
         integration = std::fmod(integration, 1.0);
-        return ret * d->volume;
+        return ret * d->volume * d->config.d->amplitude;
     }
     double NoteSynthesizerPrivate::generate(double integration) const {
         return config.d->generatorFunction(integration);

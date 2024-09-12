@@ -127,6 +127,9 @@ namespace talcs {
         void setGenerator(Generator);
         void setGenerator(const GeneratorFunction &);
 
+        void setAmplitude(float amplitude);
+        float amplitude() const;
+
         void setConfig(const NoteSynthesizerConfig &config);
         NoteSynthesizerConfig config() const;
 
@@ -166,6 +169,9 @@ namespace talcs {
 
         void setGenerator(NoteSynthesizer::Generator);
         void setGenerator(const NoteSynthesizer::GeneratorFunction &);
+
+        void setAmplitude(float amplitude);
+        float amplitude() const;
 
     private:
         QSharedDataPointer<NoteSynthesizerConfigData> d;
