@@ -80,7 +80,7 @@ namespace talcs {
 
     bool OutputContext::setDriver(const QString &driverName) {
         Q_D(OutputContext);
-        if (d->driver && driverName == d->driver->name())
+        if (d->driver && driverName == d->driver->name() && d->driver->isInitialized() && d->device && d->device->isOpen())
             return true;
         d->device.reset();
         if (d->driver) {
