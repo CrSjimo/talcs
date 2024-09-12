@@ -81,7 +81,7 @@ namespace talcs {
             for (int i = 0; i < channelCount; i++) {
                 readData.buffer->clear(i, readData.startPos, readData.length);
             }
-            readLength = qBound(0, bufferLength - nextReadPosition(), readData.length);
+            readLength = qBound(0ll, bufferLength - nextReadPosition(), readData.length);
             d->mix(readData, readLength);
             d->position += readLength;
         }
