@@ -66,7 +66,7 @@ namespace talcs {
 
     static inline void safeRead(IAudioSampleContainer *dest, qint64 destPos, qint64 length,
                                 PositionableAudioSource *src) {
-        src->read({dest, destPos, qMin(src->length() - src->nextReadPosition(), length)});
+        src->read({dest, destPos, qBound(0, src->length() - src->nextReadPosition(), length)});
     }
 
     static inline bool inRange(qint64 x, qint64 l, qint64 r) {
@@ -93,7 +93,8 @@ namespace talcs {
         if (d->src) {
             qint64 curBufPos = readData.startPos;
             qint64 lengthToRead = readData.length;
-            qint64 srcPos = d->src->nextReadPosition();
+            qint64 srcPos = d->position;
+            d->src->setNextReadPosition(srcPos);
             while (curBufPos + d->loopingEnd - srcPos < readData.startPos + readData.length &&
                    inRange(d->loopingEnd, srcPos, srcPos + lengthToRead)) {
                 safeRead(readData.buffer, curBufPos, d->loopingEnd - srcPos, d->src);
