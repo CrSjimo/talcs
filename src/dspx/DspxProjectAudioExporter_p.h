@@ -91,10 +91,12 @@ namespace talcs {
         QPair<DspxTrackContext *, AbstractAudioFormatIO *> makeNextSeparatedThruMasterTaskMixerLayoutAndGetCorrespondingData();
 
         DspxProjectAudioExporter::Result executeMixedTask();
-        DspxProjectAudioExporter::Result executeSeparatedTask(int threadCount);
-        DspxProjectAudioExporter::Result executeSeparatedThruMasterTask();
+        DspxProjectAudioExporter::Result executeSeparatedTask();
 
-        DspxProjectAudioExporter::Result executeThruMasterTaskImpl(DspxTrackContext *trackContext, AbstractAudioFormatIO *io);
+        DspxProjectAudioExporter::Result executeTaskImpl(PositionableMixerAudioSource *src, DspxTrackContext *trackContext, AbstractAudioFormatIO *io);
+
+        DspxProjectAudioExporterSourceWriter *currentWriter{};
+        bool interruptionFlagIsFail{};
 
     };
 }

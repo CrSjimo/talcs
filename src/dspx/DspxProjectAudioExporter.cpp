@@ -77,10 +77,11 @@ namespace talcs {
         savedMixerSourceDataList.clear();
         savedMixerSilentFlags = 0;
         savedMixerPosition = 0;
+
+        taskSources.clear();
     }
 
     void DspxProjectAudioExporterPrivate::makeMixedTaskMixerLayout() {
-        projectContext->transport()->setPosition(projectContext->timeConverter()(startTick));
         if (!isMuteSoloEnabled) {
             projectContext->masterControlMixer()->setSilentFlags(0);
         }
@@ -99,10 +100,10 @@ namespace talcs {
                 mixerSourceData.source->setSilentFlags(mixerSourceData.actualSilentFlags);
             }
         }
+        projectContext->transport()->setPosition(projectContext->timeConverter()(startTick));
     }
 
     QPair<DspxTrackContext *, AbstractAudioFormatIO *> DspxProjectAudioExporterPrivate::makeNextSeparatedThruMasterTaskMixerLayoutAndGetCorrespondingData() {
-        projectContext->transport()->setPosition(projectContext->timeConverter()(startTick));
         if (!isMuteSoloEnabled) {
             projectContext->masterControlMixer()->setSilentFlags(0);
         }
@@ -113,7 +114,7 @@ namespace talcs {
                 taskSources.insert(trackContext->controlMixer(), io);
             }
         }
-        for (;savedMixerSourceDataIt != savedMixerSourceDataList.end(); savedMixerSourceDataIt++) {
+        for (;savedMixerSourceDataIt != savedMixerSourceDataList.cend(); savedMixerSourceDataIt++) {
             auto &mixerSourceData = *savedMixerSourceDataIt;
             if (!taskSources.contains(mixerSourceData.source))
                 continue;
@@ -124,6 +125,7 @@ namespace talcs {
                 mixerSourceData.source->setSilentFlags(mixerSourceData.actualSilentFlags);
             }
             savedMixerSourceDataIt++;
+            projectContext->transport()->setPosition(projectContext->timeConverter()(startTick));
             return {mixerSourceData.trackContext, taskSources.value(mixerSourceData.source)};
         }
         return {nullptr, nullptr};
@@ -206,38 +208,35 @@ namespace talcs {
         Q_Q(DspxProjectAudioExporter);
 
         saveMixerState();
-        makeMixedTaskMixerLayout();
 
-        auto ret = executeThruMasterTaskImpl(nullptr, mixedTaskOutFile);
+        makeMixedTaskMixerLayout();
+        auto ret = executeTaskImpl(projectContext->masterControlMixer(), nullptr, mixedTaskOutFile);
 
         restoreMixerState();
         return ret;
     }
 
-    DspxProjectAudioExporter::Result DspxProjectAudioExporterPrivate::executeSeparatedTask(int threadCount) {
+    DspxProjectAudioExporter::Result DspxProjectAudioExporterPrivate::executeSeparatedTask() {
         Q_Q(DspxProjectAudioExporter);
-        return DspxProjectAudioExporter::OK;
-    }
 
-    DspxProjectAudioExporter::Result DspxProjectAudioExporterPrivate::executeSeparatedThruMasterTask() {
-        Q_Q(DspxProjectAudioExporter);
         saveMixerState();
 
-        DspxProjectAudioExporter::Result ret;
+        DspxProjectAudioExporter::Result ret = DspxProjectAudioExporter::OK;
 
         while (true) {
             auto [trackContext, io] = makeNextSeparatedThruMasterTaskMixerLayoutAndGetCorrespondingData();
             if (!trackContext)
                 break;
-            ret = executeThruMasterTaskImpl(trackContext, io);
+            ret = executeTaskImpl(thruMaster ? projectContext->masterControlMixer() : trackContext->controlMixer(), trackContext, io);
             if (ret != DspxProjectAudioExporter::OK)
                 break;
         }
+
         restoreMixerState();
         return ret;
     }
 
-    DspxProjectAudioExporter::Result DspxProjectAudioExporterPrivate::executeThruMasterTaskImpl(DspxTrackContext *trackContext, AbstractAudioFormatIO *io) {
+    DspxProjectAudioExporter::Result DspxProjectAudioExporterPrivate::executeTaskImpl(PositionableMixerAudioSource *src, DspxTrackContext *trackContext, AbstractAudioFormatIO *io) {
         Q_Q(DspxProjectAudioExporter);
 
         auto convertTime = projectContext->timeConverter();
@@ -246,7 +245,8 @@ namespace talcs {
         QEventLoop eventLoop;
         QThread exportThread;
 
-        DspxProjectAudioExporterSourceWriter writer(this, trackContext, projectContext->masterControlMixer(), io, length);
+        DspxProjectAudioExporterSourceWriter writer(this, trackContext, src, io, length);
+        currentWriter = &writer;
         writer.moveToThread(&exportThread);
         QObject::connect(&exportThread, &QThread::started, &writer, &AudioSourceProcessorBase::start);
 
@@ -266,33 +266,34 @@ namespace talcs {
             } else if (writer.status() == AudioSourceProcessorBase::Failed) {
                 eventLoop.exit(DspxProjectAudioExporter::Fail | clippingFlag);
             } else if (writer.status() == AudioSourceProcessorBase::Interrupted) {
-                eventLoop.exit(DspxProjectAudioExporter::Interrupted | clippingFlag);
+                eventLoop.exit((interruptionFlagIsFail ? DspxProjectAudioExporter::Fail : DspxProjectAudioExporter::Interrupted) | clippingFlag);
             }
         });
         exportThread.start();
         DspxProjectAudioExporter::Result ret(eventLoop.exec());
         exportThread.quit();
         exportThread.wait();
+        currentWriter = nullptr;
         return ret;
     }
 
-    DspxProjectAudioExporter::Result DspxProjectAudioExporter::exec(int threadCount) {
+    DspxProjectAudioExporter::Result DspxProjectAudioExporter::exec() {
         Q_D(DspxProjectAudioExporter);
         if (d->separatedTasks.isEmpty() && d->mixedTask.isEmpty() && !d->mixedTaskOutFile)
             return OK;
         if (!d->separatedTasks.isEmpty() && (!d->mixedTask.isEmpty() || d->mixedTaskOutFile)) {
             Q_UNREACHABLE();
         } else if (!d->separatedTasks.isEmpty()) {
-            if (d->thruMaster)
-                return d->executeSeparatedThruMasterTask();
-            else
-                return d->executeSeparatedTask(threadCount);
+            return d->executeSeparatedTask();
         } else {
             return d->executeMixedTask();
         }
     }
 
-    void DspxProjectAudioExporter::interrupt() {
-
+    void DspxProjectAudioExporter::interrupt(bool isFail) {
+        Q_D(DspxProjectAudioExporter);
+        d->interruptionFlagIsFail = isFail;
+        if (d->currentWriter)
+            d->currentWriter->interrupt();
     }
 }

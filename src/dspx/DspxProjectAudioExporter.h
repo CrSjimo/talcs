@@ -65,9 +65,9 @@ namespace talcs {
             ClippingDetected = 0x0010,
         };
         Q_DECLARE_FLAGS(Result, ResultFlag)
-        Result exec(int threadCount = 1);
+        Result exec();
 
-        void interrupt();
+        void interrupt(bool isFail = false);
 
     signals:
         void clippingDetected(DspxTrackContext *track);
