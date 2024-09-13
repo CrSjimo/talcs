@@ -33,7 +33,7 @@ namespace talcs {
 
     class DspxProjectAudioExporterPrivate;
 
-    class DspxProjectAudioExporter : public QObject {
+    class TALCSDSPX_EXPORT DspxProjectAudioExporter : public QObject {
         Q_OBJECT
         Q_DECLARE_PRIVATE(DspxProjectAudioExporter)
     public:
@@ -70,7 +70,7 @@ namespace talcs {
         void interrupt();
 
     signals:
-        void clippingDetected(int tick, DspxTrackContext *track);
+        void clippingDetected(DspxTrackContext *track);
         void progressChanged(double progressRatio, DspxTrackContext *track);
 
     private:

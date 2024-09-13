@@ -22,7 +22,37 @@
 
 #include <TalcsDspx/DspxProjectAudioExporter.h>
 
+#include <QHash>
+
+#include <TalcsCore/AudioSource.h>
+
+#include <TalcsFormat/AudioSourceWriter.h>
+
 namespace talcs {
+    class PositionableMixerAudioSource;
+}
+
+namespace talcs {
+
+    class DspxProjectAudioExporterSourceWriter : public AudioSourceWriter {
+        Q_OBJECT
+    public:
+        DspxProjectAudioExporterSourceWriter(DspxProjectAudioExporterPrivate *d, DspxTrackContext *trackContext, AudioSource *src, AbstractAudioFormatIO *outFile, qint64 length);
+    protected:
+        IAudioSampleContainer *prepareBuffer() override {
+            return m_buf = AudioSourceWriter::prepareBuffer();
+        }
+        bool processBlock(qint64 processedSampleCount, qint64 samplesToProcess) override;
+
+    signals:
+        void clippingDetected(qint64 position);
+
+    private:
+        DspxProjectAudioExporterPrivate *d;
+        IAudioSampleContainer *m_buf{};
+
+    };
+
     class DspxProjectAudioExporterPrivate {
         Q_DECLARE_PUBLIC(DspxProjectAudioExporter)
     public:
@@ -41,12 +71,30 @@ namespace talcs {
         AbstractAudioFormatIO *mixedTaskOutFile{};
 
         qint64 savedMixerPosition{};
+        struct MixerSourceData {
+            DspxTrackContext *trackContext;
+            PositionableMixerAudioSource *source;
+            int silentFlags;
+            bool solo;
+            int actualSilentFlags;
+        };
+        QList<MixerSourceData> savedMixerSourceDataList;
+        int savedMixerSilentFlags;
+
+        QHash<PositionableMixerAudioSource *, AbstractAudioFormatIO *> taskSources;
+        QList<MixerSourceData>::const_iterator savedMixerSourceDataIt;
 
         void saveMixerState();
         void restoreMixerState();
 
         void makeMixedTaskMixerLayout();
-        AbstractAudioFormatIO *makeNextSeparatedThruMasterTaskMixerLayoutAndGetCorrespondingIO();
+        QPair<DspxTrackContext *, AbstractAudioFormatIO *> makeNextSeparatedThruMasterTaskMixerLayoutAndGetCorrespondingData();
+
+        DspxProjectAudioExporter::Result executeMixedTask();
+        DspxProjectAudioExporter::Result executeSeparatedTask(int threadCount);
+        DspxProjectAudioExporter::Result executeSeparatedThruMasterTask();
+
+        DspxProjectAudioExporter::Result executeThruMasterTaskImpl(DspxTrackContext *trackContext, AbstractAudioFormatIO *io);
 
     };
 }

@@ -20,7 +20,115 @@
 #include "DspxProjectAudioExporter.h"
 #include "DspxProjectAudioExporter_p.h"
 
+#include <QSet>
+#include <QEventLoop>
+#include <QThreadPool>
+#include <QThread>
+
+#include <TalcsCore/TransportAudioSource.h>
+#include <TalcsCore/PositionableMixerAudioSource.h>
+
+#include <TalcsDspx/DspxProjectContext.h>
+#include <TalcsDspx/DspxTrackContext.h>
+
 namespace talcs {
+    DspxProjectAudioExporterSourceWriter::DspxProjectAudioExporterSourceWriter(DspxProjectAudioExporterPrivate *d, DspxTrackContext *trackContext, AudioSource *src, AbstractAudioFormatIO *outFile, qint64 length)
+        : AudioSourceWriter(src, outFile, length), d(d) {
+    }
+
+    bool DspxProjectAudioExporterSourceWriter::processBlock(qint64 processedSampleCount, qint64 samplesToProcess) {
+        if (d->isClippingCheckEnabled) {
+            for (int ch = 0; ch < m_buf->channelCount(); ch++) {
+                if (m_buf->magnitude(ch) > 1.0) {
+                    emit clippingDetected(processedSampleCount);
+                    break;
+                }
+            }
+        }
+        return AudioSourceWriter::processBlock(processedSampleCount, samplesToProcess);
+    }
+
+    void DspxProjectAudioExporterPrivate::saveMixerState() {
+        savedMixerPosition = projectContext->transport()->position();
+        savedMixerSilentFlags = projectContext->masterControlMixer()->silentFlags();
+        auto masterTrack = projectContext->masterTrackMixer();
+        for (auto trackContext : projectContext->tracks()) {
+            savedMixerSourceDataList.append({
+                trackContext,
+                trackContext->controlMixer(),
+                trackContext->controlMixer()->silentFlags(),
+                masterTrack->isSourceSolo(trackContext->controlMixer()),
+                masterTrack->isMutedBySoloSetting(trackContext->controlMixer()) ? -1 : trackContext->controlMixer()->silentFlags(),
+            });
+        }
+    }
+
+    void DspxProjectAudioExporterPrivate::restoreMixerState() {
+        projectContext->masterTrackMixer()->removeAllSources();
+        auto masterTrack = projectContext->masterTrackMixer();
+        for (const auto &mixerSourceData : savedMixerSourceDataList) {
+            masterTrack->addSource(mixerSourceData.source);
+            masterTrack->setSourceSolo(mixerSourceData.source, mixerSourceData.solo);
+            mixerSourceData.source->setSilentFlags(mixerSourceData.silentFlags);
+        }
+        projectContext->masterControlMixer()->setSilentFlags(savedMixerSilentFlags);
+        projectContext->transport()->setPosition(savedMixerPosition);
+
+        savedMixerSourceDataList.clear();
+        savedMixerSilentFlags = 0;
+        savedMixerPosition = 0;
+    }
+
+    void DspxProjectAudioExporterPrivate::makeMixedTaskMixerLayout() {
+        projectContext->transport()->setPosition(projectContext->timeConverter()(startTick));
+        if (!isMuteSoloEnabled) {
+            projectContext->masterControlMixer()->setSilentFlags(0);
+        }
+        auto masterTrack = projectContext->masterTrackMixer();
+        masterTrack->removeAllSources();
+        for (auto trackContext : mixedTask) {
+            taskSources.insert(trackContext->controlMixer(), nullptr);
+        }
+        for (const auto &mixerSourceData : savedMixerSourceDataList) {
+            if (!taskSources.contains(mixerSourceData.source))
+                continue;
+            masterTrack->addSource(mixerSourceData.source);
+            if (!isMuteSoloEnabled) {
+                mixerSourceData.source->setSilentFlags(0);
+            } else {
+                mixerSourceData.source->setSilentFlags(mixerSourceData.actualSilentFlags);
+            }
+        }
+    }
+
+    QPair<DspxTrackContext *, AbstractAudioFormatIO *> DspxProjectAudioExporterPrivate::makeNextSeparatedThruMasterTaskMixerLayoutAndGetCorrespondingData() {
+        projectContext->transport()->setPosition(projectContext->timeConverter()(startTick));
+        if (!isMuteSoloEnabled) {
+            projectContext->masterControlMixer()->setSilentFlags(0);
+        }
+        auto masterTrack = projectContext->masterTrackMixer();
+        masterTrack->removeAllSources();
+        if (taskSources.isEmpty()) {
+            for (const auto &[trackContext, io] : separatedTasks) {
+                taskSources.insert(trackContext->controlMixer(), io);
+            }
+        }
+        for (;savedMixerSourceDataIt != savedMixerSourceDataList.end(); savedMixerSourceDataIt++) {
+            auto &mixerSourceData = *savedMixerSourceDataIt;
+            if (!taskSources.contains(mixerSourceData.source))
+                continue;
+            masterTrack->addSource(mixerSourceData.source);
+            if (!isMuteSoloEnabled) {
+                mixerSourceData.source->setSilentFlags(0);
+            } else {
+                mixerSourceData.source->setSilentFlags(mixerSourceData.actualSilentFlags);
+            }
+            savedMixerSourceDataIt++;
+            return {mixerSourceData.trackContext, taskSources.value(mixerSourceData.source)};
+        }
+        return {nullptr, nullptr};
+    }
+
     DspxProjectAudioExporter::DspxProjectAudioExporter(DspxProjectContext *context, QObject *parent) : QObject(parent), d_ptr(new DspxProjectAudioExporterPrivate) {
         Q_D(DspxProjectAudioExporter);
         d->projectContext = context;
@@ -94,6 +202,80 @@ namespace talcs {
         return d->isClippingCheckEnabled;
     }
 
+    DspxProjectAudioExporter::Result DspxProjectAudioExporterPrivate::executeMixedTask() {
+        Q_Q(DspxProjectAudioExporter);
+
+        saveMixerState();
+        makeMixedTaskMixerLayout();
+
+        auto ret = executeThruMasterTaskImpl(nullptr, mixedTaskOutFile);
+
+        restoreMixerState();
+        return ret;
+    }
+
+    DspxProjectAudioExporter::Result DspxProjectAudioExporterPrivate::executeSeparatedTask(int threadCount) {
+        Q_Q(DspxProjectAudioExporter);
+        return DspxProjectAudioExporter::OK;
+    }
+
+    DspxProjectAudioExporter::Result DspxProjectAudioExporterPrivate::executeSeparatedThruMasterTask() {
+        Q_Q(DspxProjectAudioExporter);
+        saveMixerState();
+
+        DspxProjectAudioExporter::Result ret;
+
+        while (true) {
+            auto [trackContext, io] = makeNextSeparatedThruMasterTaskMixerLayoutAndGetCorrespondingData();
+            if (!trackContext)
+                break;
+            ret = executeThruMasterTaskImpl(trackContext, io);
+            if (ret != DspxProjectAudioExporter::OK)
+                break;
+        }
+        restoreMixerState();
+        return ret;
+    }
+
+    DspxProjectAudioExporter::Result DspxProjectAudioExporterPrivate::executeThruMasterTaskImpl(DspxTrackContext *trackContext, AbstractAudioFormatIO *io) {
+        Q_Q(DspxProjectAudioExporter);
+
+        auto convertTime = projectContext->timeConverter();
+        auto length = convertTime(startTick + lengthTick) - convertTime(startTick);
+
+        QEventLoop eventLoop;
+        QThread exportThread;
+
+        DspxProjectAudioExporterSourceWriter writer(this, trackContext, projectContext->masterControlMixer(), io, length);
+        writer.moveToThread(&exportThread);
+        QObject::connect(&exportThread, &QThread::started, &writer, &AudioSourceProcessorBase::start);
+
+        int clippingFlag = 0;
+        QObject::connect(&writer, &DspxProjectAudioExporterSourceWriter::clippingDetected, q, [&] {
+            if (!clippingFlag) {
+                clippingFlag = DspxProjectAudioExporter::ClippingDetected;
+                emit q->clippingDetected(trackContext);
+            }
+        });
+        QObject::connect(&writer, &AudioSourceProcessorBase::blockProcessed, q, [&](qint64 processedSampleCount) {
+            emit q->progressChanged(1.0 * processedSampleCount / length, trackContext);
+        });
+        QObject::connect(&writer, &AudioSourceProcessorBase::finished, q, [&] {
+            if (writer.status() == AudioSourceProcessorBase::Completed) {
+                eventLoop.exit(DspxProjectAudioExporter::OK | clippingFlag);
+            } else if (writer.status() == AudioSourceProcessorBase::Failed) {
+                eventLoop.exit(DspxProjectAudioExporter::Fail | clippingFlag);
+            } else if (writer.status() == AudioSourceProcessorBase::Interrupted) {
+                eventLoop.exit(DspxProjectAudioExporter::Interrupted | clippingFlag);
+            }
+        });
+        exportThread.start();
+        DspxProjectAudioExporter::Result ret(eventLoop.exec());
+        exportThread.quit();
+        exportThread.wait();
+        return ret;
+    }
+
     DspxProjectAudioExporter::Result DspxProjectAudioExporter::exec(int threadCount) {
         Q_D(DspxProjectAudioExporter);
         if (d->separatedTasks.isEmpty() && d->mixedTask.isEmpty() && !d->mixedTaskOutFile)
@@ -101,11 +283,13 @@ namespace talcs {
         if (!d->separatedTasks.isEmpty() && (!d->mixedTask.isEmpty() || d->mixedTaskOutFile)) {
             Q_UNREACHABLE();
         } else if (!d->separatedTasks.isEmpty()) {
-
+            if (d->thruMaster)
+                return d->executeSeparatedThruMasterTask();
+            else
+                return d->executeSeparatedTask(threadCount);
         } else {
-
+            return d->executeMixedTask();
         }
-        return OK;
     }
 
     void DspxProjectAudioExporter::interrupt() {
