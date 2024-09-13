@@ -22,6 +22,7 @@
 
 #include <memory>
 
+#include <QMutex>
 #include <QVariant>
 
 #include <TalcsCore/PositionableAudioSource.h>
@@ -44,9 +45,12 @@ namespace talcs {
         void detectInterval(qint64 intervalLength) override;
         NoteSynthesizerDetectorMessage nextMessage() override;
 
+        void update();
+
         DspxNoteContextPrivate *d;
         QList<NoteSynthesizerDetectorMessage> messages;
         QList<NoteSynthesizerDetectorMessage>::const_iterator messageIterator;
+        QMutex mutex;
 
     protected:
         qint64 processReading(const AudioSourceReadData &readData) override;

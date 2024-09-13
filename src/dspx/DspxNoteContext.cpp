@@ -56,6 +56,7 @@ namespace talcs {
     void DspxNoteContextSynthesizer::setNextReadPosition(qint64 pos) {
         if (pos == PositionableAudioSource::nextReadPosition())
             return;
+        QMutexLocker locker(&mutex);
         PositionableAudioSource::setNextReadPosition(0);
         d->noteSynthesizer->flush(true);
         d->noteSynthesizer->read({&dummyBuffer, 0, pos, -1});
@@ -87,7 +88,17 @@ namespace talcs {
         }
     }
 
+    void DspxNoteContextSynthesizer::update() {
+        QMutexLocker locker(&mutex);
+        auto pos = PositionableAudioSource::nextReadPosition();
+        PositionableAudioSource::setNextReadPosition(0);
+        d->noteSynthesizer->flush(true);
+        d->noteSynthesizer->read({&dummyBuffer, 0, pos, -1});
+        PositionableAudioSource::setNextReadPosition(pos);
+    }
+
     qint64 DspxNoteContextSynthesizer::processReading(const AudioSourceReadData &readData) {
+        QMutexLocker locker(&mutex);
         d->noteSynthesizer->read(readData);
         PositionableAudioSource::setNextReadPosition(PositionableAudioSource::nextReadPosition() + readData.length);
         return readData.length;
@@ -148,14 +159,14 @@ namespace talcs {
         auto firstSample = convertTime(d->singingClipContext->start() + d->posTick) - clipPositionSample;
         auto lastSample = convertTime(d->singingClipContext->start() + d->posTick + d->lengthTick) + d->noteSynthesizer->releaseTime() - clipPositionSample;
         clipSeries->setClipRange(d->clipView, firstSample, qMax(qint64(1), lastSample - firstSample));
-        d->synthesizer->setNextReadPosition(0);
+        d->synthesizer->update();
     }
 
     void DspxNoteContext::setKeyCent(int cent) {
         Q_D(DspxNoteContext);
         if (d->keyCent != cent) {
             d->keyCent = cent;
-            d->synthesizer->setNextReadPosition(0);
+            d->synthesizer->update();
         }
     }
 
@@ -167,36 +178,36 @@ namespace talcs {
     void DspxNoteContext::addPitchAnchor(int pos, const QVariant &anchorData) {
         Q_D(DspxNoteContext);
         d->pitchAnchors.insert(pos, anchorData);
-        d->synthesizer->setNextReadPosition(0);
+        d->synthesizer->update();
     }
 
     void DspxNoteContext::removePitchAnchor(int pos) {
         Q_D(DspxNoteContext);
         d->pitchAnchors.remove(pos);
-        d->synthesizer->setNextReadPosition(0);
+        d->synthesizer->update();
     }
 
     void DspxNoteContext::clearPitchAnchor() {
         Q_D(DspxNoteContext);
         d->pitchAnchors.clear();
-        d->synthesizer->setNextReadPosition(0);
+        d->synthesizer->update();
     }
 
     void DspxNoteContext::addEnergyAnchor(int pos, const QVariant &anchorData) {
         Q_D(DspxNoteContext);
         d->pitchAnchors.insert(pos, anchorData);
-        d->synthesizer->setNextReadPosition(0);
+        d->synthesizer->update();
     }
 
     void DspxNoteContext::removeEnergyAnchor(int pos) {
         Q_D(DspxNoteContext);
         d->pitchAnchors.remove(pos);
-        d->synthesizer->setNextReadPosition(0);
+        d->synthesizer->update();
     }
 
     void DspxNoteContext::clearEnergyAnchor() {
         Q_D(DspxNoteContext);
         d->pitchAnchors.clear();
-        d->synthesizer->setNextReadPosition(0);
+        d->synthesizer->update();
     }
 }
