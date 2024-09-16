@@ -34,6 +34,7 @@ namespace talcs {
         Q_DECLARE_PRIVATE(AudioSourceWriter)
     public:
         AudioSourceWriter(AudioSource *src, AbstractAudioFormatIO *outFile, qint64 length, QObject *parent = nullptr);
+        AudioSourceWriter(AudioSource *src, AbstractAudioFormatIO *outFile, int channelCountToMonoize, qint64 length, QObject *parent = nullptr);
         ~AudioSourceWriter() override;
 
     protected:

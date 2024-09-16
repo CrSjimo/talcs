@@ -46,10 +46,17 @@ namespace talcs {
      *
      * Note that this object does not take the ownership of both objects.
      */
-    AudioSourceWriter::AudioSourceWriter(AudioSource *src, AbstractAudioFormatIO *outFile, qint64 length, QObject *parent)
-        : AudioSourceProcessorBase(*new AudioSourceWriterPrivate, src, length, parent) {
+    AudioSourceWriter::AudioSourceWriter(AudioSource *src, AbstractAudioFormatIO *outFile,
+                                         qint64 length, QObject *parent)
+        : AudioSourceWriter(src, outFile, 0, length, parent) {
+    }
+
+    AudioSourceWriter::AudioSourceWriter(AudioSource *src, AbstractAudioFormatIO *outFile,
+                                         int channelCountToMonoize, qint64 length,
+                                         QObject *parent) : AudioSourceProcessorBase(*new AudioSourceWriterPrivate, src, length, parent) {
         Q_D(AudioSourceWriter);
         d->outFile = outFile;
+        d->channelCountToMonoize = channelCountToMonoize;
     }
 
     /**
@@ -59,6 +66,10 @@ namespace talcs {
 
     IAudioSampleContainer *AudioSourceWriter::prepareBuffer() {
         Q_D(AudioSourceWriter);
+        if (d->channelCountToMonoize) {
+            d->monoizeBuf.resize(d->channelCountToMonoize, d->src->bufferSize());
+            return &d->monoizeBuf;
+        }
         auto p = new float[d->src->bufferSize() * d->outFile->channelCount()];
         d->buf = new InterleavedAudioDataWrapper(p, d->outFile->channelCount(), d->src->bufferSize());
         return d->buf;
@@ -66,14 +77,26 @@ namespace talcs {
 
     bool AudioSourceWriter::processBlock(qint64 processedSampleCount, qint64 samplesToProcess) {
         Q_D(AudioSourceWriter);
+        if (d->channelCountToMonoize) {
+            for (qint64 i = 0; i < samplesToProcess; i++) {
+                d->monoizeBuf.data(0)[i] /= static_cast<float>(d->channelCountToMonoize);
+                for (int ch = 1; ch < d->channelCountToMonoize; ch++) {
+                    d->monoizeBuf.data(0)[i] += d->monoizeBuf.data(ch)[i] / static_cast<float>(d->channelCountToMonoize);
+                }
+            }
+            return samplesToProcess == d->outFile->write(d->monoizeBuf.data(0), samplesToProcess);
+        }
         return samplesToProcess == d->outFile->write(d->buf->data(), samplesToProcess);
     }
 
     void AudioSourceWriter::processWillFinish() {
         Q_D(AudioSourceWriter);
-        delete d->buf->data();
-        delete d->buf;
-        d->buf = nullptr;
+        if (d->buf) {
+            delete d->buf->data();
+            delete d->buf;
+            d->buf = nullptr;
+        }
+        d->monoizeBuf = {};
     }
 
 }
