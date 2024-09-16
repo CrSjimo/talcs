@@ -32,8 +32,8 @@
 #include <TalcsDspx/DspxTrackContext.h>
 
 namespace talcs {
-    DspxProjectAudioExporterSourceWriter::DspxProjectAudioExporterSourceWriter(DspxProjectAudioExporterPrivate *d, DspxTrackContext *trackContext, AudioSource *src, AbstractAudioFormatIO *outFile, qint64 length)
-        : AudioSourceWriter(src, outFile, length), d(d) {
+    DspxProjectAudioExporterSourceWriter::DspxProjectAudioExporterSourceWriter(DspxProjectAudioExporterPrivate *d, DspxTrackContext *trackContext, AudioSource *src, AbstractAudioFormatIO *outFile, int channelCountToMonoize, qint64 length)
+        : AudioSourceWriter(src, outFile, channelCountToMonoize, length), d(d) {
     }
 
     bool DspxProjectAudioExporterSourceWriter::processBlock(qint64 processedSampleCount, qint64 samplesToProcess) {
@@ -175,6 +175,14 @@ namespace talcs {
         Q_D(const DspxProjectAudioExporter);
         return d->thruMaster;
     }
+    void DspxProjectAudioExporter::setMonoChannel(bool v) {
+        Q_D(DspxProjectAudioExporter);
+        d->isMonoChannel = v;
+    }
+    bool DspxProjectAudioExporter::isMonoChannel() const {
+        Q_D(const DspxProjectAudioExporter);
+        return d->isMonoChannel;
+    }
 
     void DspxProjectAudioExporter::addSeparatedTask(DspxTrackContext *track, AbstractAudioFormatIO *outFile) {
         Q_D(DspxProjectAudioExporter);
@@ -245,7 +253,9 @@ namespace talcs {
         QEventLoop eventLoop;
         QThread exportThread;
 
-        DspxProjectAudioExporterSourceWriter writer(this, trackContext, src, io, length);
+        DspxProjectAudioExporterSourceWriter writer(this, trackContext, src, io, isMonoChannel ? 2 : 0, length);
+        auto cleanup = [=](void *) {currentWriter = nullptr;};
+        std::unique_ptr<void, decltype(cleanup)> _(nullptr, cleanup);
         currentWriter = &writer;
         writer.moveToThread(&exportThread);
         QObject::connect(&exportThread, &QThread::started, &writer, &AudioSourceProcessorBase::start);
@@ -273,7 +283,6 @@ namespace talcs {
         DspxProjectAudioExporter::Result ret(eventLoop.exec());
         exportThread.quit();
         exportThread.wait();
-        currentWriter = nullptr;
         return ret;
     }
 

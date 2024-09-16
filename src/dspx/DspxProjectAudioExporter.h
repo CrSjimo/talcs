@@ -50,6 +50,9 @@ namespace talcs {
         void setThruMaster(bool);
         bool thruMaster() const;
 
+        void setMonoChannel(bool);
+        bool isMonoChannel() const;
+
         void addSeparatedTask(DspxTrackContext *track, AbstractAudioFormatIO *outFile);
         void setMixedTask(const QList<DspxTrackContext *> &tracks, AbstractAudioFormatIO *outFile);
         void clearTask();

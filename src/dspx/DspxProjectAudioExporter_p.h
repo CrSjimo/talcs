@@ -37,7 +37,7 @@ namespace talcs {
     class DspxProjectAudioExporterSourceWriter : public AudioSourceWriter {
         Q_OBJECT
     public:
-        DspxProjectAudioExporterSourceWriter(DspxProjectAudioExporterPrivate *d, DspxTrackContext *trackContext, AudioSource *src, AbstractAudioFormatIO *outFile, qint64 length);
+        DspxProjectAudioExporterSourceWriter(DspxProjectAudioExporterPrivate *d, DspxTrackContext *trackContext, AudioSource *src, AbstractAudioFormatIO *outFile, int channelCountToMonoize, qint64 length);
     protected:
         IAudioSampleContainer *prepareBuffer() override {
             return m_buf = AudioSourceWriter::prepareBuffer();
@@ -65,6 +65,7 @@ namespace talcs {
         int lengthTick{};
         bool thruMaster{};
         bool isClippingCheckEnabled{};
+        bool isMonoChannel{};
 
         QList<QPair<DspxTrackContext *, AbstractAudioFormatIO *>> separatedTasks;
         QList<DspxTrackContext *> mixedTask;
