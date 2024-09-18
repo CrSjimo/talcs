@@ -257,7 +257,7 @@ namespace talcs {
 
         DspxProjectAudioExporterSourceWriter writer(this, trackContext, src, io, isMonoChannel ? 2 : 0, length);
         auto cleanup = [=](void *) {currentWriter = nullptr;};
-        std::unique_ptr<void, decltype(cleanup)> _(nullptr, cleanup);
+        std::unique_ptr<void, decltype(cleanup)> _(this, cleanup);
         currentWriter = &writer;
         writer.moveToThread(&exportThread);
         QObject::connect(&exportThread, &QThread::started, &writer, &AudioSourceProcessorBase::start);
