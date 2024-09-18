@@ -64,8 +64,6 @@ namespace talcs {
             OK = 0x0000,
             Fail = 0x0001,
             Interrupted = 0x0002,
-
-            ClippingDetected = 0x0010,
         };
         Q_DECLARE_FLAGS(Result, ResultFlag)
         Result exec();

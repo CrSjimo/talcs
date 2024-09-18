@@ -125,7 +125,7 @@ namespace talcs {
                 mixerSourceData.source->setSilentFlags(mixerSourceData.actualSilentFlags);
             }
             savedMixerSourceDataIt++;
-            projectContext->transport()->setPosition(projectContext->timeConverter()(startTick));
+            masterTrack->setNextReadPosition(projectContext->timeConverter()(startTick));
             return {mixerSourceData.trackContext, taskSources.value(mixerSourceData.source)};
         }
         return {nullptr, nullptr};
@@ -133,6 +133,7 @@ namespace talcs {
 
     DspxProjectAudioExporter::DspxProjectAudioExporter(DspxProjectContext *context, QObject *parent) : QObject(parent), d_ptr(new DspxProjectAudioExporterPrivate) {
         Q_D(DspxProjectAudioExporter);
+        d->q_ptr = this;
         d->projectContext = context;
     }
 
@@ -231,6 +232,7 @@ namespace talcs {
 
         DspxProjectAudioExporter::Result ret = DspxProjectAudioExporter::OK;
 
+        savedMixerSourceDataIt = savedMixerSourceDataList.cbegin();
         while (true) {
             auto [trackContext, io] = makeNextSeparatedThruMasterTaskMixerLayoutAndGetCorrespondingData();
             if (!trackContext)
@@ -260,10 +262,10 @@ namespace talcs {
         writer.moveToThread(&exportThread);
         QObject::connect(&exportThread, &QThread::started, &writer, &AudioSourceProcessorBase::start);
 
-        int clippingFlag = 0;
+        bool clippingFlag = false;
         QObject::connect(&writer, &DspxProjectAudioExporterSourceWriter::clippingDetected, q, [&] {
             if (!clippingFlag) {
-                clippingFlag = DspxProjectAudioExporter::ClippingDetected;
+                clippingFlag = true;
                 emit q->clippingDetected(trackContext);
             }
         });
@@ -272,11 +274,11 @@ namespace talcs {
         });
         QObject::connect(&writer, &AudioSourceProcessorBase::finished, q, [&] {
             if (writer.status() == AudioSourceProcessorBase::Completed) {
-                eventLoop.exit(DspxProjectAudioExporter::OK | clippingFlag);
+                eventLoop.exit(DspxProjectAudioExporter::OK);
             } else if (writer.status() == AudioSourceProcessorBase::Failed) {
-                eventLoop.exit(DspxProjectAudioExporter::Fail | clippingFlag);
+                eventLoop.exit(DspxProjectAudioExporter::Fail);
             } else if (writer.status() == AudioSourceProcessorBase::Interrupted) {
-                eventLoop.exit((interruptionFlagIsFail ? DspxProjectAudioExporter::Fail : DspxProjectAudioExporter::Interrupted) | clippingFlag);
+                eventLoop.exit(interruptionFlagIsFail ? DspxProjectAudioExporter::Fail : DspxProjectAudioExporter::Interrupted);
             }
         });
         exportThread.start();
