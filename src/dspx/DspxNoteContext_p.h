@@ -77,6 +77,8 @@ namespace talcs {
 
         QMap<int, QVariant> pitchAnchors;
         QMap<int, QVariant> energyAnchors;
+
+        bool isBeingReadByClip() const;
     };
 }
 

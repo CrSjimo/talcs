@@ -93,17 +93,24 @@ namespace talcs {
         auto pos = PositionableAudioSource::nextReadPosition();
         PositionableAudioSource::setNextReadPosition(0);
         d->noteSynthesizer->flush(true);
-        d->noteSynthesizer->read({&dummyBuffer, 0, pos, -1});
-        PositionableAudioSource::setNextReadPosition(pos);
+        if (d->isBeingReadByClip()) {
+            d->noteSynthesizer->read({&dummyBuffer, 0, pos, -1});
+            PositionableAudioSource::setNextReadPosition(pos);
+        }
     }
 
     qint64 DspxNoteContextSynthesizer::processReading(const AudioSourceReadData &readData) {
         QMutexLocker locker(&mutex);
         d->noteSynthesizer->read(readData);
-        PositionableAudioSource::setNextReadPosition(PositionableAudioSource::nextReadPosition() + readData.length);
+        PositionableAudioSource::setNextReadPosition(PositionableAudioSource::nextReadPosition() +
+                                                     readData.length);
         return readData.length;
     }
 
+    bool DspxNoteContextPrivate::isBeingReadByClip() const {
+        auto pos = singingClipContext->d_func()->noteClipSeries->nextReadPosition();
+        return pos >= clipView.position() && pos < clipView.position() + clipView.length();
+    }
 
     DspxNoteContext::DspxNoteContext(DspxSingingClipContext *singingClipContext) : QObject(singingClipContext), d_ptr(new DspxNoteContextPrivate) {
         Q_D(DspxNoteContext);

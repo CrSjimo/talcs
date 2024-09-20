@@ -29,6 +29,7 @@ namespace talcs {
     class PositionableMixerAudioSource;
     class DspxPseudoSingerContext;
     class DspxNoteContext;
+    class DspxNoteContextPrivate;
 
     class DspxSingingClipContextPrivate;
 
@@ -37,6 +38,7 @@ namespace talcs {
         Q_DECLARE_PRIVATE(DspxSingingClipContext)
         friend class DspxPseudoSingerContext;
         friend class DspxNoteContext;
+        friend class DspxNoteContextPrivate;
     public:
         ~DspxSingingClipContext() override;
 

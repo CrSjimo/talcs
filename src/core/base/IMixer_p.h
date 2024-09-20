@@ -198,13 +198,17 @@ namespace talcs {
                 bool isMutedBySoloSetting = (soloCounter && !srcInfo.isSolo);
 
                 if (sourceList.size() == 1) { // fast-read
-                    actualReadLength = src->read(AudioSourceReadData(readData.buffer, readData.startPos, readLength, isMutedBySoloSetting ? -1 : silentFlags));
+                    IAudioSampleContainer *adoptedBuffer = readData.buffer->isContinuous() ? readData.buffer : &tmpBuf;
+                    actualReadLength = src->read(AudioSourceReadData(adoptedBuffer, adoptedBuffer == readData.buffer ? readData.startPos : 0, readLength, isMutedBySoloSetting ? -1 : silentFlags));
                     for (int i = 0; i < channelCount; i++) {
                         if (((1 << i) & silentFlags) != 0) {
-                            readData.buffer->clear(i, readData.startPos, readLength);
+                            adoptedBuffer->clear(i, readData.startPos, readLength);
                         } else {
                             auto gainCh = i == 0 ? gainLeftRight.first : i == 1 ? gainLeftRight.second : gain;
-                            readData.buffer->gainSampleRange(i, readData.startPos, readLength, gainCh);
+                            adoptedBuffer->gainSampleRange(i, readData.startPos, readLength, gainCh);
+                            if (adoptedBuffer != readData.buffer) {
+                                readData.buffer->setSampleRange(i, readData.startPos, readLength, tmpBuf, i, 0);
+                            }
                         }
                     }
                     break;
