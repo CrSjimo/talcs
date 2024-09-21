@@ -58,9 +58,8 @@ namespace talcs {
     void DspxPseudoSingerContext::removeSingingClip(int id) {
         Q_D(DspxPseudoSingerContext);
         Q_ASSERT(d->clips.contains(id));
-        auto clip = d->clips.take(id);
+        std::unique_ptr<DspxSingingClipContext> clip(d->clips.take(id));
         d->clipSeries->removeClip(clip->d_func()->clipView);
-        delete clip;
     }
 
     QList<DspxSingingClipContext *> DspxPseudoSingerContext::clips() const {

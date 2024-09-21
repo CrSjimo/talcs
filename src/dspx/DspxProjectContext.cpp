@@ -137,9 +137,8 @@ namespace talcs {
     void DspxProjectContext::removeTrack(int index) {
         Q_D(DspxProjectContext);
         Q_ASSERT(index >= 0 && index < d->tracks.size());
-        auto track = d->tracks.takeAt(index);
+        std::unique_ptr<DspxTrackContext> track(d->tracks.takeAt(index));
         d->masterTrackMixer->removeSource(track->controlMixer());
-        delete track;
     }
 
     void DspxProjectContext::moveTrack(int index, int count, int dest) {

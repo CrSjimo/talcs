@@ -127,9 +127,8 @@ namespace talcs {
     void DspxSingingClipContext::removeNote(int id) {
         Q_D(DspxSingingClipContext);
         Q_ASSERT(d->notes.contains(id));
-        auto note = d->notes.take(id);
+        std::unique_ptr<DspxNoteContext> note(d->notes.take(id));
         d->noteClipSeries->removeClip(note->d_func()->clipView);
-        delete note;
     }
 
     QList<DspxNoteContext *> DspxSingingClipContext::notes() const {

@@ -88,9 +88,8 @@ namespace talcs {
     void DspxTrackContext::removeAudioClip(int id) {
         Q_D(DspxTrackContext);
         Q_ASSERT(d->clips.contains(id));
-        auto clip = d->clips.take(id);
+        std::unique_ptr<DspxAudioClipContext> clip(d->clips.take(id));
         d->clipSeries->removeClip(clip->d_func()->clipView);
-        delete clip;
     }
 
     QList<DspxAudioClipContext *> DspxTrackContext::clips() const {
