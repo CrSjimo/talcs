@@ -60,6 +60,9 @@ namespace talcs {
     class RemoteProcessInfoCallback {
     public:
         virtual void onThisBlockProcessInfo(const RemoteProcessInfo &processInfo) = 0;
+
+    protected:
+        ~RemoteProcessInfoCallback() = default;
     };
 
 }

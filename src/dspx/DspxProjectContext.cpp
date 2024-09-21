@@ -149,7 +149,7 @@ namespace talcs {
 
         QVector<DspxTrackContext *> tmp;
         tmp.resize(count);
-        std::copy(d->tracks.begin() + index, d->tracks.begin() + index + count, tmp.begin());
+        std::copy_n(d->tracks.begin() + index, count, tmp.begin());
         int correctDest;
         if (dest > index) {
             correctDest = dest - count;

@@ -28,7 +28,7 @@
 namespace talcs {
 
     class AudioBuffer;
-    class AudioSourceReadData;
+    struct AudioSourceReadData;
     class IAudioSampleProvider;
 
     class MultichannelAudioResamplerPrivate;
@@ -37,7 +37,7 @@ namespace talcs {
     class TALCSFORMAT_EXPORT MultichannelAudioResampler {
     public:
         explicit MultichannelAudioResampler(double ratio, qint64 bufferSize, int channelCount);
-        ~MultichannelAudioResampler();
+        virtual ~MultichannelAudioResampler();
 
         void reset();
 

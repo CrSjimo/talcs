@@ -43,7 +43,7 @@ namespace talcs {
             tail = head;
             tail %= 1024;
         }
-        bool empty() {
+        bool empty() const {
             return !counter;
         }
         MidiMessage top() {

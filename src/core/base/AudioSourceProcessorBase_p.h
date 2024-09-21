@@ -24,9 +24,12 @@
 
 namespace talcs {
 
-    class AudioSourceProcessorBasePrivate {
+    class TALCSCORE_EXPORT AudioSourceProcessorBasePrivate {
         Q_DECLARE_PUBLIC(AudioSourceProcessorBase)
     public:
+
+        virtual ~AudioSourceProcessorBasePrivate();
+
         AudioSourceProcessorBase *q_ptr;
         AudioSource *src;
         qint64 length;

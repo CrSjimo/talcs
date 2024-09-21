@@ -29,7 +29,7 @@
 
 namespace talcs {
 
-    static const size_t DEVICE_LIST_SIZE = 16;
+    static constexpr size_t DEVICE_LIST_SIZE = 16;
 
     static ASIOAudioDevicePrivate *m_devices[DEVICE_LIST_SIZE] = {};
 
@@ -217,7 +217,7 @@ namespace talcs {
             return;
         }
         *pDev = d;
-        d->deviceIndex = int(std::distance(std::begin(m_devices), pDev));
+        d->deviceIndex = static_cast<int>(std::distance(std::begin(m_devices), pDev));
         d->callbacks = getASIOCallbacks<DEVICE_LIST_SIZE - 1>(d->deviceIndex);
         setName(name);
         setDriver(driver);

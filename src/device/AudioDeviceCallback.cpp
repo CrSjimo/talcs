@@ -27,6 +27,8 @@ namespace talcs {
      * @see AudioDevice
      */
 
+    AudioDeviceCallback::~AudioDeviceCallback() = default;
+
     /**
      * @fn void AudioDeviceCallback::deviceWillStartCallback(AudioDevice *device)
      * Called when device is about to start.

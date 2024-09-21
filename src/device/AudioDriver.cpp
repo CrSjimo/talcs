@@ -22,6 +22,8 @@
 
 namespace talcs {
 
+    AudioDriverPrivate::~AudioDriverPrivate() = default;
+
     /**
      * @class AudioDriver
      * @brief Base class for audio drivers that underlay audio devices
@@ -106,7 +108,7 @@ namespace talcs {
      * The parent of the device created is set to this object, and use @c delete to deallocate.
      *
      * @c nullptr will be returned if the function fails to create the device with the specified name. Note that the
-     * audio device is not guaranteed to work, and use @link AudioDevice::isInitialized() to check whether it can work
+     * audio device is not guaranteed to work, and use AudioDevice::isInitialized() to check whether it can work
      * or not.
      * @see AudioDevice, AudioDevice::isInitialized()
      */

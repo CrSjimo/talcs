@@ -42,14 +42,14 @@ namespace talcs {
     }
 
     void MidiInputDevicePrivate::rtmidiCallback(double timeStamp, std::vector<unsigned char> *message, void *userData) {
-        auto d = reinterpret_cast<MidiInputDevicePrivate *>(userData);
+        auto d = static_cast<MidiInputDevicePrivate *>(userData);
         MidiMessage msg(message->data(), static_cast<int>(message->size()), timeStamp);
         d->listener.messageCallback(msg);
     }
 
     void MidiInputDevicePrivate::rtmidiErrorCallback(RtMidiError::Type type, const std::string &errorText, void *userData) {
         Q_UNUSED(type)
-        auto d = reinterpret_cast<MidiInputDevicePrivate *>(userData);
+        auto d = static_cast<MidiInputDevicePrivate *>(userData);
         d->q_ptr->setErrorString(QString::fromStdString(errorText));
         d->listener.errorCallback(QString::fromStdString(errorText));
     }
@@ -99,9 +99,9 @@ namespace talcs {
         QStringList a;
         try {
             RtMidiIn tmp;
-            int count = static_cast<int>(tmp.getPortCount());
+            unsigned count = tmp.getPortCount();
             a.reserve(count);
-            for (int i = 0; i < count; i++) {
+            for (unsigned i = 0; i < count; i++) {
                 a.append(QString::fromStdString(tmp.getPortName(i)));
             }
         } catch (RtMidiError &e) {

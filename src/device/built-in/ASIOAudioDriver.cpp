@@ -49,13 +49,13 @@ namespace talcs {
     }
 
     struct keyClose {
-        void operator()(HKEY hKey) {
+        void operator()(HKEY hKey) const {
             if (hKey)
                 ::RegCloseKey(hKey);
         }
     };
 
-    using HKEYUniquePtr = std::unique_ptr<std::remove_pointer<HKEY>::type, keyClose>;
+    using HKEYUniquePtr = std::unique_ptr<std::remove_pointer_t<HKEY>, keyClose>;
 
     static bool checkDriverCOMClass(char *clsidStr) {
         CharLowerBuffA(clsidStr, std::strlen(clsidStr));
@@ -91,7 +91,7 @@ namespace talcs {
         return false;
     }
 
-    void ASIOAudioDriverPrivate::createDriverSpec(HKEY hkey, char *keyName) {
+    void ASIOAudioDriverPrivate::createDriverSpec(HKEY hkey, const char *keyName) {
         HKEYUniquePtr hKeySub; // HEKY_LOCAL_MACHINE\software\asio\<driver>
         HKEY hKey_;
 

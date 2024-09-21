@@ -36,7 +36,7 @@ namespace talcs {
         if (decibels >= .0)
             s += "+";
         if (precision <= 0)
-            s += QString::number(int(decibels));
+            s += QString::number(static_cast<int>(decibels));
         else
             s += QString::number(decibels, 'f', precision);
         s += " dB";

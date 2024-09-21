@@ -26,9 +26,12 @@
 
 namespace talcs {
 
-    class AudioSourcePrivate {
+    class TALCSCORE_EXPORT AudioSourcePrivate {
         Q_DECLARE_PUBLIC(AudioSource)
     public:
+
+        virtual ~AudioSourcePrivate();
+
         AudioSource *q_ptr;
 
         QMutex filterMutex;

@@ -41,8 +41,8 @@ namespace talcs {
         AudioDevice *createDevice(const QString &name) override;
     };
 
-    static const int MAXPATHLEN = 512;
-    static const int MAXDRVNAMELEN = 128;
+    static constexpr int MAXPATHLEN = 512;
+    static constexpr int MAXDRVNAMELEN = 128;
 
     struct ASIODeviceSpec {
         CLSID clsid;
@@ -52,7 +52,7 @@ namespace talcs {
     class ASIOAudioDriverPrivate : public AudioDriverPrivate {
         Q_DECLARE_PUBLIC(ASIOAudioDriver)
         QList<ASIODeviceSpec> asioDriverSpecs;
-        void createDriverSpec(HKEY hkey, char *keyName);
+        void createDriverSpec(HKEY hkey, const char *keyName);
     };
 }
 

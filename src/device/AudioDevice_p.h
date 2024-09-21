@@ -26,9 +26,12 @@
 
 namespace talcs {
 
-    class AudioDevicePrivate {
+    class TALCSDEVICE_EXPORT AudioDevicePrivate {
         Q_DECLARE_PUBLIC(AudioDevice)
     public:
+
+        virtual ~AudioDevicePrivate();
+
         AudioDevice *q_ptr;
 
         QPointer<AudioDriver> driver;

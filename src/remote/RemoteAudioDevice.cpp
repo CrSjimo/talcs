@@ -153,7 +153,7 @@ namespace talcs {
 
         remoteIsOpened = true;
         sharedAudioData.resize(maxChannelCount);
-        auto *ptr = reinterpret_cast<char *>(region->get_address());
+        auto *ptr = static_cast<char *>(region->get_address());
         for (int i = 0; i < maxChannelCount; i++) {
             sharedAudioData[i] = reinterpret_cast<float *>(ptr);
             ptr += bufferSize * sizeof(float);
@@ -213,8 +213,7 @@ namespace talcs {
                 break;
             if (!lock.owns())
                 continue;
-            bool success = prepareBufferCondition->wait_for(lock, 1000ms, [=] { return *bufferPrepareStatus != Prepared; });
-            if (success) {
+            if (bool success = prepareBufferCondition->wait_for(lock, 1000ms, [=] { return *bufferPrepareStatus != Prepared; })) {
                 remotePrepareBuffer();
                 *bufferPrepareStatus = Prepared;
                 prepareBufferCondition->notify_one();

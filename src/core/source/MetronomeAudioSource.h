@@ -33,6 +33,9 @@ namespace talcs {
     public:
         virtual void detectInterval(qint64 intervalLength) = 0;
         virtual MetronomeAudioSourceDetectorMessage nextMessage() = 0;
+
+    protected:
+        ~MetronomeAudioSourceDetector() = default;
     };
 
     class PositionableAudioSource;

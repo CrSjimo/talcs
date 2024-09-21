@@ -99,13 +99,13 @@ namespace talcs {
         if (isOpen())
             close();
 
-        d->spec.freq = (int) sampleRate;
+        d->spec.freq = static_cast<int>(sampleRate);
         d->spec.format = AUDIO_F32SYS;
-        d->spec.channels = (quint8) activeChannelCount();
+        d->spec.channels = static_cast<quint8>(activeChannelCount());
         d->spec.silence = 0;
-        d->spec.samples = (quint16) bufferSize;
+        d->spec.samples = static_cast<quint16>(bufferSize);
         d->spec.callback = [](void *d, quint8 *rawBuf, int length) {
-            reinterpret_cast<SDLAudioDevicePrivate *>(d)->sdlCallback(rawBuf, length);
+            static_cast<SDLAudioDevicePrivate *>(d)->sdlCallback(rawBuf, length);
         };
         d->spec.userdata = d;
 

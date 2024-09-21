@@ -22,6 +22,8 @@
 
 namespace talcs {
 
+    talcs::AudioSourcePrivate::~AudioSourcePrivate() = default;
+
     /**
      * @struct AudioSourceReadData
      * @brief The object that contains the target for AudioSource to fill data in

@@ -27,6 +27,9 @@ namespace talcs {
     class AudioDriverPrivate {
         Q_DECLARE_PUBLIC(AudioDriver)
     public:
+
+        virtual ~AudioDriverPrivate();
+
         AudioDriver *q_ptr;
         bool isInitialized = false;
     };

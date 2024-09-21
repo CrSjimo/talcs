@@ -45,7 +45,7 @@ namespace talcs {
         return m_buffer[channel][pos];
     }
     float AudioBuffer::constSampleAt(int channel, qint64 pos) const {
-        return m_buffer.at(channel).at(static_cast<int>(pos));
+        return m_buffer.at(channel).at(pos);
     }
     int AudioBuffer::channelCount() const {
         return m_buffer.size();

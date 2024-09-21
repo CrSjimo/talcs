@@ -109,26 +109,26 @@ namespace talcs {
         return stream->pos();
     }
     int64_t AudioFormatIOPrivate::sfVioRead(void *ptr, int64_t count) const {
-        return stream->read((char *) ptr, count);
+        return stream->read(static_cast<char *>(ptr), count);
     }
     int64_t AudioFormatIOPrivate::sfVioWrite(const void *ptr, int64_t count) const {
-        return stream->write((char *) ptr, count);
+        return stream->write(static_cast<const char *>(ptr), count);
     }
     int64_t AudioFormatIOPrivate::sfVioTell() const {
         return stream->pos();
     }
     static SF_VIRTUAL_IO sfVio = {
-        [](void *d) { return reinterpret_cast<AudioFormatIOPrivate *>(d)->sfVioGetFilelen(); },
+        [](void *d) { return static_cast<AudioFormatIOPrivate *>(d)->sfVioGetFilelen(); },
         [](int64_t offset, int whence, void *d) {
-            return reinterpret_cast<AudioFormatIOPrivate *>(d)->sfVioSeek(offset, whence);
+            return static_cast<AudioFormatIOPrivate *>(d)->sfVioSeek(offset, whence);
         },
         [](void *ptr, int64_t count, void *d) {
-            return reinterpret_cast<AudioFormatIOPrivate *>(d)->sfVioRead(ptr, count);
+            return static_cast<AudioFormatIOPrivate *>(d)->sfVioRead(ptr, count);
         },
         [](const void *ptr, int64_t count, void *d) {
-            return reinterpret_cast<AudioFormatIOPrivate *>(d)->sfVioWrite(ptr, count);
+            return static_cast<AudioFormatIOPrivate *>(d)->sfVioWrite(ptr, count);
         },
-        [](void *d) { return reinterpret_cast<AudioFormatIOPrivate *>(d)->sfVioTell(); }};
+        [](void *d) { return static_cast<AudioFormatIOPrivate *>(d)->sfVioTell(); }};
 
     /**
      * Initialize libsndfile with specified format, number of channels and sample rate.
@@ -160,7 +160,7 @@ namespace talcs {
             return false;
         }
         d->stream->seek(0);
-        d->sf.reset(new SndfileHandle(sfVio, d, sfOpenMode, d->format, d->channelCount, (int) d->sampleRate));
+        d->sf.reset(new SndfileHandle(sfVio, d, sfOpenMode, d->format, d->channelCount, static_cast<int>(d->sampleRate)));
         if (!d->sf->rawHandle()) {
             setErrorString(d->sf->strError());
             return false;
@@ -466,7 +466,7 @@ namespace talcs {
      * Note that this function should be called after the AudioFormatIO object is opened.
      */
     AudioFormatIO::MajorFormat AudioFormatIO::majorFormat() const {
-        return (MajorFormat) (format() & MajorFormatMask);
+        return static_cast<MajorFormat>(format() & MajorFormatMask);
     }
 
     /**
@@ -475,7 +475,7 @@ namespace talcs {
      * Note that this function should be called after the AudioFormatIO object is opened.
      */
     AudioFormatIO::Subtype AudioFormatIO::subtype() const {
-        return (Subtype) (format() & SubtypeMask);
+        return static_cast<Subtype>(format() & SubtypeMask);
     }
 
     /**
@@ -484,7 +484,7 @@ namespace talcs {
      * Note that this function should be called after the AudioFormatIO object is opened.
      */
     AudioFormatIO::ByteOrder AudioFormatIO::byteOrder() const {
-        return (ByteOrder) (format() & ByteOrderMask);
+        return static_cast<ByteOrder>(format() & ByteOrderMask);
     }
 
     /**
@@ -690,7 +690,7 @@ namespace talcs {
             FormatInfo formatInfo = {};
             info.format = i;
             sf_command(nullptr, SFC_GET_FORMAT_MAJOR, &info, sizeof(info));
-            formatInfo.majorFormat = (MajorFormat) info.format;
+            formatInfo.majorFormat = static_cast<MajorFormat>(info.format);
             formatInfo.name = info.name;
             formatInfo.extension = info.extension;
             for (int j = 0; j < subTypeCnt; j++) {
@@ -705,7 +705,7 @@ namespace talcs {
                     auto subtypeExtension = QString(info.extension);
                     if (!subtypeExtension.isEmpty() && subtypeExtension != simpleFormatExtension)
                         subtypeExtensions.append(subtypeExtension);
-                    formatInfo.subtypes.append({(Subtype) info.format, info.name, subtypeExtensions});
+                    formatInfo.subtypes.append({static_cast<Subtype>(info.format), info.name, subtypeExtensions});
                 }
             }
             formatInfo.byteOrders.append(DefaultOrder);

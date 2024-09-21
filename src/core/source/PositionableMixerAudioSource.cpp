@@ -72,8 +72,8 @@ namespace talcs {
     qint64 PositionableMixerAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(PositionableMixerAudioSource);
         qint64 readLength;
-        auto channelCount = readData.buffer->channelCount();
         {
+            auto channelCount = readData.buffer->channelCount();
             QMutexLocker locker(&d->mutex);
             auto bufferLength = length();
             if (d->tmpBuf.channelCount() < channelCount)
@@ -109,7 +109,7 @@ namespace talcs {
         if (sourceList.length() == 0)
             return 0;
         return (*std::min_element(sourceList.begin(), sourceList.end(),
-                                  [](PositionableAudioSource *src1, PositionableAudioSource *src2) {
+                                  [](auto *src1, auto *src2) {
                                       return src1->length() < src2->length();
                                   }))
                 ->length();

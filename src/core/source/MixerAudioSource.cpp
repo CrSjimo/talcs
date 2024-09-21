@@ -70,8 +70,8 @@ namespace talcs {
     qint64 MixerAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(MixerAudioSource);
         qint64 readLength = readData.length;
-        auto channelCount = readData.buffer->channelCount();
         {
+            auto channelCount = readData.buffer->channelCount();
             QMutexLocker locker(&d->mutex);
             if (d->tmpBuf.channelCount() < channelCount)
                 d->tmpBuf.resize(channelCount);

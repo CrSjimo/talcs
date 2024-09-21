@@ -23,6 +23,8 @@
 
 namespace talcs {
 
+    AudioSourceProcessorBasePrivate::~AudioSourceProcessorBasePrivate() = default;
+
     /**
      * @class AudioSourceProcessorBase
      * @brief Base class for objects that process the audio produced by an AudioSource object.

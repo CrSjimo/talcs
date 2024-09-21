@@ -104,8 +104,7 @@ namespace talcs {
         d->detector->detectInterval(readData.length);
         auto beat = d->detector->nextMessage();
         qint64 tailLength = beat.position != -1 ? beat.position : readData.length;
-        auto tailSrc = d->tailIsMajor ? d->majorBeatSource : d->tailIsMinor ? d->minorBeatSource : nullptr;
-        if (tailSrc) {
+        if (auto tailSrc = d->tailIsMajor ? d->majorBeatSource : d->tailIsMinor ? d->minorBeatSource : nullptr) {
             qint64 tailReadLength = tailSrc->read({readData.buffer, readData.startPos, tailLength, readData.silentFlags});
             if (tailReadLength < tailLength) {
                 for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
@@ -225,7 +224,7 @@ namespace talcs {
     class BuiltInBeatSource : public MemoryAudioSource {
     public:
         using Func = float(*)(qint64, double);
-        explicit BuiltInBeatSource(Func f) : f(f), MemoryAudioSource(&buf) {
+        explicit BuiltInBeatSource(Func f) : MemoryAudioSource(&buf), f(f) {
         }
         ~BuiltInBeatSource() override = default;
 

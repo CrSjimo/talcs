@@ -32,8 +32,6 @@ namespace talcs {
         Q_OBJECT
         Q_DECLARE_PRIVATE(RemoteAudioDevice)
     public:
-
-    public:
         explicit RemoteAudioDevice(RemoteSocket *socket, const QString &name, QObject *parent = nullptr);
         ~RemoteAudioDevice() override;
 

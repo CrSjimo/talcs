@@ -37,7 +37,7 @@ namespace talcs {
     class TALCSFORMAT_EXPORT AudioResampler {
     public:
         explicit AudioResampler(double ratio, qint64 bufferSize);
-        ~AudioResampler();
+        virtual ~AudioResampler();
 
         void reset();
 

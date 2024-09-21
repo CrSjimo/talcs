@@ -75,15 +75,13 @@ namespace talcs {
         auto extension = (filename + ".").split(".").last();
         auto hintedEntry = extension.isEmpty() ? nullptr : hintFromExtension(extension);
         if (hintedEntry) {
-            auto io = hintedEntry->getFormatLoad(filename, userData);
-            if (io)
+            if (auto io = hintedEntry->getFormatLoad(filename, userData))
                 return io;
         }
         for (auto entry : entries()) {
             if (entry == hintedEntry)
                 continue;
-            auto io = entry->getFormatLoad(filename, userData);
-            if (io)
+            if (auto io = entry->getFormatLoad(filename, userData))
                 return io;
         }
         return nullptr;

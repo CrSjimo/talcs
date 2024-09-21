@@ -33,6 +33,9 @@ namespace talcs {
         qint64 bufferSize() const;
         double sampleRate() const;
 
+    protected:
+        ~AudioStreamBase() = default;
+
     private:
         qint64 m_bufferSize = 0;
         double m_sampleRate = 0;

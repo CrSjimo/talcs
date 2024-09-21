@@ -56,7 +56,7 @@ namespace talcs {
     qint64 SineWaveAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(SineWaveAudioSource);
         QMutexLocker locker(&d->mutex);
-        static const double PI = 3.14159265358979323846;
+        static constexpr double PI = 3.14159265358979323846;
         auto channelCount = readData.buffer->channelCount();
         auto pos = d->position;
         auto sr = sampleRate();

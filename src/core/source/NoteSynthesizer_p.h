@@ -60,14 +60,14 @@ namespace talcs {
         QList<KeyInfo> keys;
 
         struct GenerateSineWave {
-            inline double operator()(double integration) {
+            inline double operator()(double integration) const {
                 static const double PI = std::acos(-1);
                 return std::sin(2.0 * PI * integration);
             }
         };
 
         struct GenerateSquareWave {
-            inline double operator()(double integration) {
+            inline double operator()(double integration) const {
                 double t = std::fmod(integration, 1.0);
                 if (t < -0.5) {
                     return 1.0;
@@ -82,7 +82,7 @@ namespace talcs {
         };
 
         struct GenerateTriangleWave {
-            inline double operator()(double integration) {
+            inline double operator()(double integration) const {
                 double t = std::fmod(integration, 1.0);
                 if (t < -0.75) {
                     return 4.0 * (t + 1.0);
@@ -99,7 +99,7 @@ namespace talcs {
         };
 
         struct GenerateSawtoothWave {
-            inline double operator()(double integration) {
+            inline double operator()(double integration) const {
                 double t = std::fmod(integration, 1.0);
                 if (t < 0)
                     return 2 * t + 1;

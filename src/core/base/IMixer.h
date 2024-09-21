@@ -103,6 +103,9 @@ namespace talcs {
 
         virtual void setLevelMeterChannelCount(int count) = 0;
         virtual int levelMeterChannelCount() = 0;
+
+    protected:
+        ~IMixer() = default;
     };
     
 }

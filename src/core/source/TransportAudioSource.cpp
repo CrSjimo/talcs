@@ -61,7 +61,7 @@ namespace talcs {
     }
 
     TransportAudioSource::TransportAudioSource(TransportAudioSourcePrivate &d, QObject *parent)
-        : AudioSource(d), QObject(parent) {
+        : QObject(parent), AudioSource(d) {
     }
 
     static inline void safeRead(IAudioSampleContainer *dest, qint64 destPos, qint64 length,

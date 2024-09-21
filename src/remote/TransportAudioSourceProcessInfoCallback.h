@@ -26,7 +26,7 @@ namespace talcs {
 
     class TransportAudioSource;
 
-    class TALCSREMOTE_EXPORT TransportAudioSourceProcessInfoCallback : public RemoteProcessInfoCallback {
+    class TALCSREMOTE_EXPORT TransportAudioSourceProcessInfoCallback final : public RemoteProcessInfoCallback {
     public:
         explicit TransportAudioSourceProcessInfoCallback(TransportAudioSource *tpSrc);
         void onThisBlockProcessInfo(const RemoteProcessInfo &processInfo) override;

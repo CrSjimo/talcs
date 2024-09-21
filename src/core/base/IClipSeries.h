@@ -116,6 +116,9 @@ namespace talcs {
 
         virtual qint64 effectiveLength() const = 0;
 
+    protected:
+        ~IClipSeries() = default;
+
     };
 
 } // talcs

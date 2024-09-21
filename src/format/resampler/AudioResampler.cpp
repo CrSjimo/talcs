@@ -100,10 +100,10 @@ namespace talcs {
             if (!d->processedOutputLength) {
                 int initialLength = d->resampler->getInLenBeforeOutPos(d->bufferSize);
                 read(d->inputBuffer.data(), initialLength);
-                std::copy(d->inputBuffer.cbegin(), d->inputBuffer.cbegin() + initialLength, d->f64InputBuffer.begin());
+                std::copy_n(d->inputBuffer.cbegin(), initialLength, d->f64InputBuffer.begin());
                 double *outputPointer;
                 int outputBlockLength = d->resampler->process(d->f64InputBuffer.data(), initialLength, outputPointer);
-                std::copy(outputPointer, outputPointer + outputBlockLength,
+                std::copy_n(outputPointer, outputBlockLength,
                           d->outputBuffer.begin() + d->outputBufferOffset);
                 d->processedInputLength += initialLength;
                 d->processedOutputLength += d->bufferSize;
@@ -117,12 +117,12 @@ namespace talcs {
                 int inputBlockLength = d->resampler->getInLenBeforeOutPos(d->processedOutputLength + d->bufferSize) -
                                        d->processedInputLength;
                 read(d->inputBuffer.data(), inputBlockLength);
-                std::copy(d->inputBuffer.cbegin(), d->inputBuffer.cbegin() + inputBlockLength,
+                std::copy_n(d->inputBuffer.cbegin(), inputBlockLength,
                           d->f64InputBuffer.begin());
                 double *outputPointer;
                 int outputBlockLength = d->resampler->process(d->f64InputBuffer.data(), inputBlockLength,
                                                               outputPointer);
-                std::copy(outputPointer, outputPointer + outputBlockLength,
+                std::copy_n(outputPointer, outputBlockLength,
                           d->outputBuffer.begin() + d->outputBufferOffset);
                 d->processedInputLength += inputBlockLength;
                 d->processedOutputLength += d->bufferSize;
@@ -136,8 +136,8 @@ namespace talcs {
                 //|-------buffer size-------|*****|           ^
                 //=================================           the new offset
 
-                std::copy(d->outputBuffer.cbegin(), d->outputBuffer.cbegin() + d->bufferSize, buffer);
-                std::copy(d->outputBuffer.cbegin() + d->bufferSize, d->outputBuffer.cbegin() + d->outputBufferOffset,
+                std::copy_n(d->outputBuffer.cbegin(), d->bufferSize, buffer);
+                std::copy_n(d->outputBuffer.cbegin() + d->bufferSize, d->outputBufferOffset - d->bufferSize,
                           d->outputBuffer.begin());
                 d->outputBufferOffset = d->outputBufferOffset - d->bufferSize;
                 break;

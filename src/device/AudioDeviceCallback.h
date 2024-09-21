@@ -26,10 +26,13 @@ namespace talcs {
     
     class AudioDevice;
     class AudioBuffer;
-    class AudioSourceReadData;
+    struct AudioSourceReadData;
 
     class TALCSDEVICE_EXPORT AudioDeviceCallback {
     public:
+
+        virtual ~AudioDeviceCallback();
+
         virtual bool deviceWillStartCallback(AudioDevice *device) = 0;
         virtual void deviceStoppedCallback() = 0;
         virtual void workCallback(const AudioSourceReadData &readData) = 0;

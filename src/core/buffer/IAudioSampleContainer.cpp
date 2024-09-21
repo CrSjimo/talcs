@@ -78,7 +78,7 @@ namespace talcs {
         if (isContinuous() && src.isContinuous()) {
             auto pDest = writePointerTo(destChannel, destStartPos);
             auto pSrc = src.readPointerTo(srcChannel, srcStartPos);
-            std::copy(pSrc, pSrc + length, pDest);
+            std::copy_n(pSrc, length, pDest);
         } else {
             for (qint64 i = 0; i < length; i++) {
                 sampleAt(destChannel, destStartPos + i) = src.constSampleAt(srcChannel, srcStartPos + i);

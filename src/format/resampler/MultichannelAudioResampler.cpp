@@ -69,7 +69,7 @@ namespace talcs {
             mcr->read(&mcr->d->inputBuffer);
         }
         auto *p = mcr->d->inputBuffer.constData(ch);
-        std::copy(p, p + length, inputBlock);
+        std::copy_n(p, length, inputBlock);
     }
 
     /**

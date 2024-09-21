@@ -24,6 +24,8 @@
 
 namespace talcs {
 
+    AudioDevicePrivate::~AudioDevicePrivate() = default;
+
     /**
      * @class AudioDevice
      * @brief Base class for audio devices

@@ -64,14 +64,14 @@ namespace talcs {
         };
         NoteSynthesizerDetectorMessage(SpecialValueNull null = {}) : position(-1), messageType{}, pitch{} {
         }
-        NoteSynthesizerDetectorMessage(qint64 position, Note note) : position(position), messageType(NoteMessage), note(note) {
+        NoteSynthesizerDetectorMessage(qint64 position, const Note &note) : position(position), messageType(NoteMessage), note(note) {
         }
-        NoteSynthesizerDetectorMessage(qint64 position, Pitch pitch) : position(position), messageType(PitchMessage), pitch(pitch) {
+        NoteSynthesizerDetectorMessage(qint64 position, const Pitch &pitch) : position(position), messageType(PitchMessage), pitch(pitch) {
         }
-        NoteSynthesizerDetectorMessage(qint64 position, Volume volume) : position(position), messageType(VolumeMessage), volume(volume) {
+        NoteSynthesizerDetectorMessage(qint64 position, const Volume &volume) : position(position), messageType(VolumeMessage), volume(volume) {
         }
 
-        constexpr bool isNull() noexcept {
+        constexpr bool isNull() const noexcept {
             return position == -1;
         }
 
@@ -88,6 +88,9 @@ namespace talcs {
     public:
         virtual void detectInterval(qint64 intervalLength) = 0;
         virtual NoteSynthesizerDetectorMessage nextMessage() = 0;
+
+    protected:
+        ~NoteSynthesizerDetector() = default;
     };
 
     class NoteSynthesizerPrivate;

@@ -28,7 +28,7 @@
 #include <TalcsMidi/private/AudioMidiStream_p.h>
 
 namespace talcs {
-    class MidiNoteSynthesizerPrivate : public NoteSynthesizerDetector {
+    class MidiNoteSynthesizerPrivate final : public NoteSynthesizerDetector {
         Q_DECLARE_PUBLIC(MidiNoteSynthesizer)
     public:
         MidiNoteSynthesizer *q_ptr;

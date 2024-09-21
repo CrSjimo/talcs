@@ -26,9 +26,9 @@
 
 namespace talcs {
 
-    static const double factor16 = (double) 0x7fffL + 0.49999;
-    static const double factor24 = (double) 0x7fffffL + 0.49999;
-    static const double factor32 = (double) 0x7fffffffL + 0.49999;
+    static constexpr double factor16 = static_cast<double>(0x7fffL) + 0.49999;
+    static constexpr double factor24 = static_cast<double>(0x7fffffL) + 0.49999;
+    static constexpr double factor32 = static_cast<double>(0x7fffffffL) + 0.49999;
 
     static inline float rangeRestrict(float x) {
         return qMax(-1.0f, qMin(1.0f, x));
@@ -45,9 +45,10 @@ namespace talcs {
      * @param src the pointer to source samples
      * @param length the number of samples
      * @param isLittleEndian whether the destination values are little-endian
+     * @param restrictRange whether to restrict sample value between -1.0f and 1.0f
      */
     void AudioSampleConverter::convertToInt16(void *dest, const float *src, qint64 length, bool isLittleEndian, bool restrictRange) {
-        auto p = reinterpret_cast<qint16 *>(dest);
+        auto p = static_cast<qint16 *>(dest);
         if (restrictRange)
             while (--length >= 0)
                 *p++ = isLittleEndian ? qToLittleEndian(qint16(rangeRestrict(*src++) * factor16))
@@ -64,11 +65,12 @@ namespace talcs {
      * @param src the pointer to source samples
      * @param length the number of samples
      * @param isLittleEndian whether the destination values are little-endian
+     * @param restrictRange whether to restrict sample value between -1.0f and 1.0f
      */
     void AudioSampleConverter::convertToInt24(void *dest, const float *src, qint64 length, bool isLittleEndian, bool restrictRange) {
         long a;
-        char *b = (char *) dest;
-        char *aa = (char *) &a;
+        char *b = static_cast<char *>(dest);
+        char *aa = reinterpret_cast<char *>(&a);
         if (restrictRange)
             while (--length >= 0) {
                 if (isLittleEndian) {
@@ -105,9 +107,10 @@ namespace talcs {
      * @param src the pointer to source samples
      * @param length the number of samples
      * @param isLittleEndian whether the destination values are little-endian
+     * @param restrictRange whether to restrict sample value between -1.0f and 1.0f
      */
     void AudioSampleConverter::convertToInt32(void *dest, const float *src, qint64 length, bool isLittleEndian, bool restrictRange) {
-        auto p = reinterpret_cast<qint32 *>(dest);
+        auto p = static_cast<qint32 *>(dest);
         if (restrictRange)
             while (--length >= 0)
                 *p++ = isLittleEndian ? qToLittleEndian(qint32(rangeRestrict(*src++) * factor32))
@@ -141,7 +144,7 @@ namespace talcs {
      * @param isLittleEndian whether the destination values are little-endian
      */
     void AudioSampleConverter::convertToFloat64(void *dest, const float *src, qint64 length, bool isLittleEndian) {
-        auto p = reinterpret_cast<double *>(dest);
+        auto p = static_cast<double *>(dest);
         while (--length >= 0)
             *p++ = isLittleEndian ? qToLittleEndian(*src++) : qToBigEndian(*src++);
     }
