@@ -24,13 +24,13 @@
 
 #include <TalcsCore/TransportAudioSource.h>
 #include <TalcsCore/private/AudioSource_p.h>
+#include <TalcsCore/TakeOwnershipPointer.h>
 
 namespace talcs {
     class TransportAudioSourcePrivate : public AudioSourcePrivate {
         Q_DECLARE_PUBLIC(TransportAudioSource)
     public:
-        PositionableAudioSource *src = nullptr;
-        bool takeOwnership = false;
+        TakeOwnershipPointer<PositionableAudioSource> src;
 
         qint64 position = 0;
         std::atomic<TransportAudioSource::PlaybackStatus> playbackStatus = TransportAudioSource::Paused;

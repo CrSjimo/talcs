@@ -25,15 +25,10 @@
 namespace talcs {
     TalcsAudioSource::TalcsAudioSource(talcs::AudioSource *src, bool takeOwnership) : TalcsAudioSource(*new TalcsAudioSourcePrivate) {
         Q_D(TalcsAudioSource);
-        d->src = src;
-        d->takeOwnership = takeOwnership;
+        d->src.reset(src, takeOwnership);
     }
 
-    TalcsAudioSource::~TalcsAudioSource() {
-        Q_D(TalcsAudioSource);
-        if (d->takeOwnership)
-            delete d->src;
-    }
+    TalcsAudioSource::~TalcsAudioSource() = default;
 
     void TalcsAudioSource::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {
         Q_D(TalcsAudioSource);

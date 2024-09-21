@@ -52,11 +52,6 @@ namespace talcs {
      * If the object is not close, it will be closed now.
      */
     TransportAudioSource::~TransportAudioSource() {
-        Q_D(TransportAudioSource);
-        if (d->takeOwnership) {
-            delete d->src;
-            d->src = nullptr;
-        }
         TransportAudioSource::close();
     }
 
@@ -154,8 +149,7 @@ namespace talcs {
     void TransportAudioSource::setSource(PositionableAudioSource *src, bool takeOwnership) {
         Q_D(TransportAudioSource);
         QMutexLocker locker(&d->mutex);
-        d->src = src;
-        d->takeOwnership = takeOwnership;
+        d->src.reset(src, takeOwnership);
         if (src) {
             if (isOpen()) {
                 src->setNextReadPosition(d->position);

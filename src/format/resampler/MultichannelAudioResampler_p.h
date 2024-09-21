@@ -20,6 +20,9 @@
 #ifndef TALCS_MULTICHANNELAUDIORESAMPLER_P_H
 #define TALCS_MULTICHANNELAUDIORESAMPLER_P_H
 
+#include <memory>
+#include <vector>
+
 #include "MultichannelAudioResampler.h"
 #include "AudioResampler.h"
 
@@ -32,9 +35,9 @@ namespace talcs {
     class MultichannelAudioResamplerPrivate {
     public:
         int channelCount;
-        QVector<ChannelResampler *> resamplerOfChannel;
+        std::vector<std::unique_ptr<ChannelResampler>> resamplerOfChannel;
         AudioBuffer inputBuffer;
-        float *tmpBuf = nullptr;
+        std::unique_ptr<float[]> tmpBuf;
     };
 
     class ChannelResampler : public AudioResampler {

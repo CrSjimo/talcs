@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 CrSjimo                                                 *
+* Copyright (c) 2024 CrSjimo                                                 *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,23 +17,51 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_TALCSPOSITIONABLEAUDIOSOURCE_P_H
-#define TALCS_TALCSPOSITIONABLEAUDIOSOURCE_P_H
+#ifndef TALCS_TAKEOWNERSHIPPOINTER_H
+#define TALCS_TAKEOWNERSHIPPOINTER_H
 
-#include <TalcsJuceAdapter/TalcsPositionableAudioSource.h>
+#include <memory>
 
-#include <TalcsCore/AudioDataWrapper.h>
-#include <TalcsCore/TakeOwnershipPointer.h>
+#include <TalcsCore/TalcsCoreGlobal.h>
 
 namespace talcs {
-    class TalcsPositionableAudioSourcePrivate {
-        Q_DECLARE_PUBLIC(TalcsPositionableAudioSource)
-    public:
-        TalcsPositionableAudioSource *q_ptr;
-        TakeOwnershipPointer<PositionableAudioSource> src;
-        AudioDataWrapper wrapper = AudioDataWrapper(nullptr, 0, 0);
-        QAtomicInteger<bool> isLooping = false;
-    };
-}
 
-#endif //TALCS_TALCSPOSITIONABLEAUDIOSOURCE_P_H
+    template<typename T>
+    class TakeOwnershipPointer {
+    public:
+        TakeOwnershipPointer(T *ptr = nullptr, bool takeOwnership = false) : d(ptr), m_takeOwnership(takeOwnership) {
+        }
+        ~TakeOwnershipPointer() {
+            if (!m_takeOwnership) {
+                Q_UNUSED(d.release());
+            }
+        }
+
+        void reset(T *ptr, bool takeOwnership) {
+            Q_UNUSED(d.release());
+            d.reset(ptr);
+            m_takeOwnership = takeOwnership;
+        }
+
+        T *get() const {
+            return d.get();
+        }
+
+        T *operator->() const {
+            return d.get();
+        }
+        T &operator*() const {
+            return *d.get();
+        }
+        operator T*() const {
+            return d.get();
+        }
+
+    private:
+        std::unique_ptr<T> d;
+        bool m_takeOwnership;
+    };
+
+} // talcs
+
+#endif //TALCS_TAKEOWNERSHIPPOINTER_H

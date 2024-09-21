@@ -23,14 +23,14 @@
 #include <TalcsJuceAdapter/TalcsAudioSource.h>
 
 #include <TalcsCore/AudioDataWrapper.h>
+#include <TalcsCore/TakeOwnershipPointer.h>
 
 namespace talcs {
     class TalcsAudioSourcePrivate {
         Q_DECLARE_PUBLIC(TalcsAudioSource)
     public:
         TalcsAudioSource *q_ptr;
-        AudioSource *src;
-        bool takeOwnership;
+        TakeOwnershipPointer<AudioSource> src;
         AudioDataWrapper wrapper = AudioDataWrapper(nullptr, 0, 0);
     };
 }

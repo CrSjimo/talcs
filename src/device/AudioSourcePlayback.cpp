@@ -46,8 +46,7 @@ namespace talcs {
     AudioSourcePlayback::AudioSourcePlayback(AudioSource *src, bool takeOwnership, bool managedByDevice)
         : AudioSourcePlayback(*new AudioSourcePlaybackPrivate) {
         Q_D(AudioSourcePlayback);
-        d->src = src;
-        d->takeOwnership = takeOwnership;
+        d->src.reset(src, takeOwnership);
         d->managedByDevice = managedByDevice;
     }
 
@@ -60,12 +59,7 @@ namespace talcs {
      *
      * If the ownership of the AudioSource object is taken, it will be deleted.
      */
-    AudioSourcePlayback::~AudioSourcePlayback() {
-        Q_D(AudioSourcePlayback);
-        if (d->takeOwnership) {
-            delete d->src;
-        }
-    }
+    AudioSourcePlayback::~AudioSourcePlayback() = default;
 
     /**
      * Gets the AudioSource object used.
@@ -81,8 +75,7 @@ namespace talcs {
     void AudioSourcePlayback::setSource(AudioSource *src, bool takeOwnership, bool managedByDevice) {
         Q_D(AudioSourcePlayback);
         QMutexLocker locker(&d->mutex);
-        d->src = src;
-        d->takeOwnership = takeOwnership;
+        d->src.reset(src, takeOwnership);
         d->managedByDevice = managedByDevice;
     }
 

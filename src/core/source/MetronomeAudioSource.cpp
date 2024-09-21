@@ -58,13 +58,7 @@ namespace talcs {
 
     }
 
-    MetronomeAudioSource::~MetronomeAudioSource() {
-        Q_D(MetronomeAudioSource);
-        if (d->takeOwnershipOfMajor)
-            delete d->majorBeatSource;
-        if (d->takeOwnershipOfMinor)
-            delete d->minorBeatSource;
-    }
+    MetronomeAudioSource::~MetronomeAudioSource() = default;
 
     MetronomeAudioSource::MetronomeAudioSource(MetronomeAudioSourcePrivate &d) : AudioSource(d) {
         MetronomeAudioSource::close();
@@ -104,7 +98,7 @@ namespace talcs {
         d->detector->detectInterval(readData.length);
         auto beat = d->detector->nextMessage();
         qint64 tailLength = beat.position != -1 ? beat.position : readData.length;
-        if (auto tailSrc = d->tailIsMajor ? d->majorBeatSource : d->tailIsMinor ? d->minorBeatSource : nullptr) {
+        if (auto tailSrc = d->tailIsMajor ? d->majorBeatSource.get() : d->tailIsMinor ? d->minorBeatSource.get() : nullptr) {
             qint64 tailReadLength = tailSrc->read({readData.buffer, readData.startPos, tailLength, readData.silentFlags});
             if (tailReadLength < tailLength) {
                 for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
@@ -123,7 +117,7 @@ namespace talcs {
             bool isMajor = beat.isMajor;
             beat = d->detector->nextMessage();
             qint64 beatLength = beat.position != -1 ? beat.position - beatStart : readData.length - beatStart;
-            auto beatSource = isMajor ? d->majorBeatSource : d->minorBeatSource;
+            auto beatSource = isMajor ? d->majorBeatSource.get() : d->minorBeatSource.get();
             d->tailIsMajor = isMajor;
             d->tailIsMinor = !isMajor;
             if (beatSource) {
@@ -155,8 +149,7 @@ namespace talcs {
         if (isOpen())
             if (!src->open(bufferSize(), sampleRate()))
                 return false;
-        d->majorBeatSource = src;
-        d->takeOwnershipOfMajor = takeOwnership;
+        d->majorBeatSource.reset(src, takeOwnership);
         return true;
     }
 
@@ -178,8 +171,7 @@ namespace talcs {
         if (isOpen())
             if (!src->open(bufferSize(), sampleRate()))
                 return false;
-        d->minorBeatSource = src;
-        d->takeOwnershipOfMinor = takeOwnership;
+        d->minorBeatSource.reset(src, takeOwnership);
         return true;
     }
 

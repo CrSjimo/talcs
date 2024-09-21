@@ -24,13 +24,14 @@
 
 #include <TalcsCore/MemoryAudioSource.h>
 #include <TalcsCore/private/PositionableAudioSource_p.h>
+#include <TalcsCore/TakeOwnershipPointer.h>
 
 namespace talcs {
 
     class MemoryAudioSourcePrivate : public PositionableAudioSourcePrivate {
         Q_DECLARE_PUBLIC(MemoryAudioSource)
     public:
-        IAudioSampleProvider *buffer;
+        TakeOwnershipPointer<IAudioSampleProvider> buffer;
         QMutex mutex;
         bool takeOwnership;
     };

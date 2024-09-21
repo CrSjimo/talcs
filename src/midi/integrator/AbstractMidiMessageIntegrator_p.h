@@ -26,14 +26,16 @@
 #include <QMutex>
 
 #include <TalcsCore/private/AudioSource_p.h>
+#include <TalcsCore/TakeOwnershipPointer.h>
+
+#include <TalcsMidi/AudioMidiStream.h>
 
 namespace talcs {
     class AbstractMidiMessageIntegratorPrivate : public AudioSourcePrivate {
         Q_DECLARE_PUBLIC(AbstractMidiMessageIntegrator)
     public:
         QMutex mutex;
-        AudioMidiStream *stream = nullptr;
-        bool takeOwnership = false;
+        TakeOwnershipPointer<AudioMidiStream> stream;
     };
 }
 

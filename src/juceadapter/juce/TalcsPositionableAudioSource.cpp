@@ -25,15 +25,10 @@
 namespace talcs {
     TalcsPositionableAudioSource::TalcsPositionableAudioSource(talcs::PositionableAudioSource *src, bool takeOwnership) : TalcsPositionableAudioSource(*new TalcsPositionableAudioSourcePrivate) {
         Q_D(TalcsPositionableAudioSource);
-        d->src = src;
-        d->takeOwnership = takeOwnership;
+        d->src.reset(src, takeOwnership);
     }
 
-    TalcsPositionableAudioSource::~TalcsPositionableAudioSource() {
-        Q_D(TalcsPositionableAudioSource);
-        if (d->takeOwnership)
-            delete d->src;
-    }
+    TalcsPositionableAudioSource::~TalcsPositionableAudioSource() = default;
 
     void TalcsPositionableAudioSource::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {
         Q_D(TalcsPositionableAudioSource);

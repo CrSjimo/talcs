@@ -22,6 +22,7 @@
 
 #include <QMutex>
 
+#include <TalcsCore/TakeOwnershipPointer.h>
 #include <TalcsDevice/AudioSourcePlayback.h>
 
 namespace talcs {
@@ -30,9 +31,8 @@ namespace talcs {
         Q_DECLARE_PUBLIC(AudioSourcePlayback)
     public:
         AudioSourcePlayback *q_ptr;
-        AudioSource *src;
+        TakeOwnershipPointer<AudioSource> src;
         QMutex mutex;
-        bool takeOwnership;
         bool managedByDevice;
     };
     

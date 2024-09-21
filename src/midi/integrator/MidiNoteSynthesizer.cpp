@@ -27,16 +27,11 @@ namespace talcs {
 
     MidiNoteSynthesizer::MidiNoteSynthesizer(NoteSynthesizer *noteSynthesizer, bool takeOwnership) : MidiNoteSynthesizer(*new MidiNoteSynthesizerPrivate) {
         Q_D(MidiNoteSynthesizer);
-        d->noteSynthesizer = noteSynthesizer;
-        d->takeOwnership = takeOwnership;
+        d->noteSynthesizer.reset(noteSynthesizer, takeOwnership);
         d->noteSynthesizer->setDetector(d);
     }
 
-    MidiNoteSynthesizer::~MidiNoteSynthesizer() {
-        Q_D(MidiNoteSynthesizer);
-        if (d->takeOwnership)
-            delete d->noteSynthesizer;
-    }
+    MidiNoteSynthesizer::~MidiNoteSynthesizer() = default;
 
     bool MidiNoteSynthesizer::open(qint64 bufferSize, double sampleRate) {
         Q_D(MidiNoteSynthesizer);

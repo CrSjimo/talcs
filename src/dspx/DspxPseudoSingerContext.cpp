@@ -58,8 +58,7 @@ namespace talcs {
     void DspxPseudoSingerContext::removeSingingClip(int id) {
         Q_D(DspxPseudoSingerContext);
         Q_ASSERT(d->clips.contains(id));
-        auto clip = d->clips.value(id);
-        d->clips.remove(id);
+        auto clip = d->clips.take(id);
         d->clipSeries->removeClip(clip->d_func()->clipView);
         delete clip;
     }

@@ -24,16 +24,15 @@
 
 #include <TalcsCore/MetronomeAudioSource.h>
 #include <TalcsCore/private/AudioSource_p.h>
+#include <TalcsCore/TakeOwnershipPointer.h>
 
 namespace talcs {
     class MetronomeAudioSourcePrivate : public AudioSourcePrivate {
         Q_DECLARE_PUBLIC(MetronomeAudioSource);
     public:
         QMutex mutex;
-        PositionableAudioSource *majorBeatSource = nullptr;
-        bool takeOwnershipOfMajor = false;
-        PositionableAudioSource *minorBeatSource = nullptr;
-        bool takeOwnershipOfMinor = false;
+        TakeOwnershipPointer<PositionableAudioSource> majorBeatSource;
+        TakeOwnershipPointer<PositionableAudioSource> minorBeatSource;
         MetronomeAudioSourceDetector *detector = nullptr;
 
         bool tailIsMajor = false;

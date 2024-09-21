@@ -22,8 +22,6 @@
 
 #include <QList>
 
-#include <TalcsMidi/AudioMidiStream.h>
-
 namespace talcs {
     AbstractMidiMessageIntegrator::AbstractMidiMessageIntegrator() : AbstractMidiMessageIntegrator(*new AbstractMidiMessageIntegratorPrivate) {
 
@@ -32,8 +30,6 @@ namespace talcs {
     AbstractMidiMessageIntegrator::~AbstractMidiMessageIntegrator() {
         Q_D(AbstractMidiMessageIntegrator);
         AbstractMidiMessageIntegrator::close();
-        if (d->takeOwnership)
-            delete d->stream;
     }
 
     bool AbstractMidiMessageIntegrator::open(qint64 bufferSize, double sampleRate) {
@@ -55,8 +51,7 @@ namespace talcs {
     void AbstractMidiMessageIntegrator::setStream(AudioMidiStream *stream, bool takeOwnership) {
         Q_D(AbstractMidiMessageIntegrator);
         QMutexLocker locker(&d->mutex);
-        d->stream = stream;
-        d->takeOwnership = takeOwnership;
+        d->stream.reset(stream, takeOwnership);
         if (isOpen())
             d->stream->open(bufferSize(), sampleRate());
     }

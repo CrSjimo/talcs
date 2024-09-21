@@ -24,8 +24,9 @@
 #include <QVector>
 
 #include <TalcsCore/private/PositionableAudioSource_p.h>
-#include <TalcsFormat/AudioFormatInputSource.h>
+#include <TalcsCore/TakeOwnershipPointer.h>
 
+#include <TalcsFormat/AudioFormatInputSource.h>
 #include <TalcsFormat/MultichannelAudioResampler.h>
 
 namespace talcs {
@@ -34,8 +35,7 @@ namespace talcs {
     class AudioFormatInputSourcePrivate : public PositionableAudioSourcePrivate {
         Q_DECLARE_PUBLIC(AudioFormatInputSource);
     public:
-        AbstractAudioFormatIO *io = nullptr;
-        bool takeOwnership;
+        TakeOwnershipPointer<AbstractAudioFormatIO> io;
         double ratio = 0;
 
         class AudioFormatInputResampler : public MultichannelAudioResampler {

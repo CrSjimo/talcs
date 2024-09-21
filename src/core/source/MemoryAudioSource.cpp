@@ -37,19 +37,14 @@ namespace talcs {
     MemoryAudioSource::MemoryAudioSource(IAudioSampleProvider *buffer, bool takeOwnership)
         : MemoryAudioSource(*new MemoryAudioSourcePrivate) {
         Q_D(MemoryAudioSource);
-        d->buffer = buffer;
+        d->buffer.reset(buffer, takeOwnership);
         d->takeOwnership = takeOwnership;
     }
 
     MemoryAudioSource::MemoryAudioSource(MemoryAudioSourcePrivate &d) : PositionableAudioSource(d) {
     }
 
-    MemoryAudioSource::~MemoryAudioSource() {
-        Q_D(MemoryAudioSource);
-        if (d->takeOwnership) {
-            delete d->buffer;
-        }
-    }
+    MemoryAudioSource::~MemoryAudioSource() = default;
 
     /**
      * Gets the IAudioSampleProvider object used.
@@ -68,9 +63,8 @@ namespace talcs {
     IAudioSampleProvider *MemoryAudioSource::setBuffer(IAudioSampleProvider *newBuffer, bool takeOwnership) {
         Q_D(MemoryAudioSource);
         QMutexLocker locker(&d->mutex);
-        auto oldBuffer = d->buffer;
-        d->buffer = newBuffer;
-        d->takeOwnership = takeOwnership;
+        auto oldBuffer = d->buffer.get();
+        d->buffer.reset(newBuffer, takeOwnership);
         d->position = 0;
         return oldBuffer;
     }

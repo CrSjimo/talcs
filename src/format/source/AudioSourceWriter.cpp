@@ -70,9 +70,9 @@ namespace talcs {
             d->monoizeBuf.resize(d->channelCountToMonoize, d->src->bufferSize());
             return &d->monoizeBuf;
         }
-        auto p = new float[d->src->bufferSize() * d->outFile->channelCount()];
-        d->buf = new InterleavedAudioDataWrapper(p, d->outFile->channelCount(), d->src->bufferSize());
-        return d->buf;
+        d->bufData.reset(new float[d->src->bufferSize() * d->outFile->channelCount()]);
+        d->buf = std::make_unique<InterleavedAudioDataWrapper>(d->bufData.get(), d->outFile->channelCount(), d->src->bufferSize());
+        return d->buf.get();
     }
 
     bool AudioSourceWriter::processBlock(qint64 processedSampleCount, qint64 samplesToProcess) {
@@ -91,11 +91,8 @@ namespace talcs {
 
     void AudioSourceWriter::processWillFinish() {
         Q_D(AudioSourceWriter);
-        if (d->buf) {
-            delete d->buf->data();
-            delete d->buf;
-            d->buf = nullptr;
-        }
+        d->bufData.reset();
+        d->buf.reset();
         d->monoizeBuf = {};
     }
 

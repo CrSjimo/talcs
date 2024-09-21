@@ -25,6 +25,8 @@
 #include <QList>
 
 #include <TalcsCore/NoteSynthesizer.h>
+#include <TalcsCore/TakeOwnershipPointer.h>
+
 #include <TalcsMidi/private/AudioMidiStream_p.h>
 
 namespace talcs {
@@ -33,8 +35,7 @@ namespace talcs {
     public:
         MidiNoteSynthesizer *q_ptr;
 
-        NoteSynthesizer *noteSynthesizer;
-        bool takeOwnership = false;
+        TakeOwnershipPointer<NoteSynthesizer> noteSynthesizer;
 
         double frequencyOfA = 440.0;
 

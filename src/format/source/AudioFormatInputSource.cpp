@@ -55,12 +55,7 @@ namespace talcs {
         setAudioFormatIo(audioFormatIo, takeOwnership);
     }
 
-    AudioFormatInputSource::~AudioFormatInputSource() {
-        Q_D(AudioFormatInputSource);
-        if (d->takeOwnership) {
-            delete d->io;
-        }
-    }
+    AudioFormatInputSource::~AudioFormatInputSource() = default;
 
     AudioFormatInputSource::AudioFormatInputSource(AudioFormatInputSourcePrivate &d) : PositionableAudioSource(d) {
     }
@@ -155,8 +150,7 @@ namespace talcs {
         }
         Q_D(AudioFormatInputSource);
         QMutexLocker locker(&d->mutex);
-        d->io = audioFormatIo;
-        d->takeOwnership = takeOwnership;
+        d->io.reset(audioFormatIo, takeOwnership);
         if (d->io && d->io->openMode())
             d->io->seek(d->inPosition);
         if (d->resampler)

@@ -39,26 +39,21 @@ namespace talcs {
         d->channelCount = channelCount;
         d->inputBuffer.resize(channelCount, 1);
         for (int i = 0; i < channelCount; i++) {
-            d->resamplerOfChannel.append(new ChannelResampler(ratio, bufferSize, this, i));
+            d->resamplerOfChannel.emplace_back(std::make_unique<ChannelResampler>(ratio, bufferSize, this, i));
         }
-        d->tmpBuf = new float[bufferSize];
+        d->tmpBuf.reset(new float[bufferSize]);
     }
 
     /**
      * Destructor.
      */
-    MultichannelAudioResampler::~MultichannelAudioResampler() {
-        for (int i = 0; i < d->channelCount; i++) {
-            delete d->resamplerOfChannel[i];
-        }
-        delete[] d->tmpBuf;
-    }
+    MultichannelAudioResampler::~MultichannelAudioResampler() = default;
 
     /**
      * @copydoc AudioResampler::reset()
      */
     void MultichannelAudioResampler::reset() {
-        for (auto resampler: d->resamplerOfChannel) {
+        for (auto &resampler: d->resamplerOfChannel) {
             resampler->reset();
         }
     }
@@ -81,12 +76,13 @@ namespace talcs {
                 if (i < readData.buffer->channelCount())
                     d->resamplerOfChannel[i]->process(readData.buffer->writePointerTo(i, readData.startPos));
                 else
-                    d->resamplerOfChannel[i]->process(d->tmpBuf);
+                    d->resamplerOfChannel[i]->process(d->tmpBuf.get());
             }
         } else {
-            AudioDataWrapper pSrc(&d->tmpBuf, 1, bufferSize());
+            auto p = d->tmpBuf.get();
+            AudioDataWrapper pSrc(&p, 1, bufferSize());
             for (int i = 0; i < d->channelCount; i++) {
-                d->resamplerOfChannel[i]->process(d->tmpBuf);
+                d->resamplerOfChannel[i]->process(d->tmpBuf.get());
                 if (i < readData.buffer->channelCount())
                     readData.buffer->setSampleRange(i, readData.startPos, readData.length, pSrc, 0, 0);
             }

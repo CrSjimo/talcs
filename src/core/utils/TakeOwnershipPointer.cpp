@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 CrSjimo                                                 *
+* Copyright (c) 2024 CrSjimo                                                 *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,23 +17,7 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_TALCSPOSITIONABLEAUDIOSOURCE_P_H
-#define TALCS_TALCSPOSITIONABLEAUDIOSOURCE_P_H
-
-#include <TalcsJuceAdapter/TalcsPositionableAudioSource.h>
-
-#include <TalcsCore/AudioDataWrapper.h>
-#include <TalcsCore/TakeOwnershipPointer.h>
+#include "TakeOwnershipPointer.h"
 
 namespace talcs {
-    class TalcsPositionableAudioSourcePrivate {
-        Q_DECLARE_PUBLIC(TalcsPositionableAudioSource)
-    public:
-        TalcsPositionableAudioSource *q_ptr;
-        TakeOwnershipPointer<PositionableAudioSource> src;
-        AudioDataWrapper wrapper = AudioDataWrapper(nullptr, 0, 0);
-        QAtomicInteger<bool> isLooping = false;
-    };
-}
-
-#endif //TALCS_TALCSPOSITIONABLEAUDIOSOURCE_P_H
+} // talcs

@@ -20,6 +20,8 @@
 #ifndef TALCS_TRANSPORTAUDIOSOURCEWRITER_P_H
 #define TALCS_TRANSPORTAUDIOSOURCEWRITER_P_H
 
+#include <memory>
+
 #include <TalcsCore/InterleavedAudioDataWrapper.h>
 #include <TalcsCore/AudioBuffer.h>
 #include <TalcsCore/private/AudioSourceProcessorBase_p.h>
@@ -29,7 +31,8 @@ namespace talcs {
 
     class AudioSourceWriterPrivate: public AudioSourceProcessorBasePrivate {
     public:
-        InterleavedAudioDataWrapper *buf = nullptr;
+        std::unique_ptr<InterleavedAudioDataWrapper> buf;
+        std::unique_ptr<float[]> bufData;
         AudioBuffer monoizeBuf;
         AbstractAudioFormatIO *outFile;
         int channelCountToMonoize;
