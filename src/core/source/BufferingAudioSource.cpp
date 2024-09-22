@@ -162,7 +162,7 @@ namespace talcs {
         if (isOpen() && size > bufferSize()) {
             flush();
             d->readAheadSize = size;
-            d->buf.resize(-1, size * 2);
+            d->buf.resize(d->channelCount, size * 2);
             if (d->autoBuffering)
                 d->commitBufferingTask(false);
         } else {
@@ -189,7 +189,7 @@ namespace talcs {
         if (isOpen() && d->readAheadSize > bufferSize()) {
             flush();
             d->channelCount = channelCount;
-            d->buf.resize(channelCount);
+            d->buf.resize(channelCount, d->readAheadSize * 2);
             if (d->autoBuffering)
                 d->commitBufferingTask(false);
         } else {
