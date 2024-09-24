@@ -41,9 +41,14 @@ namespace talcs {
         AudioDriverManager *driverManager() const;
         AudioDriver *driver() const;
 
-        bool setDriver(const QString &driverName);
-        bool setDevice(const QString &deviceName);
-        bool enumerateDevices();
+        enum DeviceOption {
+            DO_DefaultOption,
+            DO_UsePreferredSpec,
+            DO_DoNotChangeAdoptedSpec,
+        };
+        bool setDriver(const QString &driverName, DeviceOption option = DO_DefaultOption);
+        bool setDevice(const QString &deviceName, DeviceOption option = DO_DefaultOption);
+        bool enumerateDevices(DeviceOption option = DO_DefaultOption);
 
         qint64 adoptedBufferSize() const;
         bool setAdoptedBufferSize(qint64 bufferSize);

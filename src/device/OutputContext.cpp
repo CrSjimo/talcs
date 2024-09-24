@@ -78,7 +78,7 @@ namespace talcs {
         return d->driver;
     }
 
-    bool OutputContext::setDriver(const QString &driverName) {
+    bool OutputContext::setDriver(const QString &driverName, OutputContext::DeviceOption option) {
         Q_D(OutputContext);
         if (d->driver && driverName == d->driver->name() && d->driver->isInitialized() && d->device && d->device->isOpen())
             return true;
@@ -92,10 +92,10 @@ namespace talcs {
             d->driver = nullptr;
             return false;
         }
-        return enumerateDevices();
+        return enumerateDevices(option);
     }
 
-    bool OutputContext::setDevice(const QString &deviceName) {
+    bool OutputContext::setDevice(const QString &deviceName, OutputContext::DeviceOption option) {
         Q_D(OutputContext);
         std::unique_ptr<talcs::AudioDevice> dev;
         if (deviceName.isEmpty())
@@ -105,18 +105,15 @@ namespace talcs {
         if (!dev || !dev->isInitialized()) {
             return false;
         }
-        auto savedBufferSize = d->adoptedBufferSize == 0 ? dev->preferredBufferSize() : d->adoptedBufferSize;
-        auto savedSampleRate = qFuzzyIsNull(d->adoptedSampleRate) ? dev->preferredSampleRate() : d->adoptedSampleRate;
-        if (!dev->open(savedBufferSize, savedSampleRate) && !dev->open(dev->preferredBufferSize(), dev->preferredSampleRate())) {
+        if (!d->openDeviceWithOption(dev.get(), option))
             return false;
-        }
         d->device = std::move(dev);
         AbstractOutputContext::setDevice(d->device.get());
         d->postSetDevice();
         return true;
     }
 
-    bool OutputContext::enumerateDevices() {
+    bool OutputContext::enumerateDevices(OutputContext::DeviceOption option) {
         Q_D(OutputContext);
         for (int i = 0;; i++) {
             if (d->driver && d->driver->initialize()) {
@@ -144,10 +141,9 @@ namespace talcs {
             }
             if (!currentDevice || !currentDevice->isInitialized())
                 continue;
-            auto savedBufferSize = d->adoptedBufferSize == 0 ? currentDevice->preferredBufferSize() : d->adoptedBufferSize;
-            auto savedSampleRate = qFuzzyIsNull(d->adoptedSampleRate) ? currentDevice->preferredSampleRate() : d->adoptedSampleRate;
-            if (!currentDevice->open(savedBufferSize, savedSampleRate) && !currentDevice->open(currentDevice->preferredBufferSize(), currentDevice->preferredSampleRate()))
+            if (!d->openDeviceWithOption(currentDevice.get(), option)) {
                 continue;
+            }
             d->device = std::move(currentDevice);
             AbstractOutputContext::setDevice(d->device.get());
             d->postSetDevice();
@@ -209,6 +205,25 @@ namespace talcs {
         d->hotPlugNotificationMode = mode;
     }
 
+    bool OutputContextPrivate::openDeviceWithOption(AudioDevice *device, OutputContext::DeviceOption option) {
+        auto savedBufferSize = adoptedBufferSize;
+        auto savedSampleRate = adoptedSampleRate;
+        switch (option) {
+            case OutputContext::DO_DefaultOption:
+                savedBufferSize = !savedBufferSize ? device->preferredBufferSize() : savedBufferSize;
+                savedSampleRate = qFuzzyIsNull(savedSampleRate) ? device->preferredSampleRate() : savedSampleRate;
+                break;
+            case OutputContext::DO_UsePreferredSpec:
+                savedBufferSize = device->preferredBufferSize();
+                savedSampleRate = device->preferredSampleRate();
+                break;
+            case OutputContext::DO_DoNotChangeAdoptedSpec:
+                break;
+        }
+        if (!device->open(savedBufferSize, savedSampleRate) && !device->open(device->preferredBufferSize(), device->preferredSampleRate()))
+            return false;
+        return true;
+    }
     void OutputContextPrivate::handleDeviceHotPlug() {
         Q_Q(OutputContext);
         auto deviceList = driver->devices();
