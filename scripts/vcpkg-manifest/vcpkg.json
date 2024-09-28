@@ -15,7 +15,8 @@
     },
     "interval-tree",
     "boost-interprocess",
-    "qmsetup"
+    "qmsetup",
+    "wavpack"
   ],
   "overrides": [
     {
