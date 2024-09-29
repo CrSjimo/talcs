@@ -70,31 +70,31 @@ namespace talcs {
     }
 
     static WavpackStreamReader64 wpStreamReader = {
-        [](void *id, void *data, int32_t bcount) {
+        [](void *id, void *data, int32_t bcount) -> int32_t {
             return wpReadBytes(static_cast<QFileDevice *>(id), data, bcount);
         },
-        [](void *id, void *data, int32_t bcount) {
+        [](void *id, void *data, int32_t bcount) -> int32_t {
             return wpWriteBytes(static_cast<QFileDevice *>(id), data, bcount);
         },
-        [](void *id) {
+        [](void *id) -> int64_t {
             return wpGetPos(static_cast<QFileDevice *>(id));
         },
-        [](void *id, qint64 pos) {
+        [](void *id, qint64 pos) -> int {
             return wpSetPosAbs(static_cast<QFileDevice *>(id), pos);
         },
-        [](void *id, qint64 pos, int mode) {
+        [](void *id, qint64 pos, int mode) -> int {
             return wpSetPosRel(static_cast<QFileDevice *>(id), pos, mode);
         },
-        [](void *id, int c) {
+        [](void *id, int c) -> int {
             return wpPushBackByte(static_cast<QFileDevice *>(id), c);
         },
-        [](void *id) {
+        [](void *id) ->int64_t {
             return wpGetLength(static_cast<QFileDevice *>(id));
         },
         [](void *id) -> int {
             return wpCanSeek(static_cast<QFileDevice *>(id));
         },
-        [](void *id) {
+        [](void *id) -> int {
             return wpTruncateHere(static_cast<QFileDevice *>(id));
         },
         nullptr,
@@ -117,7 +117,7 @@ namespace talcs {
             return;
         }
         d->stream = stream;
-        d->corrStream = stream;
+        d->corrStream = corrStream;
     }
 
     QFileDevice *WavpackAudioFormatIO::stream() const {
@@ -133,8 +133,8 @@ namespace talcs {
     bool WavpackAudioFormatIO::open(OpenMode mode) {
         Q_D(WavpackAudioFormatIO);
         close();
-        if (mode.testFlag(Read) && mode.testFlag(Write)) {
-            qWarning() << "WavpackAudioFormatIO: Cannot open for both reading and writing";
+        if (mode.testFlag(Write)) {
+            qWarning() << "WavpackAudioFormatIO: Writing is not supported.";
             return false;
         }
         if (mode == 0) {
@@ -158,11 +158,7 @@ namespace talcs {
                 return false;
             }
             d->context = ctx;
-        } else {
-            // TODO write
-            return false;
         }
-
         d->openMode = mode;
         return true;
     }
@@ -191,7 +187,7 @@ namespace talcs {
     }
 
     void WavpackAudioFormatIO::setFormat(int format) {
-
+        qWarning() << "WavpackAudioFormatIO: Writing is not supported.";
     }
 
     int WavpackAudioFormatIO::channelCount() const {
@@ -201,6 +197,7 @@ namespace talcs {
     }
 
     void WavpackAudioFormatIO::setChannelCount(int channelCount) {
+        qWarning() << "WavpackAudioFormatIO: Writing is not supported.";
     }
 
     double WavpackAudioFormatIO::sampleRate() const {
@@ -210,6 +207,7 @@ namespace talcs {
     }
 
     void WavpackAudioFormatIO::setSampleRate(double sampleRate) {
+        qWarning() << "WavpackAudioFormatIO: Writing is not supported.";
     }
 
     double WavpackAudioFormatIO::bitRate() const {
@@ -222,6 +220,7 @@ namespace talcs {
     }
 
     void WavpackAudioFormatIO::setBitRate(double bitRate) {
+        qWarning() << "WavpackAudioFormatIO: Writing is not supported.";
     }
 
     void WavpackAudioFormatIO::setThreadCount(int threadCount) {
@@ -241,9 +240,9 @@ namespace talcs {
     }
 
     static inline void convertSamplesInPlaceToFloat(float *p, qsizetype size, int bitDepth) {
-        const double NORM = (1 << (bitDepth - 1)) + 0.49999;
+        const double NORM = ((1 << (bitDepth - 1)) - 1) + 0.49999;
         for (float *pp = p; pp < p + size; pp++) {
-            *p = static_cast<float>(*(reinterpret_cast<qint32 *>(pp)) / NORM);
+            *pp = static_cast<float>(*reinterpret_cast<qint32 *>(pp) / NORM);
         }
     }
 
@@ -261,6 +260,7 @@ namespace talcs {
     }
 
     qint64 WavpackAudioFormatIO::write(const float *ptr, qint64 length) {
+        qWarning() << "WavpackAudioFormatIO: Writing is not supported.";
         return 0;
     }
 
@@ -274,4 +274,4 @@ namespace talcs {
         return WavpackGetSampleIndex64(d->context);
     }
 
-} // talcs
+}

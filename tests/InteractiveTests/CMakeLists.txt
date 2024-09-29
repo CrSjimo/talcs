@@ -29,3 +29,5 @@ add_subdirectory(AudioSourceReadingFilter)
 add_subdirectory(NoteSynthesizer)
 
 add_subdirectory(WaveformPainter)
+
+add_subdirectory(WavpackAudioFormatIO)
