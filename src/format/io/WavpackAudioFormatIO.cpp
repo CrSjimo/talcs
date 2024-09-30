@@ -24,7 +24,6 @@
 
 #include <QFileDevice>
 #include <QDebug>
-#include <rpc/msgpack/v1/adaptor/size_equal_only.hpp>
 
 #include <wavpack/wavpack.h>
 
@@ -79,10 +78,10 @@ namespace talcs {
         [](void *id) -> int64_t {
             return wpGetPos(static_cast<QFileDevice *>(id));
         },
-        [](void *id, qint64 pos) -> int {
+        [](void *id, int64_t pos) -> int {
             return wpSetPosAbs(static_cast<QFileDevice *>(id), pos);
         },
-        [](void *id, qint64 pos, int mode) -> int {
+        [](void *id, int64_t pos, int mode) -> int {
             return wpSetPosRel(static_cast<QFileDevice *>(id), pos, mode);
         },
         [](void *id, int c) -> int {
