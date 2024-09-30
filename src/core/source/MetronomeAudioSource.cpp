@@ -29,22 +29,34 @@
 namespace talcs {
 
     /**
-     * @class MetronomeAudioSourceBeatDetector
-     * @brief The detector for MetronomeAudioSource
+     * @struct MetronomeAudioSourceDetectorMessage
+     * @brief The message produced by MetronomeAudioSourceDetector
      */
 
     /**
-     * @fn void MetronomeAudioSourceBeatDetector::initialize()
-     * Initializes the internal state.
+     * @var MetronomeAudioSourceDetectorMessage::position
+     * Position.
      */
 
     /**
-     * @fn void MetronomeAudioSourceBeatDetector::detectInterval(qint64 intervalStart, qint64 intervalLength)
+     * @var MetronomeAudioSourceDetectorMessage::isMajor
+     * Whether this beat is a major beat.
+     */
+
+    /**
+     * @class MetronomeAudioSourceDetector
+     * @brief The detector for MetronomeAudioSource.
+     *
+     * @see NoteSynthesizerDetector
+     */
+
+    /**
+     * @fn void MetronomeAudioSourceDetector::detectInterval(qint64 intervalStart, qint64 intervalLength)
      * Detects whether beats exists in the interval and updates the internal state.
      */
 
     /**
-     * @fn QPair<qint64, bool> MetronomeAudioSourceBeatDetector::nextBeat()
+     * @fn MetronomeAudioSourceDetectorMessage MetronomeAudioSourceBeatDetector::nextMessage()
      * Returns the position (relative to the start of interval) and whether it is a major beat of the next beat within
      * the interval given by previous detectInterval() call. If there is no beat left, then the position should be -1.
      */

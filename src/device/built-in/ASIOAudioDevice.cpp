@@ -198,15 +198,6 @@ namespace talcs {
                                                       32000,  44100,  48000,  64000,  88200,  96000,
                                                       128000, 176400, 192000, 256000, 352800, 384000};
 
-    /**
-     * @class ASIOAudioDevice
-     * @brief The audio device using ASIO
-     * @see @link URL https://forums.steinberg.net/c/developer/asio/ @endlink
-     */
-
-    /**
-     * Only ASIOAudioDevice can access this constructor.
-     */
     ASIOAudioDevice::ASIOAudioDevice(const QString &name, IASIO *iasio, ASIOAudioDriver *driver)
         : AudioDevice(*new ASIOAudioDevicePrivate, driver) {
         Q_D(ASIOAudioDevice);
@@ -271,11 +262,6 @@ namespace talcs {
         setErrorString({});
     }
 
-    /**
-     * Destructor.
-     *
-     * If the device is not close, it will be closed now.
-     */
     ASIOAudioDevice::~ASIOAudioDevice() {
         Q_D(ASIOAudioDevice);
         ASIOAudioDevice::close();

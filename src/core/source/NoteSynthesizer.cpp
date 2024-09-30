@@ -28,44 +28,150 @@ namespace talcs {
 
     /**
      * @struct NoteSynthesizerDetectorMessage
-     * The message produced by NoteSynthesizerDetector.
+     * @brief The message produced by NoteSynthesizerDetector.
+     */
+
+    /**
+     * @enum NoteSynthesizerDetectorMessage::SpecialValueNull
+     * Special null message.
      *
+     * @var NoteSynthesizerDetectorMessage::Null
+     * Null.
+     */
+
+    /**
+     * @enum NoteSynthesizerDetectorMessage::SpecialValueAllNotesOff
+     * Special all-notes-off message.
+     *
+     * @var NoteSynthesizerDetectorMessage::AllNotesOff
+     * All notes off.
+     */
+
+    /**
+     * @enum NoteSynthesizerDetectorMessage::NoteMessageType
+     * Types of the note message.
+     *
+     * @var NoteSynthesizerDetectorMessage::NoteOff
+     * Note off.
+     *
+     * @var NoteSynthesizerDetectorMessage::NoteOn
+     * Note on.
+     *
+     * @var NoteSynthesizerDetectorMessage::NoteOnIfNotPlaying
+     * Note on if the note is not playing.
+     */
+
+    /**
+     * @struct NoteSynthesizerDetectorMessage::Note
+     * @brief Struct of a note message.
+     */
+
+    /**
+     * @fn NoteSynthesizerDetectorMessage::Note::Note(SpecialValueAllNotesOff allNotesOff)
+     * Creates a special all-notes-off message.
+     */
+
+    /**
+     * @fn NoteSynthesizerDetectorMessage::Note::Note(double frequency, NoteMessageType messageType)
+     * @overload
+     * Creates a note message with velocity set to 1.0.
+     */
+
+    /**
+     * @fn NoteSynthesizerDetectorMessage::Note::Note(double frequency, double velocity, NoteMessageType messageType)
+     * Creates a note message.
+     */
+
+    /**
+     * @var NoteSynthesizerDetectorMessage::Note::frequency
+     * Frequency.
+     */
+
+    /**
+     * @var NoteSynthesizerDetectorMessage::Note::velocity
+     * Velocity.
+     */
+
+    /**
+     * @var NoteSynthesizerDetectorMessage::Note::messageType
+     * Message type.
+     */
+
+    /**
+     * @struct NoteSynthesizerDetectorMessage::Pitch
+     * @brief Struct of a pitch message.
+     */
+
+    /**
+     * @var NoteSynthesizerDetectorMessage::Pitch::deltaPitch
+     * Delta pitch in semitone.
+     */
+
+    /**
+     * @struct NoteSynthesizerDetectorMessage::Volume
+     * @brief Struct of a volume message.
+     */
+
+    /**
+     * @var NoteSynthesizerDetectorMessage::Volume::volume
+     * The volume. Will be multiplied to the actual gain.
+     */
+
+    /**
+     * @fn NoteSynthesizerDetectorMessage::NoteSynthesizerDetectorMessage(SpecialValueNull null)
+     * Creates a null message.
+     */
+
+    /**
+     * @fn NoteSynthesizerDetectorMessage::NoteSynthesizerDetectorMessage(qint64 position, const Note &note)
+     * Creates a note message.
+     */
+
+    /**
+     * @fn NoteSynthesizerDetectorMessage::NoteSynthesizerDetectorMessage(qint64 position, const Pitch &pitch)
+     * Creates a pitch message.
+     */
+
+    /**
+     * @fn NoteSynthesizerDetectorMessage::NoteSynthesizerDetectorMessage(qint64 position, const Volume &volume)
+     * Creates a volume message.
+     */
+
+    /**
+     * @fn bool NoteSynthesizerDetectorMessage::isNull() const
+     * Gets whether the message is null.
+     */
+
+    /**
      * @var NoteSynthesizerDetectorMessage::position
-     * The position of the message relative to the start of interval. If the message is null, this value will be -1.
-     *
-     * @var NoteSynthesizerDetectorMessage::frequency
-     * The frequency (Hz) of the note. If the message is all-notes-off, this value will be 0.0.
-     *
-     * @var NoteSynthesizerDetectorMessage::velocity
-     * The velocity (gain) of the note sound. Ranged between 0.0 and 1.0.
-     *
-     * @var NoteSynthesizerDetectorMessage::isNoteOn
-     * The message is whether note-on of note-off.
+     * Position of the message. For null message, it is -1.
      */
 
     /**
-     * @fn NoteSynthesizerDetectorMessage::NoteSynthesizerDetectorMessage(SpecialValueNull)
-     * Constructor of null message.
+     * @var NoteSynthesizerDetectorMessage::messageType;
+     * Message type.
      */
 
     /**
-     * @fn NoteSynthesizerDetectorMessage::NoteSynthesizerDetectorMessage(qint64 position, SpecialValueAllNotesOff)
-     * Constructor of all-notes-off message.
+     * @var NoteSynthesizerDetectorMessage::note
+     * The note message struct.
      */
 
     /**
-     * @fn NoteSynthesizerDetectorMessage::NoteSynthesizerDetectorMessage(qint64 position, double frequency, bool isNoteOn)
-     * Constructor. The velocity is 1.0 by default.
+     * @var NoteSynthesizerDetectorMessage::pitch
+     * The pitch message struct.
      */
 
     /**
-     * @fn NoteSynthesizerDetectorMessage::NoteSynthesizerDetectorMessage(qint64 position, double frequency, double velocity, bool isNoteOn)
-     * Constructor.
+     * @var NoteSynthesizerDetectorMessage::volume
+     * The volume message struct.
      */
 
     /**
      * @class NoteSynthesizerDetector
      * @brief The detector for NoteSynthesizer
+     *
+     * @see MetronomeAudioSourceDetector
      */
 
     /**
@@ -78,44 +184,90 @@ namespace talcs {
      * Returns the next message within the interval. If there is no more message left, returns null message.
      */
 
+    /**
+     * @class NoteSynthesizerConfig
+     * @brief Configuration of NoteSynthesizer
+     */
+
+    /**
+     * Constructor.
+     */
     NoteSynthesizerConfig::NoteSynthesizerConfig() : d(new NoteSynthesizerConfigData) {
         d->updateRates();
     }
 
     NoteSynthesizerConfig::NoteSynthesizerConfig(const NoteSynthesizerConfig &o) = default;
 
+    /**
+     * Destructor.
+     */
     NoteSynthesizerConfig::~NoteSynthesizerConfig() = default;
 
     NoteSynthesizerConfig &NoteSynthesizerConfig::operator=(const NoteSynthesizerConfig &o) = default;
 
+    /**
+     * Sets the attack time (in sample).
+     */
     void NoteSynthesizerConfig::setAttackTime(qint64 t) {
         d->attackTime = t;
         d->updateRates();
     }
+
+    /**
+     * Gets the attack time (in sample).
+     */
     qint64 NoteSynthesizerConfig::attackTime() const {
         return d->attackTime;
     }
+
+    /**
+     * Sets the decay time (in sample).
+     */
     void NoteSynthesizerConfig::setDecayTime(qint64 t) {
         d->decayTime = t;
         d->updateRates();
     }
+
+    /**
+     * Gets the decay time (in sample).
+     */
     qint64 NoteSynthesizerConfig::decayTime() const {
         return d->decayTime;
     }
+
+    /**
+     * Sets the decay ratio.
+     */
     void NoteSynthesizerConfig::setDecayRatio(double ratio) {
         d->decayRatio = ratio;
         d->updateRates();
     }
+
+    /**
+     * Gets thedecay ratio.
+     */
     double NoteSynthesizerConfig::decayRatio() const {
         return d->decayRatio;
     }
+
+    /**
+     * Sets the release time (in sample).
+     */
     void NoteSynthesizerConfig::setReleaseTime(qint64 t) {
         d->releaseTime = t;
         d->updateRates();
     }
+
+    /**
+     * Gets the release time (in sample).
+     */
     qint64 NoteSynthesizerConfig::releaseTime() const {
         return d->releaseTime;
     }
+
+    /**
+     * Sets the generator to a pre-defined pattern.
+     */
     void NoteSynthesizerConfig::setGenerator(NoteSynthesizer::Generator g) {
         switch (g) {
             case NoteSynthesizer::Generator::Sine:
@@ -134,14 +286,32 @@ namespace talcs {
                 setGenerator(NoteSynthesizerPrivate::GenerateSineWave());
         }
     }
+
+    /**
+     * Sets the generator to a custom function.
+     * @param g the generator function. The first parameter is frequency (unit: sample^(-1), not Hz) and the second
+     * parameter is the position in sample.
+     *
+     * For example, if this generator generates sine wave, the function will be:
+     *
+     * @code
+     * [](double f, qint64 x) { return std::sin(2.0 * PI * f * double(x)); }
+     * @endcode
+     */
     void NoteSynthesizerConfig::setGenerator(const NoteSynthesizer::GeneratorFunction &g) {
         d->generatorFunction = g;
     }
 
+    /**
+     * Sets the amplitude.
+     */
     void NoteSynthesizerConfig::setAmplitude(float amplitude) {
         d->amplitude = amplitude;
     }
 
+    /**
+     * Gets the amplitude.
+     */
     float NoteSynthesizerConfig::amplitude() const {
         return d->amplitude;
     }
@@ -175,6 +345,8 @@ namespace talcs {
 
     /**
      * Sets the attack time (in sample).
+     *
+     * @see NoteSynthesizerConfig::setAttackTime()
      */
     void NoteSynthesizer::setAttackTime(qint64 t) {
         Q_D(NoteSynthesizer);
@@ -184,26 +356,51 @@ namespace talcs {
 
     /**
      * Gets the attack time (in sample).
+     *
+     * @see NoteSynthesizerConfig::attackTime()
      */
     qint64 NoteSynthesizer::attackTime() const {
         Q_D(const NoteSynthesizer);
         return d->config.attackTime();
     }
 
+    /**
+     * Sets the decay time (in sample).
+     *
+     * @see NoteSynthesizerConfig::setDecayTime()
+     */
     void NoteSynthesizer::setDecayTime(qint64 t) {
         Q_D(NoteSynthesizer);
         QMutexLocker locker(&d->mutex);
         d->config.setDecayTime(t);
     }
+
+    /**
+     * Gets the decay time (in sample).
+     *
+     * @see NoteSynthesizerConfig::decayTime()
+     */
     qint64 NoteSynthesizer::decayTime() const {
         Q_D(const NoteSynthesizer);
         return d->config.decayTime();
     }
+
+    /**
+     * Sets the decay ratio.
+     *
+     * @see NoteSynthesizerConfig::setDecayRatio()
+     */
     void NoteSynthesizer::setDecayRatio(double ratio) {
         Q_D(NoteSynthesizer);
         QMutexLocker locker(&d->mutex);
         d->config.setDecayRatio(ratio);
     }
+
+    /**
+     * Gets the decay ratio.
+     *
+     * @see NoteSynthesizerConfig::decayRatio()
+     */
     double NoteSynthesizer::decayRatio() const {
         Q_D(const NoteSynthesizer);
         return d->config.decayRatio();
@@ -211,6 +408,8 @@ namespace talcs {
 
     /**
      * Sets the release time (in sample).
+     *
+     * @see NoteSynthesizerConfig::setReleaseTime()
      */
     void NoteSynthesizer::setReleaseTime(qint64 t) {
         Q_D(NoteSynthesizer);
@@ -220,6 +419,8 @@ namespace talcs {
 
     /**
      * Gets the release time (in sample).
+     *
+     * @see NoteSynthesizerConfig::releaseTime()
      */
     qint64 NoteSynthesizer::releaseTime() const {
         Q_D(const NoteSynthesizer);
@@ -251,6 +452,8 @@ namespace talcs {
 
     /**
      * Sets the generator to a pre-defined pattern.
+     *
+     * @see NoteSynthesizerConfig::setGenerator
      */
     void NoteSynthesizer::setGenerator(NoteSynthesizer::Generator g) {
         Q_D(NoteSynthesizer);
@@ -260,14 +463,8 @@ namespace talcs {
 
     /**
      * Sets the generator to a custom function.
-     * @param g the generator function. The first parameter is frequency (unit: sample^(-1), not Hz) and the second
-     * parameter is the position in sample.
      *
-     * For example, if this generator generates sine wave, the function will be:
-     *
-     * @code
-     * [](double f, qint64 x) { return std::sin(2.0 * PI * f * double(x)); }
-     * @endcode
+     * @see NoteSynthesizerConfig::setGenerator
      */
     void NoteSynthesizer::setGenerator(const NoteSynthesizer::GeneratorFunction &g) {
         Q_D(NoteSynthesizer);
@@ -275,22 +472,39 @@ namespace talcs {
         d->config.setGenerator(g);
     }
 
+    /**
+     * Sets the amplitude.
+     *
+     * @see NoteSynthesizerConfig::setAmplitude()
+     */
     void NoteSynthesizer::setAmplitude(float amplitude) {
         Q_D(NoteSynthesizer);
         QMutexLocker locker(&d->mutex);
         d->config.setAmplitude(amplitude);
     }
 
+    /**
+     * Gets the amplitude.
+     *
+     * @see NoteSynthesizerConfig::amplitude()
+     */
     float NoteSynthesizer::amplitude() const {
         Q_D(const NoteSynthesizer);
         return d->config.amplitude();
     }
 
+    /**
+     * Sets the configuration.
+     */
     void NoteSynthesizer::setConfig(const NoteSynthesizerConfig &config) {
         Q_D(NoteSynthesizer);
         QMutexLocker locker(&d->mutex);
         d->config = config;
     }
+
+    /**
+     * Gets the configuration.
+     */
     NoteSynthesizerConfig NoteSynthesizer::config() const {
         Q_D(const NoteSynthesizer);
         return d->config;

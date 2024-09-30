@@ -51,7 +51,7 @@ namespace talcs {
     AudioSourceProcessorBase::~AudioSourceProcessorBase() = default;
 
     /**
-     * @enum Status
+     * @enum AudioSourceProcessorBase::Status
      * The possible statuses.
      * @var AudioSourceProcessorBase::Ready
      * The processor is ready to start.

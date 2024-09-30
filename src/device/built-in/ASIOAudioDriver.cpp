@@ -26,24 +26,10 @@
 
 namespace talcs {
 
-    /**
-     * @class ASIOAudioDriver
-     * @brief The audio driver using ASIO
-     * @see @link URL https://forums.steinberg.net/c/developer/asio/ @endlink
-     */
-
-    /**
-     * Constructor.
-     */
     ASIOAudioDriver::ASIOAudioDriver(QObject * parent) : AudioDriver(*new ASIOAudioDriverPrivate, parent) {
         setName("ASIO");
     }
 
-    /**
-     * Destructor.
-     *
-     * If the driver is still running, it will be terminated now.
-     */
     ASIOAudioDriver::~ASIOAudioDriver() {
         ASIOAudioDriver::finalize();
     }

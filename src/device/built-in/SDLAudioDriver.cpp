@@ -28,15 +28,6 @@
 
 namespace talcs {
 
-    /**
-     * @class SDLAudioDriver
-     * @brief The audio driver using SDL2 Audio
-     * @see @link URL https://wiki.libsdl.org/ @endlink
-     */
-
-    /**
-     * Constructor.
-     */
     SDLAudioDriver::SDLAudioDriver(QObject * parent) : SDLAudioDriver(*new SDLAudioDriverPrivate, parent) {
         Q_D(SDLAudioDriver);
         d->eventPoller.reset(new SDLEventPoller);
@@ -50,11 +41,6 @@ namespace talcs {
     SDLAudioDriver::SDLAudioDriver(SDLAudioDriverPrivate & d, QObject * parent) : AudioDriver(d, parent) {
     }
 
-    /**
-     * Destructor.
-     *
-     * If the driver is still running, it will be terminated now.
-     */
     SDLAudioDriver::~SDLAudioDriver() {
         Q_D(SDLAudioDriver);
         SDLAudioDriver::finalize();

@@ -30,14 +30,37 @@
 #include <TalcsDevice/AudioSourcePlayback.h>
 
 namespace talcs {
+
+    /**
+     * @class OutputContext
+     * @brief The derived AbstractOutputContext based on the audio driver manager created by
+     * AudioDriverManager::createBuiltInDriverManager()
+     */
+
+    /**
+     * Constructor.
+     */
     OutputContext::OutputContext(QObject *parent) : AbstractOutputContext(parent), d_ptr(new OutputContextPrivate) {
         Q_D(OutputContext);
         d->q_ptr = this;
         d->driverManager.reset(AudioDriverManager::createBuiltInDriverManager());
     }
 
+    /**
+     * Destructor.
+     */
     OutputContext::~OutputContext() = default;
 
+    /**
+     * Initializes the OutputContext.
+     *
+     * For customized purpose, you can also call setDriver() and setDevice() to manually initialize,
+     * or call enumerateDevice() to manually enumerate audio drivers and devices.
+     *
+     * @param driverNameHint hint of the name of the driver to use
+     * @param deviceNameHint hint of the name of the device to use
+     * @return true if successful
+     */
     bool OutputContext::initialize(const QString &driverNameHint, const QString &deviceNameHint) {
         Q_D(OutputContext);
         do {
@@ -68,16 +91,50 @@ namespace talcs {
         return enumerateDevices();
     }
 
+    /**
+     * Gets the audio driver manager.
+     */
     AudioDriverManager *OutputContext::driverManager() const {
         Q_D(const OutputContext);
         return d->driverManager.get();
     }
 
+    /**
+     * Gets the audio driver.
+     */
     AudioDriver *OutputContext::driver() const {
         Q_D(const OutputContext);
         return d->driver;
     }
 
+    /**
+     * @enum OutputContext::DeviceOption
+     * The options of audio device initialization
+     *
+     * @var OutputContext::DO_DefaultOption
+     * The adopted buffer size and sample rate will be used first to initialize the audio device. If
+     * it fails, then the preferred buffer size and sample rate will be used and the adopted buffer
+     * size and sample rate will be changed.
+     *
+     * @var OutputContext::DO_UsePreferredSpec
+     * Uses the preferred buffer size and sample rate to initialize the audio device.
+     *
+     * @var OutputContext::DO_DoNotChangeAdoptedSpec
+     * Uses the adopted buffer size and sample rate to initialize the audio device.
+     */
+
+    /**
+     * Sets the audio driver.
+     *
+     * If driverName is identical to the name of current driver, and current driver and device are
+     * ready, this function will do nothing.
+     *
+     * Unlike setDevice(), if this function fails, current device and driver will become nullptr.
+     *
+     * @param driverName the name of the driver to be used
+     * @param option the option of audio device initialization
+     * @return true if successful
+     */
     bool OutputContext::setDriver(const QString &driverName, OutputContext::DeviceOption option) {
         Q_D(OutputContext);
         if (d->driver && driverName == d->driver->name() && d->driver->isInitialized() && d->device && d->device->isOpen())
@@ -95,6 +152,15 @@ namespace talcs {
         return enumerateDevices(option);
     }
 
+    /**
+     * Sets the audio device.
+     *
+     * Unlike setDriver(), if this function fails, current device still remains unchanged.
+     *
+     * @param deviceName the name of the device to be used
+     * @param option the option of audio device initialization
+     * @return true if successful
+     */
     bool OutputContext::setDevice(const QString &deviceName, OutputContext::DeviceOption option) {
         Q_D(OutputContext);
         std::unique_ptr<talcs::AudioDevice> dev;
@@ -113,6 +179,18 @@ namespace talcs {
         return true;
     }
 
+    /**
+     * Enumerate all audio drivers and devices to find a proper one to use.
+     *
+     * If an audio driver is set and able to be initialized, then it will be used. Otherwise, the first
+     * successfully initialized driver will be used.
+     *
+     * If current driver has a default device then it will be used. Otherwise, the first successfully
+     * initialized device will be used.
+     *
+     * @param option the option of audio device initialization
+     * @return true if successful
+     */
     bool OutputContext::enumerateDevices(OutputContext::DeviceOption option) {
         Q_D(OutputContext);
         for (int i = 0;; i++) {
@@ -154,11 +232,21 @@ namespace talcs {
         }
     }
 
+    /**
+     * Gets the adopted buffer size.
+     */
     qint64 OutputContext::adoptedBufferSize() const {
         Q_D(const OutputContext);
         return d->adoptedBufferSize;
     }
 
+    /**
+     * Sets the adopted buffer size.
+     *
+     * This will reopen the device and the pre-mixer.
+     *
+     * @return true if successful
+     */
     bool OutputContext::setAdoptedBufferSize(qint64 bufferSize) {
         Q_D(OutputContext);
         if (bufferSize == d->adoptedBufferSize)
@@ -175,11 +263,21 @@ namespace talcs {
         return true;
     }
 
+    /**
+     * Gets the adopted sample rate.
+     */
     double OutputContext::adoptedSampleRate() const {
         Q_D(const OutputContext);
         return d->adoptedSampleRate;
     }
 
+    /**
+     * Sets the adopted sample rate.
+     *
+     * This will reopen the device and the pre-mixer.
+     *
+     * @return true if successful
+     */
     bool OutputContext::setAdoptedSampleRate(double sampleRate) {
         Q_D(OutputContext);
         if (qFuzzyCompare(sampleRate, d->adoptedSampleRate))
@@ -195,16 +293,42 @@ namespace talcs {
         return true;
     }
 
+    /**
+     * @enum OutputContext::HotPlugNotificationMode
+     * The mode of hot-plug notification.
+     *
+     * @var OutputContext::Omni
+     * Notifies on any device is added or removed.
+     *
+     * @var OutputContext::Current
+     * Notifies on current device is removed.
+     *
+     * @var OutputContext::None
+     * Does not notify.
+     */
+
+    /**
+     * Gets the hot-plug notification mode.
+     */
     OutputContext::HotPlugNotificationMode OutputContext::hotPlugNotificationMode() const {
         Q_D(const OutputContext);
         return d->hotPlugNotificationMode;
     }
 
+    /**
+     * Sets the hot-plug notification mode.
+     */
     void OutputContext::setHotPlugNotificationMode(OutputContext::HotPlugNotificationMode mode) {
         Q_D(OutputContext);
         d->hotPlugNotificationMode = mode;
     }
 
+    /**
+     * @fn OutputContext::deviceHotPlugged()
+     * Emitted when hot-plug is detected.
+     *
+     * @see HotPlugNotificationMode
+     */
     bool OutputContextPrivate::openDeviceWithOption(AudioDevice *device, OutputContext::DeviceOption option) {
         auto savedBufferSize = adoptedBufferSize;
         auto savedSampleRate = adoptedSampleRate;
