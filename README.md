@@ -44,6 +44,10 @@
     
     The DSPX module includes classes for building up the audio-processing context in [DSPX](https://github.com/diffscope/opendspx/) editor applications.
 
+  - GUI
+    
+    The GUI modules includes some audio utilities relevant to the GUI.
+
 Essential modules will be built by default, and additional modules will not be built by default. To enable or disable the build of a module, set the corresponding CMake option on or off.
 
 The device module provides two internal implementations: SDL and ASIO. SDL is enabled and ASIO is disabled by default. To enable or disable, set the CMake option `TALCS_DEVICE_ENABLE_SDL` and `TALCS_DEVICE_ENABLE_ASIO` on or off.
@@ -66,6 +70,8 @@ The device module provides two internal implementations: SDL and ASIO. SDL is en
 
 - [avaneev/r8brain-free-src](https://github.com/avaneev/r8brain-free-src) (used by: Format)
 
+- [dbry/WavPack](https://github.com/dbry/WavPack) (used by: Format)
+
 - [thestk/rtmidi](https://github.com/thestk/rtmidi) (used by: MIDI)
 
 - [rpclib/rpclib](https://github.com/rpclib/rpclib) (used by: Remote)
@@ -83,6 +89,8 @@ The device module provides two internal implementations: SDL and ASIO. SDL is en
 TALCS uses vcpkg to manage dependency libraries, except Qt, ASIO SDK, r8brain, and JUCE:
 
 - The port files of interval-tree and qmsetup are in [stdware/vcpkg-overlay](https://github.com/stdware/vcpkg-overlay). The documentation about how to install libraries is also in this repository. This repository is included as a submodule in `scripts/vcpkg`.
+
+- Qt should be installed manually.
 
 - ASIO SDK should be downloaded manually from [Steinberg's official website](https://www.steinberg.net/asiosdk) and configured in CMake option `TALCS_ASIOSDK_DIR`. 
 
