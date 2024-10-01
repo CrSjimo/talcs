@@ -23,23 +23,39 @@
 
 namespace talcs {
 
+    /**
+     * @class Decibels
+     * @brief Helpful functions for decibel conversion.
+     */
+
+    /**
+     * Converts decibel to gain.
+     */
     float Decibels::decibelsToGain(double decibels, double minusInfinityDb) {
         return static_cast<float>(decibels > minusInfinityDb ? std::pow (10.0, decibels * .1) : .0);
     }
+
+    /**
+     * Converts gain to decibel.
+     */
     double Decibels::gainToDecibels(float gain, double minusInfinityDb) {
         return gain > .0f ? qMax (minusInfinityDb, std::log10 (gain) * 10.0) : minusInfinityDb;
     }
+
+    /**
+     * Converts decibel to string.
+     */
     QString Decibels::toString(double decibels, int precision, double minusInfinityDb) {
         if (decibels <= minusInfinityDb)
-            return "-INF dB";
+            return QStringLiteral("-INF dB");
         QString s;
         if (decibels >= .0)
-            s += "+";
+            s += '+';
         if (precision <= 0)
             s += QString::number(static_cast<int>(decibels));
         else
             s += QString::number(decibels, 'f', precision);
-        s += " dB";
+        s += QStringLiteral(" dB");
         return s;
     }
     

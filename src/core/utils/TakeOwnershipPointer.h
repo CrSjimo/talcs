@@ -21,6 +21,7 @@
 #define TALCS_TAKEOWNERSHIPPOINTER_H
 
 #include <memory>
+#include <tuple>
 
 #include <TalcsCore/TalcsCoreGlobal.h>
 
@@ -33,12 +34,12 @@ namespace talcs {
         }
         ~TakeOwnershipPointer() {
             if (!m_takeOwnership) {
-                Q_UNUSED(d.release());
+                std::ignore = d.release();
             }
         }
 
         void reset(T *ptr, bool takeOwnership) {
-            Q_UNUSED(d.release());
+            std::ignore = d.release();
             d.reset(ptr);
             m_takeOwnership = takeOwnership;
         }

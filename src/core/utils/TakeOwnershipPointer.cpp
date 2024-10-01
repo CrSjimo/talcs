@@ -20,4 +20,49 @@
 #include "TakeOwnershipPointer.h"
 
 namespace talcs {
-} // talcs
+
+    /**
+     * @class TakeOwnershipPointer
+     * @brief A helper smart pointer for taking ownership.
+     *
+     * It is suggested not to use this feature. Instead, you shall manage the objects on your own.
+     * But for historical reasons, this feature is still kept.
+     */
+
+    /**
+     * @fn TakeOwnershipPointer::TakeOwnershipPointer(T *ptr, bool takeOwnership)
+     * Constructor.
+     */
+
+    /**
+     * @fn TakeOwnershipPointer::~TakeOwnershipPointer()
+     * Destructor. If takeOwnership is true, the pointer will be deleted.
+     */
+
+    /**
+     * @fn void TakeOwnershipPointer::reset(T *ptr, bool takeOwnership)
+     * Resets the pointer. Note that this does nothing on the old pointer no matter takeOwnership was
+     * true or false.
+     */
+
+    /**
+     * @fn T TakeOwnershipPointer::*get() const
+     * Gets the pointer.
+     */
+
+    /**
+     * @fn T *TakeOwnershipPointer::operator->() const
+     * Smart pointer operator.
+     */
+
+    /**
+     * @fn T &TakeOwnershipPointer::operator*() const
+     * Smart pointer operator.
+     */
+
+    /**
+     * @fn TakeOwnershipPointer::operator T*() const
+     * Implicit conversion for compatibility.
+     */
+
+}

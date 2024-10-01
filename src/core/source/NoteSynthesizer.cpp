@@ -317,6 +317,11 @@ namespace talcs {
     }
 
     /**
+     * @class NoteSynthesizer
+     * @brief A synthesizer of notes.
+     */
+
+    /**
      * Constructor.
      */
     NoteSynthesizer::NoteSynthesizer() : NoteSynthesizer(*new NoteSynthesizerPrivate) {

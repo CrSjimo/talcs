@@ -23,7 +23,17 @@
 #include "SDLAudioDriverDisplayNameHelper.h"
 
 namespace talcs {
-    QString SDLAudioDriverDisplayNameHelper::getDisplayName(const QString &deviceName) {
+
+    /**
+     * @class SDLAudioDriverDisplayNameHelper
+     * @brief Helpful function for getting the display name of an SDL audio driver.
+     */
+
+    /**
+     * Gets the display name of an SDL audio driver.
+     * @param driverName raw driver name
+     */
+    QString SDLAudioDriverDisplayNameHelper::getDisplayName(const QString &driverName) {
         static QHash<QString, QString> map = {
                 {"pipewire",    "Pipewire"                   },
                 {"pulseaudio",  "PulseAudio"                 },
@@ -57,6 +67,6 @@ namespace talcs {
                 {"emscripten",  "SDL emscripten audio driver"},
                 {"DART",        "OS/2 DART"                  },
         };
-        return map.value(deviceName, deviceName);
+        return map.value(driverName, driverName);
     }
 }
