@@ -5,4 +5,34 @@ include(CMakeFindDependencyMacro)
 find_dependency(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
 find_dependency(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
 
+# Core
+find_path(INTERVAL_TREE_INCLUDE_DIRS "interval-tree/interval_tree.hpp" REQUIRED)
+
+# Device
+if(@TALCS_DEVICE@ AND @TALCS_DEVICE_ENABLE_SDL@)
+    find_dependency(SDL2 REQUIRED)
+endif()
+
+# Format
+if(@TALCS_FORMAT@)
+    find_dependency(SndFile REQUIRED)
+    find_dependency(wavpack REQUIRED)
+endif()
+
+# JuceAdapter
+if(@TALCS_JUCE_ADAPTER@)
+    find_dependency(JUCE REQUIRED)
+endif()
+
+# Midi
+if(@TALCS_MIDI@)
+    find_dependency(rtmidi REQUIRED)
+endif()
+
+# Remote
+if(@TALCS_REMOTE@)
+    find_dependency(Boost REQUIRED)
+    find_dependency(rpclib REQUIRED)
+endif()
+
 include("${CMAKE_CURRENT_LIST_DIR}/talcsTargets.cmake")
