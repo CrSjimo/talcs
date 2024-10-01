@@ -61,7 +61,7 @@ runs:
       uses: actions/cache/restore@v4
       with:
         path: ${{ github.workspace }}/vcpkg
-        key: ${{ runner.os }}-vcpkg-${{ hashFiles('scripts/vcpkg-manifest/vcpkg.json') }}
+        key: ${{ runner.os }}-vcpkg-${{ hashFiles('scripts/vcpkg-manifest/vcpkg.json', 'scripts/vcpkg/**') }}
         restore-keys: |
           ${{ runner.os }}-vcpkg-
 
