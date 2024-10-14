@@ -32,14 +32,14 @@ namespace talcs {
      * Converts decibel to gain.
      */
     float Decibels::decibelsToGain(double decibels, double minusInfinityDb) {
-        return static_cast<float>(decibels > minusInfinityDb ? std::pow (10.0, decibels * .1) : .0);
+        return static_cast<float>(decibels > minusInfinityDb ? std::pow (10.0, decibels * .05) : .0);
     }
 
     /**
      * Converts gain to decibel.
      */
     double Decibels::gainToDecibels(float gain, double minusInfinityDb) {
-        return gain > .0f ? qMax (minusInfinityDb, std::log10 (gain) * 10.0) : minusInfinityDb;
+        return gain > .0f ? qMax (minusInfinityDb, std::log10 (gain) * 20.0) : minusInfinityDb;
     }
 
     /**
