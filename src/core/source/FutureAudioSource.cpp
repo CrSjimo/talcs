@@ -162,6 +162,8 @@ namespace talcs {
     void FutureAudioSource::setNextReadPosition(qint64 pos) {
         Q_D(FutureAudioSource);
         QMutexLocker locker(&d->mutex);
+        if (d->src)
+            d->src->setNextReadPosition(pos);
         PositionableAudioSource::setNextReadPosition(pos);
     }
 
