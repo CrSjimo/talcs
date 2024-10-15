@@ -29,7 +29,8 @@ namespace talcs {
         if (status == FutureAudioSource::Ready) {
             src = futureWatcher->result();
             if (q->isOpen()) {
-                Q_ASSERT(src->open(q->bufferSize(), q->sampleRate()));
+                auto result = src->open(q->bufferSize(), q->sampleRate());
+                Q_ASSERT(result);
                 src->setNextReadPosition(position);
             }
         }
