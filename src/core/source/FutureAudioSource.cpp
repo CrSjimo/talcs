@@ -27,12 +27,13 @@ namespace talcs {
     void FutureAudioSourcePrivate::_q_statusChanged(FutureAudioSource::Status status) {
         Q_Q(FutureAudioSource);
         if (status == FutureAudioSource::Ready) {
-            src = futureWatcher->result();
+            auto src_ = futureWatcher->result();
             if (q->isOpen()) {
-                auto result = src->open(q->bufferSize(), q->sampleRate());
+                auto result = src_->open(q->bufferSize(), q->sampleRate());
                 Q_ASSERT(result);
-                src->setNextReadPosition(position);
+                src_->setNextReadPosition(position);
             }
+            src = src_;
         }
         emit q->statusChanged(status);
     }
@@ -275,6 +276,9 @@ namespace talcs {
     void FutureAudioSource::wait() {
         Q_D(FutureAudioSource);
         d->futureWatcher->waitForFinished();
+        if (d->futureWatcher->isFinished())
+            while (!d->src) {
+            }
     }
 
     /**

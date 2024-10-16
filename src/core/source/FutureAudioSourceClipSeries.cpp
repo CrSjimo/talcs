@@ -343,6 +343,7 @@ namespace talcs {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         d->readMode = readMode;
+        d->checkAndNotify();
     }
 
     /**
