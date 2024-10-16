@@ -82,7 +82,7 @@ namespace talcs {
         Q_D(AudioFormatInputSource);
         QMutexLocker locker(&d->mutex);
         Q_ASSERT(d->io && isOpen());
-        auto readLength = qBound(qint64(0), readData.length, length() - d->position);
+        auto readLength = qMax(qint64(0), qMin(readData.length, length() - d->position));
         d->resampler->process(readData);
         if (d->doStereoize && d->io->channelCount() == 1 && readData.buffer->channelCount() > 1) {
             readData.buffer->setSampleRange(1, readData.startPos, readLength, *readData.buffer, 0, readData.startPos);
