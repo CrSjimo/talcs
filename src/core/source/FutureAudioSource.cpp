@@ -203,7 +203,8 @@ namespace talcs {
             case Cancelled:
                 break;
             case Ready:
-                source()->close();
+                if (d->src)
+                    d->src->close();
                 break;
         }
         talcs::AudioSource::close();

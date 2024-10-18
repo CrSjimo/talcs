@@ -83,7 +83,7 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         Q_ASSERT(d->io && isOpen());
         auto readLength = qMax(qint64(0), qMin(readData.length, length() - d->position));
-        d->resampler->process(readData);
+        d->resampler->process({readData.buffer, readData.startPos, readLength, readData.silentFlags});
         if (d->doStereoize && d->io->channelCount() == 1 && readData.buffer->channelCount() > 1) {
             readData.buffer->setSampleRange(1, readData.startPos, readLength, *readData.buffer, 0, readData.startPos);
         }
