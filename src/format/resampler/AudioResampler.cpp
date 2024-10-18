@@ -87,10 +87,10 @@ namespace talcs {
      *
      * This function does not provide functionalities of getting read length, and it should be checked in other ways.
      */
-    void AudioResampler::process(float *buffer) {
+    void AudioResampler::process(float *buffer, qint64 length) {
         // If ratio is 1.0 then just copy.
         if (d->copyOnly)
-            return read(buffer, d->bufferSize);
+            return read(buffer, length);
 
 
         for (int i = 0; i < 2; i++) {
@@ -98,7 +98,7 @@ namespace talcs {
 
             // First, get the latency and processed the first block. The output length is always zero.
             if (!d->processedOutputLength) {
-                int initialLength = d->resampler->getInLenBeforeOutPos(d->bufferSize);
+                int initialLength = d->resampler->getInLenBeforeOutPos(static_cast<int>(length));
                 read(d->inputBuffer.data(), initialLength);
                 std::copy_n(d->inputBuffer.cbegin(), initialLength, d->f64InputBuffer.begin());
                 double *outputPointer;
@@ -106,7 +106,7 @@ namespace talcs {
                 std::copy_n(outputPointer, outputBlockLength,
                           d->outputBuffer.begin() + d->outputBufferOffset);
                 d->processedInputLength += initialLength;
-                d->processedOutputLength += d->bufferSize;
+                d->processedOutputLength += static_cast<int>(length);
                 d->outputBufferOffset += outputBlockLength;
                 if (outputBlockLength != 0)
                     readFlag = false;
@@ -114,7 +114,7 @@ namespace talcs {
 
             // Read input block, covert it to f64, process, and convert the output block into output buffer.
             if (readFlag) {
-                int inputBlockLength = d->resampler->getInLenBeforeOutPos(d->processedOutputLength + d->bufferSize) -
+                int inputBlockLength = d->resampler->getInLenBeforeOutPos(d->processedOutputLength + static_cast<int>(length)) -
                                        d->processedInputLength;
                 read(d->inputBuffer.data(), inputBlockLength);
                 std::copy_n(d->inputBuffer.cbegin(), inputBlockLength,
@@ -125,21 +125,21 @@ namespace talcs {
                 std::copy_n(outputPointer, outputBlockLength,
                           d->outputBuffer.begin() + d->outputBufferOffset);
                 d->processedInputLength += inputBlockLength;
-                d->processedOutputLength += d->bufferSize;
+                d->processedOutputLength += static_cast<int>(length);
                 d->outputBufferOffset += outputBlockLength;
             }
 
-            if (d->outputBufferOffset >= d->bufferSize) {
+            if (d->outputBufferOffset >= length) {
                 //=================================     =======
                 //|--old offset--|--output block--|     |*****|
                 //================================= --> =======
                 //|-------buffer size-------|*****|           ^
                 //=================================           the new offset
 
-                std::copy_n(d->outputBuffer.cbegin(), d->bufferSize, buffer);
-                std::copy_n(d->outputBuffer.cbegin() + d->bufferSize, d->outputBufferOffset - d->bufferSize,
+                std::copy_n(d->outputBuffer.cbegin(), length, buffer);
+                std::copy_n(d->outputBuffer.cbegin() + length, d->outputBufferOffset - length,
                           d->outputBuffer.begin());
-                d->outputBufferOffset = d->outputBufferOffset - d->bufferSize;
+                d->outputBufferOffset = d->outputBufferOffset - static_cast<int>(length);
                 break;
             } else {
                 //===================================     ===================================

@@ -74,15 +74,15 @@ namespace talcs {
         if (readData.buffer->isContinuous()) {
             for (int i = 0; i < d->channelCount; i++) {
                 if (i < readData.buffer->channelCount())
-                    d->resamplerOfChannel[i]->process(readData.buffer->writePointerTo(i, readData.startPos));
+                    d->resamplerOfChannel[i]->process(readData.buffer->writePointerTo(i, readData.startPos), readData.length);
                 else
-                    d->resamplerOfChannel[i]->process(d->tmpBuf.get());
+                    d->resamplerOfChannel[i]->process(d->tmpBuf.get(), readData.length);
             }
         } else {
             auto p = d->tmpBuf.get();
             AudioDataWrapper pSrc(&p, 1, bufferSize());
             for (int i = 0; i < d->channelCount; i++) {
-                d->resamplerOfChannel[i]->process(d->tmpBuf.get());
+                d->resamplerOfChannel[i]->process(d->tmpBuf.get(), readData.length);
                 if (i < readData.buffer->channelCount())
                     readData.buffer->setSampleRange(i, readData.startPos, readData.length, pSrc, 0, 0);
             }

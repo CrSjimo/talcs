@@ -41,7 +41,7 @@ namespace talcs {
 
         void reset();
 
-        void process(float *buffer);
+        void process(float *buffer, qint64 length);
 
         double ratio() const;
         qint64 bufferSize() const;

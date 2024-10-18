@@ -18,6 +18,7 @@
  ******************************************************************************/
 
 #include <cmath>
+#include <random>
 
 #include <QCoreApplication>
 #include <QFile>
@@ -51,19 +52,24 @@ private:
 
 void testFunc() {
     {
-        QFile f("D:\\CloudMusic\\07.恋染色.flac");
+        QFile f("C:/CloudMusic/07.恋染色.flac");
         AudioFormatIO io(&f);
         f.open(QIODevice::ReadOnly);
         io.open(AbstractAudioFormatIO::Read);
         MyResampler resampler(96000.0 / 44100.0, 1024, 2, &io);
         QVector<float> data(1024 * 2);
         InterleavedAudioDataWrapper wrapper(data.data(), 2, 1024);
-        QFile fOut("D:\\test.pcm");
+        QFile fOut("C:/Users/Crs_1/Downloads/test.pcm");
         fOut.open(QFile::WriteOnly);
         QTime t0 = QTime::currentTime();
-        for (int i = 0; i < std::ceil(io.length() * 96000.0 / 44100.0 / 1024.0); i++) {
-            resampler.process(&wrapper);
-            fOut.write((char*)(data.data()), 2048 * sizeof(float));
+
+        std::random_device rd;
+        std::uniform_int_distribution dist(0, 512);
+        for (qint64 i = 0; i < std::ceil(io.length() * 96000.0 / 44100.0);) {
+            qint64 length = 1024 - dist(rd);
+            resampler.process({&wrapper, 0, length});
+            fOut.write((char*)(data.data()), length * 2 * sizeof(float));
+            i += length;
         }
         qDebug() << t0.msecsTo(QTime::currentTime());
         fOut.flush();
