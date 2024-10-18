@@ -53,8 +53,12 @@ namespace talcs {
 
         void notifyPause();
         void notifyResume();
-        void checkAndNotify(qint64 position, qint64 length);
-        void checkAndNotify();
+        enum NotifyPurpose {
+            Pause,
+            Resume,
+        };
+        void checkAndNotify(qint64 position, qint64 length, NotifyPurpose purpose);
+        void checkAndNotify(NotifyPurpose purpose);
     };
     
 }

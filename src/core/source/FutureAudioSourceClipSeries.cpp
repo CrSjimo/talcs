@@ -47,7 +47,7 @@ namespace talcs {
                 cachedLengthAvailable += clip.length();
                 clipLengthCachedDict[clip.position()] = true;
                 emitProgressChanged();
-                checkAndNotify();
+                checkAndNotify(Resume);
             }
         });
     }
@@ -83,19 +83,21 @@ namespace talcs {
             isPauseRequiredEmitted = false;
         }
     }
-    void FutureAudioSourceClipSeriesPrivate::checkAndNotify(qint64 position, qint64 length) {
+    void FutureAudioSourceClipSeriesPrivate::checkAndNotify(qint64 position, qint64 length, NotifyPurpose purpose) {
         Q_Q(FutureAudioSourceClipSeries);
-        if (readMode == FutureAudioSourceClipSeries::Notify) {
-            if (!q->canRead(position + length, length)) {
+        if (readMode != FutureAudioSourceClipSeries::Notify)
+            return;
+        if (!q->canRead(position + length, length)) {
+            if (purpose == Pause)
                 notifyPause();
-            } else {
+        } else {
+            if (purpose == Resume)
                 notifyResume();
-            }
         }
     }
-    void FutureAudioSourceClipSeriesPrivate::checkAndNotify() {
+    void FutureAudioSourceClipSeriesPrivate::checkAndNotify(NotifyPurpose purpose) {
         Q_Q(FutureAudioSourceClipSeries);
-        checkAndNotify(position, q->bufferSize());
+        checkAndNotify(position, q->bufferSize(), purpose);
     }
 
     /**
@@ -120,8 +122,8 @@ namespace talcs {
     qint64 FutureAudioSourceClipSeries::processReading(const AudioSourceReadData &readData) {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        d->checkAndNotify(d->position + readData.length, readData.length);
         FutureAudioSourceClipSeriesPrivate::ClipInterval readDataInterval(nullptr, d->position, readData.length);
+        d->checkAndNotify(d->position + readData.length, readData.length, FutureAudioSourceClipSeriesPrivate::Pause);
         for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
             readData.buffer->clear(ch, readData.startPos, readData.length);
         }
@@ -155,7 +157,7 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         if (d->position != pos) {
             d->position = pos;
-            d->checkAndNotify();
+            d->checkAndNotify(FutureAudioSourceClipSeriesPrivate::Resume);
         }
     }
 
@@ -184,7 +186,7 @@ namespace talcs {
         auto ret = d->insertClip(content, position, startPos, length);
         if (!ret.isNull()) {
             d->postAddClip(d->intervalLookup(ret.position(), ret.content()));
-            d->checkAndNotify();
+            d->checkAndNotify(FutureAudioSourceClipSeriesPrivate::Resume);
         }
         return ret;
     }
@@ -221,9 +223,9 @@ namespace talcs {
         auto oldContent = clip.content();
         auto ret = d->setClipContent(clip, content);
         if (!ret.isNull()) {
-            d->checkAndNotify();
             d->postRemoveClip({oldContent, ret.position(), ret.length()}, false);
             d->postAddClip({content, ret.position(), ret.length()});
+            d->checkAndNotify(FutureAudioSourceClipSeriesPrivate::Resume);
         }
         return ret;
     }
@@ -249,7 +251,7 @@ namespace talcs {
         auto clipInterval = d->intervalLookup(clip.position(), clip.content());
         d->removeClip(clip);
         d->postRemoveClip(clipInterval);
-        d->checkAndNotify();
+        d->checkAndNotify(FutureAudioSourceClipSeriesPrivate::Resume);
     }
 
     void FutureAudioSourceClipSeries::removeAllClips() {
@@ -257,7 +259,7 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         d->removeAllClips();
         d->preRemoveAllClips();
-        d->checkAndNotify();
+        d->checkAndNotify(FutureAudioSourceClipSeriesPrivate::Resume);
     }
 
     QList<FutureAudioSourceClipSeries::ClipView> FutureAudioSourceClipSeries::clips() const {
@@ -342,8 +344,8 @@ namespace talcs {
     void FutureAudioSourceClipSeries::setReadMode(FutureAudioSourceClipSeries::ReadMode readMode) {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
+        d->checkAndNotify(FutureAudioSourceClipSeriesPrivate::Resume);
         d->readMode = readMode;
-        d->checkAndNotify();
     }
 
     /**

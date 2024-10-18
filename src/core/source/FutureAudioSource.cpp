@@ -154,6 +154,8 @@ namespace talcs {
 
     qint64 FutureAudioSource::length() const {
         Q_D(const FutureAudioSource);
+        if (d->src)
+            return d->src->length();
         return d->futureWatcher->progressMaximum();
     }
 
