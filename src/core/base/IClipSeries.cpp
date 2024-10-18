@@ -21,7 +21,7 @@
 #include "IClipSeries_p.h"
 
 namespace talcs {
-    ClipViewImpl::ClipViewImpl() : d(nullptr), m_content(0) {
+    ClipViewImpl::ClipViewImpl() : d(nullptr), m_content(nullptr) {
 
     }
 
@@ -29,7 +29,7 @@ namespace talcs {
         return m_content && d->clipPositionDict.contains(m_content);
     }
 
-    qintptr ClipViewImpl::content() const {
+    void *ClipViewImpl::content() const {
         return m_content;
     }
 
@@ -48,11 +48,11 @@ namespace talcs {
         return d->intervalLookup(position(), content()).length();
     }
 
-    ClipViewImpl::ClipViewImpl(const IClipSeriesPrivate *d, qintptr content) : d(d), m_content(content) {
+    ClipViewImpl::ClipViewImpl(const IClipSeriesPrivate *d, void *content) : d(d), m_content(content) {
 
     }
 
-    ClipViewImpl IClipSeriesPrivate::insertClip(qintptr content, qint64 position, qint64 startPos, qint64 length) {
+    ClipViewImpl IClipSeriesPrivate::insertClip(void *content, qint64 position, qint64 startPos, qint64 length) {
         if (clipPositionDict.contains(content))
             return {};
         auto interval = ClipInterval(content, position, length);
@@ -81,7 +81,7 @@ namespace talcs {
         return true;
     }
 
-    ClipViewImpl IClipSeriesPrivate::setClipContent(const ClipViewImpl &clipViewImpl, qintptr content) {
+    ClipViewImpl IClipSeriesPrivate::setClipContent(const ClipViewImpl &clipViewImpl, void *content) {
         if (content == clipViewImpl.content())
             return clipViewImpl;
         if (clipPositionDict.contains(content))
@@ -95,15 +95,15 @@ namespace talcs {
         return ret;
     }
 
-    ClipViewImpl IClipSeriesPrivate::findClipByContent(qintptr content) const {
+    ClipViewImpl IClipSeriesPrivate::findClipByContent(void *content) const {
         auto ret = ClipViewImpl(this, content);
         if (!ret.isValid())
-            ret.m_content = 0;
+            ret.m_content = nullptr;
         return ret;
     }
 
     void IClipSeriesPrivate::findClipByPosition(qint64 position, const std::function<bool(const ClipViewImpl &)> &onFind) const {
-        clips.overlap_find_all({0, position, 1}, [&](const ClipIntervalTree::const_iterator &it) {
+        clips.overlap_find_all({nullptr, position, 1}, [&](const ClipIntervalTree::const_iterator &it) {
             return onFind(ClipViewImpl(this, it->interval().content()));
         });
     }
@@ -128,7 +128,7 @@ namespace talcs {
     QList<ClipViewImpl> IClipSeriesPrivate::clipViewImplList() const {
         QList<ClipViewImpl> list;
         for (auto p = clips.cbegin(); p != clips.cend(); p++) {
-            list.append(ClipViewImpl(const_cast<IClipSeriesPrivate *>(this), p->interval().content()));
+            list.append(ClipViewImpl(this, p->interval().content()));
         }
         return list;
     }
@@ -139,13 +139,13 @@ namespace talcs {
         return *endSet.rbegin();
     }
 
-    IClipSeriesPrivate::ClipInterval IClipSeriesPrivate::intervalLookup(qint64 pos, qintptr content) const {
+    IClipSeriesPrivate::ClipInterval IClipSeriesPrivate::intervalLookup(qint64 pos, void *content) const {
         return findClipIterator(pos, content)->interval();
     }
 
-    IClipSeriesPrivate::ClipIntervalTree::iterator IClipSeriesPrivate::findClipIterator(qint64 pos, qintptr content) {
+    IClipSeriesPrivate::ClipIntervalTree::iterator IClipSeriesPrivate::findClipIterator(qint64 pos, void *content) {
         ClipIntervalTree::iterator it = clips.end();
-        clips.overlap_find_all({0, pos, 1}, [&](const ClipIntervalTree::iterator &it_) {
+        clips.overlap_find_all({nullptr, pos, 1}, [&](const ClipIntervalTree::iterator &it_) {
             if (it_.interval().content() == content) {
                 it = it_;
                 return false;
@@ -155,9 +155,9 @@ namespace talcs {
         return it;
     }
 
-    IClipSeriesPrivate::ClipIntervalTree::const_iterator IClipSeriesPrivate::findClipIterator(qint64 pos, qintptr content) const {
+    IClipSeriesPrivate::ClipIntervalTree::const_iterator IClipSeriesPrivate::findClipIterator(qint64 pos, void *content) const {
         ClipIntervalTree::const_iterator it = clips.end();
-        clips.overlap_find_all({0, pos, 1}, [&](const ClipIntervalTree::const_iterator &it_) {
+        clips.overlap_find_all({nullptr, pos, 1}, [&](const ClipIntervalTree::const_iterator &it_) {
             if (it_.interval().content() == content) {
                 it = it_;
                 return false;

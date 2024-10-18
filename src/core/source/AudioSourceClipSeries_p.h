@@ -40,7 +40,7 @@ namespace talcs {
         bool openAllClips(qint64 bufferSize, double sampleRate) {
             buf.resize(2, bufferSize);
             for (auto p = d->clips.begin(); p != d->clips.end(); p++) {
-                if (!reinterpret_cast<SourceClass *>(p->interval().content())->open(bufferSize, sampleRate))
+                if (!static_cast<SourceClass *>(p->interval().content())->open(bufferSize, sampleRate))
                     return false;
             }
             return true;
@@ -49,7 +49,7 @@ namespace talcs {
         void closeAllClips() {
             buf.resize(0, 0);
             for (auto p = d->clips.begin(); p != d->clips.end(); p++) {
-                reinterpret_cast<SourceClass *>(p->interval().content())->close();
+                static_cast<SourceClass *>(p->interval().content())->close();
             }
         }
 
@@ -64,7 +64,7 @@ namespace talcs {
 
         QPair<qint64, AudioSourceReadData> calculateClipReadData(const IClipSeriesPrivate::ClipInterval &clip, qint64 seriesPosition,
                                                                         const AudioSourceReadData &seriesReadData) {
-            auto contentLength = reinterpret_cast<PositionableAudioSource *>(clip.content())->length();
+            auto contentLength = static_cast<SourceClass *>(clip.content())->length();
             auto corrLen = qMin(clip.length(), contentLength - d->clipStartPosDict.value(clip.content()));
             auto headCut = qMax(0ll, seriesPosition - clip.position());
             auto tailCut = qMax(0ll, (clip.position() + corrLen) - (seriesPosition + seriesReadData.length));

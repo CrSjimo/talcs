@@ -33,10 +33,10 @@ namespace talcs {
         bool isValid() const;
 
         bool isNull() const {
-            return !bool(m_content);
+            return !static_cast<bool>(m_content);
         }
 
-        qintptr content() const;
+        void * content() const;
 
         qint64 startPos() const;
 
@@ -50,9 +50,9 @@ namespace talcs {
 
     private:
         friend class IClipSeriesPrivate;
-        explicit ClipViewImpl(const IClipSeriesPrivate *d, qintptr content);
+        explicit ClipViewImpl(const IClipSeriesPrivate *d, void *content);
         const IClipSeriesPrivate *d;
-        qintptr m_content;
+        void *m_content;
     };
 
     template <class T>
@@ -74,7 +74,7 @@ namespace talcs {
             }
 
             T *content() const {
-                return reinterpret_cast<T *>(m_impl.content());
+                return static_cast<T *>(m_impl.content());
             }
 
             qint64 startPos() const {

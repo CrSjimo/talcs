@@ -33,10 +33,10 @@ namespace talcs {
     public:
 
         struct ClipInterval : public lib_interval_tree::interval<qint64> {
-            inline ClipInterval(qintptr content, qint64 position, qint64 length) : lib_interval_tree::interval<qint64>(position, position + length - 1), m_content(content) {
+            inline ClipInterval(void * content, qint64 position, qint64 length) : lib_interval_tree::interval<qint64>(position, position + length - 1), m_content(content) {
             }
 
-            inline qintptr content() const {
+            inline void *content() const {
                 return m_content;
             }
 
@@ -48,21 +48,21 @@ namespace talcs {
                 return high() - low() + 1;
             }
 
-            qintptr m_content;
+            void *m_content;
         };
 
         using ClipIntervalTree = lib_interval_tree::interval_tree<ClipInterval>;
         ClipIntervalTree clips;
-        QHash<qintptr, qint64> clipPositionDict;
-        QHash<qintptr, qint64> clipStartPosDict;
+        QHash<void *, qint64> clipPositionDict;
+        QHash<void *, qint64> clipStartPosDict;
         std::set<qint64> endSet;
 
-        ClipViewImpl insertClip(qintptr content, qint64 position, qint64 startPos, qint64 length);
+        ClipViewImpl insertClip(void *content, qint64 position, qint64 startPos, qint64 length);
         void setClipStartPos(const ClipViewImpl &clipViewImpl, qint64 startPos);
         bool setClipRange(const ClipViewImpl &clipViewImpl, qint64 position, qint64 length);
-        ClipViewImpl setClipContent(const ClipViewImpl &clipViewImpl, qintptr content);
+        ClipViewImpl setClipContent(const ClipViewImpl &clipViewImpl, void *content);
 
-        ClipViewImpl findClipByContent(qintptr content) const;
+        ClipViewImpl findClipByContent(void *content) const;
         void findClipByPosition(qint64 position, const std::function<bool(const ClipViewImpl &)> &onFind) const;
 
         void removeClip(const ClipViewImpl &clipViewImpl);
@@ -72,9 +72,9 @@ namespace talcs {
 
         qint64 effectiveLength() const;
 
-        IClipSeriesPrivate::ClipInterval intervalLookup(qint64 pos, qintptr content) const;
-        IClipSeriesPrivate::ClipIntervalTree::iterator findClipIterator(qint64 pos, qintptr content);
-        IClipSeriesPrivate::ClipIntervalTree::const_iterator findClipIterator(qint64 pos, qintptr content) const;
+        IClipSeriesPrivate::ClipInterval intervalLookup(qint64 pos, void *content) const;
+        IClipSeriesPrivate::ClipIntervalTree::iterator findClipIterator(qint64 pos, void * content);
+        IClipSeriesPrivate::ClipIntervalTree::const_iterator findClipIterator(qint64 pos, void *content) const;
 
     };
 

@@ -54,7 +54,7 @@ namespace talcs {
     }
     qint64 AudioSourceClipSeries::processReading(const AudioSourceReadData &readData) {
         Q_D(AudioSourceClipSeries);
-        AudioSourceClipSeriesPrivate::ClipInterval readDataInterval(0, d->position, readData.length);
+        AudioSourceClipSeriesPrivate::ClipInterval readDataInterval(nullptr, d->position, readData.length);
         for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
             readData.buffer->clear(ch, readData.startPos, readData.length);
         }
@@ -63,7 +63,7 @@ namespace talcs {
                 auto clip = it->interval();
                 auto [clipReadPosition, clipReadData] =
                     d->calculateClipReadData(clip, d->position, readData);
-                auto clipSrc = reinterpret_cast<PositionableAudioSource *>(clip.content());
+                auto clipSrc = static_cast<PositionableAudioSource *>(clip.content());
                 clipSrc->setNextReadPosition(clipReadPosition);
                 clipSrc->read(clipReadData);
                 for (int ch = 0; ch < readData.buffer->channelCount(); ch++)
@@ -118,7 +118,7 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         if (!d->preInsertClip(content))
             return {};
-        return d->insertClip(reinterpret_cast<qintptr>(content), position, startPos, length);
+        return d->insertClip(content, position, startPos, length);
     }
 
     void AudioSourceClipSeries::setClipStartPos(const AudioSourceClipSeries::ClipView &clip,
@@ -140,13 +140,13 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         if (!d->preInsertClip(content))
             return {};
-        return d->setClipContent(clip, reinterpret_cast<qintptr>(content));
+        return d->setClipContent(clip, content);
     }
 
     AudioSourceClipSeries::ClipView
     AudioSourceClipSeries::findClip(PositionableAudioSource *content) const {
         Q_D(const AudioSourceClipSeries);
-        return d->findClipByContent(reinterpret_cast<qintptr>(content));
+        return d->findClipByContent(content);
     }
 
     QList<AudioSourceClipSeries::ClipView> AudioSourceClipSeries::findClip(qint64 position) const {
