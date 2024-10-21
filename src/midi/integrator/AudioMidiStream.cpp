@@ -32,6 +32,7 @@ namespace talcs {
     bool AudioMidiStream::open(qint64 bufferSize, double sampleRate) {
         Q_D(AudioMidiStream);
         QMutexLocker locker(&d->filterMutex);
+        AudioStreamBase::close();
         if (d->filter.loadRelaxed() && !d->filter.loadRelaxed()->open(bufferSize, sampleRate)) {
             return false;
         }

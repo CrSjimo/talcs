@@ -49,10 +49,6 @@ namespace talcs {
         setFrequency(frequencyIntegration);
     }
 
-    bool SineWaveAudioSource::open(qint64 bufferSize, double sampleRate) {
-        return AudioSource::open(bufferSize, sampleRate);
-    }
-
     qint64 SineWaveAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(SineWaveAudioSource);
         QMutexLocker locker(&d->mutex);

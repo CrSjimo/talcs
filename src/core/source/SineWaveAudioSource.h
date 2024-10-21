@@ -35,7 +35,6 @@ namespace talcs {
         explicit SineWaveAudioSource(const std::function<double(qint64)> &frequencyIntegration);
         ~SineWaveAudioSource() override = default;
 
-        bool open(qint64 bufferSize, double sampleRate) override;
         qint64 length() const override;
 
         void setFrequency(double frequency);

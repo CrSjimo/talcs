@@ -117,6 +117,7 @@ namespace talcs {
     bool AudioFormatInputSource::open(qint64 bufferSize, double sampleRate) {
         Q_D(AudioFormatInputSource);
         QMutexLocker locker(&d->mutex);
+        AudioSource::close();
         if (!d->io)
             return false;
         if (d->io->open(AbstractAudioFormatIO::Read)) {

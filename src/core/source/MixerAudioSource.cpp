@@ -60,6 +60,7 @@ namespace talcs {
     bool MixerAudioSource::open(qint64 bufferSize, double sampleRate) {
         Q_D(MixerAudioSource);
         QMutexLocker locker(&d->mutex);
+        AudioSource::close();
         if (d->start(bufferSize, sampleRate)) {
             return AudioSource::open(bufferSize, sampleRate);
         } else {

@@ -122,6 +122,7 @@ namespace talcs {
     bool TransportAudioSource::open(qint64 bufferSize, double sampleRate) {
         Q_D(TransportAudioSource);
         QMutexLocker locker(&d->mutex);
+        AudioSource::close();
         d->playbackStatus = Paused;
         if (d->src && !d->src->open(bufferSize, sampleRate)) {
             return false;

@@ -94,6 +94,7 @@ namespace talcs {
     bool AudioSourceClipSeries::open(qint64 bufferSize, double sampleRate) {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
+        AudioSource::close();
         if (d->openAllClips(bufferSize, sampleRate))
             return AudioSource::open(bufferSize, sampleRate);
         return false;

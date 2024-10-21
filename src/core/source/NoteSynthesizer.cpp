@@ -339,6 +339,7 @@ namespace talcs {
 
     bool NoteSynthesizer::open(qint64 bufferSize, double sampleRate) {
         Q_D(NoteSynthesizer);
+        AudioSource::close();
         flush(true);
         return AudioSource::open(bufferSize, sampleRate);
     }

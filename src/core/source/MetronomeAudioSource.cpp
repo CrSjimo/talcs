@@ -79,6 +79,7 @@ namespace talcs {
     bool MetronomeAudioSource::open(qint64 bufferSize, double sampleRate) {
         Q_D(MetronomeAudioSource);
         QMutexLocker locker(&d->mutex);
+        AudioSource::close();
         if (d->majorBeatSource)
             if (!d->majorBeatSource->open(bufferSize, sampleRate))
                 return false;

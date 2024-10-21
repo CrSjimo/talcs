@@ -35,6 +35,7 @@ namespace talcs {
     bool AbstractMidiMessageIntegrator::open(qint64 bufferSize, double sampleRate) {
         Q_D(AbstractMidiMessageIntegrator);
         QMutexLocker locker(&d->mutex);
+        AudioSource::close();
         if (d->stream && !d->stream->open(bufferSize, sampleRate))
             return false;
         return AudioSource::open(bufferSize, sampleRate);

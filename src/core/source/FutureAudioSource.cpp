@@ -174,6 +174,7 @@ namespace talcs {
     bool FutureAudioSource::open(qint64 bufferSize, double sampleRate) {
         Q_D(FutureAudioSource);
         QMutexLocker locker(&d->mutex);
+        AudioSource::close();
         switch (status()) {
             case Running:
             case Paused:
