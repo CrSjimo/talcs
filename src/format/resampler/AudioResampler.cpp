@@ -20,6 +20,8 @@
 #include "AudioResampler.h"
 #include "AudioResampler_p.h"
 
+#include <algorithm>
+
 namespace talcs {
 
     /**
@@ -62,7 +64,7 @@ namespace talcs {
         if (d->copyOnly)
             return;
         d->resampler->clear();
-        d->outputBuffer.clear();
+        std::fill(d->outputBuffer.begin(), d->outputBuffer.end(), 0);
         d->outputBufferOffset = 0;
         d->processedInputLength = 0;
         d->processedOutputLength = 0;
@@ -91,6 +93,9 @@ namespace talcs {
         // If ratio is 1.0 then just copy.
         if (d->copyOnly)
             return read(buffer, length);
+
+        if (length == 0)
+            return;
 
 
         for (int i = 0; i < 2; i++) {
