@@ -5,3 +5,5 @@ add_subdirectory(BufferingAudioSource)
 add_subdirectory(IMixer)
 
 add_subdirectory(AudioSourceClipSeries)
+
+add_subdirectory(AudioResampler)
