@@ -21,8 +21,10 @@
 #define TALCS_ICLIPSERIES_P_H
 
 #include <set>
+#include <atomic>
 
 #include <QHash>
+#include <QSet>
 #include <QScopedPointer>
 
 #include <TalcsCore/IClipSeries.h>
@@ -53,22 +55,30 @@ namespace talcs {
 
         using ClipIntervalTree = lib_interval_tree::interval_tree<ClipInterval>;
         ClipIntervalTree clips;
-        QHash<void *, qint64> clipPositionDict;
-        QHash<void *, qint64> clipStartPosDict;
+        QHash<qint64, qint64> clipPositionDict;
+        QHash<qint64, qint64> clipStartPosDict;
+        QHash<qint64, void *> clipContentDict;
+        QHash<void *, qint64> clipKeyDict;
+        QSet<void *> clipContentSet;
         std::set<qint64> endSet;
+        std::atomic<qint64> clipViewKeyCounter = 0x10000;
 
-        ClipViewImpl insertClip(void *content, qint64 position, qint64 startPos, qint64 length);
-        void setClipStartPos(const ClipViewImpl &clipViewImpl, qint64 startPos);
-        bool setClipRange(const ClipViewImpl &clipViewImpl, qint64 position, qint64 length);
-        ClipViewImpl setClipContent(const ClipViewImpl &clipViewImpl, void *content);
+        inline qint64 nextKey() {
+            return clipViewKeyCounter++;
+        }
 
-        ClipViewImpl findClipByContent(void *content) const;
-        void findClipByPosition(qint64 position, const std::function<bool(const ClipViewImpl &)> &onFind) const;
+        ClipViewPrivate::ClipViewImpl insertClip(void *content, qint64 position, qint64 startPos, qint64 length);
+        void setClipStartPos(const ClipViewPrivate::ClipViewImpl &clipViewImpl, qint64 startPos);
+        bool setClipRange(const ClipViewPrivate::ClipViewImpl &clipViewImpl, qint64 position, qint64 length);
+        bool setClipContent(const ClipViewPrivate::ClipViewImpl &clipViewImpl, void *content);
 
-        void removeClip(const ClipViewImpl &clipViewImpl);
+        ClipViewPrivate::ClipViewImpl findClipByContent(void *content) const;
+        void findClipByPosition(qint64 position, const std::function<bool(const ClipViewPrivate::ClipViewImpl &)> &onFind) const;
+
+        void removeClip(const ClipViewPrivate::ClipViewImpl &clipViewImpl);
         void removeAllClips();
 
-        QList<ClipViewImpl> clipViewImplList() const;
+        QList<ClipViewPrivate::ClipViewImpl> clipViewImplList() const;
 
         qint64 effectiveLength() const;
 

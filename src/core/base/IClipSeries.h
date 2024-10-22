@@ -26,34 +26,35 @@ namespace talcs {
 
     class IClipSeriesPrivate;
 
-    class TALCSCORE_EXPORT ClipViewImpl {
-    public:
-        ClipViewImpl();
+    namespace ClipViewPrivate {
+        class TALCSCORE_EXPORT ClipViewImpl {
+        public:
+            ClipViewImpl();
 
-        bool isValid() const;
+            bool isValid() const;
 
-        bool isNull() const {
-            return !static_cast<bool>(m_content);
-        }
+            bool isNull() const {
+                return !k;
+            }
 
-        void * content() const;
+            void *content() const;
 
-        qint64 startPos() const;
+            qint64 startPos() const;
 
-        qint64 position() const;
+            qint64 position() const;
 
-        qint64 length() const;
+            qint64 length() const;
 
-        template<class ClipView>
-        ClipViewImpl(const ClipView &clipView) : ClipViewImpl(clipView.m_impl) {
-        }
+            template<class ClipView>
+            ClipViewImpl(const ClipView &clipView) : ClipViewImpl(clipView.m_impl) {
+            }
 
-    private:
-        friend class IClipSeriesPrivate;
-        explicit ClipViewImpl(const IClipSeriesPrivate *d, void *content);
-        const IClipSeriesPrivate *d;
-        void *m_content;
-    };
+            explicit ClipViewImpl(const IClipSeriesPrivate *d, qint64 k);
+
+            const IClipSeriesPrivate *d;
+            qint64 k;
+        };
+    }
 
     template <class T>
     class IClipSeries {
@@ -62,7 +63,7 @@ namespace talcs {
         public:
             ClipView() = default;
 
-            ClipView(const ClipViewImpl &impl) : m_impl(impl) {
+            ClipView(const ClipViewPrivate::ClipViewImpl &impl) : m_impl(impl) {
             }
 
             bool isValid() const {
@@ -97,14 +98,14 @@ namespace talcs {
                 return content() != other.content();
             }
         private:
-            friend class ClipViewImpl;
-            ClipViewImpl m_impl;
+            friend class ClipViewPrivate::ClipViewImpl;
+            ClipViewPrivate::ClipViewImpl m_impl;
         };
 
         virtual ClipView insertClip(T *content, qint64 position, qint64 startPos, qint64 length) = 0;
         virtual void setClipStartPos(const ClipView &clip, qint64 startPos) = 0;
         virtual bool setClipRange(const ClipView &clip, qint64 position, qint64 length) = 0;
-        virtual ClipView setClipContent(const ClipView &clip, T *content) = 0;
+        virtual bool setClipContent(const ClipView &clip, T *content) = 0;
 
         virtual ClipView findClip(T *content) const = 0;
         virtual QList<ClipView> findClip(qint64 position) const = 0;

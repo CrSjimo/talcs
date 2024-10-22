@@ -134,13 +134,12 @@ namespace talcs {
         return d->setClipRange(clip, position, length);
     }
 
-    AudioSourceClipSeries::ClipView
-    AudioSourceClipSeries::setClipContent(const AudioSourceClipSeries::ClipView &clip,
+    bool AudioSourceClipSeries::setClipContent(const AudioSourceClipSeries::ClipView &clip,
                                           PositionableAudioSource *content) {
         Q_D(AudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
         if (!d->preInsertClip(content))
-            return {};
+            return false;
         return d->setClipContent(clip, content);
     }
 
@@ -153,7 +152,7 @@ namespace talcs {
     QList<AudioSourceClipSeries::ClipView> AudioSourceClipSeries::findClip(qint64 position) const {
         Q_D(const AudioSourceClipSeries);
         QList<ClipView> list;
-        d->findClipByPosition(position, [&](const ClipViewImpl &clipView) {
+        d->findClipByPosition(position, [&](const ClipViewPrivate::ClipViewImpl &clipView) {
             list.append(clipView);
             return true;
         });

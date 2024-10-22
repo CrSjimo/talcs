@@ -21,100 +21,109 @@
 #include "IClipSeries_p.h"
 
 namespace talcs {
-    ClipViewImpl::ClipViewImpl() : d(nullptr), m_content(nullptr) {
 
+    namespace ClipViewPrivate {
+        ClipViewImpl::ClipViewImpl() : d(nullptr), k(0) {
+
+        }
+
+        bool ClipViewImpl::isValid() const {
+            return k && d->clipContentDict.contains(k);
+        }
+
+        void *ClipViewImpl::content() const {
+            Q_ASSERT(isValid());
+            return d->clipContentDict.value(k);
+        }
+
+        qint64 ClipViewImpl::startPos() const {
+            Q_ASSERT(isValid());
+            return d->clipStartPosDict.value(k);
+        }
+
+        qint64 ClipViewImpl::position() const {
+            Q_ASSERT(isValid());
+            return d->clipPositionDict.value(k);
+        }
+
+        qint64 ClipViewImpl::length() const {
+            Q_ASSERT(isValid());
+            return d->intervalLookup(position(), content()).length();
+        }
+
+        ClipViewImpl::ClipViewImpl(const IClipSeriesPrivate *d, qint64 k) : d(d), k(k) {
+
+        }
     }
 
-    bool ClipViewImpl::isValid() const {
-        return m_content && d->clipPositionDict.contains(m_content);
-    }
-
-    void *ClipViewImpl::content() const {
-        return m_content;
-    }
-
-    qint64 ClipViewImpl::startPos() const {
-        Q_ASSERT(isValid());
-        return d->clipStartPosDict.value(m_content);
-    }
-
-    qint64 ClipViewImpl::position() const {
-        Q_ASSERT(isValid());
-        return d->clipPositionDict.value(m_content);
-    }
-
-    qint64 ClipViewImpl::length() const {
-        Q_ASSERT(isValid());
-        return d->intervalLookup(position(), content()).length();
-    }
-
-    ClipViewImpl::ClipViewImpl(const IClipSeriesPrivate *d, void *content) : d(d), m_content(content) {
-
-    }
-
-    ClipViewImpl IClipSeriesPrivate::insertClip(void *content, qint64 position, qint64 startPos, qint64 length) {
-        if (clipPositionDict.contains(content))
+    ClipViewPrivate::ClipViewImpl IClipSeriesPrivate::insertClip(void *content, qint64 position, qint64 startPos, qint64 length) {
+        if (clipContentSet.contains(content))
             return {};
         auto interval = ClipInterval(content, position, length);
         clips.insert(interval);
-        clipPositionDict.insert(content, position);
-        clipStartPosDict.insert(content, startPos);
+        auto k = nextKey();
+        clipPositionDict.insert(k, position);
+        clipStartPosDict.insert(k, startPos);
+        clipContentDict.insert(k, content);
+        clipKeyDict.insert(content, k);
+        clipContentSet.insert(content);
         endSet.insert(position + length);
-        return ClipViewImpl(this, content);
+        return ClipViewPrivate::ClipViewImpl(this, k);
     }
 
-    void IClipSeriesPrivate::setClipStartPos(const ClipViewImpl &clipViewImpl, qint64 startPos) {
+    void IClipSeriesPrivate::setClipStartPos(const ClipViewPrivate::ClipViewImpl &clipViewImpl, qint64 startPos) {
         Q_ASSERT(clipViewImpl.isValid());
-        clipStartPosDict[clipViewImpl.content()] = startPos;
+        clipStartPosDict[clipViewImpl.k] = startPos;
     }
 
-    bool IClipSeriesPrivate::setClipRange(const ClipViewImpl &clipViewImpl, qint64 position, qint64 length) {
-        auto it = findClipIterator(clipPositionDict.value(clipViewImpl.content()), clipViewImpl.content());
+    bool IClipSeriesPrivate::setClipRange(const ClipViewPrivate::ClipViewImpl &clipViewImpl, qint64 position, qint64 length) {
+        auto it = findClipIterator(clipPositionDict.value(clipViewImpl.k), clipViewImpl.content());
         auto oldPosition = it->interval().position();
         auto oldLength = it->interval().length();
         clips.erase(it);
         auto interval = IClipSeriesPrivate::ClipInterval(clipViewImpl.content(), position, length);
         clips.insert(interval);
-        clipPositionDict[clipViewImpl.content()] = position;
+        clipPositionDict[clipViewImpl.k] = position;
         endSet.erase(oldPosition + oldLength);
         endSet.insert(position + length);
         return true;
     }
 
-    ClipViewImpl IClipSeriesPrivate::setClipContent(const ClipViewImpl &clipViewImpl, void *content) {
+    bool IClipSeriesPrivate::setClipContent(const ClipViewPrivate::ClipViewImpl &clipViewImpl, void *content) {
         if (content == clipViewImpl.content())
-            return clipViewImpl;
-        if (clipPositionDict.contains(content))
+            return true;
+        if (clipContentSet.contains(content))
             return {};
-        auto position = clipViewImpl.position();
-        auto startPos = clipViewImpl.startPos();
-        auto length = clipViewImpl.length();
-        removeClip(clipViewImpl);
-        auto ret = insertClip(content, position, startPos, length);
-        Q_ASSERT(!ret.isNull());
-        return ret;
+        auto it = findClipIterator(clipViewImpl.position(), clipViewImpl.content());
+        auto newInterval = ClipInterval(content, clipViewImpl.position(), it.interval().length());
+        clips.erase(it);
+        clipContentSet.remove(clipViewImpl.content());
+        clipKeyDict.remove(clipViewImpl.content());
+        clipContentDict[clipViewImpl.k] = content;
+        clipKeyDict[content] = clipViewImpl.k;
+        clipContentSet.insert(content);
+        clips.insert(newInterval);
+        return true;
     }
 
-    ClipViewImpl IClipSeriesPrivate::findClipByContent(void *content) const {
-        auto ret = ClipViewImpl(this, content);
-        if (!ret.isValid())
-            ret.m_content = nullptr;
-        return ret;
+    ClipViewPrivate::ClipViewImpl IClipSeriesPrivate::findClipByContent(void *content) const {
+        return ClipViewPrivate::ClipViewImpl(this, clipKeyDict.value(content));
     }
 
-    void IClipSeriesPrivate::findClipByPosition(qint64 position, const std::function<bool(const ClipViewImpl &)> &onFind) const {
+    void IClipSeriesPrivate::findClipByPosition(qint64 position, const std::function<bool(const ClipViewPrivate::ClipViewImpl &)> &onFind) const {
         clips.overlap_find_all({nullptr, position, 1}, [&](const ClipIntervalTree::const_iterator &it) {
-            return onFind(ClipViewImpl(this, it->interval().content()));
+            return onFind(ClipViewPrivate::ClipViewImpl(this, clipKeyDict.value(it->interval().content())));
         });
     }
 
-    void IClipSeriesPrivate::removeClip(const ClipViewImpl &clipViewImpl) {
+    void IClipSeriesPrivate::removeClip(const ClipViewPrivate::ClipViewImpl &clipViewImpl) {
         auto pos = clipViewImpl.position();
         auto it = findClipIterator(pos, clipViewImpl.content());
         auto endPos = pos + it->interval().length();
         clips.erase(it);
-        clipPositionDict.remove(clipViewImpl.content());
-        clipStartPosDict.remove(clipViewImpl.content());
+        clipPositionDict.remove(clipViewImpl.k);
+        clipStartPosDict.remove(clipViewImpl.k);
+        clipContentSet.remove(clipContentDict.take(clipViewImpl.k));
         endSet.erase(endPos);
     }
 
@@ -122,13 +131,15 @@ namespace talcs {
         clips.clear();
         clipPositionDict.clear();
         clipStartPosDict.clear();
+        clipContentDict.clear();
+        clipContentSet.clear();
         endSet.clear();
     }
 
-    QList<ClipViewImpl> IClipSeriesPrivate::clipViewImplList() const {
-        QList<ClipViewImpl> list;
+    QList<ClipViewPrivate::ClipViewImpl> IClipSeriesPrivate::clipViewImplList() const {
+        QList<ClipViewPrivate::ClipViewImpl> list;
         for (auto p = clips.cbegin(); p != clips.cend(); p++) {
-            list.append(ClipViewImpl(this, p->interval().content()));
+            list.append(ClipViewPrivate::ClipViewImpl(this, clipKeyDict.value(p->interval().content())));
         }
         return list;
     }
@@ -241,17 +252,14 @@ namespace talcs {
      * @fn bool IClipSeries::setClipRange(const IClipSeries::ClipView &clip, qint64 position, qint64 length)
      * Sets the clip's position in the series and length.
      *
-     * If it fails (due to some reasons), null clip view will be returned.
+     * If it fails (due to some reasons), false will be returned.
      */
 
     /**
-     * @fn IClipSeries::ClipView IClipSeries::setClipContent(const IClipSeries::ClipView &clip, T *content)
+     * @fn bool IClipSeries::setClipContent(const IClipSeries::ClipView &clip, T *content)
      * Sets the content of a clip
      *
-     * After setting, the old clip view becomes invalid.
-     *
-     * If it fails (due to duplicated content or other reasons), null clip view will be returned and the old clip view
-     * remains valid.
+     * If it fails (due to duplicated content or other reasons), false will be returned
      */
 
     /**

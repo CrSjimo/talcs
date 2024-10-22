@@ -203,30 +203,29 @@ namespace talcs {
     FutureAudioSourceClipSeries::setClipRange(const IClipSeries<FutureAudioSource>::ClipView &clip, qint64 position,
                                               qint64 length) {
         Q_D(FutureAudioSourceClipSeries);
-        auto content = ClipViewImpl(clip).content();
-        auto oldInterval = d->intervalLookup(d->clipPositionDict.value(content), content);
-        if (d->setClipRange(ClipViewImpl(clip), position, length)) {
+        auto k = ClipViewPrivate::ClipViewImpl(clip).k;
+        auto oldInterval = d->intervalLookup(d->clipPositionDict.value(k), clip.content());
+        if (d->setClipRange(ClipViewPrivate::ClipViewImpl(clip), position, length)) {
             d->postRemoveClip(oldInterval, false);
-            d->postAddClip({content, position, length});
+            d->postAddClip({clip.content(), position, length});
             return true;
         }
         return false;
     }
 
-    FutureAudioSourceClipSeries::ClipView
-    FutureAudioSourceClipSeries::setClipContent(const FutureAudioSourceClipSeries::ClipView &clip,
+    bool FutureAudioSourceClipSeries::setClipContent(const FutureAudioSourceClipSeries::ClipView &clip,
                                                 FutureAudioSource *content) {
         Q_D(FutureAudioSourceClipSeries);
         if (content == clip.content())
-            return clip;
+            return true;
         QMutexLocker locker(&d->mutex);
         if (!d->preInsertClip(content))
-            return {};
+            return false;
         auto oldContent = clip.content();
         auto ret = d->setClipContent(clip, content);
-        if (!ret.isNull()) {
-            d->postRemoveClip({oldContent, ret.position(), ret.length()}, false);
-            d->postAddClip({content, ret.position(), ret.length()});
+        if (ret) {
+            d->postRemoveClip({oldContent, clip.position(), clip.length()}, false);
+            d->postAddClip({content, clip.position(), clip.length()});
             d->checkAndNotify(FutureAudioSourceClipSeriesPrivate::Resume);
         }
         return ret;
@@ -240,7 +239,7 @@ namespace talcs {
     QList<FutureAudioSourceClipSeries::ClipView> FutureAudioSourceClipSeries::findClip(qint64 position) const {
         Q_D(const FutureAudioSourceClipSeries);
         QList<ClipView> list;
-        d->findClipByPosition(position, [&](const ClipViewImpl &clipView) {
+        d->findClipByPosition(position, [&](const ClipViewPrivate::ClipViewImpl &clipView) {
             list.append(clipView);
             return true;
         });
