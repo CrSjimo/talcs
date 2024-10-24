@@ -166,6 +166,11 @@ namespace talcs {
             return false;
         }
         d->openMode = openMode;
+
+        // FIXME: libsndfile cannot handle FLAC overflowed integer. Enable auto clip by default.
+        if (format() | SF_FORMAT_FLAC)
+            setAutoClip(true);
+
         clearErrorString();
         return true;
     }
