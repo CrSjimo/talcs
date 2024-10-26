@@ -18,6 +18,9 @@
  ******************************************************************************/
 
 #include "FormatManager.h"
+
+#include <QFileInfo>
+
 #include "FormatManager_p.h"
 
 #include <set>
@@ -70,17 +73,28 @@ namespace talcs {
         return d->extensionHintDict.value(extension);
     }
 
-    talcs::AbstractAudioFormatIO *FormatManager::getFormatLoad(const QString &filename, const QVariant &userData) const {
+    talcs::AbstractAudioFormatIO *FormatManager::getFormatLoad(const QString &filename, const QVariant &userData, const QString &entryClassName) const {
         Q_D(const FormatManager);
-        auto extension = (filename + ".").split(".").last();
-        auto hintedEntry = extension.isEmpty() ? nullptr : hintFromExtension(extension);
-        if (hintedEntry) {
-            if (auto io = hintedEntry->getFormatLoad(filename, userData))
-                return io;
+        auto entries = d->entries;
+        {
+            auto extension = QFileInfo(filename).suffix();
+            auto hintedEntry = extension.isEmpty() ? nullptr : hintFromExtension(extension);
+            if (hintedEntry) {
+                entries.removeOne(hintedEntry);
+                entries.prepend(hintedEntry);
+            }
         }
-        for (auto entry : entries()) {
-            if (entry == hintedEntry)
-                continue;
+        if (!entryClassName.isEmpty()) {
+            auto specifiedEntry = std::find_if(d->entries.cbegin(), d->entries.cend(), [entryClassName](FormatEntry *entry) {
+                return entry->metaObject()->className() == entryClassName;
+            });
+            if (specifiedEntry != d->entries.cend()) {
+                auto entry = *specifiedEntry;
+                entries.removeOne(entry);
+                entries.prepend(entry);
+            }
+        }
+        for (auto entry : entries) {
             if (auto io = entry->getFormatLoad(filename, userData))
                 return io;
         }

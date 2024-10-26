@@ -22,6 +22,7 @@
 
 #include <QScopedPointer>
 
+#include <TalcsCore/ErrorStringProvider.h>
 #include <TalcsFormat/AbstractAudioFormatIO.h>
 
 class QFileDevice;
@@ -30,7 +31,7 @@ namespace talcs {
 
     class WavpackAudioFormatIOPrivate;
 
-    class TALCSFORMAT_EXPORT WavpackAudioFormatIO : public AbstractAudioFormatIO {
+    class TALCSFORMAT_EXPORT WavpackAudioFormatIO : public AbstractAudioFormatIO, public ErrorStringProvider {
         Q_DECLARE_PRIVATE(WavpackAudioFormatIO)
     public:
         explicit WavpackAudioFormatIO(QFileDevice *stream = nullptr, QFileDevice *corrStream = nullptr);

@@ -17,42 +17,21 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_FORMATMANAGER_H
-#define TALCS_FORMATMANAGER_H
+#ifndef TALCS_TALCSWIDGETSGLOBAL_H
+#define TALCS_TALCSWIDGETSGLOBAL_H
 
-#include <TalcsFormat/TalcsFormatGlobal.h>
+#include <QtGlobal>
 
-#include <QObject>
-#include <QVariant>
+#ifndef TALCSWIDGETS_EXPORT
+#  ifdef TALCSWIDGETS_STATIC
+#    define TALCSWIDGETS_EXPORT
+#  else
+#    ifdef TALCSWIDGETS_LIBRARY
+#      define TALCSWIDGETS_EXPORT Q_DECL_EXPORT
+#    else
+#      define TALCSWIDGETS_EXPORT Q_DECL_IMPORT
+#    endif
+#  endif
+#endif
 
-namespace talcs {
-
-    class FormatEntry;
-
-    class AbstractAudioFormatIO;
-
-    class FormatManagerPrivate;
-
-    class TALCSFORMAT_EXPORT FormatManager : public QObject {
-        Q_OBJECT
-        Q_DECLARE_PRIVATE(FormatManager)
-    public:
-        explicit FormatManager(QObject *parent = nullptr);
-        ~FormatManager() override;
-
-        void addEntry(FormatEntry *entry);
-        QList<FormatEntry *> entries() const;
-        QStringList extensionHints() const;
-        QStringList filters() const;
-
-        FormatEntry *hintFromExtension(const QString &extension) const;
-
-        talcs::AbstractAudioFormatIO *getFormatLoad(const QString &filename, const QVariant &userData = {}, const QString &entryClassName = {}) const;
-
-    private:
-        QScopedPointer<FormatManagerPrivate> d_ptr;
-    };
-
-} // talcs
-
-#endif //TALCS_FORMATMANAGER_H
+#endif //TALCS_TALCSWIDGETSGLOBAL_H

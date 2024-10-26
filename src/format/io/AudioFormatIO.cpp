@@ -77,13 +77,14 @@ namespace talcs {
      *
      * @see AudioFormatIO()
      */
-    void AudioFormatIO::setStream(QIODevice *stream) {
+    void AudioFormatIO::setStream(QIODevice *stream, qint64 offset) {
         Q_D(AudioFormatIO);
         if (d->openMode) {
             qWarning() << "AudioFormatIO: Cannot set stream when AudioFormatIO is open.";
             return;
         }
         d->stream = stream;
+        d->streamOffset = offset;
     }
 
     /**
@@ -95,13 +96,15 @@ namespace talcs {
     }
 
     int64_t AudioFormatIOPrivate::sfVioGetFilelen() const {
-        return stream->size();
+        return stream->size() - streamOffset;
     }
     int64_t AudioFormatIOPrivate::sfVioSeek(int64_t offset, int whence) const {
         if (whence == SF_SEEK_CUR)
             offset += stream->pos();
         else if (whence == SF_SEEK_END)
             offset += stream->size();
+        else if (whence == SF_SEEK_SET)
+            offset += streamOffset;
         if (offset != stream->pos()) {
             if (!stream->seek(offset))
                 return -1;
@@ -115,7 +118,7 @@ namespace talcs {
         return stream->write(static_cast<const char *>(ptr), count);
     }
     int64_t AudioFormatIOPrivate::sfVioTell() const {
-        return stream->pos();
+        return stream->pos() - streamOffset;
     }
     static SF_VIRTUAL_IO sfVio = {
         [](void *d) { return static_cast<AudioFormatIOPrivate *>(d)->sfVioGetFilelen(); },

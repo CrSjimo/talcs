@@ -135,6 +135,10 @@ if(TALCS_GUI)
     add_subdirectory(gui)
 endif()
 
+if(TALCS_WIDGETS)
+    add_subdirectory(widgets)
+endif()
+
 if(TALCS_INSTALL)
     # Add install target
     set(_install_dir ${CMAKE_INSTALL_LIBDIR}/cmake/${TALCS_INSTALL_NAME})

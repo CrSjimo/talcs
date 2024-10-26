@@ -21,6 +21,7 @@ option(TALCS_REMOTE "Build talcs::Remote library" OFF)
 option(TALCS_JUCE_ADAPTER "Build talcs::JuceAdapter library" OFF)
 option(TALCS_DSPX "Build talcs::Dspx library" OFF)
 option(TALCS_GUI "Build talcs::Gui library" OFF)
+option(TALCS_WIDGETS "Build talcs::Widgets library" OFF)
 
 
 # ----------------------------------
@@ -117,6 +118,9 @@ if(TALCS_BUILD_DOCUMENTATIONS)
     endif()
     if(TALCS_GUI)
         list(APPEND _doc_targets TalcsGui)
+    endif()
+    if(TALCS_WIDGETS)
+        list(APPEND _doc_targets TalcsWidgets)
     endif()
 
     qm_import(Doxygen)

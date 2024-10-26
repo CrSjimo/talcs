@@ -154,6 +154,7 @@ namespace talcs {
             auto ctx = WavpackOpenFileInputEx64(&wpStreamReader, d->stream, d->corrStream, err, flags, 0);
             if (!ctx) {
                 qWarning() << "WavpackAudioFormatIO: Failed to open" << err;
+                setErrorString(err);
                 return false;
             }
             d->context = ctx;
@@ -174,6 +175,7 @@ namespace talcs {
             d->context = nullptr;
         }
         d->openMode = NotOpen;
+        clearErrorString();
     }
 
     int WavpackAudioFormatIO::format() const {

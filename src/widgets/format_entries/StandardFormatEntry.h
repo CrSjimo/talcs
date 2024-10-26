@@ -17,42 +17,32 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_FORMATMANAGER_H
-#define TALCS_FORMATMANAGER_H
+#ifndef TALCS_STANDARDFORMATENTRY_H
+#define TALCS_STANDARDFORMATENTRY_H
 
-#include <TalcsFormat/TalcsFormatGlobal.h>
-
-#include <QObject>
-#include <QVariant>
+#include <TalcsFormat/FormatEntry.h>
+#include <TalcsWidgets/TalcsWidgetsGlobal.h>
 
 namespace talcs {
 
-    class FormatEntry;
+    class StandardFormatEntryPrivate;
 
-    class AbstractAudioFormatIO;
-
-    class FormatManagerPrivate;
-
-    class TALCSFORMAT_EXPORT FormatManager : public QObject {
+    class TALCSWIDGETS_EXPORT StandardFormatEntry : public FormatEntry {
         Q_OBJECT
-        Q_DECLARE_PRIVATE(FormatManager)
+        Q_DECLARE_PRIVATE(StandardFormatEntry)
     public:
-        explicit FormatManager(QObject *parent = nullptr);
-        ~FormatManager() override;
+        explicit StandardFormatEntry(QObject *parent = nullptr);
+        ~StandardFormatEntry() override;
 
-        void addEntry(FormatEntry *entry);
-        QList<FormatEntry *> entries() const;
-        QStringList extensionHints() const;
-        QStringList filters() const;
-
-        FormatEntry *hintFromExtension(const QString &extension) const;
-
-        talcs::AbstractAudioFormatIO *getFormatLoad(const QString &filename, const QVariant &userData = {}, const QString &entryClassName = {}) const;
+        QStringList filters() const override;
+        QStringList extensionHints() const override;
+        AbstractAudioFormatIO *getFormatOpen(const QString &filename, QVariant &userData, QWidget *win) override;
+        AbstractAudioFormatIO *getFormatLoad(const QString &filename, const QVariant &userData) override;
 
     private:
-        QScopedPointer<FormatManagerPrivate> d_ptr;
+        QScopedPointer<StandardFormatEntryPrivate> d_ptr;
     };
 
-} // talcs
+}
 
-#endif //TALCS_FORMATMANAGER_H
+#endif //TALCS_STANDARDFORMATENTRY_H

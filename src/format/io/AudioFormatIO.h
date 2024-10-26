@@ -41,7 +41,7 @@ namespace talcs {
 
         ~AudioFormatIO() override;
 
-        void setStream(QIODevice *stream);
+        void setStream(QIODevice *stream, qint64 offset = 0);
         QIODevice *stream() const;
 
         enum MajorFormat {

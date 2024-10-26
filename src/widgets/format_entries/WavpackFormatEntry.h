@@ -17,42 +17,26 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_FORMATMANAGER_H
-#define TALCS_FORMATMANAGER_H
+#ifndef TALCS_WAVPACKFORMATENTRY_H
+#define TALCS_WAVPACKFORMATENTRY_H
 
-#include <TalcsFormat/TalcsFormatGlobal.h>
-
-#include <QObject>
-#include <QVariant>
+#include <TalcsFormat/FormatEntry.h>
+#include <TalcsWidgets/TalcsWidgetsGlobal.h>
 
 namespace talcs {
 
-    class FormatEntry;
+class TALCSWIDGETS_EXPORT WavpackFormatEntry : public FormatEntry {
+    Q_OBJECT
+public:
+    explicit WavpackFormatEntry(QObject *parent = nullptr);
+    ~WavpackFormatEntry() override;
 
-    class AbstractAudioFormatIO;
-
-    class FormatManagerPrivate;
-
-    class TALCSFORMAT_EXPORT FormatManager : public QObject {
-        Q_OBJECT
-        Q_DECLARE_PRIVATE(FormatManager)
-    public:
-        explicit FormatManager(QObject *parent = nullptr);
-        ~FormatManager() override;
-
-        void addEntry(FormatEntry *entry);
-        QList<FormatEntry *> entries() const;
-        QStringList extensionHints() const;
-        QStringList filters() const;
-
-        FormatEntry *hintFromExtension(const QString &extension) const;
-
-        talcs::AbstractAudioFormatIO *getFormatLoad(const QString &filename, const QVariant &userData = {}, const QString &entryClassName = {}) const;
-
-    private:
-        QScopedPointer<FormatManagerPrivate> d_ptr;
-    };
+    QStringList filters() const override;
+    QStringList extensionHints() const override;
+    AbstractAudioFormatIO * getFormatOpen(const QString &filename, QVariant &userData, QWidget *win) override;
+    AbstractAudioFormatIO * getFormatLoad(const QString &filename, const QVariant &userData) override;
+};
 
 } // talcs
 
-#endif //TALCS_FORMATMANAGER_H
+#endif //TALCS_WAVPACKFORMATENTRY_H
