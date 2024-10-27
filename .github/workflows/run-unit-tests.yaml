@@ -38,6 +38,7 @@ jobs:
             -DTALCS_REMOTE:BOOL=ON `
             -DTALCS_DSPX:BOOL=ON `
             -DTALCS_GUI:BOOL=ON `
+            -DTALCS_WIDGETS:BOOL=ON `
             -DTALCS_ASIOSDK_DIR=${{ env.ASIOSDK_DIR }}
           cmake --build build
           $binaryDir = (Get-ChildItem -Path build -Filter out-* -Directory)[0]
