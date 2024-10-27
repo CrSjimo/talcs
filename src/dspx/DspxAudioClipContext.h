@@ -29,6 +29,7 @@ namespace talcs {
 
     class PositionableMixerAudioSource;
     class BufferingAudioSource;
+    class AbstractAudioFormatIO;
 
     class DspxTrackContext;
 
@@ -56,8 +57,8 @@ namespace talcs {
         void setClipLen(int tick);
         int clipLen() const;
 
-        bool setPathLoad(const QString &path, const QVariant &data = {});
-        bool setPathOpen(const QString &path, const QString &selectedFilter, QVariant &data, QWidget *win);
+        bool setPathLoad(const QString &path, const QVariant &data = {}, const QString &entryClassName = {});
+        bool setPathOpen(const QString &path, AbstractAudioFormatIO *io);
         QString path() const;
 
         void updatePosition();
