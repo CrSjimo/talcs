@@ -1,6 +1,3 @@
 [submodule "scripts/vcpkg"]
 	path = scripts/vcpkg
 	url = https://github.com/SineStriker/vcpkg-overlay.git
-[submodule "lib/r8brain/r8brain-free-src"]
-	path = lib/r8brain/r8brain-free-src
-	url = https://github.com/avaneev/r8brain-free-src
