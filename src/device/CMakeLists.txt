@@ -26,6 +26,14 @@ else()
     list(FILTER _src EXCLUDE REGEX SDL)
 endif()
 
+if(TALCS_DEVICE_ENABLE_PORTAUDIO)
+    find_package(portaudio REQUIRED)
+    list(APPEND _links_private portaudio)
+    list(APPEND _defines TALCS_USE_FEATURE_PORTAUDIO)
+else()
+    list(FILTER _src EXCLUDE REGEX PortAudio)
+endif()
+
 talcs_add_library(${PROJECT_NAME} AUTOGEN
     SOURCES ${_src}
     LINKS talcs::Core

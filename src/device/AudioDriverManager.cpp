@@ -30,6 +30,10 @@
 #    include <TalcsDevice/private/ASIOAudioDriver_p.h>
 #endif
 
+#ifdef TALCS_USE_FEATURE_PORTAUDIO
+#    include <TalcsDevice/private/PortAudioAudioDriver_p.h>
+#endif
+
 namespace talcs {
 
     /**
@@ -124,6 +128,16 @@ namespace talcs {
      */
     AudioDriverManager *AudioDriverManager::createBuiltInDriverManager(QObject *parent) {
         auto drvMgr = new AudioDriverManager(parent);
+#ifdef TALCS_USE_FEATURE_PORTAUDIO
+        if (PortAudioAudioDriver::globalInitialize()) {
+            for (auto drv : PortAudioAudioDriver::getDrivers()) {
+                drvMgr->addAudioDriver(drv);
+            }
+            connect(drvMgr, &QObject::destroyed, []() { PortAudioAudioDriver::globalFinalize(); });
+        } else {
+            qWarning() << "AudioDriverManager: Failed to initialize PortAudio drivers.";
+        }
+#endif
 #ifdef TALCS_USE_FEATURE_SDL
         for (auto drv : SDLAudioDriver::getDrivers()) {
             drvMgr->addAudioDriver(drv);

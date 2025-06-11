@@ -27,11 +27,13 @@ namespace talcs {
     /**
      * @class SDLAudioDriverDisplayNameHelper
      * @brief Helpful function for getting the display name of an SDL audio driver.
+     * @deprecated
      */
 
     /**
      * Gets the display name of an SDL audio driver.
      * @param driverName raw driver name
+     * @deprecated
      */
     QString SDLAudioDriverDisplayNameHelper::getDisplayName(const QString &driverName) {
         static QHash<QString, QString> map = {

@@ -74,6 +74,7 @@ namespace talcs {
         QScopedPointer<SDLEventPoller> eventPoller;
         QThread *eventPollerThread;
         QMap<quint32, SDLAudioDevice *> openedDevices;
+        QString internalName;
 
         void handleSDLEvent(const QByteArray &sdlEventData);
         void handleDeviceRemoved(quint32 devId);

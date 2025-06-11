@@ -26,7 +26,7 @@ namespace talcs {
 
     class TALCSDEVICE_EXPORT SDLAudioDriverDisplayNameHelper {
     public:
-        static QString getDisplayName(const QString &driverName);
+        [[deprecated]] static QString getDisplayName(const QString &driverName);
     };
 
 } // talcs

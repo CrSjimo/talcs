@@ -28,6 +28,43 @@
 
 namespace talcs {
 
+    static QString getDisplayName(const QString &driverName) {
+        static QHash<QString, QString> map = {
+                {"pipewire",    "Pipewire (SDL)"                   },
+                {"pulseaudio",  "PulseAudio (SDL)"                 },
+                {"alsa",        "ALSA PCM audio (SDL)"             },
+                {"jack",        "JACK Audio Connection Kit (SDL)"  },
+                {"sndio",       "OpenBSD sndio (SDL)"              },
+                {"netbsd",      "NetBSD audio (SDL)"               },
+                {"dsp",         "OSS /dev/dsp standard audio (SDL)"},
+                {"qsa",         "QNX QSA Audio (SDL)"              },
+                {"audio",       "UNIX /dev/audio interface (SDL)"  },
+                {"arts",        "Analog RealTime Synthesizer (SDL)"},
+                {"esd",         "Enlightened Sound Daemon (SDL)"   },
+                {"nacl",        "SDL NaCl Audio Driver (SDL)"      },
+                {"nas",         "Network Audio System (SDL)"       },
+                {"wasapi",      "WASAPI (SDL)"                     },
+                {"directsound", "DirectSound (SDL)"                },
+                {"winmm",       "Windows Waveform Audio (SDL)"     },
+                {"paud",        "AIX Paudio (SDL)"                 },
+                {"haiku",       "Haiku BSoundPlayer (SDL)"         },
+                {"coreaudio",   "CoreAudio (SDL)"                  },
+                {"disk",        "direct-to-disk audio (SDL)"       },
+                {"dummy",       "SDL dummy audio driver (SDL)"     },
+                {"fusionsound", "FusionSound (SDL)"                },
+                {"AAudio",      "AAudio audio driver (SDL)"        },
+                {"openslES",    "opensl ES audio driver (SDL)"     },
+                {"android",     "SDL Android audio driver (SDL)"   },
+                {"ps2",         "PS2 audio driver (SDL)"           },
+                {"psp",         "PSP audio driver (SDL)"           },
+                {"vita",        "VITA audio driver (SDL)"          },
+                {"n3ds",        "SDL N3DS audio driver (SDL)"      },
+                {"emscripten",  "SDL emscripten audio driver (SDL)"},
+                {"DART",        "OS/2 DART (SDL)"                  },
+        };
+        return map.value(driverName, driverName);
+    }
+
     SDLAudioDriver::SDLAudioDriver(QObject * parent) : SDLAudioDriver(*new SDLAudioDriverPrivate, parent) {
         Q_D(SDLAudioDriver);
         d->eventPoller.reset(new SDLEventPoller);
@@ -48,7 +85,7 @@ namespace talcs {
 
     bool SDLAudioDriver::initialize() {
         Q_D(SDLAudioDriver);
-        if (SDL_Init(SDL_INIT_AUDIO) == 0 && SDL_AudioInit(name().toLocal8Bit()) == 0) {
+        if (SDL_Init(SDL_INIT_AUDIO) == 0 && SDL_AudioInit(d->internalName.toLocal8Bit()) == 0) {
             QTimer::singleShot(0, [=] {
                 SDL_FlushEvents(SDL_AUDIODEVICEADDED, SDL_AUDIODEVICEREMOVED);
                 d->eventPollerThread->start();
@@ -115,7 +152,8 @@ namespace talcs {
             if (name == "disk" || name == "dummy")
                 continue;
             auto drv = new SDLAudioDriver;
-            drv->setName(name);
+            drv->d_func()->internalName = name;
+            drv->setName(getDisplayName(name));
             list.append(drv);
         }
         return list;

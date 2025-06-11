@@ -244,7 +244,7 @@ void SimpleAudioApplicationWindow::updateDriverAndDevice(const QString &driver, 
             disconnect(m_drv, nullptr, this, nullptr);
         }
         m_dev = nullptr;
-        m_drv = m_drvMgr->driver(m_drvMgr->drivers()[0]);
+        m_drv = m_drvMgr->driver(driver);
         if (!m_drv || !m_drv->initialize()) {
             QMessageBox::critical(this, {}, "Cannot initialize audio driver: " + m_drv->name());
             return;
