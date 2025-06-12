@@ -26,7 +26,7 @@ runs:
         where.exe ninja
         ninja --version
         Write-Output VCPKG_TRIPLET=x64-windows >> $env:GITHUB_ENV
-        Write-Output QT_ARCH=win64_msvc2019_64 >> $env:GITHUB_ENV
+        Write-Output QT_ARCH=win64_msvc2022_64 >> $env:GITHUB_ENV
 
     - name: Install build tools (Ubuntu)
       if: inputs.os == 'ubuntu-latest'
