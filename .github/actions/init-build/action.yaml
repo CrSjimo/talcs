@@ -54,7 +54,7 @@ runs:
         Write-Output QT_ARCH=clang_64 >> $env:GITHUB_ENV
 
     - name: Install Qt
-      uses: jurplel/install-qt-action@v3
+      uses: jurplel/install-qt-action@v4
       with:
         version: ${{ inputs.qt-version }}
         archives: ${{ inputs.os == 'ubuntu-latest' && 'icu qtbase' || 'qtbase' }}
@@ -63,7 +63,7 @@ runs:
     - name: Prepare vcpkg
       shell: pwsh
       run: |
-        Write-Output VCPKG_REPO_REF=$((Get-Content scripts/vcpkg-manifest/vcpkg.json | ConvertFrom-Json).'builtin-baseline') >> $env:GITHUB_ENV
+        Write-Output VCPKG_REPO_REF=f9d77ef46dfe708b51db358acdea2b97615d5193 >> $env:GITHUB_ENV
         Write-Output VCPKG_DEFAULT_BINARY_CACHE=${{ github.workspace }}/vcpkg_archives >> $env:GITHUB_ENV
         Write-Output VCPKG_CACHE_HASH=${{ hashFiles('scripts/vcpkg-manifest/vcpkg.json', 'scripts/vcpkg/**') }} >> $env:GITHUB_ENV
 
