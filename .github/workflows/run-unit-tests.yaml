@@ -11,7 +11,7 @@ jobs:
           - windows-latest
           - ubuntu-latest
           - macos-13
-        qt-version: ['5.15.2', '6.5.3']
+        qt-version: ['6.5.3', '6.8.2']
 
     runs-on: ${{ matrix.os }}
 
@@ -34,7 +34,10 @@ jobs:
             -DCMAKE_BUILD_TYPE=RelWithDebInfo `
             -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT_DIR }}/scripts/buildsystems/vcpkg.cmake" `
             -DTALCS_BUILD_TESTS:BOOL=ON `
-            -DTALCS_ENABLE_ASIO:BOOL=ON `
+            -DTALCS_DEVICE_ENABLE_ASIO:BOOL=ON `
+            -DTALCS_DEVICE_ENABLE_PORTAUDIO:BOOL=ON `
+            -DTALCS_DEVICE_ENABLE_LIBSOUNDIO:BOOL=ON `
+            -DTALCS_DEVICE_ENABLE_SDL:BOOL=ON `
             -DTALCS_REMOTE:BOOL=ON `
             -DTALCS_DSPX:BOOL=ON `
             -DTALCS_GUI:BOOL=ON `
@@ -45,7 +48,7 @@ jobs:
           Write-Output BUILD_BINARY_DIR=$(Resolve-Path -Path $binaryDir) >> $env:GITHUB_ENV
 
       - name: Upload TALCS binary artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: TALCS_${{ runner.os }}_Qt${{ matrix.qt-version }}_${{ github.sha }}
           path: ${{ env.BUILD_BINARY_DIR }}

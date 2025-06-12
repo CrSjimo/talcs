@@ -18,7 +18,7 @@ jobs:
         uses: ./.github/actions/init-build
         with:
           os: ubuntu-latest
-          qt-version: '5.15.2'
+          qt-version: '6.8.2'
 
       - name: Load TALCS CMake project
         shell: pwsh
@@ -27,7 +27,10 @@ jobs:
             -DCMAKE_BUILD_TYPE=RelWithDebInfo `
             -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT_DIR }}/scripts/buildsystems/vcpkg.cmake" `
             -DTALCS_BUILD_TESTS:BOOL=ON `
-            -DTALCS_ENABLE_ASIO:BOOL=ON `
+            -DTALCS_DEVICE_ENABLE_ASIO:BOOL=ON `
+            -DTALCS_DEVICE_ENABLE_PORTAUDIO:BOOL=ON `
+            -DTALCS_DEVICE_ENABLE_LIBSOUNDIO:BOOL=ON `
+            -DTALCS_DEVICE_ENABLE_SDL:BOOL=ON `
             -DTALCS_REMOTE:BOOL=ON `
             -DTALCS_DSPX:BOOL=ON `
             -DTALCS_GUI:BOOL=ON `
