@@ -16,7 +16,10 @@
     "interval-tree",
     "boost-interprocess",
     "qmsetup",
-    "wavpack"
+    "wavpack",
+    "r8brain-free-src",
+    "portaudio",
+    "libsoundio"
   ],
   "overrides": [
     {
@@ -24,7 +27,7 @@
       "version": "2.28.2"
     }
   ],
-  "builtin-baseline": "dd6fbdd22cc56af2ec8f97b4f62ce5ef612a891b",
+  "builtin-baseline": "f9d77ef46dfe708b51db358acdea2b97615d5193",
   "vcpkg-configuration": {
     "overlay-ports": [
       "../vcpkg/ports"
