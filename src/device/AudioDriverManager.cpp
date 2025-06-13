@@ -131,7 +131,18 @@ namespace talcs {
      * @overload
      */
     AudioDriverManager * AudioDriverManager::createBuiltInDriverManager(QObject *parent) {
-        return createBuiltInDriverManager(parent, CreateVirtualDefaultDevice | UseSoundIO | UseASIO);
+        return createBuiltInDriverManager(parent, CreateVirtualDefaultDevice
+#ifdef TALCS_USE_FEATURE_LIBSOUNDIO
+            | UseSoundIO
+#elif defined(TALCS_USE_FEATURE_SDL)
+            | UseSDL
+#elif defined(TALCS_USE_FEATURE_PORTAUDIO)
+            | UsePortAudio
+#endif
+#ifdef TALCS_USE_FEATURE_ASIO
+            | UseASIO
+#endif
+        );
     }
 
     /**
