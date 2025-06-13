@@ -31,8 +31,8 @@ namespace talcs {
         AudioBuffer();
         AudioBuffer(int channelCount, qint64 sampleCount);
 
-        float &sampleAt(int channel, qint64 pos) override;
-        float constSampleAt(int channel, qint64 pos) const override;
+        void setSample(int channel, qint64 pos, float value) override;
+        float sample(int channel, qint64 pos) const override;
 
         float *writePointerTo(int channel, qint64 startPos) override;
         const float *readPointerTo(int channel, qint64 startPos) const override;

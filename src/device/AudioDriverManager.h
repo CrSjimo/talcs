@@ -43,7 +43,24 @@ namespace talcs {
         AudioDriver *driver(const QString &name) const;
         QStringList drivers() const;
 
+        enum BuiltInDriverManagerOptionFlags {
+            CreateVirtualDefaultDevice = 0x1,
+#ifdef TALCS_USE_FEATURE_PORTAUDIO
+            UsePortAudio = 0x2,
+#endif
+#ifdef TALCS_USE_FEATURE_SDL
+            UseSDL = 0x4,
+#endif
+#ifdef TALCS_USE_FEATURE_LIBSOUNDIO
+            UseSoundIO = 0x8,
+#endif
+#ifdef TALCS_USE_FEATURE_ASIO
+            UseASIO = 0x10,
+#endif
+        };
+        Q_DECLARE_FLAGS(BuiltInDriverManagerOption, BuiltInDriverManagerOptionFlags);
         static AudioDriverManager *createBuiltInDriverManager(QObject *parent = nullptr);
+        static AudioDriverManager *createBuiltInDriverManager(QObject *parent, BuiltInDriverManagerOption option);
 
     signals:
         void driverAdded(AudioDriver *driver);
@@ -53,6 +70,8 @@ namespace talcs {
         AudioDriverManager(AudioDriverManagerPrivate &d, QObject *parent);
         QScopedPointer<AudioDriverManagerPrivate> d_ptr;
     };
+
+    Q_DECLARE_OPERATORS_FOR_FLAGS(AudioDriverManager::BuiltInDriverManagerOption);
     
 }
 

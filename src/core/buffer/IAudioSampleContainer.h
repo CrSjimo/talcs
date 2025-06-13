@@ -26,7 +26,7 @@ namespace talcs {
 
     class TALCSCORE_EXPORT IAudioSampleContainer : public IAudioSampleProvider {
     public:
-        virtual float &sampleAt(int channel, qint64 pos) = 0;
+        virtual void setSample(int channel, qint64 pos, float value) = 0;
         virtual float *writePointerTo(int channel, qint64 startPos);
 
         void setSampleRange(int destChannel, qint64 destStartPos, qint64 length, const IAudioSampleProvider &src,

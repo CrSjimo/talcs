@@ -17,25 +17,25 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_PORTAUDIOAUDIODEVICE_P_H
-#define TALCS_PORTAUDIOAUDIODEVICE_P_H
-
-#include <TalcsDevice/private/AudioDevice_p.h>
+#ifndef TALCS_SOUNDIOAUDIODEVICE_P_H
+#define TALCS_SOUNDIOAUDIODEVICE_P_H
 
 #include <QMutex>
 
-#include <portaudio.h>
+#include <soundio/soundio.h>
+
+#include <TalcsDevice/private/AudioDevice_p.h>
 
 namespace talcs {
 
-    class PortAudioAudioDevicePrivate;
-    class PortAudioAudioDriver;
+    class SoundIOAudioDevicePrivate;
+    class SoundIOAudioDriver;
 
-    class PortAudioAudioDevice : public AudioDevice {
+    class SoundIOAudioDevice : public AudioDevice {
         Q_OBJECT
-        Q_DECLARE_PRIVATE(PortAudioAudioDevice)
+        Q_DECLARE_PRIVATE(SoundIOAudioDevice)
     public:
-        ~PortAudioAudioDevice() override;
+        ~SoundIOAudioDevice() override;
         bool start(AudioDeviceCallback *audioDeviceCallback) override;
         void stop() override;
         bool open(qint64 bufferSize, double sampleRate) override;
@@ -43,22 +43,32 @@ namespace talcs {
         void lock() override;
         void unlock() override;
         bool openControlPanel() override;
+
     protected:
-        friend class PortAudioAudioDriver;
-        PortAudioAudioDevice(const QString &name, PortAudioAudioDriver *driver);
+        friend class SoundIOAudioDriver;
+        SoundIOAudioDevice(const QString &name, SoundIOAudioDriver *driver);
+
+    private slots:
+        void handleStreamingError();
+        void handleDeviceChanged(); // new slot for device change
+    private:
+        bool m_isVirtualDefault = false;
+        QString m_actualDeviceName; // internal, for real device switching
     };
 
-    class PortAudioAudioDevicePrivate : public AudioDevicePrivate {
-        Q_DECLARE_PUBLIC(PortAudioAudioDevice)
+    class SoundIOAudioDevicePrivate : public AudioDevicePrivate {
+        Q_DECLARE_PUBLIC(SoundIOAudioDevice)
     public:
-        PaStream *stream = nullptr;
-        int deviceIndex = -1;
-        int hostApiIndex = -1;
-        const PaDeviceInfo *deviceInfo = nullptr;
+        SoundIoDevice *device = nullptr;
+        SoundIoOutStream *outStream = nullptr;
         AudioDeviceCallback *audioDeviceCallback = nullptr;
         QMutex mutex;
+        bool isOpen = false;
+        
+        static void writeCallback(SoundIoOutStream *outStream, int frameCountMin, int frameCountMax);
+        static void underflowCallback(SoundIoOutStream *outStream);
+        static void errorCallback(SoundIoOutStream *outStream, int err);
     };
-
 }
 
-#endif // TALCS_PORTAUDIOAUDIODEVICE_P_H
+#endif // TALCS_SOUNDIOAUDIODEVICE_P_H

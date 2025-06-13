@@ -60,18 +60,18 @@ private slots:
         QVERIFY(src2.isOpen());
         series.read(&tmpBuf);
         for (int i = 0; i < 768; i++) {
-            QCOMPARE(tmpBuf.constSampleAt(0, i), i);
+            QCOMPARE(tmpBuf.sample(0, i), i);
         }
         for (int t = 0; t < 2; t++) {
             series.read(&tmpBuf);
             for (int i = 0; i < 256; i++) {
-                QCOMPARE(tmpBuf.constSampleAt(0, i), 768 + i);
-                QCOMPARE(tmpBuf.constSampleAt(0, 256 + i), 0);
-                QCOMPARE(tmpBuf.constSampleAt(0, 512 + i), 4096 + i);
+                QCOMPARE(tmpBuf.sample(0, i), 768 + i);
+                QCOMPARE(tmpBuf.sample(0, 256 + i), 0);
+                QCOMPARE(tmpBuf.sample(0, 512 + i), 4096 + i);
             }
             series.read(&tmpBuf);
             for (int i = 0; i < 768; i++) {
-                QCOMPARE(tmpBuf.constSampleAt(0, i), 4096 + 256 + i);
+                QCOMPARE(tmpBuf.sample(0, i), 4096 + 256 + i);
             }
             series.setNextReadPosition(768);
         }

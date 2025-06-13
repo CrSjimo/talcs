@@ -43,7 +43,7 @@ namespace talcs {
      */
 
     /**
-     * @fn float IAudioSampleProvider::constSampleAt(int channel, qint64 pos) const
+     * @fn float IAudioSampleProvider::sample(int channel, qint64 pos) const
      * Gets the sample at a specified channel and position.
      *
      * Note that if the sample data is stored continuously, performance will be better when using the pointer to read
@@ -87,7 +87,7 @@ namespace talcs {
         if (!isContinuous()) {
             float m = 0;
             for (qint64 i = 0; i < length; i++) {
-                m = qMax(m, std::abs(constSampleAt(channel, startPos + i)));
+                m = qMax(m, std::abs(sample(channel, startPos + i)));
             }
             return m;
         } else {
@@ -114,8 +114,8 @@ namespace talcs {
         if (!isContinuous()) {
             auto m = qMakePair(std::numeric_limits<float>::max(), std::numeric_limits<float>::lowest());
             for (qint64 i = 0; i < length; i++) {
-                m.first = qMin(m.first, constSampleAt(channel, startPos + i));
-                m.second = qMax(m.second, constSampleAt(channel, startPos + i));
+                m.first = qMin(m.first, sample(channel, startPos + i));
+                m.second = qMax(m.second, sample(channel, startPos + i));
             }
             return m;
         } else {
@@ -142,8 +142,8 @@ namespace talcs {
         if (!isContinuous()) {
             float s = 0;
             for (qint64 i = 0; i < length; i++) {
-                auto sample = constSampleAt(channel, startPos + i);
-                s += sample * sample;
+                auto v = sample(channel, startPos + i);
+                s += v * v;
             }
             return std::sqrt(s / static_cast<float>(length));
         } else {

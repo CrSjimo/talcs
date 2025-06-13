@@ -34,6 +34,14 @@ else()
     list(FILTER _src EXCLUDE REGEX PortAudio)
 endif()
 
+if(TALCS_DEVICE_ENABLE_LIBSOUNDIO)
+    find_package(libsoundio REQUIRED)
+    list(APPEND _links_private libsoundio::libsoundio libsoundio::libsoundio_shared)
+    list(APPEND _defines TALCS_USE_FEATURE_LIBSOUNDIO)
+else()
+    list(FILTER _src EXCLUDE REGEX SoundIO)
+endif()
+
 talcs_add_library(${PROJECT_NAME} AUTOGEN
     SOURCES ${_src}
     LINKS talcs::Core

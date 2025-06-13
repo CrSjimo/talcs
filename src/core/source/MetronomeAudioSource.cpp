@@ -236,7 +236,9 @@ namespace talcs {
         bool open(qint64 bufferSize, double sampleRate) override {
             buf.resize(2, static_cast<qint64>(0.1 * sampleRate));
             for (int i = 0; i < buf.sampleCount(); i++) {
-                buf.sampleAt(0, i) = buf.sampleAt(1, i) = f(i, sampleRate);
+                float v = f(i, sampleRate);
+                buf.setSample(0, i, v);
+                buf.setSample(1, i, v);
             }
             return MemoryAudioSource::open(bufferSize, sampleRate);
         }

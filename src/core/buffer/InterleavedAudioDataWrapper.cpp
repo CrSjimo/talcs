@@ -43,11 +43,10 @@ namespace talcs {
 
     InterleavedAudioDataWrapper::~InterleavedAudioDataWrapper() = default;
 
-    float &InterleavedAudioDataWrapper::sampleAt(int channel, qint64 pos) {
-        return d->data[pos * d->channelCount + channel];
+    void InterleavedAudioDataWrapper::setSample(int channel, qint64 pos, float value) {
+        d->data[pos * d->channelCount + channel] = value;
     }
-
-    float InterleavedAudioDataWrapper::constSampleAt(int channel, qint64 pos) const {
+    float InterleavedAudioDataWrapper::sample(int channel, qint64 pos) const {
         return d->data[pos * d->channelCount + channel];
     }
 

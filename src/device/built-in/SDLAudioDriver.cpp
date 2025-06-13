@@ -106,7 +106,16 @@ namespace talcs {
         AudioDriver::finalize();
     }
     QStringList SDLAudioDriver::devices() const {
+        Q_D(const SDLAudioDriver);
         QStringList list;
+        if (d->createVirtualDefaultDevice) {
+            char *name;
+            SDL_AudioSpec spec;
+            if (SDL_GetDefaultAudioInfo(&name, &spec, 0) == 0) {
+                SDL_free(name);
+                list.append("");
+            }
+        }
         int cnt = SDL_GetNumAudioDevices(0);
         for (int i = 0; i < cnt; i++) {
             list.append(QString::fromUtf8(SDL_GetAudioDeviceName(i, 0)));
@@ -114,6 +123,10 @@ namespace talcs {
         return list;
     }
     QString SDLAudioDriver::defaultDevice() const {
+        Q_D(const SDLAudioDriver);
+        if (d->createVirtualDefaultDevice) {
+            return "";
+        }
         char *name;
         SDL_AudioSpec spec;
         if (SDL_GetDefaultAudioInfo(&name, &spec, 0) == 0) {
@@ -126,8 +139,25 @@ namespace talcs {
     }
 
     AudioDevice *SDLAudioDriver::createDefaultDevice() {
-        auto dev = new SDLAudioDevice({}, this);
-        return dev;
+        Q_D(SDLAudioDriver);
+        {
+            char *name;
+            SDL_AudioSpec spec;
+            if (SDL_GetDefaultAudioInfo(&name, &spec, 0) != 0) {
+                return nullptr;
+            }
+            SDL_free(name);
+        }
+        if (d->createVirtualDefaultDevice) {
+            return new SDLAudioDevice({}, this);
+        } else {
+            auto name = defaultDevice();
+            if (!name.isEmpty()) {
+                return new SDLAudioDevice(defaultDevice(), this);
+            }
+            return nullptr;
+        }
+
     }
 
     AudioDevice *SDLAudioDriver::createDevice(const QString &name) {
@@ -144,7 +174,7 @@ namespace talcs {
         Q_D(SDLAudioDriver);
         d->openedDevices.remove(devId);
     }
-    QList<SDLAudioDriver *> SDLAudioDriver::getDrivers() {
+    QList<SDLAudioDriver *> SDLAudioDriver::getDrivers(bool createVirtualDefaultDevice) {
         int cnt = SDL_GetNumAudioDrivers();
         QList<SDLAudioDriver *> list;
         for (int i = 0; i < cnt; i++) {
@@ -153,6 +183,7 @@ namespace talcs {
                 continue;
             auto drv = new SDLAudioDriver;
             drv->d_func()->internalName = name;
+            drv->d_func()->createVirtualDefaultDevice = createVirtualDefaultDevice;
             drv->setName(getDisplayName(name));
             list.append(drv);
         }

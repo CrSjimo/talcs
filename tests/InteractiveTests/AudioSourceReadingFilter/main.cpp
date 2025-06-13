@@ -36,10 +36,11 @@ protected:
     qint64 processReading(const AudioSourceReadData &readData) override {
         for (int i = 0; i < readData.length; i++) {
             for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
-                float &v = readData.buffer->sampleAt(ch, readData.startPos + i);
+                float v = readData.buffer->sample(ch, readData.startPos + i);
                 v += 1.0f;
                 if (v > 1.0f)
                     v -= 2.0f;
+                readData.buffer->setSample(ch, readData.startPos + i, v);
             }
         }
         return readData.length;

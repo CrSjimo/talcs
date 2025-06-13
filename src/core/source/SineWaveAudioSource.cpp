@@ -66,7 +66,7 @@ namespace talcs {
                 for (int ch = 0; ch < channelCount; ch++) {
                     if ((1 << ch) & readData.silentFlags)
                         continue;
-                    readData.buffer->sampleAt(ch, readData.startPos + i) = sample;
+                    readData.buffer->setSample(ch, readData.startPos + i, sample);
                 }
             }
         }

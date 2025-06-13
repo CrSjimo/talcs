@@ -33,8 +33,8 @@ namespace talcs {
         AudioDataWrapper(float *const *data, int channelCount, qint64 sampleCount, qint64 startPos = 0);
         ~AudioDataWrapper() override;
 
-        float &sampleAt(int channel, qint64 pos) override;
-        float constSampleAt(int channel, qint64 pos) const override;
+        void setSample(int channel, qint64 pos, float value) override;
+        float sample(int channel, qint64 pos) const override;
 
         int channelCount() const override;
         qint64 sampleCount() const override;

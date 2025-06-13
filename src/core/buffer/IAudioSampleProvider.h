@@ -30,7 +30,7 @@ namespace talcs {
     public:
         virtual ~IAudioSampleProvider() = default;
 
-        virtual float constSampleAt(int channel, qint64 pos) const = 0;
+        virtual float sample(int channel, qint64 pos) const = 0;
         virtual bool isContinuous() const;
         virtual const float *readPointerTo(int channel, qint64 startPos) const;
 

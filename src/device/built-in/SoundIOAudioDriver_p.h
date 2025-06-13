@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 CrSjimo                                                 *
+ * Copyright (c) 2023-2025 CrSjimo                                            *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,69 +17,51 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_SDLAUDIODRIVER_P_H
-#define TALCS_SDLAUDIODRIVER_P_H
+#ifndef TALCS_SOUNDIOAUDIODRIVER_P_H
+#define TALCS_SOUNDIOAUDIODRIVER_P_H
 
 #include <TalcsDevice/private/AudioDriver_p.h>
 
-#include <QMap>
-#include <QMutex>
-#include <QThread>
+#include <soundio/soundio.h>
 
 namespace talcs {
 
-    class SDLAudioDriverPrivate;
-    class SDLAudioDevice;
-
-    class SDLAudioDriver : public AudioDriver {
+    class SoundIOAudioDriverPrivate;
+    class SoundIOAudioDevice;    class SoundIOAudioDriver : public AudioDriver {
         Q_OBJECT
-        Q_DECLARE_PRIVATE(SDLAudioDriver)
-        friend class SDLAudioDevice;
+        Q_DECLARE_PRIVATE(SoundIOAudioDriver)
+        friend class SoundIOAudioDevice;
     public:
-        explicit SDLAudioDriver(QObject *parent = nullptr);
-        ~SDLAudioDriver() override;
+        ~SoundIOAudioDriver() override;
 
         bool initialize() override;
         void finalize() override;
         QStringList devices() const override;
         QString defaultDevice() const override;
-        AudioDevice * createDefaultDevice() override;
+        AudioDevice *createDefaultDevice() override;
         AudioDevice *createDevice(const QString &name) override;
 
-        static QList<SDLAudioDriver *> getDrivers(bool createVirtualDefaultDevice);
-
+        static QList<SoundIOAudioDriver *> getDrivers(bool createVirtualDefaultDevice);
+        
     protected:
-        SDLAudioDriver(SDLAudioDriverPrivate &d, QObject *parent);
-        void addOpenedDevice(quint32 devId, SDLAudioDevice *dev);
-        void removeOpenedDevice(quint32 devId);
+        explicit SoundIOAudioDriver(QObject *parent = nullptr);
+        void timerEvent(QTimerEvent *event) override;
+    Q_SIGNALS:
+        void aboutToChangeDevice();
     };
 
-    class SDLEventPoller : public QObject {
-        Q_OBJECT
+    class SoundIOAudioDriverPrivate : public AudioDriverPrivate {
+        Q_DECLARE_PUBLIC(SoundIOAudioDriver)
     public:
-        explicit SDLEventPoller(QObject *parent = nullptr) : QObject(parent) {}
-        QAtomicInteger<bool> stopRequested = false;
-    public slots:
-        void start();
-        void quit();
+        SoundIo *soundio = nullptr;
+        SoundIoBackend backend = SoundIoBackendNone;
+        bool isRaw = false;
+        bool createVirtualDefaultDevice = false;
+        Qt::TimerId timerId = Qt::TimerId::Invalid;
 
-    signals:
-        void event(QByteArray sdlEventData);
+        void handleDeviceChange();
     };
 
-    class SDLAudioDriverPrivate : public AudioDriverPrivate {
-        Q_DECLARE_PUBLIC(SDLAudioDriver)
-    public:
-        int driverIndex;
-        bool createVirtualDefaultDevice;
-        QScopedPointer<SDLEventPoller> eventPoller;
-        QThread *eventPollerThread;
-        QMap<quint32, SDLAudioDevice *> openedDevices;
-        QString internalName;
-
-        void handleSDLEvent(const QByteArray &sdlEventData);
-        void handleDeviceRemoved(quint32 devId);
-    };
 }
 
-#endif // TALCS_SDLAUDIODRIVER_P_H
+#endif // TALCS_SOUNDIOAUDIODRIVER_P_H

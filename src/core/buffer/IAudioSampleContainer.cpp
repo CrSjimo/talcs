@@ -43,8 +43,8 @@ namespace talcs {
      */
 
     /**
-     * @fn float &IAudioSampleContainer::sampleAt(int channel, qint64 pos);
-     * Gets the reference to the sample at a specified channel and position.
+     * @fn void IAudioSampleContainer::setSample(int channel, qint64 pos, float value);
+     * Sets the sample at a specified channel and position.
      *
      * Note that if the sample data is stored continuously, performance will be better when using the pointer to write
      * directly.
@@ -81,7 +81,7 @@ namespace talcs {
             std::copy_n(pSrc, length, pDest);
         } else {
             for (qint64 i = 0; i < length; i++) {
-                sampleAt(destChannel, destStartPos + i) = src.constSampleAt(srcChannel, srcStartPos + i);
+                setSample(destChannel, destStartPos + i, src.sample(srcChannel, srcStartPos + i));
             }
         }
     }
@@ -123,7 +123,7 @@ namespace talcs {
             std::transform(pDest, pDest + length, pSrc, pDest, [gain](float d, float s) { return d + s * gain; });
         } else {
             for (qint64 i = 0; i < length; i++) {
-                sampleAt(destChannel, destStartPos + i) += src.constSampleAt(srcChannel, srcStartPos + i) * gain;
+                setSample(destChannel, destStartPos + i, sample(destChannel, destStartPos + i) + src.sample(srcChannel, srcStartPos + i) * gain);
             }
         }
     }
@@ -158,7 +158,7 @@ namespace talcs {
             std::transform(p, p + length, p, [gain](float num) { return num * gain; });
         } else {
             for (qint64 i = 0; i < length; i++) {
-                sampleAt(destChannel, destStartPos + i) *= gain;
+                setSample(destChannel, destStartPos + i, sample(destChannel, destStartPos + i) * gain);
             }
         }
     }
@@ -197,7 +197,7 @@ namespace talcs {
             memset(writePointerTo(destChannel, destStartPos), 0, length * sizeof(float));
         } else {
             for (qint64 i = 0; i < length; i++) {
-                sampleAt(destChannel, destStartPos + i) = 0;
+                setSample(destChannel, destStartPos + i, 0);
             }
         }
     }

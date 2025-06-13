@@ -34,6 +34,10 @@
 #    include <TalcsDevice/private/PortAudioAudioDriver_p.h>
 #endif
 
+#ifdef TALCS_USE_FEATURE_LIBSOUNDIO
+#    include <TalcsDevice/private/SoundIOAudioDriver_p.h>
+#endif
+
 namespace talcs {
 
     /**
@@ -124,27 +128,47 @@ namespace talcs {
     }
 
     /**
+     * @overload
+     */
+    AudioDriverManager * AudioDriverManager::createBuiltInDriverManager(QObject *parent) {
+        return createBuiltInDriverManager(parent, CreateVirtualDefaultDevice | UseSoundIO | UseASIO);
+    }
+
+    /**
      * Creates an audio driver manager with all built-in drivers.
      */
-    AudioDriverManager *AudioDriverManager::createBuiltInDriverManager(QObject *parent) {
+    AudioDriverManager *AudioDriverManager::createBuiltInDriverManager(QObject *parent, BuiltInDriverManagerOption option) {
         auto drvMgr = new AudioDriverManager(parent);
 #ifdef TALCS_USE_FEATURE_PORTAUDIO
-        if (PortAudioAudioDriver::globalInitialize()) {
-            for (auto drv : PortAudioAudioDriver::getDrivers()) {
-                drvMgr->addAudioDriver(drv);
+        if (qgetenv("TALCS_DEVICE_USE_PORTAUDIO") != "0" && qgetenv("TALCS_DEVICE_USE_PORTAUDIO") == "1" || option & UsePortAudio) {
+            if (PortAudioAudioDriver::globalInitialize()) {
+                for (auto drv : PortAudioAudioDriver::getDrivers()) {
+                    drvMgr->addAudioDriver(drv);
+                }
+                connect(drvMgr, &QObject::destroyed, []() { PortAudioAudioDriver::globalFinalize(); });
+            } else {
+                qWarning() << "AudioDriverManager: Failed to initialize PortAudio drivers.";
             }
-            connect(drvMgr, &QObject::destroyed, []() { PortAudioAudioDriver::globalFinalize(); });
-        } else {
-            qWarning() << "AudioDriverManager: Failed to initialize PortAudio drivers.";
         }
 #endif
 #ifdef TALCS_USE_FEATURE_SDL
-        for (auto drv : SDLAudioDriver::getDrivers()) {
-            drvMgr->addAudioDriver(drv);
+        if (qgetenv("TALCS_DEVICE_USE_SDL") != "0" && qgetenv("TALCS_DEVICE_USE_SDL") == "1" || option & UseSDL) {
+            for (auto drv : SDLAudioDriver::getDrivers(option & CreateVirtualDefaultDevice)) {
+                drvMgr->addAudioDriver(drv);
+            }
+        }
+#endif
+#ifdef TALCS_USE_FEATURE_LIBSOUNDIO
+        if (qgetenv("TALCS_DEVICE_USE_LIBSOUNDIO") != "0" && qgetenv("TALCS_DEVICE_USE_LIBSOUNDIO") == "1" || option & UseSoundIO) {
+            for (auto drv : SoundIOAudioDriver::getDrivers(option & CreateVirtualDefaultDevice)) {
+                drvMgr->addAudioDriver(drv);
+            }
         }
 #endif
 #ifdef TALCS_USE_FEATURE_ASIO
-        drvMgr->addAudioDriver(new ASIOAudioDriver);
+        if (qgetenv("TALCS_DEVICE_USE_ASIO") != "0" && qgetenv("TALCS_DEVICE_USE_ASIO") == "1" || option & UseASIO) {
+            drvMgr->addAudioDriver(new ASIOAudioDriver);
+        }
 #endif
         return drvMgr;
     }

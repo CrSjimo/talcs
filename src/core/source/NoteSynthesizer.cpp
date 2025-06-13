@@ -534,7 +534,8 @@ namespace talcs {
                         continue;
                     auto generatedSample = static_cast<float>(vel * d->generate(keyInfo.integration));
                     for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
-                        readData.buffer->sampleAt(ch, readData.startPos + currentPos) += generatedSample;
+                        float oldVal = readData.buffer->sample(ch, readData.startPos + currentPos);
+                        readData.buffer->setSample(ch, readData.startPos + currentPos, oldVal + generatedSample);
                     }
                 }
                 d->keys.erase(std::remove_if(d->keys.begin(), d->keys.end(), [&](const auto &item) {

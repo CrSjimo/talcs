@@ -48,11 +48,10 @@ namespace talcs {
 
     AudioDataWrapper::~AudioDataWrapper() = default;
 
-    float &AudioDataWrapper::sampleAt(int channel, qint64 pos) {
-        return d->data[channel][d->startPos + pos];
+    void AudioDataWrapper::setSample(int channel, qint64 pos, float value) {
+        d->data[channel][d->startPos + pos] = value;
     }
-
-    float AudioDataWrapper::constSampleAt(int channel, qint64 pos) const {
+    float AudioDataWrapper::sample(int channel, qint64 pos) const {
         return d->data[channel][d->startPos + pos];
     }
 

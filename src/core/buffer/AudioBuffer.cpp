@@ -41,10 +41,10 @@ namespace talcs {
         resize(channelCount, sampleCount);
     }
 
-    float &AudioBuffer::sampleAt(int channel, qint64 pos) {
-        return m_buffer[channel][pos];
+    void AudioBuffer::setSample(int channel, qint64 pos, float value) {
+        m_buffer[channel][pos] = value;
     }
-    float AudioBuffer::constSampleAt(int channel, qint64 pos) const {
+    float AudioBuffer::sample(int channel, qint64 pos) const {
         return m_buffer.at(channel).at(pos);
     }
     int AudioBuffer::channelCount() const {
