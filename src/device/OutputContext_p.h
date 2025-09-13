@@ -40,7 +40,7 @@ namespace talcs {
 
         OutputContext::HotPlugNotificationMode hotPlugNotificationMode = OutputContext::Omni;
 
-        bool openDeviceWithOption(AudioDevice *device, OutputContext::DeviceOption option);
+        bool openDeviceWithOption(AudioDevice *device, OutputContext::DeviceOption option) const;
         void handleDeviceHotPlug();
         void postSetDevice();
 

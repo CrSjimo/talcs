@@ -38,12 +38,21 @@ namespace talcs {
      */
 
     /**
-     * Constructor.
+     * @overload
      */
     OutputContext::OutputContext(QObject *parent) : AbstractOutputContext(parent), d_ptr(new OutputContextPrivate) {
         Q_D(OutputContext);
         d->q_ptr = this;
         d->driverManager.reset(AudioDriverManager::createBuiltInDriverManager());
+    }
+
+    /**
+     * Constructor.
+     */
+    OutputContext::OutputContext(AudioDriverManager::BuiltInDriverManagerOption option, QObject *parent): AbstractOutputContext(parent), d_ptr(new OutputContextPrivate) {
+        Q_D(OutputContext);
+        d->q_ptr = this;
+        d->driverManager.reset(AudioDriverManager::createBuiltInDriverManager(nullptr, option));
     }
 
     /**
@@ -329,7 +338,7 @@ namespace talcs {
      *
      * @see HotPlugNotificationMode
      */
-    bool OutputContextPrivate::openDeviceWithOption(AudioDevice *device, OutputContext::DeviceOption option) {
+    bool OutputContextPrivate::openDeviceWithOption(AudioDevice *device, OutputContext::DeviceOption option) const {
         auto savedBufferSize = adoptedBufferSize;
         auto savedSampleRate = adoptedSampleRate;
         switch (option) {
