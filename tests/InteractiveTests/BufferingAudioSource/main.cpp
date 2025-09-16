@@ -39,7 +39,7 @@ using namespace talcs;
 
 int main(int argc, char **argv) {
     QApplication a(argc, argv);
-    QFile f("C:\\CloudMusic\\07.恋染色.flac");
+    QFile f("C:\\CloudMusic\\07.恋染�?flac");
     AudioFormatIO io(&f);
     f.open(QIODevice::ReadOnly);
     AudioFormatInputSource src(&io);

@@ -52,7 +52,7 @@ private:
 
 void testFunc() {
     {
-        QFile f("C:/CloudMusic/07.恋染色.flac");
+        QFile f("C:/CloudMusic/07.恋染�?flac");
         AudioFormatIO io(&f);
         f.open(QIODevice::ReadOnly);
         io.open(AbstractAudioFormatIO::Read);

@@ -34,7 +34,7 @@ talcs::IAudioSampleContainer *AudioVisualizer::prepareBuffer() {
 
 bool AudioVisualizer::processBlock(qint64 processedSampleCount, qint64 samplesToProcess) {
     auto minMax = m_buf.findMinMax(0);
-    // 处理峰值数据
+    // 处理峰值数�?
     // 在这个样例中，会把峰值数据输出到文本框里，实际应用时这个地方可以和可视化widget对接
     // 然后这个函数运行在另一个线程上，需要用queued connection
     QMetaObject::invokeMethod(m_edit, "appendPlainText", Qt::QueuedConnection, Q_ARG(QString, QString("%1 %2").arg(minMax.first).arg(minMax.second)));
