@@ -121,7 +121,7 @@ namespace talcs {
         auto formatManager = d->trackContext->projectContext()->formatManager();
         if (!formatManager)
             return false;
-        auto io = formatManager->getFormatLoad(path, data);
+        auto io = formatManager->getFormatLoad(path, data, entryClassName);
         if (!io)
             return false;
         d->handleIO(io);
