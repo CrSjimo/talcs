@@ -40,7 +40,7 @@ namespace talcs {
 
         QVariant data;
 
-        QMap<int, DspxAudioClipContext *> clips;
+        QMap<quintptr, DspxAudioClipContext *> clips;
 
     };
 }

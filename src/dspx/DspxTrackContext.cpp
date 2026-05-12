@@ -76,7 +76,7 @@ namespace talcs {
         return d->data;
     }
 
-    DspxAudioClipContext *DspxTrackContext::addAudioClip(int id) {
+    DspxAudioClipContext *DspxTrackContext::addAudioClip(quintptr id) {
         Q_D(DspxTrackContext);
         auto clip = new DspxAudioClipContext(this);
         auto clipView = d->clipSeries->insertClip(clip->controlMixer(), 0, 0, 1);
@@ -85,7 +85,7 @@ namespace talcs {
         return clip;
     }
 
-    void DspxTrackContext::removeAudioClip(int id) {
+    void DspxTrackContext::removeAudioClip(quintptr id) {
         Q_D(DspxTrackContext);
         Q_ASSERT(d->clips.contains(id));
         std::unique_ptr<DspxAudioClipContext> clip(d->clips.take(id));

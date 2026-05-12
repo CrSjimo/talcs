@@ -57,9 +57,8 @@ namespace talcs {
         void setClipLen(int tick);
         int clipLen() const;
 
-        bool setPathLoad(const QString &path, const QVariant &data = {}, const QString &entryClassName = {});
-        bool setPathOpen(const QString &path, AbstractAudioFormatIO *io);
-        QString path() const;
+        void loadAudio(AbstractAudioFormatIO *io);
+        AbstractAudioFormatIO *takeAudio();
 
         void updatePosition();
 

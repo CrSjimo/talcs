@@ -29,13 +29,14 @@
 namespace talcs {
 
     class AbstractAudioFormatIO;
+    class AudioFormatInputSource;
 
     class DspxAudioClipContextPrivate {
         Q_DECLARE_PUBLIC(DspxAudioClipContext);
     public:
         DspxAudioClipContext *q_ptr;
 
-        std::unique_ptr<PositionableAudioSource> rawSource;
+        std::unique_ptr<AudioFormatInputSource> rawSource;
         std::unique_ptr<BufferingAudioSource> contentSource;
         std::unique_ptr<PositionableMixerAudioSource> clipMixer;
         std::unique_ptr<PositionableMixerAudioSource> controlMixer;
@@ -47,11 +48,8 @@ namespace talcs {
         int startTick = 0;
         int clipStartTick = 0;
         int clipLenTick = 0;
-        QString path;
 
         QVariant data;
-
-        void handleIO(AbstractAudioFormatIO *io);
 
     };
 }

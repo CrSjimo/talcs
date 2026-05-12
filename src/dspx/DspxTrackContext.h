@@ -50,8 +50,8 @@ namespace talcs {
         void setData(const QVariant &data);
         QVariant data() const;
 
-        DspxAudioClipContext *addAudioClip(int id);
-        void removeAudioClip(int id);
+        DspxAudioClipContext *addAudioClip(quintptr id);
+        void removeAudioClip(quintptr id);
 
         QList<DspxAudioClipContext *> clips() const;
 

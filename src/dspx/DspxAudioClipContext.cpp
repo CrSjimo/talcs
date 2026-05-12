@@ -107,40 +107,24 @@ namespace talcs {
         return d->clipLenTick;
     }
 
-    void DspxAudioClipContextPrivate::handleIO(AbstractAudioFormatIO *io) {
+    void DspxAudioClipContext::loadAudio(AbstractAudioFormatIO *io) {
+        Q_D(DspxAudioClipContext);
         auto rawSource_ = std::make_unique<AudioFormatInputSource>(io, true);
-        if (contentSource)
-            clipMixer->removeSource(contentSource.get());
-        contentSource.reset(trackContext->projectContext()->makeBufferable(rawSource_.get(), 2));
-        rawSource = std::move(rawSource_);
-        clipMixer->prependSource(contentSource.get());
+        if (d->contentSource)
+            d->clipMixer->removeSource(d->contentSource.get());
+        d->contentSource.reset(d->trackContext->projectContext()->makeBufferable(rawSource_.get(), 2));
+        d->rawSource = std::move(rawSource_);
+        d->clipMixer->prependSource(d->contentSource.get());
     }
 
-    bool DspxAudioClipContext::setPathLoad(const QString &path, const QVariant &data, const QString &entryClassName) {
+    AbstractAudioFormatIO *DspxAudioClipContext::takeAudio() {
         Q_D(DspxAudioClipContext);
-        auto formatManager = d->trackContext->projectContext()->formatManager();
-        if (!formatManager)
-            return false;
-        auto io = formatManager->getFormatLoad(path, data, entryClassName);
-        if (!io)
-            return false;
-        d->handleIO(io);
-        d->path = path;
-        return true;
-    }
-
-    bool DspxAudioClipContext::setPathOpen(const QString &path, AbstractAudioFormatIO *io) {
-        Q_D(DspxAudioClipContext);
-        if (!io)
-            return false;
-        d->handleIO(io);
-        d->path = path;
-        return true;
-    }
-
-    QString DspxAudioClipContext::path() const {
-        Q_D(const DspxAudioClipContext);
-        return d->path;
+        d->clipMixer->removeSource(d->contentSource.get());
+        d->contentSource.reset();
+        auto io = d->rawSource->audioFormatIo();
+        d->rawSource->setAudioFormatIo(nullptr);
+        d->rawSource.reset();
+        return io;
     }
 
     void DspxAudioClipContext::updatePosition() {
