@@ -58,6 +58,7 @@ namespace talcs {
         for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
             readData.buffer->clear(ch, readData.startPos, readData.length);
         }
+        QMutexLocker locker(&d->mutex);
         qAsConst(d->clips).overlap_find_all(
             readDataInterval, [=](const decltype(d->clips)::const_iterator &it) {
                 auto clip = it->interval();
@@ -125,12 +126,14 @@ namespace talcs {
     void AudioSourceClipSeries::setClipStartPos(const AudioSourceClipSeries::ClipView &clip,
                                                 qint64 startPos) {
         Q_D(AudioSourceClipSeries);
+        QMutexLocker locker(&d->mutex);
         d->setClipStartPos(clip, startPos);
     }
 
     bool AudioSourceClipSeries::setClipRange(const AudioSourceClipSeries::ClipView &clip, qint64 position,
                                              qint64 length) {
         Q_D(AudioSourceClipSeries);
+        QMutexLocker locker(&d->mutex);
         return d->setClipRange(clip, position, length);
     }
 
