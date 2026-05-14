@@ -107,9 +107,10 @@ namespace talcs {
         if (pos != d->position) {
             if (d->resampler)
                 d->resampler->reset();
-            if (d->io && d->io->openMode())
+            if (isOpen()) {
                 d->io->seek(outPositionToIn(pos, d->ratio));
-            d->inPosition = outPositionToIn(pos, d->ratio);
+                d->inPosition = outPositionToIn(pos, d->ratio);
+            }
         }
         PositionableAudioSource::setNextReadPosition(pos);
     }

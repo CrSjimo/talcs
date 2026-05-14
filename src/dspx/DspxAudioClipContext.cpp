@@ -122,6 +122,7 @@ namespace talcs {
         d->clipMixer->removeSource(d->contentSource.get());
         d->contentSource.reset();
         auto io = d->rawSource->audioFormatIo();
+        d->rawSource->close();
         d->rawSource->setAudioFormatIo(nullptr);
         d->rawSource.reset();
         return io;
