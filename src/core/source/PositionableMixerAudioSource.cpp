@@ -103,17 +103,11 @@ namespace talcs {
     }
 
     /**
-     * Returns the minimum length among all input sources.
+     * Infinity length.
      */
     qint64 PositionableMixerAudioSource::length() const {
-        auto sourceList = sources();
-        if (sourceList.length() == 0)
-            return 0;
-        return (*std::min_element(sourceList.begin(), sourceList.end(),
-                                  [](auto *src1, auto *src2) {
-                                      return src1->length() < src2->length();
-                                  }))
-                ->length();
+        // TODO this used to be the minimum length of all sources, which seems to be buggy, so just return infinity
+        return std::numeric_limits<qint64>::max();
     }
 
     void PositionableMixerAudioSourcePrivate::setNextReadPositionToAll(qint64 pos) {
