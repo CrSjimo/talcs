@@ -125,7 +125,8 @@ namespace talcs {
             d->ratio = sampleRate / d->io->sampleRate();
             d->resampler.reset(new AudioFormatInputSourcePrivate::AudioFormatInputResampler(d->ratio, bufferSize,
                                                                                         d->io->channelCount(), d));
-            d->io->seek(outPositionToIn(d->position, d->ratio));
+            d->inPosition = outPositionToIn(d->position, d->ratio);
+            d->io->seek(d->inPosition);
             return AudioSource::open(bufferSize, sampleRate);
         } else
             return false;
