@@ -20,9 +20,37 @@
 #include "DspxProjectContext.h"
 #include "DspxProjectContext_p.h"
 
+#include <utility>
+
+#include <TalcsDspx/DspxAudioClipContext.h>
 #include <TalcsDspx/DspxTrackContext.h>
 
 namespace talcs {
+
+    namespace {
+
+        class ProjectPreMixer final : public MixerAudioSource {
+        public:
+            explicit ProjectPreMixer(DspxProjectContextPrivate *project) : m_project(project) {
+            }
+
+            bool open(qint64 bufferSize, double sampleRate) override {
+                if (!MixerAudioSource::open(bufferSize, sampleRate)) {
+                    return false;
+                }
+                for (const auto track : std::as_const(m_project->tracks)) {
+                    for (const auto clip : track->clips()) {
+                        clip->updatePosition();
+                    }
+                }
+                return true;
+            }
+
+        private:
+            DspxProjectContextPrivate *m_project;
+        };
+
+    }
 
     DspxProjectContextBufferingAudioSourceObject::DspxProjectContextBufferingAudioSourceObject(PositionableAudioSource *src, int channelCount, qint64 readAheadSize, QObject *parent)
     : QObject(parent), BufferingAudioSource(src, channelCount, readAheadSize) {
@@ -34,7 +62,7 @@ namespace talcs {
         Q_D(DspxProjectContext);
         d->q_ptr = this;
 
-        d->preMixer = std::make_unique<MixerAudioSource>();
+        d->preMixer = std::make_unique<ProjectPreMixer>(d);
         d->transport = std::make_unique<TransportAudioSource>();
         d->postMixer = std::make_unique<PositionableMixerAudioSource>();
         d->masterControlMixer = std::make_unique<PositionableMixerAudioSource>();
