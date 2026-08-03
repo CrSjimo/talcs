@@ -26,25 +26,33 @@
 
 #ifdef Q_OS_WIN
 #  include <TalcsFormat/MediaFoundationAACAudioFormatIO.h>
+#elif defined(Q_OS_MACOS)
+#  include <TalcsFormat/CoreAudioAACAudioFormatIO.h>
 #endif
 
 namespace talcs {
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
 
     namespace {
 
-        class MediaFoundationAACAudioFormatIOObject : public QObject, public MediaFoundationAACAudioFormatIO {
+#ifdef Q_OS_WIN
+        using PlatformAACAudioFormatIO = MediaFoundationAACAudioFormatIO;
+#else
+        using PlatformAACAudioFormatIO = CoreAudioAACAudioFormatIO;
+#endif
+
+        class PlatformAACAudioFormatIOObject : public QObject, public PlatformAACAudioFormatIO {
         public:
-            explicit MediaFoundationAACAudioFormatIOObject(QObject *parent = nullptr)
+            explicit PlatformAACAudioFormatIOObject(QObject *parent = nullptr)
                 : QObject(parent) {
             }
 
-            ~MediaFoundationAACAudioFormatIOObject() override = default;
+            ~PlatformAACAudioFormatIOObject() override = default;
         };
 
         AbstractAudioFormatIO *openAACFile(const QString &filename) {
-            auto io = std::make_unique<MediaFoundationAACAudioFormatIOObject>();
+            auto io = std::make_unique<PlatformAACAudioFormatIOObject>();
             auto file = std::make_unique<QFile>(filename, io.get());
             if (!file->open(QIODevice::ReadOnly)) {
                 qWarning() << "AACFormatEntry: Cannot open file" << filename << file->errorString();
@@ -53,7 +61,7 @@ namespace talcs {
 
             io->setStream(file.release());
             if (!io->open(AbstractAudioFormatIO::Read)) {
-                qWarning() << "AACFormatEntry: Cannot open MediaFoundationAACAudioFormatIO" << filename
+                qWarning() << "AACFormatEntry: Cannot open platform AAC decoder" << filename
                            << io->errorString();
                 return nullptr;
             }
@@ -80,7 +88,7 @@ namespace talcs {
     }
 
     AbstractAudioFormatIO *AACFormatEntry::getFormatOpen(const QString &filename, QVariant &, QWidget *) {
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
         return openAACFile(filename);
 #else
         Q_UNUSED(filename)
@@ -89,7 +97,7 @@ namespace talcs {
     }
 
     AbstractAudioFormatIO *AACFormatEntry::getFormatLoad(const QString &filename, const QVariant &) {
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(Q_OS_MACOS)
         return openAACFile(filename);
 #else
         Q_UNUSED(filename)
