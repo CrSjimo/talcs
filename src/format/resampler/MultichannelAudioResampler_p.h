@@ -26,6 +26,8 @@
 #include "MultichannelAudioResampler.h"
 #include "AudioResampler.h"
 
+#include <QVector>
+
 #include <TalcsCore/AudioBuffer.h>
 
 namespace talcs {
@@ -38,6 +40,11 @@ namespace talcs {
         std::vector<std::unique_ptr<ChannelResampler>> resamplerOfChannel;
         AudioBuffer inputBuffer;
         std::unique_ptr<float[]> tmpBuf;
+
+        struct InputBlockRecord {
+            QVector<QVector<float>> channels;
+        };
+        std::vector<InputBlockRecord> inputBlockRecords;
     };
 
     class ChannelResampler : public AudioResampler {
@@ -46,6 +53,7 @@ namespace talcs {
         void read(float *inputBlock, qint64 length) override;
         MultichannelAudioResampler *mcr;
         int ch;
+        int readIndexWithinCall = 0;
     };
 }
 

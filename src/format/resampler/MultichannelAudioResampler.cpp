@@ -59,11 +59,22 @@ namespace talcs {
     }
 
     void ChannelResampler::read(float *inputBlock, qint64 length) {
+        int index = readIndexWithinCall++;
         if (ch == 0) {
             mcr->d->inputBuffer.resize(-1, length);
             mcr->read(&mcr->d->inputBuffer);
+            Q_ASSERT(index == static_cast<int>(mcr->d->inputBlockRecords.size()));
+            mcr->d->inputBlockRecords.emplace_back();
+            auto &record = mcr->d->inputBlockRecords.back();
+            record.channels.resize(mcr->d->channelCount);
+            for (int c = 0; c < mcr->d->channelCount; c++) {
+                const auto *p = mcr->d->inputBuffer.constData(c);
+                record.channels[c] = QVector<float>(p, p + length);
+            }
         }
-        auto *p = mcr->d->inputBuffer.constData(ch);
+        Q_ASSERT(index < static_cast<int>(mcr->d->inputBlockRecords.size()));
+        Q_ASSERT(static_cast<qint64>(mcr->d->inputBlockRecords[index].channels[ch].size()) == length);
+        const auto *p = mcr->d->inputBlockRecords[index].channels[ch].constData();
         std::copy_n(p, length, inputBlock);
     }
 
@@ -71,6 +82,10 @@ namespace talcs {
      * @copydoc AudioResampler::process()
      */
     void MultichannelAudioResampler::process(const AudioSourceReadData &readData) {
+        d->inputBlockRecords.clear();
+        for (auto &resampler : d->resamplerOfChannel) {
+            resampler->readIndexWithinCall = 0;
+        }
         if (readData.buffer->isContinuous()) {
             for (int i = 0; i < d->channelCount; i++) {
                 if (i < readData.buffer->channelCount())
