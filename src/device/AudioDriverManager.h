@@ -54,9 +54,6 @@ namespace talcs {
 #ifdef TALCS_USE_FEATURE_LIBSOUNDIO
             UseSoundIO = 0x8,
 #endif
-#ifdef TALCS_USE_FEATURE_ASIO
-            UseASIO = 0x10,
-#endif
         };
         Q_DECLARE_FLAGS(BuiltInDriverManagerOption, BuiltInDriverManagerOptionFlags);
         static AudioDriverManager *createBuiltInDriverManager(QObject *parent = nullptr);

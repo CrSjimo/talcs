@@ -26,9 +26,6 @@
 #    include <TalcsDevice/private/SDLAudioDriver_p.h>
 #endif
 
-#ifdef TALCS_USE_FEATURE_ASIO
-#    include <TalcsDevice/private/ASIOAudioDriver_p.h>
-#endif
 
 #ifdef TALCS_USE_FEATURE_PORTAUDIO
 #    include <TalcsDevice/private/PortAudioAudioDriver_p.h>
@@ -139,9 +136,6 @@ namespace talcs {
 #elif defined(TALCS_USE_FEATURE_PORTAUDIO)
             | UsePortAudio
 #endif
-#ifdef TALCS_USE_FEATURE_ASIO
-            | UseASIO
-#endif
         );
     }
 
@@ -174,11 +168,6 @@ namespace talcs {
             for (auto drv : SoundIOAudioDriver::getDrivers(option & CreateVirtualDefaultDevice)) {
                 drvMgr->addAudioDriver(drv);
             }
-        }
-#endif
-#ifdef TALCS_USE_FEATURE_ASIO
-        if (qgetenv("TALCS_DEVICE_USE_ASIO") != "0" && qgetenv("TALCS_DEVICE_USE_ASIO") == "1" || option & UseASIO) {
-            drvMgr->addAudioDriver(new ASIOAudioDriver);
         }
 #endif
         return drvMgr;

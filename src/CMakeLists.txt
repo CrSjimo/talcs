@@ -111,6 +111,10 @@ if(TALCS_DEVICE)
     add_subdirectory(device)
 endif()
 
+if(TALCS_ASIO)
+    add_subdirectory(asio)
+endif()
+
 if(TALCS_FORMAT)
     add_subdirectory(format)
 endif()

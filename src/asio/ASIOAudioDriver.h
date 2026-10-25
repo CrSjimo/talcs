@@ -1,0 +1,46 @@
+/*******************************************************************************
+ * Copyright (c) 2023 CrSjimo                                                  *
+ * SPDX-License-Identifier: GPL-3.0-only                                       *
+ *                                                                             *
+ * This file is part of TALCS.                                                 *
+ *                                                                             *
+ * TALCS is free software: you can redistribute it and/or modify it under the  *
+ * terms of the GNU General Public License as published by the Free Software   *
+ * Foundation, version 3 of the License.                                       *
+ *                                                                             *
+ * TALCS is distributed in the hope that it will be useful, but WITHOUT ANY    *
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS   *
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more       *
+ * details.                                                                    *
+ *                                                                             *
+ * You should have received a copy of the GNU General Public License along     *
+ * with TALCS. If not, see <https://www.gnu.org/licenses/>.                    *
+ ******************************************************************************/
+
+#ifndef TALCS_ASIOAUDIODRIVER_H
+#define TALCS_ASIOAUDIODRIVER_H
+
+#include <TalcsDevice/AudioDriver.h>
+
+#include <TalcsAsio/TalcsAsioGlobal.h>
+
+namespace talcs {
+
+    class ASIOAudioDriverPrivate;
+
+    class TALCSASIO_EXPORT ASIOAudioDriver : public AudioDriver {
+        Q_OBJECT
+        Q_DECLARE_PRIVATE(ASIOAudioDriver)
+    public:
+        explicit ASIOAudioDriver(QObject *parent = nullptr);
+        ~ASIOAudioDriver() override;
+        bool initialize() override;
+        void finalize() override;
+        QStringList devices() const override;
+        QString defaultDevice() const override;
+        AudioDevice *createDevice(const QString &name) override;
+    };
+
+}
+
+#endif // TALCS_ASIOAUDIODRIVER_H
