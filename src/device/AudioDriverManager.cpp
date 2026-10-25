@@ -21,21 +21,17 @@
 #include "AudioDriverManager_p.h"
 
 #include <QDebug>
+#include <QLoggingCategory>
 
-#ifdef TALCS_USE_FEATURE_SDL
+#ifdef Q_OS_WIN
+#    include <TalcsDevice/private/WASAPIAudioDriver_p.h>
+#else
 #    include <TalcsDevice/private/SDLAudioDriver_p.h>
 #endif
 
-
-#ifdef TALCS_USE_FEATURE_PORTAUDIO
-#    include <TalcsDevice/private/PortAudioAudioDriver_p.h>
-#endif
-
-#ifdef TALCS_USE_FEATURE_LIBSOUNDIO
-#    include <TalcsDevice/private/SoundIOAudioDriver_p.h>
-#endif
-
 namespace talcs {
+
+    Q_LOGGING_CATEGORY(lcAudioDriverManager, "talcs.device.driverManager")
 
     /**
      * @class AudioDriverManager
@@ -62,12 +58,13 @@ namespace talcs {
     bool AudioDriverManager::addAudioDriver(AudioDriver *driver) {
         Q_D(AudioDriverManager);
         if (!driver) {
-            qWarning() << "AudioDriverManager: driver to add is null.";
+            qCWarning(lcAudioDriverManager) << "Audio driver registration failed because the driver is null.";
             return false;
         }
         auto driverName = driver->name();
         driver->setParent(this);
         d->driverDict.append({driverName, driver});
+        qCInfo(lcAudioDriverManager) << "Audio driver registered." << "driver:" << driverName << "display name:" << driver->displayName();
         emit driverAdded(driver);
         return true;
     }
@@ -81,17 +78,18 @@ namespace talcs {
     bool AudioDriverManager::removeDriver(AudioDriver *driver) {
         Q_D(AudioDriverManager);
         if (!driver) {
-            qWarning() << "AudioDriverManager: driver to remove is null.";
+            qCWarning(lcAudioDriverManager) << "Audio driver removal failed because the driver is null.";
             return false;
         }
         auto driverName = driver->name();
         auto i = d->driverDict.indexOf({driverName, driver});
         if (i == -1) {
-            qWarning() << QString("AudioDriverManager: driver '%1' does not exist.").arg(driverName);
+            qCWarning(lcAudioDriverManager) << "Audio driver removal failed because the driver is not registered." << "driver:" << driverName;
             return false;
         }
         driver->setParent(nullptr);
         d->driverDict.removeAt(i);
+        qCInfo(lcAudioDriverManager) << "Audio driver removed." << "driver:" << driverName;
         emit driverRemoved(driver);
         return true;
     }
@@ -125,51 +123,23 @@ namespace talcs {
     }
 
     /**
-     * @overload
-     */
-    AudioDriverManager * AudioDriverManager::createBuiltInDriverManager(QObject *parent) {
-        return createBuiltInDriverManager(parent, CreateVirtualDefaultDevice
-#ifdef TALCS_USE_FEATURE_LIBSOUNDIO
-            | UseSoundIO
-#elif defined(TALCS_USE_FEATURE_SDL)
-            | UseSDL
-#elif defined(TALCS_USE_FEATURE_PORTAUDIO)
-            | UsePortAudio
-#endif
-        );
-    }
-
-    /**
      * Creates an audio driver manager with all built-in drivers.
      */
-    AudioDriverManager *AudioDriverManager::createBuiltInDriverManager(QObject *parent, BuiltInDriverManagerOption option) {
+    AudioDriverManager *AudioDriverManager::createBuiltInDriverManager(QObject *parent) {
+        qCInfo(lcAudioDriverManager) << "Built-in audio driver enumeration started.";
         auto drvMgr = new AudioDriverManager(parent);
-#ifdef TALCS_USE_FEATURE_PORTAUDIO
-        if (qgetenv("TALCS_DEVICE_USE_PORTAUDIO") != "0" && qgetenv("TALCS_DEVICE_USE_PORTAUDIO") == "1" || option & UsePortAudio) {
-            if (PortAudioAudioDriver::globalInitialize()) {
-                for (auto drv : PortAudioAudioDriver::getDrivers()) {
-                    drvMgr->addAudioDriver(drv);
-                }
-                connect(drvMgr, &QObject::destroyed, []() { PortAudioAudioDriver::globalFinalize(); });
-            } else {
-                qWarning() << "AudioDriverManager: Failed to initialize PortAudio drivers.";
-            }
+#ifdef Q_OS_WIN
+        drvMgr->addAudioDriver(new WASAPIAudioDriver(WASAPIAudioDriver::Shared));
+        drvMgr->addAudioDriver(new WASAPIAudioDriver(WASAPIAudioDriver::Exclusive));
+#else
+        for (auto drv : SDLAudioDriver::getDrivers()) {
+            drvMgr->addAudioDriver(drv);
         }
 #endif
-#ifdef TALCS_USE_FEATURE_SDL
-        if (qgetenv("TALCS_DEVICE_USE_SDL") != "0" && qgetenv("TALCS_DEVICE_USE_SDL") == "1" || option & UseSDL) {
-            for (auto drv : SDLAudioDriver::getDrivers(option & CreateVirtualDefaultDevice)) {
-                drvMgr->addAudioDriver(drv);
-            }
+        qCInfo(lcAudioDriverManager) << "Built-in audio driver enumeration completed." << "drivers:" << drvMgr->drivers();
+        if (drvMgr->drivers().isEmpty()) {
+            qCWarning(lcAudioDriverManager) << "No built-in audio drivers are available.";
         }
-#endif
-#ifdef TALCS_USE_FEATURE_LIBSOUNDIO
-        if (qgetenv("TALCS_DEVICE_USE_LIBSOUNDIO") != "0" && qgetenv("TALCS_DEVICE_USE_LIBSOUNDIO") == "1" || option & UseSoundIO) {
-            for (auto drv : SoundIOAudioDriver::getDrivers(option & CreateVirtualDefaultDevice)) {
-                drvMgr->addAudioDriver(drv);
-            }
-        }
-#endif
         return drvMgr;
     }
 

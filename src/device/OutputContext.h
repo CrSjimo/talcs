@@ -22,8 +22,6 @@
 
 #include <TalcsDevice/AbstractOutputContext.h>
 
-#include <TalcsDevice/AudioDriverManager.h>
-
 namespace talcs {
 
     class AudioDriverManager;
@@ -36,7 +34,6 @@ namespace talcs {
         Q_DECLARE_PRIVATE(OutputContext)
     public:
         explicit OutputContext(QObject *parent = nullptr);
-        explicit OutputContext(AudioDriverManager::BuiltInDriverManagerOption option, QObject *parent = nullptr);
         ~OutputContext() override;
 
         bool initialize(const QString &driverNameHint = {}, const QString &deviceNameHint = {});
@@ -71,6 +68,9 @@ namespace talcs {
         void deviceHotPlugged();
 
     private:
+        void handleDriverDeviceChanged();
+        void handleDeviceClosed();
+
         QScopedPointer<OutputContextPrivate> d_ptr;
     };
 

@@ -1,40 +1,21 @@
 project(TalcsDevice VERSION ${TALCS_VERSION} LANGUAGES CXX)
 
-set(_defines)
-set(_include_private)
 set(_links_private)
 
 file(GLOB_RECURSE _src *.h *.cpp)
 
-if(TALCS_DEVICE_ENABLE_SDL)
+if(WIN32)
+    list(APPEND _links_private ole32 uuid avrt)
+    list(FILTER _src EXCLUDE REGEX SDL)
+else()
     find_package(SDL2 REQUIRED)
     list(APPEND _links_private SDL2::SDL2)
-    list(APPEND _defines TALCS_USE_FEATURE_SDL)
-else()
-    list(FILTER _src EXCLUDE REGEX SDL)
-endif()
-
-if(TALCS_DEVICE_ENABLE_PORTAUDIO)
-    find_package(portaudio REQUIRED)
-    list(APPEND _links_private portaudio)
-    list(APPEND _defines TALCS_USE_FEATURE_PORTAUDIO)
-else()
-    list(FILTER _src EXCLUDE REGEX PortAudio)
-endif()
-
-if(TALCS_DEVICE_ENABLE_LIBSOUNDIO)
-    find_package(libsoundio REQUIRED)
-    list(APPEND _links_private libsoundio::libsoundio libsoundio::libsoundio_shared)
-    list(APPEND _defines TALCS_USE_FEATURE_LIBSOUNDIO)
-else()
-    list(FILTER _src EXCLUDE REGEX SoundIO)
+    list(FILTER _src EXCLUDE REGEX WASAPI)
 endif()
 
 talcs_add_library(${PROJECT_NAME} AUTOGEN
     SOURCES ${_src}
     LINKS talcs::Core
     LINKS_PRIVATE ${_links_private}
-    DEFINES ${_defines}
-    INCLUDE_PRIVATE ${_include_private}
     QT_INCLUDE_PRIVATE Core
 )

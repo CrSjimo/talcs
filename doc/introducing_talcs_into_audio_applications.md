@@ -4,7 +4,7 @@
 
 ## Dealing with drivers and devices
 
-The static member function [AudioDriverManager::createBuiltInDriverManager](@ref talcs::AudioDriverManager::createBuiltInDriverManager())() can be used to create an [AudioDriverManager](@ref talcs::AudioDriverManager) that supports the built-in SDL drivers. After the creation of the built-in audio manager, list all driver modes for the user to select. Then,  get the specified [AudioDriver](@ref talcs::AudioDriver) object.
+The static member function [AudioDriverManager::createBuiltInDriverManager](@ref talcs::AudioDriverManager::createBuiltInDriverManager())() creates an [AudioDriverManager](@ref talcs::AudioDriverManager) with all built-in drivers for the target platform. Windows uses `WASAPI` and `WASAPI (Exclusive Mode)`. Other platforms use SDL2. The ASIO module provides `talcs::ASIOAudioDriver`, which requires registration with `AudioDriverManager::addAudioDriver()`. The driver names are available through `drivers()`, and `driver()` returns the corresponding [AudioDriver](@ref talcs::AudioDriver). `AudioDriver::displayName()` returns the translated display name.
 
 Only after the initialization can audio devices be listed and created. Once an [AudioDevice](@ref talcs::AudioDevice) object is created, the information about supported buffer sizes and sample rates can be used to configure the audio application and open the device.
 

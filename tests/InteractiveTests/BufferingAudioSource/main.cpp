@@ -45,11 +45,11 @@ int main(int argc, char **argv) {
     AudioFormatInputSource src(&io);
     BufferingAudioSource bufSrc(&src, 2, 114514);
     auto mgr = AudioDriverManager::createBuiltInDriverManager();
-    auto drv = mgr->driver("wasapi");
+    auto drv = mgr->driver("WASAPI");
     drv->initialize();
     auto dev = drv->createDevice(drv->defaultDevice());
     qDebug() << dev->name();
-    dev->open(1024, 48000);
+    dev->open(dev->preferredBufferSize(), dev->preferredSampleRate());
     AudioSourcePlayback playback(&bufSrc);
     dev->start(&playback);
     QTimer timer;

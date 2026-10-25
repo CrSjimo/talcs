@@ -31,6 +31,10 @@
     The MIDI module can process MIDI messages, read inputs from MIDI devices, and do MIDI-related audio processing.
 
 - Additional Modules
+
+  - ASIO (requires: Device, Windows)
+
+    The ASIO module provides the ASIO audio driver under GPL-3.0-only. Enable the module with `TALCS_ASIO`.
   
   - Remote (requires: Device, MIDI)
     
@@ -50,7 +54,7 @@
 
 Essential modules will be built by default, and additional modules will not be built by default. To enable or disable the build of a module, set the corresponding CMake option on or off.
 
-The device module provides two internal implementations: SDL and ASIO. SDL is enabled and ASIO is disabled by default. To enable or disable, set the CMake option `TALCS_DEVICE_ENABLE_SDL` and `TALCS_DEVICE_ENABLE_ASIO` on or off.
+The device module includes native `WASAPI` and `WASAPI (Exclusive Mode)` drivers through `IAudioClient3` on Windows. Other platforms use SDL2. All built-in drivers for the target platform are registered by `AudioDriverManager::createBuiltInDriverManager()`. The ASIO module exports `talcs::ASIOAudioDriver` for registration with `AudioDriverManager::addAudioDriver()`.
 
 ## API Documentation
 
@@ -62,11 +66,11 @@ The device module provides two internal implementations: SDL and ASIO. SDL is en
 
 - [5cript/interval-tree](https://github.com/5cript/interval-tree)
 
-- [libsdl-org/SDL](https://github.com/libsdl-org/SDL) (used by: Device)
+- [libsdl-org/SDL](https://github.com/libsdl-org/SDL) (used by: Device on platforms without a native backend)
 
 - [libsndfile/libsndfile](https://github.com/libsndfile/libsndfile) (used by: Format)
 
-- [ASIO SDK](https://www.steinberg.net/developers/) <i>(optional)</i> (used by: Device)
+- [ASIO SDK](https://www.steinberg.net/developers/) (used by: ASIO)
 
 - [avaneev/r8brain-free-src](https://github.com/avaneev/r8brain-free-src) (used by: Format)
 
@@ -86,19 +90,21 @@ The device module provides two internal implementations: SDL and ASIO. SDL is en
   
   - [Doxygen](https://www.doxygen.nl/) <i>(optional)</i>
 
-TALCS uses vcpkg to manage dependency libraries, except Qt, ASIO SDK, r8brain, and JUCE:
+TALCS uses vcpkg to manage dependency libraries, except Qt, r8brain, and JUCE:
 
 - The port files of interval-tree and qmsetup are in [stdware/vcpkg-overlay](https://github.com/stdware/vcpkg-overlay). The documentation about how to install libraries is also in this repository. This repository is included as a submodule in `scripts/vcpkg`.
 
 - Qt should be installed manually.
 
-- ASIO SDK should be downloaded manually from [Steinberg's official website](https://www.steinberg.net/asiosdk) and configured in CMake option `TALCS_ASIOSDK_DIR`. 
+- The ASIO module uses only headers from the `asiosdk` vcpkg package.
 
 - r8brain is included as a submodule in the TALCS repository.
 
 - JUCE should be manually specified in the CMake option `JUCE_DIR` to make CMake find it.
 
 ## License of TALCS
+
+The ASIO module is licensed under GPL-3.0-only. The following terms apply to the other TALCS modules.
 
 TALCS is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 

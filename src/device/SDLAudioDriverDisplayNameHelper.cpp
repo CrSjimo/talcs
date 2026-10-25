@@ -17,10 +17,10 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#include <QString>
-#include <QHash>
-
 #include "SDLAudioDriverDisplayNameHelper.h"
+
+#include <QHash>
+#include <QString>
 
 namespace talcs {
 
@@ -50,9 +50,6 @@ namespace talcs {
                 {"esd",         "Enlightened Sound Daemon"   },
                 {"nacl",        "SDL NaCl Audio Driver"      },
                 {"nas",         "Network Audio System"       },
-                {"wasapi",      "WASAPI"                     },
-                {"directsound", "DirectSound"                },
-                {"winmm",       "Windows Waveform Audio"     },
                 {"paud",        "AIX Paudio"                 },
                 {"haiku",       "Haiku BSoundPlayer"         },
                 {"coreaudio",   "CoreAudio"                  },

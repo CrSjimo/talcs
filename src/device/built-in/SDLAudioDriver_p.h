@@ -20,11 +20,11 @@
 #ifndef TALCS_SDLAUDIODRIVER_P_H
 #define TALCS_SDLAUDIODRIVER_P_H
 
-#include <TalcsDevice/private/AudioDriver_p.h>
-
 #include <QMap>
 #include <QMutex>
 #include <QThread>
+
+#include <TalcsDevice/private/AudioDriver_p.h>
 
 namespace talcs {
 
@@ -43,10 +43,9 @@ namespace talcs {
         void finalize() override;
         QStringList devices() const override;
         QString defaultDevice() const override;
-        AudioDevice * createDefaultDevice() override;
         AudioDevice *createDevice(const QString &name) override;
 
-        static QList<SDLAudioDriver *> getDrivers(bool createVirtualDefaultDevice);
+        static QList<SDLAudioDriver *> getDrivers();
 
     protected:
         SDLAudioDriver(SDLAudioDriverPrivate &d, QObject *parent);
@@ -71,7 +70,6 @@ namespace talcs {
         Q_DECLARE_PUBLIC(SDLAudioDriver)
     public:
         int driverIndex;
-        bool createVirtualDefaultDevice;
         QScopedPointer<SDLEventPoller> eventPoller;
         QThread *eventPollerThread;
         QMap<quint32, SDLAudioDevice *> openedDevices;

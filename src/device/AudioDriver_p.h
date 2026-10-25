@@ -24,7 +24,7 @@
 
 namespace talcs {
 
-    class AudioDriverPrivate {
+    class TALCSDEVICE_EXPORT AudioDriverPrivate {
         Q_DECLARE_PUBLIC(AudioDriver)
     public:
 

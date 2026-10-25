@@ -30,15 +30,16 @@ int main(int argc, char **argv) {
 
     auto mgr = talcs::AudioDriverManager::createBuiltInDriverManager();
     qInfo() << "Built-in drivers:" << mgr->drivers();
-    auto wasapiDrv = mgr->driver("wasapi");
+    auto wasapiDrv = mgr->driver("WASAPI");
 
-    if (!wasapiDrv->initialize()) {
+    if (!wasapiDrv || !wasapiDrv->initialize()) {
         qCritical() << "Cannot initialize WASAPI driver!";
         return 1;
     }
     qInfo() << "WASAPI devices:" << wasapiDrv->devices();
     qInfo() << "WASAPI default device:" << wasapiDrv->defaultDevice();
-    auto dev = wasapiDrv->createDevice(wasapiDrv->defaultDevice());
+    const auto defaultDeviceName = wasapiDrv->defaultDevice();
+    auto dev = defaultDeviceName.isEmpty() ? nullptr : wasapiDrv->createDevice(defaultDeviceName);
 
     if (!dev || !dev->isInitialized()) {
         qCritical() << "Cannot create WASAPI audio device!";

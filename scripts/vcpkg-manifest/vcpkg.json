@@ -15,15 +15,14 @@
     },
     {
       "name": "sdl2",
+      "platform": "!windows",
       "default-features": false
     },
     "interval-tree",
     "boost-interprocess",
     "qmsetup",
     "wavpack",
-    "r8brain-free-src",
-    "portaudio",
-    "libsoundio"
+    "r8brain-free-src"
   ],
   "overrides": [
     {

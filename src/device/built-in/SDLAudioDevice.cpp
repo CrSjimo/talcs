@@ -19,18 +19,20 @@
 
 #include "SDLAudioDevice_p.h"
 
-#include <cstring>
-
 #include <QDebug>
+#include <QLoggingCategory>
 
 #include <SDL2/SDL.h>
 
 #include <TalcsCore/AudioSource.h>
 #include <TalcsCore/InterleavedAudioDataWrapper.h>
 
-#include "SDLAudioDriver_p.h"
+#include <TalcsDevice/private/SDLAudioDriver_p.h>
 
 namespace talcs {
+
+    Q_LOGGING_CATEGORY(lcSDLAudioDevice, "talcs.device.sdl.device")
+
     static const QList<double> COMMON_SAMPLE_RATES = {8000,   11025,  12000,  16000,  22050,  24000,
                                                       32000,  44100,  48000,  64000,  88200,  96000,
                                                       128000, 176400, 192000, 256000, 352800, 384000};
@@ -39,32 +41,31 @@ namespace talcs {
 
     SDLAudioDevice::SDLAudioDevice(const QString &name, SDLAudioDriver *driver)
         : AudioDevice(*new SDLAudioDevicePrivate, driver) {
-        Q_D(SDLAudioDevice);
         setName(name);
         setDriver(driver);
-        SDL_AudioSpec preferredSpec;
-        if (name.isEmpty()) {
-            char *devName;
-            if (SDL_GetDefaultAudioInfo(&devName, &preferredSpec, 0) == 0) {
-                SDL_free(devName);
-            } else {
-                setErrorString(SDL_GetError());
-                return;
+        qCInfo(lcSDLAudioDevice) << "SDL audio device initialization started." << "driver:" << driver->name() << "device:" << name;
+        SDL_AudioSpec preferredSpec{};
+        const int count = SDL_GetNumAudioDevices(0);
+        if (count < 0) {
+            qCWarning(lcSDLAudioDevice) << "SDL audio device enumeration failed during initialization." << "device:" << name << "error:" << SDL_GetError();
+        }
+        int deviceIndex = -1;
+        const auto deviceName = name.toUtf8();
+        for (int i = 0; i < count; ++i) {
+            if (deviceName == SDL_GetAudioDeviceName(i, 0)) {
+                deviceIndex = i;
+                break;
             }
-        } else {
-            int cnt = SDL_GetNumAudioDevices(0);
-            int devIndex = 0;
-            auto devName = name.toUtf8();
-            for (int i = 0; i < cnt; i++) {
-                if (std::strcmp(devName, SDL_GetAudioDeviceName(i, 0)) == 0) {
-                    devIndex = i;
-                    break;
-                }
-            }
-            if (SDL_GetAudioDeviceSpec(devIndex, 0, &preferredSpec) != 0) {
-                setErrorString(SDL_GetError());
-                return;
-            }
+        }
+        if (deviceIndex < 0) {
+            setErrorString(tr("The audio device is no longer available."));
+            qCWarning(lcSDLAudioDevice) << "SDL audio device initialization failed." << "device:" << name << "error:" << errorString();
+            return;
+        }
+        if (SDL_GetAudioDeviceSpec(deviceIndex, 0, &preferredSpec) != 0) {
+            setErrorString(SDL_GetError());
+            qCWarning(lcSDLAudioDevice) << "SDL audio device format retrieval failed." << "device:" << name << "error:" << errorString();
+            return;
         }
         setChannelCount(qMin(quint8(8), preferredSpec.channels));
         if (preferredSpec.samples == 0)
@@ -77,6 +78,9 @@ namespace talcs {
         setAvailableSampleRates(COMMON_SAMPLE_RATES);
 
         setIsInitialized(true);
+        qCDebug(lcSDLAudioDevice) << "SDL audio device capabilities resolved." << "device:" << name << "channels:" << channelCount()
+                                << "preferred buffer size:" << preferredBufferSize() << "preferred sample rate:" << preferredSampleRate()
+                                << "buffer sizes:" << availableBufferSizes() << "sample rates:" << availableSampleRates();
     }
 
     SDLAudioDevice::~SDLAudioDevice() {
@@ -85,6 +89,8 @@ namespace talcs {
 
     bool SDLAudioDevice::open(qint64 bufferSize, double sampleRate) {
         Q_D(SDLAudioDevice);
+        qCInfo(lcSDLAudioDevice) << "SDL audio device open started." << "driver:" << driver()->name() << "device:" << name()
+                               << "buffer size:" << bufferSize << "sample rate:" << sampleRate << "channels:" << activeChannelCount();
         if (isOpen())
             close();
 
@@ -98,16 +104,20 @@ namespace talcs {
         };
         d->spec.userdata = d;
 
-        d->devId = SDL_OpenAudioDevice(name().isEmpty() ? nullptr : name().toUtf8().data(), 0, &d->spec, nullptr, 0);
+        d->devId = SDL_OpenAudioDevice(name().toUtf8().constData(), 0, &d->spec, nullptr, 0);
         if (d->devId == 0) {
             setErrorString(SDL_GetError());
+            qCWarning(lcSDLAudioDevice) << "SDL audio device open failed." << "device:" << name()
+                                      << "buffer size:" << bufferSize << "sample rate:" << sampleRate << "error:" << errorString();
             return false;
         }
         static_cast<SDLAudioDriver *>(d->driver.data())->addOpenedDevice(d->devId, this);
+        qCInfo(lcSDLAudioDevice) << "SDL audio device open completed." << "device:" << name() << "device ID:" << d->devId;
         return AudioStreamBase::open(bufferSize, sampleRate);
     }
     void SDLAudioDevice::close() {
         Q_D(SDLAudioDevice);
+        const bool wasOpen = isOpen();
         SDLAudioDevice::stop();
         SDL_CloseAudioDevice(d->devId);
         if (d->driver)
@@ -115,23 +125,34 @@ namespace talcs {
         d->devId = 0;
         d->spec = {};
         AudioDevice::close();
+        if (wasOpen) {
+            qCInfo(lcSDLAudioDevice) << "SDL audio device closed." << "device:" << name();
+        }
     }
 
     bool SDLAudioDevice::start(AudioDeviceCallback * audioDeviceCallback) {
         Q_D(SDLAudioDevice);
+        qCInfo(lcSDLAudioDevice) << "SDL audio playback start requested." << "device:" << name() << "device ID:" << d->devId;
         d->audioDeviceCallback = audioDeviceCallback;
-        if (!audioDeviceCallback->deviceWillStartCallback(this))
+        if (!audioDeviceCallback->deviceWillStartCallback(this)) {
+            qCWarning(lcSDLAudioDevice) << "SDL audio playback preparation callback failed." << "device:" << name();
             return false;
+        }
         SDL_PauseAudioDevice(d->devId, 0);
+        qCInfo(lcSDLAudioDevice) << "SDL audio playback started." << "device:" << name();
         return AudioDevice::start(audioDeviceCallback);
     }
     void SDLAudioDevice::stop() {
         Q_D(SDLAudioDevice);
+        const bool wasStarted = isStarted();
         SDL_PauseAudioDevice(d->devId, 1);
         if (d->audioDeviceCallback)
             d->audioDeviceCallback->deviceStoppedCallback();
         d->audioDeviceCallback = nullptr;
         AudioDevice::stop();
+        if (wasStarted) {
+            qCInfo(lcSDLAudioDevice) << "SDL audio playback stopped." << "device:" << name();
+        }
     }
     void SDLAudioDevice::lock() {
         Q_D(SDLAudioDevice);
@@ -150,10 +171,12 @@ namespace talcs {
     }
 
     bool SDLAudioDevice::openControlPanel() {
-#ifdef Q_OS_WINDOWS
-        return std::system("mmsys.cpl") == 0;
-#elif defined(Q_OS_MACOS)
-        return std::system("open 'x-apple.systempreferences:com.apple.preference.sound'") == 0;
+#ifdef Q_OS_MACOS
+        const auto result = std::system("open 'x-apple.systempreferences:com.apple.preference.sound'");
+        if (result != 0) {
+            qCWarning(lcSDLAudioDevice) << "SDL audio control panel launch failed." << "device:" << name() << "process status:" << result;
+        }
+        return result == 0;
 #else
         return false;
 #endif

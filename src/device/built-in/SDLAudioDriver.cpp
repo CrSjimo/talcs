@@ -20,47 +20,47 @@
 #include "SDLAudioDriver_p.h"
 
 #include <QDebug>
+#include <QLoggingCategory>
 #include <QTimer>
 
 #include <SDL2/SDL.h>
 
-#include "SDLAudioDevice_p.h"
+#include <TalcsDevice/private/SDLAudioDevice_p.h>
 
 namespace talcs {
 
+    Q_LOGGING_CATEGORY(lcSDLAudioDriver, "talcs.device.sdl.driver")
+
     static QString getDisplayName(const QString &driverName) {
         static QHash<QString, QString> map = {
-                {"pipewire",    "Pipewire (SDL)"                   },
-                {"pulseaudio",  "PulseAudio (SDL)"                 },
-                {"alsa",        "ALSA PCM audio (SDL)"             },
-                {"jack",        "JACK Audio Connection Kit (SDL)"  },
-                {"sndio",       "OpenBSD sndio (SDL)"              },
-                {"netbsd",      "NetBSD audio (SDL)"               },
-                {"dsp",         "OSS /dev/dsp standard audio (SDL)"},
-                {"qsa",         "QNX QSA Audio (SDL)"              },
-                {"audio",       "UNIX /dev/audio interface (SDL)"  },
-                {"arts",        "Analog RealTime Synthesizer (SDL)"},
-                {"esd",         "Enlightened Sound Daemon (SDL)"   },
-                {"nacl",        "SDL NaCl Audio Driver (SDL)"      },
-                {"nas",         "Network Audio System (SDL)"       },
-                {"wasapi",      "WASAPI (SDL)"                     },
-                {"directsound", "DirectSound (SDL)"                },
-                {"winmm",       "Windows Waveform Audio (SDL)"     },
-                {"paud",        "AIX Paudio (SDL)"                 },
-                {"haiku",       "Haiku BSoundPlayer (SDL)"         },
-                {"coreaudio",   "CoreAudio (SDL)"                  },
-                {"disk",        "direct-to-disk audio (SDL)"       },
-                {"dummy",       "SDL dummy audio driver (SDL)"     },
-                {"fusionsound", "FusionSound (SDL)"                },
-                {"AAudio",      "AAudio audio driver (SDL)"        },
-                {"openslES",    "opensl ES audio driver (SDL)"     },
-                {"android",     "SDL Android audio driver (SDL)"   },
-                {"ps2",         "PS2 audio driver (SDL)"           },
-                {"psp",         "PSP audio driver (SDL)"           },
-                {"vita",        "VITA audio driver (SDL)"          },
-                {"n3ds",        "SDL N3DS audio driver (SDL)"      },
-                {"emscripten",  "SDL emscripten audio driver (SDL)"},
-                {"DART",        "OS/2 DART (SDL)"                  },
+                {"pipewire",    QT_TRANSLATE_NOOP("talcs::AudioDriver", "Pipewire (SDL)")                   },
+                {"pulseaudio",  QT_TRANSLATE_NOOP("talcs::AudioDriver", "PulseAudio (SDL)")                 },
+                {"alsa",        QT_TRANSLATE_NOOP("talcs::AudioDriver", "ALSA PCM audio (SDL)")             },
+                {"jack",        QT_TRANSLATE_NOOP("talcs::AudioDriver", "JACK Audio Connection Kit (SDL)")  },
+                {"sndio",       QT_TRANSLATE_NOOP("talcs::AudioDriver", "OpenBSD sndio (SDL)")              },
+                {"netbsd",      QT_TRANSLATE_NOOP("talcs::AudioDriver", "NetBSD audio (SDL)")               },
+                {"dsp",         QT_TRANSLATE_NOOP("talcs::AudioDriver", "OSS /dev/dsp standard audio (SDL)")},
+                {"qsa",         QT_TRANSLATE_NOOP("talcs::AudioDriver", "QNX QSA Audio (SDL)")              },
+                {"audio",       QT_TRANSLATE_NOOP("talcs::AudioDriver", "UNIX /dev/audio interface (SDL)")  },
+                {"arts",        QT_TRANSLATE_NOOP("talcs::AudioDriver", "Analog RealTime Synthesizer (SDL)")},
+                {"esd",         QT_TRANSLATE_NOOP("talcs::AudioDriver", "Enlightened Sound Daemon (SDL)")   },
+                {"nacl",        QT_TRANSLATE_NOOP("talcs::AudioDriver", "SDL NaCl Audio Driver (SDL)")      },
+                {"nas",         QT_TRANSLATE_NOOP("talcs::AudioDriver", "Network Audio System (SDL)")       },
+                {"paud",        QT_TRANSLATE_NOOP("talcs::AudioDriver", "AIX Paudio (SDL)")                 },
+                {"haiku",       QT_TRANSLATE_NOOP("talcs::AudioDriver", "Haiku BSoundPlayer (SDL)")         },
+                {"coreaudio",   QT_TRANSLATE_NOOP("talcs::AudioDriver", "CoreAudio (SDL)")                  },
+                {"disk",        QT_TRANSLATE_NOOP("talcs::AudioDriver", "direct-to-disk audio (SDL)")       },
+                {"dummy",       QT_TRANSLATE_NOOP("talcs::AudioDriver", "SDL dummy audio driver (SDL)")     },
+                {"fusionsound", QT_TRANSLATE_NOOP("talcs::AudioDriver", "FusionSound (SDL)")                },
+                {"AAudio",      QT_TRANSLATE_NOOP("talcs::AudioDriver", "AAudio audio driver (SDL)")        },
+                {"openslES",    QT_TRANSLATE_NOOP("talcs::AudioDriver", "opensl ES audio driver (SDL)")     },
+                {"android",     QT_TRANSLATE_NOOP("talcs::AudioDriver", "SDL Android audio driver (SDL)")   },
+                {"ps2",         QT_TRANSLATE_NOOP("talcs::AudioDriver", "PS2 audio driver (SDL)")           },
+                {"psp",         QT_TRANSLATE_NOOP("talcs::AudioDriver", "PSP audio driver (SDL)")           },
+                {"vita",        QT_TRANSLATE_NOOP("talcs::AudioDriver", "VITA audio driver (SDL)")          },
+                {"n3ds",        QT_TRANSLATE_NOOP("talcs::AudioDriver", "SDL N3DS audio driver (SDL)")      },
+                {"emscripten",  QT_TRANSLATE_NOOP("talcs::AudioDriver", "SDL emscripten audio driver (SDL)")},
+                {"DART",        QT_TRANSLATE_NOOP("talcs::AudioDriver", "OS/2 DART (SDL)")                  },
         };
         return map.value(driverName, driverName);
     }
@@ -85,19 +85,25 @@ namespace talcs {
 
     bool SDLAudioDriver::initialize() {
         Q_D(SDLAudioDriver);
+        qCInfo(lcSDLAudioDriver) << "SDL audio driver initialization started." << "driver:" << name() << "SDL driver:" << d->internalName;
         if (SDL_Init(SDL_INIT_AUDIO) == 0 && SDL_AudioInit(d->internalName.toLocal8Bit()) == 0) {
             QTimer::singleShot(0, [=] {
                 SDL_FlushEvents(SDL_AUDIODEVICEADDED, SDL_AUDIODEVICEREMOVED);
                 d->eventPollerThread->start();
             });
+            qCInfo(lcSDLAudioDriver) << "SDL audio driver initialization completed." << "driver:" << name();
             return AudioDriver::initialize();
         } else {
             setErrorString(SDL_GetError());
+            qCWarning(lcSDLAudioDriver) << "SDL audio driver initialization failed." << "driver:" << name() << "SDL driver:" << d->internalName << "error:" << errorString();
             return false;
         }
     }
     void SDLAudioDriver::finalize() {
         Q_D(SDLAudioDriver);
+        if (isInitialized()) {
+            qCInfo(lcSDLAudioDriver) << "SDL audio driver finalization started." << "driver:" << name();
+        }
         d->eventPoller->quit();
         d->eventPollerThread->quit();
         d->eventPollerThread->wait();
@@ -106,63 +112,42 @@ namespace talcs {
         AudioDriver::finalize();
     }
     QStringList SDLAudioDriver::devices() const {
-        Q_D(const SDLAudioDriver);
         QStringList list;
-        if (d->createVirtualDefaultDevice) {
-            char *name;
-            SDL_AudioSpec spec;
-            if (SDL_GetDefaultAudioInfo(&name, &spec, 0) == 0) {
-                SDL_free(name);
-                list.append("");
-            }
-        }
         int cnt = SDL_GetNumAudioDevices(0);
-        for (int i = 0; i < cnt; i++) {
-            list.append(QString::fromUtf8(SDL_GetAudioDeviceName(i, 0)));
+        if (cnt < 0) {
+            qCWarning(lcSDLAudioDriver) << "SDL audio device enumeration failed." << "driver:" << name() << "error:" << SDL_GetError();
         }
+        for (int i = 0; i < cnt; i++) {
+            const auto *deviceName = SDL_GetAudioDeviceName(i, 0);
+            if (!deviceName) {
+                qCWarning(lcSDLAudioDriver) << "SDL audio device name retrieval failed." << "driver:" << name() << "index:" << i << "error:" << SDL_GetError();
+            }
+            list.append(QString::fromUtf8(deviceName));
+        }
+        qCDebug(lcSDLAudioDriver) << "SDL audio devices enumerated." << "driver:" << name() << "devices:" << list;
         return list;
     }
     QString SDLAudioDriver::defaultDevice() const {
-        Q_D(const SDLAudioDriver);
-        if (d->createVirtualDefaultDevice) {
-            return "";
-        }
         char *name;
         SDL_AudioSpec spec;
         if (SDL_GetDefaultAudioInfo(&name, &spec, 0) == 0) {
             auto s = QString::fromUtf8(name);
             SDL_free(name);
+            qCDebug(lcSDLAudioDriver) << "SDL default audio device resolved." << "driver:" << this->name() << "device:" << s;
             return s;
         } else {
+            qCWarning(lcSDLAudioDriver) << "SDL default audio device retrieval failed." << "driver:" << this->name() << "error:" << SDL_GetError();
             return {};
         }
     }
 
-    AudioDevice *SDLAudioDriver::createDefaultDevice() {
-        Q_D(SDLAudioDriver);
-        {
-            char *name;
-            SDL_AudioSpec spec;
-            if (SDL_GetDefaultAudioInfo(&name, &spec, 0) != 0) {
-                return nullptr;
-            }
-            SDL_free(name);
-        }
-        if (d->createVirtualDefaultDevice) {
-            return new SDLAudioDevice({}, this);
-        } else {
-            auto name = defaultDevice();
-            if (!name.isEmpty()) {
-                return new SDLAudioDevice(defaultDevice(), this);
-            }
+    AudioDevice *SDLAudioDriver::createDevice(const QString &name) {
+        qCInfo(lcSDLAudioDriver) << "SDL audio device creation started." << "driver:" << this->name() << "device:" << name;
+        if (name.isEmpty() || !devices().contains(name)) {
+            qCWarning(lcSDLAudioDriver) << "SDL audio device creation failed because the device is unavailable." << "driver:" << this->name() << "device:" << name;
             return nullptr;
         }
-
-    }
-
-    AudioDevice *SDLAudioDriver::createDevice(const QString &name) {
-        auto dev = new SDLAudioDevice(name, this);
-        return dev;
+        return new SDLAudioDevice(name, this);
     }
 
     void SDLAudioDriver::addOpenedDevice(quint32 devId, SDLAudioDevice * dev) {
@@ -174,18 +159,21 @@ namespace talcs {
         Q_D(SDLAudioDriver);
         d->openedDevices.remove(devId);
     }
-    QList<SDLAudioDriver *> SDLAudioDriver::getDrivers(bool createVirtualDefaultDevice) {
+    QList<SDLAudioDriver *> SDLAudioDriver::getDrivers() {
         int cnt = SDL_GetNumAudioDrivers();
+        qCInfo(lcSDLAudioDriver) << "SDL audio driver enumeration started." << "driver count:" << cnt;
         QList<SDLAudioDriver *> list;
         for (int i = 0; i < cnt; i++) {
             auto name = QString::fromLatin1(SDL_GetAudioDriver(i));
-            if (name == "disk" || name == "dummy")
+            if (name == "disk" || name == "dummy") {
+                qCDebug(lcSDLAudioDriver) << "SDL nonhardware audio driver skipped." << "SDL driver:" << name;
                 continue;
+            }
             auto drv = new SDLAudioDriver;
             drv->d_func()->internalName = name;
-            drv->d_func()->createVirtualDefaultDevice = createVirtualDefaultDevice;
             drv->setName(getDisplayName(name));
             list.append(drv);
+            qCInfo(lcSDLAudioDriver) << "SDL audio driver enumerated." << "SDL driver:" << name << "driver:" << drv->name();
         }
         return list;
     }
@@ -194,10 +182,11 @@ namespace talcs {
         Q_Q(SDLAudioDriver);
         auto *e = reinterpret_cast<const SDL_Event *>(sdlEventData.data());
         if (e->type == SDL_AUDIODEVICEADDED && e->adevice.iscapture == 0) {
-            qDebug() << "SDL_AUDIODEVICEADDED";
+            qCInfo(lcSDLAudioDriver) << "SDL audio device added." << "driver:" << q->name() << "device index:" << e->adevice.which
+                                     << "device:" << SDL_GetAudioDeviceName(static_cast<int>(e->adevice.which), 0);
             emit q->deviceChanged();
         } else if (e->type == SDL_AUDIODEVICEREMOVED && e->adevice.iscapture == 0) {
-            qDebug() << "SDL_AUDIODEVICEREMOVED";
+            qCInfo(lcSDLAudioDriver) << "SDL audio device removed." << "driver:" << q->name() << "device ID:" << e->adevice.which;
             handleDeviceRemoved(e->adevice.which);
             emit q->deviceChanged();
         }
@@ -207,6 +196,7 @@ namespace talcs {
         if (it == openedDevices.end())
             return;
         auto dev = it.value();
+        qCWarning(lcSDLAudioDriver) << "An open SDL audio device was removed." << "device:" << dev->name() << "device ID:" << devId;
         dev->close();
         emit dev->closed();
     }

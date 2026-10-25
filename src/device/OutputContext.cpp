@@ -21,6 +21,7 @@
 #include "OutputContext_p.h"
 
 #include <QDebug>
+#include <QLoggingCategory>
 
 #include <TalcsCore/MixerAudioSource.h>
 
@@ -31,6 +32,8 @@
 
 namespace talcs {
 
+    Q_LOGGING_CATEGORY(lcOutputContext, "talcs.device.outputContext")
+
     /**
      * @class OutputContext
      * @brief The derived AbstractOutputContext based on the audio driver manager created by
@@ -38,21 +41,12 @@ namespace talcs {
      */
 
     /**
-     * @overload
+     * Creates an output context with all built-in drivers.
      */
     OutputContext::OutputContext(QObject *parent) : AbstractOutputContext(parent), d_ptr(new OutputContextPrivate) {
         Q_D(OutputContext);
         d->q_ptr = this;
         d->driverManager.reset(AudioDriverManager::createBuiltInDriverManager());
-    }
-
-    /**
-     * Constructor.
-     */
-    OutputContext::OutputContext(AudioDriverManager::BuiltInDriverManagerOption option, QObject *parent): AbstractOutputContext(parent), d_ptr(new OutputContextPrivate) {
-        Q_D(OutputContext);
-        d->q_ptr = this;
-        d->driverManager.reset(AudioDriverManager::createBuiltInDriverManager(nullptr, option));
     }
 
     /**
@@ -72,31 +66,35 @@ namespace talcs {
      */
     bool OutputContext::initialize(const QString &driverNameHint, const QString &deviceNameHint) {
         Q_D(OutputContext);
+        qCInfo(lcOutputContext) << "Audio output initialization started." << "driver hint:" << driverNameHint << "device hint:" << deviceNameHint;
         do {
             if (driverNameHint.isEmpty())
                 break;
             d->driver = d->driverManager->driver(driverNameHint);
             if (!d->driver || !d->driver->initialize()) {
+                qCWarning(lcOutputContext) << "Requested audio driver initialization failed." << "driver:" << driverNameHint
+                                          << "error:" << (d->driver ? d->driver->errorString() : QStringLiteral("The audio driver is not registered."));
                 d->driver = nullptr;
                 break;
             }
             if (deviceNameHint.isEmpty())
                 break;
             std::unique_ptr<talcs::AudioDevice> dev(d->driver->createDevice(deviceNameHint));
-            if (!dev || !dev->isInitialized())
+            if (!dev || !dev->isInitialized()) {
+                qCWarning(lcOutputContext) << "Requested audio device initialization failed."
+                                          << "driver:" << d->driver->name() << "device:" << deviceNameHint
+                                          << "error:" << (dev ? dev->errorString() : d->driver->errorString());
                 break;
-            auto savedBufferSize = d->adoptedBufferSize == 0 ? dev->preferredBufferSize() : d->adoptedBufferSize;
-            auto savedSampleRate = qFuzzyIsNull(d->adoptedSampleRate) ? dev->preferredSampleRate() : d->adoptedSampleRate;
-            if (!dev->open(savedBufferSize, savedSampleRate) && !dev->open(dev->preferredBufferSize(), dev->preferredSampleRate()))
+            }
+            if (!d->openDeviceWithOption(dev.get(), DO_DefaultOption))
                 break;
             d->device = std::move(dev);
             AbstractOutputContext::setDevice(d->device.get());
             d->postSetDevice();
-            connect(d->driver, &talcs::AudioDriver::deviceChanged, this, [d] {
-                d->handleDeviceHotPlug();
-            });
+            connect(d->driver, &AudioDriver::deviceChanged, this, &OutputContext::handleDriverDeviceChanged, Qt::UniqueConnection);
             return true;
         } while (false);
+        qCInfo(lcOutputContext) << "Audio output initialization is falling back to driver and device enumeration.";
         return enumerateDevices();
     }
 
@@ -146,8 +144,11 @@ namespace talcs {
      */
     bool OutputContext::setDriver(const QString &driverName, OutputContext::DeviceOption option) {
         Q_D(OutputContext);
-        if (d->driver && driverName == d->driver->name() && d->driver->isInitialized() && d->device && d->device->isOpen())
+        qCInfo(lcOutputContext) << "Audio driver selection started." << "driver:" << driverName << "device option:" << option;
+        if (d->driver && driverName == d->driver->name() && d->driver->isInitialized() && d->device && d->device->isOpen()) {
+            qCDebug(lcOutputContext) << "The selected audio driver and device are already open." << "driver:" << driverName << "device:" << d->device->name();
             return true;
+        }
         d->device.reset();
         if (d->driver) {
             d->driver->finalize();
@@ -155,6 +156,8 @@ namespace talcs {
         }
         d->driver = d->driverManager->driver(driverName);
         if (!d->driver || !d->driver->initialize()) {
+            qCWarning(lcOutputContext) << "Audio driver selection failed." << "driver:" << driverName
+                                      << "error:" << (d->driver ? d->driver->errorString() : QStringLiteral("The audio driver is not registered."));
             d->driver = nullptr;
             return false;
         }
@@ -172,12 +175,15 @@ namespace talcs {
      */
     bool OutputContext::setDevice(const QString &deviceName, OutputContext::DeviceOption option) {
         Q_D(OutputContext);
-        std::unique_ptr<talcs::AudioDevice> dev;
-        if (deviceName.isEmpty())
-            dev.reset(d->driver->createDefaultDevice());
-        else
-            dev.reset(d->driver->createDevice(deviceName));
+        qCInfo(lcOutputContext) << "Audio device selection started." << "device:" << deviceName << "device option:" << option;
+        if (!d->driver || deviceName.isEmpty()) {
+            qCWarning(lcOutputContext) << "Audio device selection requires an active driver and a nonempty device name." << "device:" << deviceName;
+            return false;
+        }
+        std::unique_ptr<talcs::AudioDevice> dev(d->driver->createDevice(deviceName));
         if (!dev || !dev->isInitialized()) {
+            qCWarning(lcOutputContext) << "Audio device initialization failed." << "driver:" << d->driver->name() << "device:" << deviceName
+                                      << "error:" << (dev ? dev->errorString() : d->driver->errorString());
             return false;
         }
         if (!d->openDeviceWithOption(dev.get(), option))
@@ -202,11 +208,16 @@ namespace talcs {
      */
     bool OutputContext::enumerateDevices(OutputContext::DeviceOption option) {
         Q_D(OutputContext);
+        qCInfo(lcOutputContext) << "Audio driver and device enumeration started." << "drivers:" << d->driverManager->drivers();
         for (int i = 0;; i++) {
             if (d->driver && d->driver->initialize()) {
                 break;
             }
+            if (d->driver) {
+                qCWarning(lcOutputContext) << "Audio driver initialization failed during enumeration." << "driver:" << d->driver->name() << "error:" << d->driver->errorString();
+            }
             if (i >= d->driverManager->drivers().size()) {
+                qCCritical(lcOutputContext) << "Audio driver enumeration failed because no driver could be initialized.";
                 d->driver = nullptr;
                 return false;
             }
@@ -214,31 +225,38 @@ namespace talcs {
             if (d->driver && d->driver->initialize()) {
                 break;
             }
+            if (d->driver) {
+                qCWarning(lcOutputContext) << "Audio driver initialization failed during enumeration." << "driver:" << d->driver->name() << "error:" << d->driver->errorString();
+            }
         }
-        for (int i = -1;; i++) {
-            std::unique_ptr<talcs::AudioDevice> currentDevice;
-            if (i >= d->driver->devices().size()) {
-                return false;
-            }
-            if (i == -1) {
-                if (!d->driver->defaultDevice().isEmpty())
-                    currentDevice.reset(d->driver->createDefaultDevice());
-            } else {
-                currentDevice.reset(d->driver->createDevice(d->driver->devices()[i]));
-            }
-            if (!currentDevice || !currentDevice->isInitialized())
+        auto deviceNames = d->driver->devices();
+        deviceNames.removeAll(QString());
+        const auto defaultDeviceName = d->driver->defaultDevice();
+        qCInfo(lcOutputContext) << "Audio devices enumerated." << "driver:" << d->driver->name()
+                               << "devices:" << deviceNames << "default device:" << defaultDeviceName;
+        if (!defaultDeviceName.isEmpty()) {
+            deviceNames.removeAll(defaultDeviceName);
+            deviceNames.prepend(defaultDeviceName);
+        }
+        for (const auto &deviceName : deviceNames) {
+            qCInfo(lcOutputContext) << "Audio device initialization started." << "driver:" << d->driver->name() << "device:" << deviceName;
+            std::unique_ptr<talcs::AudioDevice> currentDevice(d->driver->createDevice(deviceName));
+            if (!currentDevice || !currentDevice->isInitialized()) {
+                qCWarning(lcOutputContext) << "Audio device initialization failed." << "driver:" << d->driver->name() << "device:" << deviceName
+                                          << "error:" << (currentDevice ? currentDevice->errorString() : d->driver->errorString());
                 continue;
+            }
             if (!d->openDeviceWithOption(currentDevice.get(), option)) {
                 continue;
             }
             d->device = std::move(currentDevice);
             AbstractOutputContext::setDevice(d->device.get());
             d->postSetDevice();
-            connect(d->driver, &talcs::AudioDriver::deviceChanged, this, [d] {
-                d->handleDeviceHotPlug();
-            });
+            connect(d->driver, &AudioDriver::deviceChanged, this, &OutputContext::handleDriverDeviceChanged, Qt::UniqueConnection);
             return true;
         }
+        qCWarning(lcOutputContext) << "Audio device enumeration failed because no device could be opened." << "driver:" << d->driver->name();
+        return false;
     }
 
     /**
@@ -261,14 +279,21 @@ namespace talcs {
         if (bufferSize == d->adoptedBufferSize)
             return true;
         d->adoptedBufferSize = bufferSize;
+        qCInfo(lcOutputContext) << "Audio buffer size change started." << "buffer size:" << bufferSize;
         if (d->device && d->device->isOpen()) {
-            if (!d->device->open(d->adoptedBufferSize, d->adoptedSampleRate))
+            if (!d->device->open(d->adoptedBufferSize, d->adoptedSampleRate)) {
+                qCWarning(lcOutputContext) << "Audio device reopen failed after a buffer size change." << "device:" << d->device->name()
+                                          << "buffer size:" << bufferSize << "sample rate:" << d->adoptedSampleRate << "error:" << d->device->errorString();
                 return false;
+            }
         }
         emit bufferSizeChanged(bufferSize);
-        controlMixer()->open(d->adoptedBufferSize, d->adoptedSampleRate);
-        if (d->device && d->device->isOpen())
-            d->device->start(playback());
+        if (!controlMixer()->open(d->adoptedBufferSize, d->adoptedSampleRate)) {
+            qCWarning(lcOutputContext) << "Audio mixer open failed after a buffer size change." << "buffer size:" << bufferSize << "sample rate:" << d->adoptedSampleRate;
+        }
+        if (d->device && d->device->isOpen() && !d->device->start(playback())) {
+            qCWarning(lcOutputContext) << "Audio device restart failed after a buffer size change." << "device:" << d->device->name() << "error:" << d->device->errorString();
+        }
         return true;
     }
 
@@ -292,13 +317,21 @@ namespace talcs {
         if (qFuzzyCompare(sampleRate, d->adoptedSampleRate))
             return true;
         d->adoptedSampleRate = sampleRate;
+        qCInfo(lcOutputContext) << "Audio sample rate change started." << "sample rate:" << sampleRate;
         if (d->device && d->device->isOpen()) {
-            if (!d->device->open(d->adoptedBufferSize, d->adoptedSampleRate))
+            if (!d->device->open(d->adoptedBufferSize, d->adoptedSampleRate)) {
+                qCWarning(lcOutputContext) << "Audio device reopen failed after a sample rate change." << "device:" << d->device->name()
+                                          << "buffer size:" << d->adoptedBufferSize << "sample rate:" << sampleRate << "error:" << d->device->errorString();
                 return false;
-            d->device->start(playback());
+            }
+            if (!d->device->start(playback())) {
+                qCWarning(lcOutputContext) << "Audio device restart failed after a sample rate change." << "device:" << d->device->name() << "error:" << d->device->errorString();
+            }
         }
         emit sampleRateChanged(sampleRate);
-        controlMixer()->open(d->adoptedBufferSize, d->adoptedSampleRate);
+        if (!controlMixer()->open(d->adoptedBufferSize, d->adoptedSampleRate)) {
+            qCWarning(lcOutputContext) << "Audio mixer open failed after a sample rate change." << "buffer size:" << d->adoptedBufferSize << "sample rate:" << sampleRate;
+        }
         return true;
     }
 
@@ -332,6 +365,28 @@ namespace talcs {
         d->hotPlugNotificationMode = mode;
     }
 
+    void OutputContext::handleDriverDeviceChanged() {
+        Q_D(OutputContext);
+        if (sender() == d->driver) {
+            d->handleDeviceHotPlug();
+        }
+    }
+
+    void OutputContext::handleDeviceClosed() {
+        Q_D(OutputContext);
+        if (!d->device || sender() != d->device.get() || !d->driver || !d->driver->isInitialized() || d->device->isOpen()) {
+            return;
+        }
+        qCWarning(lcOutputContext) << "The current audio device closed unexpectedly." << "driver:" << d->driver->name()
+                                  << "device:" << d->device->name() << "error:" << d->device->errorString();
+        if (!d->driver->devices().contains(d->device->name())) {
+            return;
+        }
+        if (d->openDeviceWithOption(d->device.get(), DO_DefaultOption)) {
+            d->postSetDevice();
+        }
+    }
+
     /**
      * @fn OutputContext::deviceHotPlugged()
      * Emitted when hot-plug is detected.
@@ -353,20 +408,35 @@ namespace talcs {
             case OutputContext::DO_DoNotChangeAdoptedSpec:
                 break;
         }
-        if (!device->open(savedBufferSize, savedSampleRate) && !device->open(device->preferredBufferSize(), device->preferredSampleRate()))
-            return false;
+        qCInfo(lcOutputContext) << "Audio device open started." << "driver:" << driver->name() << "device:" << device->name()
+                               << "buffer size:" << savedBufferSize << "sample rate:" << savedSampleRate;
+        if (!device->open(savedBufferSize, savedSampleRate)) {
+            qCWarning(lcOutputContext) << "Audio device open failed. The preferred format will be retried."
+                                      << "driver:" << driver->name() << "device:" << device->name()
+                                      << "buffer size:" << savedBufferSize << "sample rate:" << savedSampleRate << "error:" << device->errorString();
+            qCInfo(lcOutputContext) << "Audio device open is retrying with the preferred format." << "device:" << device->name()
+                                   << "buffer size:" << device->preferredBufferSize() << "sample rate:" << device->preferredSampleRate();
+            if (!device->open(device->preferredBufferSize(), device->preferredSampleRate())) {
+                qCWarning(lcOutputContext) << "Audio device open failed with the preferred format." << "driver:" << driver->name()
+                                          << "device:" << device->name() << "error:" << device->errorString();
+                return false;
+            }
+        }
+        qCInfo(lcOutputContext) << "Audio device open completed." << "driver:" << driver->name() << "device:" << device->name()
+                               << "buffer size:" << device->bufferSize() << "sample rate:" << device->sampleRate();
         return true;
     }
     void OutputContextPrivate::handleDeviceHotPlug() {
         Q_Q(OutputContext);
         auto deviceList = driver->devices();
+        qCInfo(lcOutputContext) << "Audio device hot plug detected." << "driver:" << driver->name() << "devices:" << deviceList
+                               << "current device:" << (device ? device->name() : QString()) << "notification mode:" << hotPlugNotificationMode;
         if (device && deviceList.contains(device->name()) && !device->isOpen()) {
-            auto savedBufferSize = adoptedBufferSize == 0 ? device->preferredBufferSize() : adoptedBufferSize;
-            auto savedSampleRate = qFuzzyIsNull(adoptedSampleRate) ? device->preferredSampleRate() : adoptedSampleRate;
-            if (!device->open(savedBufferSize, savedSampleRate) && !device->open(device->preferredBufferSize(), device->preferredSampleRate())) {
-                qWarning() << "OutputContext: Tried to reopen current device after hot-plugged, but failed.";
+            if (!openDeviceWithOption(device.get(), OutputContext::DO_DefaultOption)) {
+                qCWarning(lcOutputContext) << "Audio device recovery failed after hot plug." << "device:" << device->name() << "error:" << device->errorString();
+            } else {
+                postSetDevice();
             }
-            postSetDevice();
         }
         switch (hotPlugNotificationMode) {
             case OutputContext::Omni:
@@ -383,6 +453,8 @@ namespace talcs {
 
     void OutputContextPrivate::postSetDevice() {
         Q_Q(OutputContext);
+        QObject::connect(device.get(), &AudioDevice::closed, q, &OutputContext::handleDeviceClosed,
+            static_cast<Qt::ConnectionType>(Qt::QueuedConnection | Qt::UniqueConnection));
         if (adoptedBufferSize != device->bufferSize()) {
             adoptedBufferSize = device->bufferSize();
             emit q->bufferSizeChanged(adoptedBufferSize);
@@ -391,8 +463,17 @@ namespace talcs {
             adoptedSampleRate = device->sampleRate();
             emit q->sampleRateChanged(adoptedSampleRate);
         }
-        q->controlMixer()->open(adoptedBufferSize, adoptedSampleRate);
-        device->start(q->playback());
+        if (!q->controlMixer()->open(adoptedBufferSize, adoptedSampleRate)) {
+            qCWarning(lcOutputContext) << "Audio mixer open failed." << "device:" << device->name()
+                                      << "buffer size:" << adoptedBufferSize << "sample rate:" << adoptedSampleRate;
+        }
+        if (!device->start(q->playback())) {
+            qCWarning(lcOutputContext) << "Audio device playback start failed." << "driver:" << driver->name()
+                                      << "device:" << device->name() << "error:" << device->errorString();
+        } else {
+            qCInfo(lcOutputContext) << "Audio output playback started." << "driver:" << driver->name() << "device:" << device->name()
+                                   << "buffer size:" << adoptedBufferSize << "sample rate:" << adoptedSampleRate << "channels:" << device->activeChannelCount();
+        }
         emit q->deviceChanged();
     }
 }

@@ -1,32 +1,35 @@
 # Tutorial: Using audio devices with TALCS
 
-TALCS has built-in support for [SDL2 Audio](https://wiki.libsdl.org/) and  [ASIO](https://forums.steinberg.net/c/developer/asio/) (only Windows). 
+TALCS includes native `WASAPI` and `WASAPI (Exclusive Mode)` drivers through `IAudioClient3` on Windows. Other platforms use [SDL2 Audio](https://wiki.libsdl.org/). All built-in drivers for the target platform are registered by `AudioDriverManager::createBuiltInDriverManager()`. The ASIO module provides `talcs::ASIOAudioDriver`, which requires registration with `AudioDriverManager::addAudioDriver()`.
 
-Due to license issues, the support for ASIO is optional. If you want to use it, you should enable the `TALCS_ENABLE_ASIO` option and specify the path to [ASIO SDK](https://www.steinberg.net/asiosdk) by setting the CMake variable `TALCS_ASIOSDK_DIR`.
+The ASIO module requires `TALCS_ASIO=ON` and the `asiosdk` vcpkg package. Link applications to `talcs::Asio` and include `<TalcsAsio/ASIOAudioDriver.h>` to register the driver. The module is licensed under GPL-3.0-only.
 
 Here is an example of how to get these built-in [AudioDriver](@ref talcs::AudioDriver) objects:
 
 ```cpp
 auto mgr = talcs::AudioDriverManager::createBuiltInDriverManager();
 qInfo() << "Built-in drivers:" << mgr->drivers();
-auto wasapiDrv = mgr->driver("wasapi");
+auto wasapiDrv = mgr->driver("WASAPI");
 ```
 
-This example creates an [AudioDriverManager](@ref talcs::AudioDriverManager) with all built-in driver modes, lists the names of all driver modes, and creates a WASAPI audio driver. You can refer to the documentation of SDL2 to find all supported driver modes.
+This Windows example creates an [AudioDriverManager](@ref talcs::AudioDriverManager) with the built-in drivers, lists their names, and retrieves the shared driver as `WASAPI`. The exclusive driver is available as `WASAPI (Exclusive Mode)`. `AudioDriver::displayName()` returns the translated display name. Driver lookup and settings use `AudioDriver::name()`.
 
 Here is an example of how to use the [AudioDriver](@ref talcs::AudioDriver) object:
 
 ```cpp
-if (!wasapiDrv->initialize()) {
+if (!wasapiDrv || !wasapiDrv->initialize()) {
     qCritical() << "Cannot initialize WASAPI driver!";
     return 1;
 }
 qInfo() << "WASAPI devices:" << wasapiDrv->devices();
 qInfo() << "WASAPI default device:" << wasapiDrv->defaultDevice();
-auto dev = wasapiDrv->createDevice(wasapiDrv->defaultDevice());
+const auto defaultDeviceName = wasapiDrv->defaultDevice();
+auto dev = defaultDeviceName.isEmpty() ? nullptr : wasapiDrv->createDevice(defaultDeviceName);
 ```
 
 This example initializes the WASAPI audio driver, lists the names of all devices as well as the default device, and creates the [AudioDevice](@ref talcs::AudioDevice) object of the default device.
+
+`defaultDevice()` returns the name of the current default physical endpoint. `createDevice()` creates a device from that name. The device remains bound to that endpoint if the system default changes. `availableSampleRates()` and `availableBufferSizes()` provide independent capability lists. `open()` returns `false` and sets `errorString()` if the requested combination is unsupported. Exclusive mode can align the requested buffer size to the hardware requirements. The actual buffer size is available through `bufferSize()` after `open()` succeeds.
 
 Here is an example of how to use the [AudioDevice](@ref talcs::AudioDevice) object:
 
@@ -36,7 +39,7 @@ if (!dev || !dev->isInitialized()) {
     return 1;
 }
 qInfo() << "Preferred buffer size:" << dev->preferredBufferSize();
-qqInfo) << "Preferred sample rate:" << dev->preferredSampleRate();
+qInfo() << "Preferred sample rate:" << dev->preferredSampleRate();
 if (!dev->open(dev->preferredBufferSize(), dev->preferredSampleRate())) {
     qCritical() << "Cannot open WASAPI audio device!";
     return 1;
