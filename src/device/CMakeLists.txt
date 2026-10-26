@@ -1,9 +1,9 @@
 project(TalcsDevice VERSION ${TALCS_VERSION} LANGUAGES CXX)
 
 set(_links_private)
+set(_platform_src)
 
 file(GLOB _src *.h *.cpp)
-list(FILTER _src EXCLUDE REGEX SDL)
 
 if(WIN32)
     file(GLOB _platform_src built-in/WASAPI*.h built-in/WASAPI*.cpp)
@@ -18,10 +18,9 @@ elseif(APPLE)
         ${TALCS_AUDIO_UNIT_FRAMEWORK}
         ${TALCS_CORE_FOUNDATION_FRAMEWORK}
     )
-else()
-    file(GLOB _platform_src SDL*.h SDL*.cpp built-in/SDL*.h built-in/SDL*.cpp)
-    find_package(SDL2 REQUIRED)
-    list(APPEND _links_private SDL2::SDL2)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    file(GLOB _platform_src built-in/NativeAudioDevice*.h built-in/NativeAudioDevice*.cpp)
+    list(APPEND _links_private ${CMAKE_DL_LIBS})
 endif()
 list(APPEND _src ${_platform_src})
 
@@ -31,3 +30,7 @@ talcs_add_library(${PROJECT_NAME} AUTOGEN
     LINKS_PRIVATE ${_links_private}
     QT_INCLUDE_PRIVATE Core
 )
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set_target_properties(${PROJECT_NAME} PROPERTIES INSTALL_RPATH "$ORIGIN" INSTALL_RPATH_USE_LINK_PATH OFF)
+endif()

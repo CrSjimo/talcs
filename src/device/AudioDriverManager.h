@@ -43,9 +43,11 @@ namespace talcs {
         AudioDriver *driver(const QString &name) const;
         QStringList drivers() const;
 
+        void loadBuiltInDriverLibraries(const QString &directory = {});
+
         static AudioDriverManager *createBuiltInDriverManager(QObject *parent = nullptr);
 
-    signals:
+    Q_SIGNALS:
         void driverAdded(AudioDriver *driver);
         void driverRemoved(AudioDriver *driver);
 

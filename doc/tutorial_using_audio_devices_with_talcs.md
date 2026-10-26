@@ -1,6 +1,8 @@
 # Tutorial: Using audio devices with TALCS
 
-TALCS includes native `WASAPI` and `WASAPI (Exclusive Mode)` drivers through `IAudioClient3` on Windows and `CoreAudio` and `CoreAudio (Hog Mode)` drivers through the HAL Output Audio Unit on macOS. Linux uses [SDL2 Audio](https://wiki.libsdl.org/). All built-in drivers for the target platform are registered by `AudioDriverManager::createBuiltInDriverManager()`. The ASIO module provides `talcs::ASIOAudioDriver`, which requires registration with `AudioDriverManager::addAudioDriver()`.
+TALCS includes native `WASAPI` and `WASAPI (Exclusive Mode)` drivers through `IAudioClient3` on Windows and `CoreAudio` and `CoreAudio (Hog Mode)` drivers through the HAL Output Audio Unit on macOS. Linux provides `PipeWire`, `PulseAudio`, `JACK`, and `ALSA` in preference order through the separate `talcs::PipeWire`, `talcs::PulseAudio`, `talcs::Jack`, and `talcs::Alsa` libraries. All built-in drivers for the target platform are registered by `AudioDriverManager::createBuiltInDriverManager()`. The ASIO module provides `talcs::ASIOAudioDriver`, which requires registration with `AudioDriverManager::addAudioDriver()`.
+
+On Linux, `AudioDriverManager::loadBuiltInDriverLibraries(directory)` loads the native driver libraries from an explicit directory. The manager loads only drivers with available backend shared libraries. The backend libraries are linked during development and resolved from the deployment environment at runtime. Native output buffers are filled directly. Requests exceeding the device buffer size are divided into callbacks no larger than that size, without caching samples between native requests. PipeWire and PulseAudio buffer sizes also specify latency requests. JACK exposes the current server sample rate and block size and groups physical playback ports by client. Changes to those ports or server settings close the affected device. ALSA exposes playback PCM configurations and uses the configured `default` PCM as its default device.
 
 The ASIO module requires `TALCS_ASIO=ON` and the `asiosdk` vcpkg package. Link applications to `talcs::Asio` and include `<TalcsAsio/ASIOAudioDriver.h>` to register the driver. The module is licensed under GPL-3.0-only.
 
@@ -29,7 +31,7 @@ auto dev = defaultDeviceName.isEmpty() ? nullptr : wasapiDrv->createDevice(defau
 
 This example initializes the WASAPI audio driver, lists the names of all devices as well as the default device, and creates the [AudioDevice](@ref talcs::AudioDevice) object of the default device.
 
-`defaultDevice()` returns the name of the current default physical endpoint. `createDevice()` creates a device from that name. The device remains bound to that endpoint if the system default changes. `availableSampleRates()` and `availableBufferSizes()` provide independent capability lists. `open()` returns `false` and sets `errorString()` if the requested combination is unsupported. Exclusive mode can align the requested buffer size to the hardware requirements. The actual buffer size is available through `bufferSize()` after `open()` succeeds.
+`defaultDevice()` returns the name of the current default output endpoint. `createDevice()` creates a device from that name. The device remains bound to that endpoint if the system default changes. `availableSampleRates()` and `availableBufferSizes()` provide independent capability lists. `open()` returns `false` and sets `errorString()` if the requested combination is unsupported. Exclusive mode can align the requested buffer size to the hardware requirements. The actual buffer size is available through `bufferSize()` after `open()` succeeds.
 
 Here is an example of how to use the [AudioDevice](@ref talcs::AudioDevice) object:
 

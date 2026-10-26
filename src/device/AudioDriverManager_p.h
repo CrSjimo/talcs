@@ -20,9 +20,9 @@
 #ifndef AUDIODRIVERMANAGER_P_H
 #define AUDIODRIVERMANAGER_P_H
 
-#include <QList>
-
 #include <TalcsDevice/AudioDriverManager.h>
+
+#include <QList>
 
 namespace talcs {
     class AudioDriverManagerPrivate {
@@ -30,6 +30,7 @@ namespace talcs {
     public:
         AudioDriverManager *q_ptr;
         QList<QPair<QString, AudioDriver *>> driverDict;
+        bool insertAudioDriver(AudioDriver *driver, AudioDriver *before = nullptr);
     };
 }
 

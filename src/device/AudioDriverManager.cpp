@@ -20,15 +20,22 @@
 #include "AudioDriverManager.h"
 #include "AudioDriverManager_p.h"
 
+#ifdef Q_OS_LINUX
+#    include <dlfcn.h>
+#endif
+
 #include <QDebug>
+#include <QDir>
+#include <QFileInfo>
+#include <QLibrary>
 #include <QLoggingCategory>
+
+#include <TalcsDevice/AudioDriver.h>
 
 #ifdef Q_OS_WIN
 #    include <TalcsDevice/private/WASAPIAudioDriver_p.h>
 #elif defined(Q_OS_MACOS)
 #    include <TalcsDevice/private/CoreAudioAudioDriver_p.h>
-#else
-#    include <TalcsDevice/private/SDLAudioDriver_p.h>
 #endif
 
 namespace talcs {
@@ -59,15 +66,21 @@ namespace talcs {
      */
     bool AudioDriverManager::addAudioDriver(AudioDriver *driver) {
         Q_D(AudioDriverManager);
+        return d->insertAudioDriver(driver);
+    }
+
+    bool AudioDriverManagerPrivate::insertAudioDriver(AudioDriver *driver, AudioDriver *before) {
+        Q_Q(AudioDriverManager);
         if (!driver) {
             qCWarning(lcAudioDriverManager) << "Audio driver registration failed because the driver is null.";
             return false;
         }
         auto driverName = driver->name();
-        driver->setParent(this);
-        d->driverDict.append({driverName, driver});
+        driver->setParent(q);
+        const auto index = before ? driverDict.indexOf({before->name(), before}) : driverDict.size();
+        driverDict.insert(index, {driverName, driver});
         qCInfo(lcAudioDriverManager) << "Audio driver registered." << "driver:" << driverName << "display name:" << driver->displayName();
-        emit driverAdded(driver);
+        Q_EMIT q->driverAdded(driver);
         return true;
     }
 
@@ -92,7 +105,7 @@ namespace talcs {
         driver->setParent(nullptr);
         d->driverDict.removeAt(i);
         qCInfo(lcAudioDriverManager) << "Audio driver removed." << "driver:" << driverName;
-        emit driverRemoved(driver);
+        Q_EMIT driverRemoved(driver);
         return true;
     }
 
@@ -136,16 +149,75 @@ namespace talcs {
 #elif defined(Q_OS_MACOS)
         drvMgr->addAudioDriver(new CoreAudioAudioDriver(CoreAudioAudioDriver::Shared));
         drvMgr->addAudioDriver(new CoreAudioAudioDriver(CoreAudioAudioDriver::Hog));
-#else
-        for (auto drv : SDLAudioDriver::getDrivers()) {
-            drvMgr->addAudioDriver(drv);
-        }
+#elif defined(Q_OS_LINUX)
+        drvMgr->loadBuiltInDriverLibraries();
 #endif
         qCInfo(lcAudioDriverManager) << "Built-in audio driver enumeration completed." << "drivers:" << drvMgr->drivers();
         if (drvMgr->drivers().isEmpty()) {
             qCWarning(lcAudioDriverManager) << "No built-in audio drivers are available.";
         }
         return drvMgr;
+    }
+
+    /**
+     * Loads available native driver libraries in preference order from directory or the device library directory.
+     */
+    void AudioDriverManager::loadBuiltInDriverLibraries(const QString &directory) {
+#ifdef Q_OS_LINUX
+        Q_D(AudioDriverManager);
+        auto libraryDirectory = directory;
+        if (libraryDirectory.isEmpty()) {
+            Dl_info information{};
+            if (dladdr(reinterpret_cast<void *>(&AudioDriverManager::createBuiltInDriverManager), &information) && information.dli_fname) {
+                libraryDirectory = QFileInfo(QString::fromLocal8Bit(information.dli_fname)).absolutePath();
+            }
+        }
+        struct Library {
+            const char *driver;
+            const char *module;
+        };
+        static const Library libraries[] = {
+            {"PipeWire", "TalcsPipeWire"},
+            {"PulseAudio", "TalcsPulseAudio"},
+            {"JACK", "TalcsJack"},
+            {"ALSA", "TalcsAlsa"},
+        };
+        for (const auto &entry : libraries) {
+            if (driver(QString::fromLatin1(entry.driver))) {
+                continue;
+            }
+            auto *library = new QLibrary(this);
+            library->setFileName(libraryDirectory.isEmpty() ? QString::fromLatin1(entry.module) : QDir(libraryDirectory).filePath(QStringLiteral("lib%1.so").arg(QString::fromLatin1(entry.module))));
+            // Removed drivers may outlive the manager, so their code must remain loaded.
+            library->setLoadHints(QLibrary::ResolveAllSymbolsHint | QLibrary::PreventUnloadHint);
+            using Factory = AudioDriver *(*)(QObject *);
+            const auto factory = reinterpret_cast<Factory>(library->resolve("talcsCreateAudioDriver"));
+            if (!factory) {
+                qCDebug(lcAudioDriverManager) << "Native audio driver library is unavailable." << library->fileName() << library->errorString();
+                delete library;
+                continue;
+            }
+            auto *nativeDriver = factory(this);
+            if (!nativeDriver || nativeDriver->name() != QString::fromLatin1(entry.driver)) {
+                qCWarning(lcAudioDriverManager) << "Native audio driver factory returned an invalid driver." << library->fileName();
+                delete nativeDriver;
+                delete library;
+                continue;
+            }
+            AudioDriver *nextDriver = nullptr;
+            bool following = false;
+            for (const auto &candidate : libraries) {
+                if (&candidate == &entry) {
+                    following = true;
+                } else if (following && (nextDriver = driver(QString::fromLatin1(candidate.driver)))) {
+                    break;
+                }
+            }
+            d->insertAudioDriver(nativeDriver, nextDriver);
+        }
+#else
+        Q_UNUSED(directory)
+#endif
     }
 
     /**

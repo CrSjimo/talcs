@@ -87,7 +87,7 @@ namespace talcs {
 
     /**
      * Returns the name of the current default device, or a null string if no default device is available.
-     * The returned name identifies a physical endpoint and can be passed to createDevice().
+     * The returned name identifies an output endpoint and can be passed to createDevice().
      */
     QString AudioDriver::defaultDevice() const {
         return {};

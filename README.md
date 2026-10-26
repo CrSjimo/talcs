@@ -54,7 +54,7 @@
 
 Essential modules will be built by default, and additional modules will not be built by default. To enable or disable the build of a module, set the corresponding CMake option on or off.
 
-The device module includes native `WASAPI` and `WASAPI (Exclusive Mode)` drivers through `IAudioClient3` on Windows and `CoreAudio` and `CoreAudio (Hog Mode)` drivers through the HAL Output Audio Unit on macOS. The CoreAudio shared driver preserves hardware settings, exposes the current hardware buffer size, and passes each native output buffer directly to the audio callback. A hardware buffer size change closes the shared device and refreshes its capabilities. The Hog driver acquires exclusive device access, configures the hardware sample rate and buffer size, and restores the hardware settings before releasing the device. Linux uses SDL2. All built-in drivers for the target platform are registered by `AudioDriverManager::createBuiltInDriverManager()`. The ASIO module exports `talcs::ASIOAudioDriver` for registration with `AudioDriverManager::addAudioDriver()`.
+The device module includes native `WASAPI` and `WASAPI (Exclusive Mode)` drivers through `IAudioClient3` on Windows and `CoreAudio` and `CoreAudio (Hog Mode)` drivers through the HAL Output Audio Unit on macOS. The CoreAudio shared driver preserves hardware settings, exposes the current hardware buffer size, and passes each native output buffer directly to the audio callback. A hardware buffer size change closes the shared device and refreshes its capabilities. The Hog driver acquires exclusive device access, configures the hardware sample rate and buffer size, and restores the hardware settings before releasing the device. Linux provides `PipeWire`, `PulseAudio`, `JACK`, and `ALSA` in preference order through the separate `talcs::PipeWire`, `talcs::PulseAudio`, `talcs::Jack`, and `talcs::Alsa` libraries. All built-in drivers for the target platform are registered by `AudioDriverManager::createBuiltInDriverManager()`. The ASIO module exports `talcs::ASIOAudioDriver` for registration with `AudioDriverManager::addAudioDriver()`.
 
 ## API Documentation
 
@@ -66,7 +66,13 @@ The device module includes native `WASAPI` and `WASAPI (Exclusive Mode)` drivers
 
 - [5cript/interval-tree](https://github.com/5cript/interval-tree)
 
-- [libsdl-org/SDL](https://github.com/libsdl-org/SDL) (used by: Device on Linux)
+- [PipeWire](https://pipewire.org/) (used by: PipeWire)
+
+- [PulseAudio](https://www.freedesktop.org/wiki/Software/PulseAudio/) (used by: PulseAudio)
+
+- [JACK](https://jackaudio.org/) (used by: Jack)
+
+- [ALSA](https://www.alsa-project.org/) (used by: Alsa)
 
 - [libsndfile/libsndfile](https://github.com/libsndfile/libsndfile) (used by: Format)
 
