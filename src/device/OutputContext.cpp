@@ -22,6 +22,7 @@
 
 #include <QDebug>
 #include <QLoggingCategory>
+#include <QSignalBlocker>
 
 #include <TalcsCore/MixerAudioSource.h>
 
@@ -149,19 +150,29 @@ namespace talcs {
             qCDebug(lcOutputContext) << "The selected audio driver and device are already open." << "driver:" << driverName << "device:" << d->device->name();
             return true;
         }
+        {
+            // Clear the borrowed pointer before destruction and notify after driver selection completes.
+            const QSignalBlocker blocker(this);
+            AbstractOutputContext::setDevice(nullptr);
+        }
         d->device.reset();
         if (d->driver) {
-            d->driver->finalize();
             disconnect(d->driver, nullptr, this, nullptr);
+            d->driver->finalize();
         }
         d->driver = d->driverManager->driver(driverName);
         if (!d->driver || !d->driver->initialize()) {
             qCWarning(lcOutputContext) << "Audio driver selection failed." << "driver:" << driverName
                                       << "error:" << (d->driver ? d->driver->errorString() : QStringLiteral("The audio driver is not registered."));
             d->driver = nullptr;
+            Q_EMIT deviceChanged();
             return false;
         }
-        return enumerateDevices(option);
+        const auto succeeded = enumerateDevices(option);
+        if (!succeeded) {
+            Q_EMIT deviceChanged();
+        }
+        return succeeded;
     }
 
     /**
