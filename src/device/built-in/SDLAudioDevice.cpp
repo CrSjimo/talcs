@@ -171,14 +171,6 @@ namespace talcs {
     }
 
     bool SDLAudioDevice::openControlPanel() {
-#ifdef Q_OS_MACOS
-        const auto result = std::system("open 'x-apple.systempreferences:com.apple.preference.sound'");
-        if (result != 0) {
-            qCWarning(lcSDLAudioDevice) << "SDL audio control panel launch failed." << "device:" << name() << "process status:" << result;
-        }
-        return result == 0;
-#else
         return false;
-#endif
     }
 }

@@ -52,7 +52,6 @@ namespace talcs {
                 {"nas",         "Network Audio System"       },
                 {"paud",        "AIX Paudio"                 },
                 {"haiku",       "Haiku BSoundPlayer"         },
-                {"coreaudio",   "CoreAudio"                  },
                 {"disk",        "direct-to-disk audio"       },
                 {"dummy",       "SDL dummy audio driver"     },
                 {"fusionsound", "FusionSound"                },

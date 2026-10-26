@@ -1,6 +1,6 @@
 # Tutorial: Using audio devices with TALCS
 
-TALCS includes native `WASAPI` and `WASAPI (Exclusive Mode)` drivers through `IAudioClient3` on Windows. Other platforms use [SDL2 Audio](https://wiki.libsdl.org/). All built-in drivers for the target platform are registered by `AudioDriverManager::createBuiltInDriverManager()`. The ASIO module provides `talcs::ASIOAudioDriver`, which requires registration with `AudioDriverManager::addAudioDriver()`.
+TALCS includes native `WASAPI` and `WASAPI (Exclusive Mode)` drivers through `IAudioClient3` on Windows and `CoreAudio` and `CoreAudio (Hog Mode)` drivers through the HAL Output Audio Unit on macOS. Linux uses [SDL2 Audio](https://wiki.libsdl.org/). All built-in drivers for the target platform are registered by `AudioDriverManager::createBuiltInDriverManager()`. The ASIO module provides `talcs::ASIOAudioDriver`, which requires registration with `AudioDriverManager::addAudioDriver()`.
 
 The ASIO module requires `TALCS_ASIO=ON` and the `asiosdk` vcpkg package. Link applications to `talcs::Asio` and include `<TalcsAsio/ASIOAudioDriver.h>` to register the driver. The module is licensed under GPL-3.0-only.
 

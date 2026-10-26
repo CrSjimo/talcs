@@ -48,7 +48,6 @@ namespace talcs {
                 {"nas",         QT_TRANSLATE_NOOP("talcs::AudioDriver", "Network Audio System (SDL)")       },
                 {"paud",        QT_TRANSLATE_NOOP("talcs::AudioDriver", "AIX Paudio (SDL)")                 },
                 {"haiku",       QT_TRANSLATE_NOOP("talcs::AudioDriver", "Haiku BSoundPlayer (SDL)")         },
-                {"coreaudio",   QT_TRANSLATE_NOOP("talcs::AudioDriver", "CoreAudio (SDL)")                  },
                 {"disk",        QT_TRANSLATE_NOOP("talcs::AudioDriver", "direct-to-disk audio (SDL)")       },
                 {"dummy",       QT_TRANSLATE_NOOP("talcs::AudioDriver", "SDL dummy audio driver (SDL)")     },
                 {"fusionsound", QT_TRANSLATE_NOOP("talcs::AudioDriver", "FusionSound (SDL)")                },

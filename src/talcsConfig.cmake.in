@@ -9,7 +9,7 @@ find_dependency(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
 find_path(INTERVAL_TREE_INCLUDE_DIRS "interval-tree/interval_tree.hpp" REQUIRED)
 
 # Device
-if(@TALCS_DEVICE@ AND NOT "@WIN32@")
+if(@TALCS_DEVICE@ AND NOT "@WIN32@" AND NOT "@APPLE@")
     find_dependency(SDL2 REQUIRED)
 endif()
 

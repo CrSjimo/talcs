@@ -25,6 +25,8 @@
 
 #ifdef Q_OS_WIN
 #    include <TalcsDevice/private/WASAPIAudioDriver_p.h>
+#elif defined(Q_OS_MACOS)
+#    include <TalcsDevice/private/CoreAudioAudioDriver_p.h>
 #else
 #    include <TalcsDevice/private/SDLAudioDriver_p.h>
 #endif
@@ -131,6 +133,9 @@ namespace talcs {
 #ifdef Q_OS_WIN
         drvMgr->addAudioDriver(new WASAPIAudioDriver(WASAPIAudioDriver::Shared));
         drvMgr->addAudioDriver(new WASAPIAudioDriver(WASAPIAudioDriver::Exclusive));
+#elif defined(Q_OS_MACOS)
+        drvMgr->addAudioDriver(new CoreAudioAudioDriver(CoreAudioAudioDriver::Shared));
+        drvMgr->addAudioDriver(new CoreAudioAudioDriver(CoreAudioAudioDriver::Hog));
 #else
         for (auto drv : SDLAudioDriver::getDrivers()) {
             drvMgr->addAudioDriver(drv);

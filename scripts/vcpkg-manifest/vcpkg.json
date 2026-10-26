@@ -15,7 +15,7 @@
     },
     {
       "name": "sdl2",
-      "platform": "!windows",
+      "platform": "linux",
       "default-features": false
     },
     "interval-tree",
