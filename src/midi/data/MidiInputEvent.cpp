@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 CrSjimo                                                 *
+ * Copyright (c) 2023-2024 CrSjimo                                            *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,45 +17,21 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_DSPXPSEUDOSINGERCONTEXT_H
-#define TALCS_DSPXPSEUDOSINGERCONTEXT_H
+#include "MidiInputEvent.h"
 
-#include <QObject>
-
-#include <TalcsDspx/TalcsDspxGlobal.h>
+#include <atomic>
+#include <chrono>
 
 namespace talcs {
 
-    class NoteSynthesizerConfig;
+    double MidiInputEvent::currentTime() noexcept {
+        static const auto epoch = std::chrono::steady_clock::now();
+        return 1.0 + std::chrono::duration<double>(std::chrono::steady_clock::now() - epoch).count();
+    }
 
-    class DspxTrackContext;
-    class DspxSingingClipContext;
+    quint64 MidiInputEvent::createSourceId() noexcept {
+        static std::atomic<quint64> next{1};
+        return next.fetch_add(1, std::memory_order_relaxed);
+    }
 
-    class DspxPseudoSingerContextPrivate;
-
-    class TALCSDSPX_EXPORT DspxPseudoSingerContext : public QObject {
-        Q_OBJECT
-        Q_DECLARE_PRIVATE(DspxPseudoSingerContext)
-        friend class DspxSingingClipContext;
-    public:
-        explicit DspxPseudoSingerContext(DspxTrackContext *trackContext);
-        ~DspxPseudoSingerContext() override;
-
-        DspxTrackContext *trackContext() const;
-
-        DspxSingingClipContext *addSingingClip(int id);
-        void removeSingingClip(int id);
-
-        QList<DspxSingingClipContext *> clips() const;
-
-        void setConfig(const NoteSynthesizerConfig &config);
-        NoteSynthesizerConfig config() const;
-
-    private:
-        QScopedPointer<DspxPseudoSingerContextPrivate> d_ptr;
-
-    };
-
-} // talcs
-
-#endif //TALCS_DSPXPSEUDOSINGERCONTEXT_H
+}

@@ -39,7 +39,12 @@ namespace talcs {
         }
 
         void reset(T *ptr, bool takeOwnership) {
-            std::ignore = d.release();
+            if (d.get() == ptr) {
+                m_takeOwnership = takeOwnership;
+                return;
+            }
+            if (!m_takeOwnership)
+                std::ignore = d.release();
             d.reset(ptr);
             m_takeOwnership = takeOwnership;
         }

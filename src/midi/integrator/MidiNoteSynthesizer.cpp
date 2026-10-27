@@ -20,6 +20,8 @@
 #include "MidiNoteSynthesizer.h"
 #include "MidiNoteSynthesizer_p.h"
 
+#include <cmath>
+
 namespace talcs {
     MidiNoteSynthesizer::MidiNoteSynthesizer() : MidiNoteSynthesizer(new NoteSynthesizer, true) {
 
@@ -28,32 +30,50 @@ namespace talcs {
     MidiNoteSynthesizer::MidiNoteSynthesizer(NoteSynthesizer *noteSynthesizer, bool takeOwnership) : MidiNoteSynthesizer(*new MidiNoteSynthesizerPrivate) {
         Q_D(MidiNoteSynthesizer);
         d->noteSynthesizer.reset(noteSynthesizer, takeOwnership);
-        d->noteSynthesizer->setDetector(d);
+        if (d->noteSynthesizer)
+            d->noteSynthesizer->setDetector(d);
     }
 
-    MidiNoteSynthesizer::~MidiNoteSynthesizer() = default;
+    MidiNoteSynthesizer::~MidiNoteSynthesizer() {
+        Q_D(MidiNoteSynthesizer);
+        close();
+        if (d->noteSynthesizer && d->noteSynthesizer->detector() == d)
+            d->noteSynthesizer->setDetector(nullptr);
+    }
 
     bool MidiNoteSynthesizer::open(qint64 bufferSize, double sampleRate) {
         Q_D(MidiNoteSynthesizer);
-        if (!d->noteSynthesizer->open(bufferSize, sampleRate))
+        d->voiceIds.clear();
+        d->messages.clear();
+        if (!d->noteSynthesizer || !d->noteSynthesizer->open(bufferSize, sampleRate))
             return false;
-        return AudioMidiStream::open(bufferSize, sampleRate);
+        if (AudioMidiStream::open(bufferSize, sampleRate))
+            return true;
+        d->noteSynthesizer->close();
+        return false;
     }
 
     void MidiNoteSynthesizer::close() {
         Q_D(MidiNoteSynthesizer);
-        d->noteSynthesizer->close();
+        if (d->noteSynthesizer)
+            d->noteSynthesizer->close();
+        d->messages.clear();
+        d->voiceIds.clear();
         AudioMidiStream::close();
     }
 
     void MidiNoteSynthesizer::setFrequencyOfA(double frequency) {
         Q_D(MidiNoteSynthesizer);
-        d->frequencyOfA = frequency;
+        if (std::isfinite(frequency) && frequency > 0) {
+            d->frequencyOfA.store(frequency);
+            if (d->noteSynthesizer)
+                d->noteSynthesizer->flush(true);
+        }
     }
 
     double MidiNoteSynthesizer::frequencyOfA() const {
         Q_D(const MidiNoteSynthesizer);
-        return d->frequencyOfA;
+        return d->frequencyOfA.load();
     }
 
     NoteSynthesizer *MidiNoteSynthesizer::noteSynthesizer() const {
@@ -61,36 +81,63 @@ namespace talcs {
         return d->noteSynthesizer;
     }
 
-    void MidiNoteSynthesizerPrivate::detectInterval(qint64 intervalLength) {
+    void MidiNoteSynthesizerPrivate::detectInterval(qint64) {
 
     }
 
     NoteSynthesizerDetectorMessage MidiNoteSynthesizerPrivate::nextMessage() {
-        while (midiEventsIterator != midiEvents.cend()) {
-            if (midiEventsIterator->message.isSysEx() && *midiEventsIterator->message.getSysExData() == 0xf7)
-                return {(midiEventsIterator++)->position, NoteSynthesizerDetectorMessage::AllNotesOff};
-            if (midiEventsIterator->message.isNoteOnOrOff()) {
-                NoteSynthesizerDetectorMessage ret = { midiEventsIterator->position, {
-                    MidiMessage::getMidiNoteInHertz(midiEventsIterator->message.getNoteNumber(), frequencyOfA),
-                    midiEventsIterator->message.getFloatVelocity(),
-                    midiEventsIterator->message.isNoteOn() ? NoteSynthesizerDetectorMessage::NoteOn : NoteSynthesizerDetectorMessage::NoteOff,
-                }};
-                midiEventsIterator++;
-                return ret;
-            } else if (midiEventsIterator->message.isPitchWheel()) {
-                NoteSynthesizerDetectorMessage ret = { midiEventsIterator->position, NoteSynthesizerDetectorMessage::Pitch{(midiEventsIterator->message.getPitchWheelValue() - 8192) / 16383.0 * 2.0}};
-                midiEventsIterator++;
-                return ret;
-            }
-            midiEventsIterator++;
-        }
-        return NoteSynthesizerDetectorMessage::Null;
+        return messageIndex < messages.size() ? messages.at(messageIndex++) : NoteSynthesizerDetectorMessage::Null;
     }
 
     qint64 MidiNoteSynthesizer::processReading(const AudioSourceReadData &readData, const QList<IntegratedMidiMessage> &midiEvents) {
         Q_D(MidiNoteSynthesizer);
-        d->midiEvents = midiEvents;
-        d->midiEventsIterator = d->midiEvents.cbegin();
+        d->messages.clear();
+        d->messageIndex = 0;
+        const auto silence = [&](qint64 position, quint64 voiceId, bool force) {
+            NoteSynthesizerDetectorMessage message{position, NoteSynthesizerDetectorMessage::AllNotesOff};
+            message.note.voiceId = voiceId;
+            if (force)
+                message.note.messageType = NoteSynthesizerDetectorMessage::SoundOff;
+            d->messages.append(message);
+        };
+        for (const auto &event : midiEvents) {
+            if (event.type == MidiInputEvent::AllSourcesStopped) {
+                silence(event.position, 0, true);
+                d->voiceIds.clear();
+                continue;
+            }
+            if (event.type == MidiInputEvent::SourceStopped) {
+                for (auto it = d->voiceIds.begin(); it != d->voiceIds.end();) {
+                    if (it.key().first == event.sourceId) {
+                        silence(event.position, it.value(), true);
+                        it = d->voiceIds.erase(it);
+                    } else {
+                        ++it;
+                    }
+                }
+                continue;
+            }
+            const auto &input = event.message;
+            if (!input.isNoteOnOrOff() && !input.isPitchWheel() && !input.isAllNotesOff() && !input.isAllSoundOff())
+                continue;
+            const auto key = qMakePair(event.sourceId, input.getChannel());
+            auto id = d->voiceIds.find(key);
+            if (id == d->voiceIds.end())
+                id = d->voiceIds.insert(key, d->nextVoiceId++);
+            if (input.isAllNotesOff() || input.isAllSoundOff()) {
+                silence(event.position, id.value(), input.isAllSoundOff());
+            } else if (input.isNoteOnOrOff()) {
+                NoteSynthesizerDetectorMessage message{event.position, {
+                    MidiMessage::getMidiNoteInHertz(input.getNoteNumber(), d->frequencyOfA.load()),
+                    input.getFloatVelocity(),
+                    input.isNoteOn() ? NoteSynthesizerDetectorMessage::NoteOn : NoteSynthesizerDetectorMessage::NoteOff}};
+                message.note.voiceId = id.value();
+                d->messages.append(message);
+            } else {
+                const auto wheel = input.getPitchWheelValue() - 8192;
+                d->messages.append({event.position, NoteSynthesizerDetectorMessage::Pitch{wheel * 2.0 / (wheel < 0 ? 8192.0 : 8191.0), id.value()}});
+            }
+        }
         return d->noteSynthesizer->read(readData);
     }
 

@@ -44,6 +44,8 @@
 #ifndef TALCS_MIDIMESSAGE_H
 #define TALCS_MIDIMESSAGE_H
 
+#include <optional>
+
 #include <QString>
 #include <QVector>
 
@@ -87,6 +89,8 @@ namespace talcs {
         int getRawDataSize() const noexcept { return m_data.size(); }
 
         QString getDescription() const;
+
+        bool isValid() const noexcept;
 
         double getTimeStamp() const noexcept { return m_timeStamp; }
 
@@ -304,7 +308,7 @@ namespace talcs {
                                      int frames,
                                      SmpteTimecodeType timecodeType);
 
-        enum MidiMachineControlCommand {
+        enum MidiMachineControlCommand : int {
             mmc_stop = 1,
             mmc_play = 2,
             mmc_deferredplay = 3,
@@ -320,6 +324,21 @@ namespace talcs {
         MidiMachineControlCommand getMidiMachineControlCommand() const noexcept;
 
         static MidiMessage midiMachineControlCommand(MidiMachineControlCommand command);
+        static MidiMessage midiMachineControlCommand(MidiMachineControlCommand command, int deviceId);
+        int getMidiMachineControlDeviceId() const noexcept;
+
+        struct MidiMachineControlGoto {
+            quint8 deviceId{};
+            quint8 hours{};
+            quint8 minutes{};
+            quint8 seconds{};
+            quint8 frames{};
+            quint8 subframes{};
+            SmpteTimecodeType timecodeType{fps24};
+        };
+
+        std::optional<MidiMachineControlGoto> getMidiMachineControlGoto() const noexcept;
+        static MidiMessage midiMachineControlGoto(MidiMachineControlGoto location);
 
         bool isMidiMachineControlGoto(int &hours,
                                       int &minutes,

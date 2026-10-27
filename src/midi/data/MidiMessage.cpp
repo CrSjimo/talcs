@@ -43,7 +43,9 @@
 
 #include "MidiMessage.h"
 
+#include <algorithm>
 #include <cmath>
+#include <limits>
 
 #include <QVector>
 
@@ -183,13 +185,12 @@ namespace talcs {
     }
 
     MidiMessage::MidiMessage(const void *const d, const int dataSize, const double t)
-            : m_timeStamp(t), m_data(dataSize) {
-        Q_ASSERT(dataSize > 0);
-        // this checks that the length matches the data..
-        Q_ASSERT(dataSize > 3 || *(quint8 *) d >= 0xf0 || getMessageLengthFromFirstByte(*(quint8 *) d) == m_data.size());
-
-        m_data.resize(dataSize);
-        memcpy(m_data.data(), d, (size_t) dataSize);
+            : m_timeStamp(t), m_data(qMax(0, dataSize)) {
+        if (!d || dataSize <= 0) {
+            m_data = {0xf0, 0xf7};
+            return;
+        }
+        memcpy(m_data.data(), d, static_cast<size_t>(dataSize));
     }
 
     MidiMessage::MidiMessage(const int byte1, const double t) noexcept
@@ -227,6 +228,11 @@ namespace talcs {
     MidiMessage::MidiMessage(const void *srcData, int sz, int &numBytesUsed, const quint8 lastStatusByte,
                              double t, bool sysexHasEmbeddedLength)
             : m_timeStamp(t) {
+        numBytesUsed = 0;
+        if (!srcData || sz <= 0) {
+            m_data = {0xf0, 0xf7};
+            return;
+        }
         auto src = static_cast<const quint8 *> (srcData);
         auto byte = (unsigned int) *src;
 
@@ -276,7 +282,17 @@ namespace talcs {
 
                 numBytesUsed += (numVariableLengthSysexBytes + size);  // (these aren't counted in the size)
             } else if (byte == 0xff) {
+                if (sz < 2) {
+                    m_data = {0xff};
+                    numBytesUsed = 1;
+                    return;
+                }
                 const auto bytesLeft = readVariableLengthValue(src + 1, sz - 1);
+                if (!bytesLeft.isValid()) {
+                    m_data = {0xff};
+                    numBytesUsed = sz + 1;
+                    return;
+                }
                 size = qMin(sz + 1, bytesLeft.bytesUsed + 2 + bytesLeft.value);
 
                 m_data.resize(size);
@@ -285,8 +301,12 @@ namespace talcs {
                 memcpy(dest + 1, src, (size_t) size - 1);
 
                 numBytesUsed += size;
+            } else if (byte == 0xf7) {
+                m_data = {0xf7};
+                numBytesUsed = 1;
             } else {
                 size = getMessageLengthFromFirstByte((quint8) byte);
+                m_data.resize(size);
                 m_data[0] = (quint8) byte;
 
                 if (size > 1) {
@@ -299,8 +319,50 @@ namespace talcs {
                 numBytesUsed += qMin(size, sz + 1);
             }
         } else {
-
+            m_data = {0xf0, 0xf7};
+            numBytesUsed = 0;
         }
+    }
+
+    bool MidiMessage::isValid() const noexcept {
+        if (m_data.isEmpty() || m_data.front() < 0x80)
+            return false;
+        const auto status = m_data.front();
+        if (status == 0xf0) {
+            return m_data.size() >= 2 && m_data.back() == 0xf7 &&
+                   std::all_of(m_data.cbegin() + 1, m_data.cend() - 1, [](quint8 byte) { return byte < 0x80; });
+        }
+        if (status == 0xff && m_data.size() > 1) {
+            if (m_data.size() < 3)
+                return false;
+            const auto length = readVariableLengthValue(m_data.constData() + 2, static_cast<int>(m_data.size()) - 2);
+            return length.isValid() && length.value == m_data.size() - 2 - length.bytesUsed;
+        }
+        if (status == 0xf7 || status == 0xf4 || status == 0xf5 || status == 0xf9 || status == 0xfd)
+            return false;
+        return m_data.size() == getMessageLengthFromFirstByte(status) &&
+               std::all_of(m_data.cbegin() + 1, m_data.cend(), [](quint8 byte) { return byte < 0x80; });
+    }
+
+    std::optional<MidiMessage::MidiMachineControlGoto> MidiMessage::getMidiMachineControlGoto() const noexcept {
+        if (!isMidiMachineControlMessage() || m_data.size() != 13 || m_data[4] != 0x44 ||
+            m_data[5] != 6 || m_data[6] != 1)
+            return std::nullopt;
+        const int frameRate = ((m_data[7] >> 5) & 3) == fps24 ? 24 : ((m_data[7] >> 5) & 3) == fps25 ? 25 : 30;
+        if ((m_data[7] & 0x1f) >= 24 || m_data[8] >= 60 || m_data[9] >= 60 || m_data[10] >= frameRate || m_data[11] >= 100)
+            return std::nullopt;
+        return MidiMachineControlGoto{m_data[2], static_cast<quint8>(m_data[7] & 0x1f),
+            m_data[8], m_data[9], m_data[10], m_data[11], static_cast<SmpteTimecodeType>((m_data[7] >> 5) & 3)};
+    }
+
+    MidiMessage MidiMessage::midiMachineControlGoto(MidiMachineControlGoto location) {
+        const int frameRate = location.timecodeType == fps24 ? 24 : location.timecodeType == fps25 ? 25 : 30;
+        if (location.deviceId > 127 || location.hours >= 24 || location.minutes >= 60 || location.seconds >= 60 ||
+            location.frames >= frameRate || location.subframes >= 100 || location.timecodeType < fps24 || location.timecodeType > fps30)
+            return {};
+        return {0xf0, 0x7f, location.deviceId, 6, 0x44, 6, 1,
+            static_cast<int>(location.hours) | (static_cast<int>(location.timecodeType) << 5),
+            location.minutes, location.seconds, location.frames, location.subframes, 0xf7};
     }
 
     MidiMessage::~MidiMessage() noexcept = default;
@@ -350,6 +412,9 @@ namespace talcs {
     }
 
     bool MidiMessage::isForChannel(const int channel) const noexcept {
+        if (m_data.size() < 1)
+            return false;
+
         Q_ASSERT(channel > 0 && channel <= 16); // valid channels are numbered 1 to 16
 
         auto data = getRawData();
@@ -369,6 +434,9 @@ namespace talcs {
     }
 
     bool MidiMessage::isNoteOn(const bool returnTrueForVelocity0) const noexcept {
+        if (m_data.size() < 3)
+            return false;
+
         auto data = getRawData();
 
         return ((data[0] & 0xf0) == 0x90)
@@ -376,6 +444,9 @@ namespace talcs {
     }
 
     bool MidiMessage::isNoteOff(const bool returnTrueForNoteOnVelocity0) const noexcept {
+        if (m_data.size() < 3)
+            return false;
+
         auto data = getRawData();
 
         return ((data[0] & 0xf0) == 0x80)
@@ -383,6 +454,9 @@ namespace talcs {
     }
 
     bool MidiMessage::isNoteOnOrOff() const noexcept {
+        if (m_data.size() < 3)
+            return false;
+
         auto d = getRawData()[0] & 0xf0;
         return (d == 0x90) || (d == 0x80);
     }
@@ -420,6 +494,9 @@ namespace talcs {
     }
 
     bool MidiMessage::isAftertouch() const noexcept {
+        if (m_data.size() < 3)
+            return false;
+
         return (getRawData()[0] & 0xf0) == 0xa0;
     }
 
@@ -441,6 +518,9 @@ namespace talcs {
     }
 
     bool MidiMessage::isChannelPressure() const noexcept {
+        if (m_data.size() < 2)
+            return false;
+
         return (getRawData()[0] & 0xf0) == 0xd0;
     }
 
@@ -470,6 +550,9 @@ namespace talcs {
 
 
     bool MidiMessage::isProgramChange() const noexcept {
+        if (m_data.size() < 2)
+            return false;
+
         return (getRawData()[0] & 0xf0) == 0xc0;
     }
 
@@ -485,6 +568,9 @@ namespace talcs {
     }
 
     bool MidiMessage::isPitchWheel() const noexcept {
+        if (m_data.size() < 3)
+            return false;
+
         return (getRawData()[0] & 0xf0) == 0xe0;
     }
 
@@ -503,10 +589,16 @@ namespace talcs {
     }
 
     bool MidiMessage::isController() const noexcept {
+        if (m_data.size() < 3)
+            return false;
+
         return (getRawData()[0] & 0xf0) == 0xb0;
     }
 
     bool MidiMessage::isControllerOfType(const int controllerType) const noexcept {
+        if (m_data.size() < 3)
+            return false;
+
         auto data = getRawData();
         return (data[0] & 0xf0) == 0xb0 && data[1] == controllerType;
     }
@@ -565,6 +657,9 @@ namespace talcs {
     }
 
     bool MidiMessage::isAllNotesOff() const noexcept {
+        if (m_data.size() < 3)
+            return false;
+
         auto data = getRawData();
         return (data[0] & 0xf0) == 0xb0 && data[1] == 123;
     }
@@ -574,11 +669,17 @@ namespace talcs {
     }
 
     bool MidiMessage::isAllSoundOff() const noexcept {
+        if (m_data.size() < 3)
+            return false;
+
         auto data = getRawData();
         return data[1] == 120 && (data[0] & 0xf0) == 0xb0;
     }
 
     bool MidiMessage::isResetAllControllers() const noexcept {
+        if (m_data.size() < 3)
+            return false;
+
         auto data = getRawData();
         return (data[0] & 0xf0) == 0xb0 && data[1] == 121;
     }
@@ -595,17 +696,25 @@ namespace talcs {
 
 //==============================================================================
     bool MidiMessage::isSysEx() const noexcept {
+        if (m_data.size() < 2)
+            return false;
+
         return *getRawData() == 0xf0;
     }
 
     MidiMessage MidiMessage::createSysExMessage(const void *sysexData, const int dataSize) {
-        QVector<char> m(dataSize + 2);
-
-        m[0] = 0xf0;
-        memcpy(m.data() + 1, sysexData, (size_t) dataSize);
-        m[dataSize + 1] = 0xf7;
-
-        return MidiMessage(m.data(), dataSize + 2);
+        Q_ASSERT(sysexData && dataSize > 0);
+        if (!sysexData || dataSize <= 0 || dataSize > std::numeric_limits<int>::max() - 2)
+            return {};
+        const auto bytes = static_cast<const quint8 *>(sysexData);
+        Q_ASSERT(std::none_of(bytes, bytes + dataSize, [](quint8 byte) { return byte >= 0x80; }));
+        if (std::any_of(bytes, bytes + dataSize, [](quint8 byte) { return byte >= 0x80; }))
+            return {};
+        QVector<quint8> data(dataSize + 2);
+        data.front() = 0xf0;
+        std::copy_n(bytes, dataSize, data.data() + 1);
+        data.back() = 0xf7;
+        return MidiMessage(data.constData(), static_cast<int>(data.size()));
     }
 
     const quint8 *MidiMessage::getSysExData() const noexcept {
@@ -617,9 +726,17 @@ namespace talcs {
     }
 
 //==============================================================================
-    bool MidiMessage::isMetaEvent() const noexcept { return *getRawData() == 0xff; }
+    bool MidiMessage::isMetaEvent() const noexcept {
+        if (m_data.size() < 3)
+            return false;
+        return *getRawData() == 0xff;
+    }
 
-    bool MidiMessage::isActiveSense() const noexcept { return *getRawData() == 0xfe; }
+    bool MidiMessage::isActiveSense() const noexcept {
+        if (m_data.size() < 1)
+            return false;
+        return *getRawData() == 0xfe;
+    }
 
     int MidiMessage::getMetaEventType() const noexcept {
         auto data = getRawData();
@@ -629,7 +746,7 @@ namespace talcs {
     int MidiMessage::getMetaEventLength() const noexcept {
         auto data = getRawData();
 
-        if (*data == 0xff) {
+        if (m_data.size() >= 3 && *data == 0xff) {
             const auto var = readVariableLengthValue(data + 2, m_data.size() - 2);
             return qMax(0, qMin(m_data.size() - 2 - var.bytesUsed, var.value));
         }
@@ -640,6 +757,8 @@ namespace talcs {
     const quint8 *MidiMessage::getMetaEventData() const noexcept {
         Q_ASSERT(isMetaEvent());
 
+        if (!isMetaEvent())
+            return nullptr;
         auto d = getRawData() + 2;
         const auto var = readVariableLengthValue(d, m_data.size() - 2);
         return d + var.bytesUsed;
@@ -665,7 +784,8 @@ namespace talcs {
 
         MidiMessage result;
 
-        const size_t textSize = text.toUtf8().size() - 1;
+        const auto utf8 = text.toUtf8();
+        const size_t textSize = static_cast<size_t>(utf8.size());
 
         quint8 header[8];
         size_t n = sizeof(header);
@@ -685,22 +805,31 @@ namespace talcs {
         auto dest = result.m_data.data();
 
         memcpy(dest, header + n, headerLen);
-        memcpy(dest + headerLen, text.toUtf8().data(), textSize);
+        memcpy(dest + headerLen, utf8.constData(), textSize);
 
         return result;
     }
 
     bool MidiMessage::isTrackNameEvent() const noexcept {
+        if (m_data.size() < 3)
+            return false;
+
         auto data = getRawData();
         return (data[1] == 3) && (*data == 0xff);
     }
 
     bool MidiMessage::isTempoMetaEvent() const noexcept {
+        if (m_data.size() < 6)
+            return false;
+
         auto data = getRawData();
         return (data[1] == 81) && (*data == 0xff);
     }
 
     bool MidiMessage::isMidiChannelMetaEvent() const noexcept {
+        if (m_data.size() < 4)
+            return false;
+
         auto data = getRawData();
         return (data[1] == 0x20) && (*data == 0xff) && (data[2] == 1);
     }
@@ -762,6 +891,9 @@ namespace talcs {
     }
 
     bool MidiMessage::isTimeSignatureMetaEvent() const noexcept {
+        if (m_data.size() < 7)
+            return false;
+
         auto data = getRawData();
         return (data[1] == 0x58) && (*data == (quint8) 0xff);
     }
@@ -770,7 +902,7 @@ namespace talcs {
         if (isTimeSignatureMetaEvent()) {
             auto d = getMetaEventData();
             numerator = d[0];
-            denominator = 1 << d[1];
+            denominator = d[1] < 31 ? 1 << d[1] : 4;
         } else {
             numerator = 4;
             denominator = 4;
@@ -794,6 +926,8 @@ namespace talcs {
     }
 
     bool MidiMessage::isKeySignatureMetaEvent() const noexcept {
+        if (getMetaEventLength() < 2)
+            return false;
         return getMetaEventType() == 0x59;
     }
 
@@ -816,7 +950,11 @@ namespace talcs {
     }
 
 //==============================================================================
-    bool MidiMessage::isSongPositionPointer() const noexcept { return *getRawData() == 0xf2; }
+    bool MidiMessage::isSongPositionPointer() const noexcept {
+        if (m_data.size() < 3)
+            return false;
+        return *getRawData() == 0xf2;
+    }
 
     int MidiMessage::getSongPositionPointerMidiBeat() const noexcept {
         auto data = getRawData();
@@ -829,23 +967,43 @@ namespace talcs {
                 (positionInMidiBeats >> 7) & 127};
     }
 
-    bool MidiMessage::isMidiStart() const noexcept { return *getRawData() == 0xfa; }
+    bool MidiMessage::isMidiStart() const noexcept {
+        if (m_data.size() < 1)
+            return false;
+        return *getRawData() == 0xfa;
+    }
 
     MidiMessage MidiMessage::midiStart() noexcept { return MidiMessage(0xfa); }
 
-    bool MidiMessage::isMidiContinue() const noexcept { return *getRawData() == 0xfb; }
+    bool MidiMessage::isMidiContinue() const noexcept {
+        if (m_data.size() < 1)
+            return false;
+        return *getRawData() == 0xfb;
+    }
 
     MidiMessage MidiMessage::midiContinue() noexcept { return MidiMessage(0xfb); }
 
-    bool MidiMessage::isMidiStop() const noexcept { return *getRawData() == 0xfc; }
+    bool MidiMessage::isMidiStop() const noexcept {
+        if (m_data.size() < 1)
+            return false;
+        return *getRawData() == 0xfc;
+    }
 
     MidiMessage MidiMessage::midiStop() noexcept { return MidiMessage(0xfc); }
 
-    bool MidiMessage::isMidiClock() const noexcept { return *getRawData() == 0xf8; }
+    bool MidiMessage::isMidiClock() const noexcept {
+        if (m_data.size() < 1)
+            return false;
+        return *getRawData() == 0xf8;
+    }
 
     MidiMessage MidiMessage::midiClock() noexcept { return MidiMessage(0xf8); }
 
-    bool MidiMessage::isQuarterFrame() const noexcept { return *getRawData() == 0xf1; }
+    bool MidiMessage::isQuarterFrame() const noexcept {
+        if (m_data.size() < 2)
+            return false;
+        return *getRawData() == 0xf1;
+    }
 
     int MidiMessage::getQuarterFrameSequenceNumber() const noexcept { return ((int) getRawData()[1]) >> 4; }
 
@@ -856,6 +1014,9 @@ namespace talcs {
     }
 
     bool MidiMessage::isFullFrame() const noexcept {
+        if (m_data.size() < 10)
+            return false;
+
         auto data = getRawData();
 
         return data[0] == 0xf0
@@ -886,12 +1047,8 @@ namespace talcs {
     }
 
     bool MidiMessage::isMidiMachineControlMessage() const noexcept {
-        auto data = getRawData();
-
-        return data[0] == 0xf0
-               && data[1] == 0x7f
-               && data[3] == 0x06
-               && m_data.size() > 5;
+        return m_data.size() >= 6 && m_data.front() == 0xf0 && m_data[1] == 0x7f &&
+               m_data[3] == 0x06 && m_data.back() == 0xf7 && isValid();
     }
 
     MidiMessage::MidiMachineControlCommand MidiMessage::getMidiMachineControlCommand() const noexcept {
@@ -901,33 +1058,34 @@ namespace talcs {
     }
 
     MidiMessage MidiMessage::midiMachineControlCommand(MidiMessage::MidiMachineControlCommand command) {
-        return {0xf0, 0x7f, 0, 6, command, 0xf7};
+        return midiMachineControlCommand(command, 0);
+    }
+
+    MidiMessage MidiMessage::midiMachineControlCommand(MidiMessage::MidiMachineControlCommand command, int deviceId) {
+        if (deviceId < 0 || deviceId > 127 || static_cast<int>(command) < 0 || static_cast<int>(command) > 127)
+            return {};
+        return {0xf0, 0x7f, deviceId, 6, command, 0xf7};
+    }
+
+    int MidiMessage::getMidiMachineControlDeviceId() const noexcept {
+        return isMidiMachineControlMessage() ? m_data[2] : -1;
     }
 
 //==============================================================================
     bool MidiMessage::isMidiMachineControlGoto(int &hours, int &minutes, int &seconds, int &frames) const noexcept {
-        auto data = getRawData();
-
-        if (m_data.size() >= 12
-            && data[0] == 0xf0
-            && data[1] == 0x7f
-            && data[3] == 0x06
-            && data[4] == 0x44
-            && data[5] == 0x06
-            && data[6] == 0x01) {
-            hours = data[7] % 24;   // (that some machines send out hours > 24)
-            minutes = data[8];
-            seconds = data[9];
-            frames = data[10];
-
-            return true;
-        }
-
-        return false;
+        const auto location = getMidiMachineControlGoto();
+        if (!location)
+            return false;
+        hours = location->hours;
+        minutes = location->minutes;
+        seconds = location->seconds;
+        frames = location->frames;
+        return true;
     }
 
     MidiMessage MidiMessage::midiMachineControlGoto(int hours, int minutes, int seconds, int frames) {
-        return {0xf0, 0x7f, 0, 6, 0x44, 6, 1, hours, minutes, seconds, frames, 0xf7};
+        return midiMachineControlGoto(MidiMachineControlGoto{0, static_cast<quint8>(hours),
+            static_cast<quint8>(minutes), static_cast<quint8>(seconds), static_cast<quint8>(frames), 0});
     }
 
 //==============================================================================

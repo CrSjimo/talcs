@@ -20,15 +20,16 @@
 #ifndef TALCS_AUDIOMIDISTREAM_P_H
 #define TALCS_AUDIOMIDISTREAM_P_H
 
-#include <QMutex>
-
 #include <TalcsMidi/AudioMidiStream.h>
+
+#include <QMutex>
 
 namespace talcs {
 
     class AudioMidiStreamPrivate {
         Q_DECLARE_PUBLIC(AudioMidiStream)
     public:
+        virtual ~AudioMidiStreamPrivate() = default;
         AudioMidiStream *q_ptr;
 
         QMutex filterMutex;

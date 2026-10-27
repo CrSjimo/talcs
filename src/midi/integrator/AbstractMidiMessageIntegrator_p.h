@@ -23,6 +23,7 @@
 
 #include <TalcsMidi/AbstractMidiMessageIntegrator.h>
 
+
 #include <QMutex>
 
 #include <TalcsCore/private/AudioSource_p.h>

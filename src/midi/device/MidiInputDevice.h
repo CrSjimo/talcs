@@ -21,6 +21,7 @@
 #define TALCS_MIDIINPUTDEVICE_H
 
 #include <QObject>
+#include <QStringList>
 
 #include <TalcsCore/ErrorStringProvider.h>
 #include <TalcsCore/NameProvider.h>
@@ -40,6 +41,7 @@ namespace talcs {
         ~MidiInputDevice() override;
 
         int deviceIndex() const;
+        quint64 sourceId() const;
 
         bool open();
         bool isOpen() const;

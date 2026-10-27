@@ -20,15 +20,49 @@
 #include "MidiInputDevice.h"
 #include "MidiInputDevice_p.h"
 
-#include <QDebug>
+#include <cmath>
+#include <vector>
 
-#include "MidiMessageListener.h"
+#ifdef Q_OS_WIN
+#  ifndef NOMINMAX
+#    define NOMINMAX
+#  endif
+#  include <Windows.h>
+#  include <mmsystem.h>
+#endif
+
+#include <QDebug>
+#include <QMetaObject>
+#include <QThread>
+
+#include <TalcsMidi/MidiMessageListener.h>
 
 namespace talcs {
+
+#ifdef Q_OS_WIN
+    namespace {
+
+        bool isWinMMInputUnavailable() {
+            std::vector<RtMidi::Api> apis;
+            RtMidi::getCompiledApi(apis);
+            // WinMM emits the empty-device warning before an error callback can be installed.
+            return apis.size() == 1 && apis.front() == RtMidi::WINDOWS_MM && midiInGetNumDevs() == 0;
+        }
+
+    }
+#endif
+
     MidiInputDevice::MidiInputDevice(int deviceIndex, QObject *parent) : QObject(parent), d_ptr(new MidiInputDevicePrivate) {
         Q_D(MidiInputDevice);
         d->q_ptr = this;
         d->portNumber = deviceIndex;
+        d->sourceId = MidiInputEvent::createSourceId();
+#ifdef Q_OS_WIN
+        if (isWinMMInputUnavailable()) {
+            setErrorString(tr("The MIDI input device is unavailable."));
+            return;
+        }
+#endif
         try {
             d->midi.reset(new RtMidiIn);
             setName(QString::fromStdString(d->midi->getPortName(deviceIndex)));
@@ -43,14 +77,30 @@ namespace talcs {
 
     void MidiInputDevicePrivate::rtmidiCallback(double timeStamp, std::vector<unsigned char> *message, void *userData) {
         auto d = static_cast<MidiInputDevicePrivate *>(userData);
-        MidiMessage msg(message->data(), static_cast<int>(message->size()), timeStamp);
-        d->listener.messageCallback(msg);
+        if (!message || message->empty())
+            return;
+        if (!d->timeStampInitialized || !std::isfinite(timeStamp) || timeStamp < 0) {
+            d->timeStamp = MidiInputEvent::currentTime();
+            d->timeStampInitialized = true;
+        } else {
+            d->timeStamp += timeStamp;
+        }
+        MidiMessage msg(message->data(), static_cast<int>(message->size()), d->timeStamp);
+        if (msg.isValid())
+            d->listener.eventCallback({msg, d->sourceId});
     }
 
     void MidiInputDevicePrivate::rtmidiErrorCallback(RtMidiError::Type type, const std::string &errorText, void *userData) {
-        Q_UNUSED(type)
+        if (type == RtMidiError::WARNING || type == RtMidiError::DEBUG_WARNING)
+            return;
         auto d = static_cast<MidiInputDevicePrivate *>(userData);
-        d->q_ptr->setErrorString(QString::fromStdString(errorText));
+        const auto error = QString::fromStdString(errorText);
+        const auto reportError = [device = d->q_ptr, error] { device->setErrorString(error); };
+        if (QThread::currentThread() == d->q_ptr->thread())
+            reportError();
+        else
+            QMetaObject::invokeMethod(d->q_ptr, reportError, Qt::QueuedConnection);
+        d->listener.eventCallback({MidiMessage().withTimeStamp(MidiInputEvent::currentTime()), d->sourceId, MidiInputEvent::SourceStopped});
         d->listener.errorCallback(QString::fromStdString(errorText));
     }
 
@@ -59,17 +109,40 @@ namespace talcs {
         return d->portNumber;
     }
 
+    quint64 MidiInputDevice::sourceId() const {
+        Q_D(const MidiInputDevice);
+        return d->sourceId;
+    }
+
     bool MidiInputDevice::open() {
         Q_D(MidiInputDevice);
         if (!d->midi)
             return false;
+        if (isOpen())
+            return true;
         try {
-            d->midi->openPort(d->portNumber);
+            if (d->portNumber < 0 || static_cast<unsigned>(d->portNumber) >= d->midi->getPortCount()) {
+                setErrorString(tr("The MIDI input device is unavailable."));
+                return false;
+            }
+            if (!d->listener.deviceWillStartCallback(this)) {
+                d->listener.deviceStoppedCallback();
+                setErrorString(tr("The MIDI input listener could not start."));
+                return false;
+            }
+            d->timeStampInitialized = false;
             d->midi->ignoreTypes(false, false, false);
-            d->listener.deviceWillStartCallback(this);
             d->midi->setCallback(&MidiInputDevicePrivate::rtmidiCallback, d);
             d->midi->setErrorCallback(&MidiInputDevicePrivate::rtmidiErrorCallback, d);
+            d->midi->openPort(d->portNumber);
+            if (!d->midi->isPortOpen()) {
+                const auto error = errorString();
+                close();
+                setErrorString(error.isEmpty() ? tr("The MIDI input device could not be opened.") : error);
+                return false;
+            }
         } catch (RtMidiError &e) {
+            close();
             setErrorString(QString::fromStdString(e.getMessage()));
             return false;
         }
@@ -84,10 +157,19 @@ namespace talcs {
 
     void MidiInputDevice::close() {
         Q_D(MidiInputDevice);
-        if (d->midi)
-            d->midi->closePort();
+        QString closeError;
+        if (d->midi) {
+            try {
+                d->midi->setErrorCallback(nullptr);
+                d->midi->cancelCallback();
+                d->midi->closePort();
+            } catch (const RtMidiError &error) {
+                closeError = QString::fromStdString(error.getMessage());
+            }
+        }
+        d->listener.eventCallback({MidiMessage().withTimeStamp(MidiInputEvent::currentTime()), d->sourceId, MidiInputEvent::SourceStopped});
         d->listener.deviceStoppedCallback();
-        setErrorString({});
+        setErrorString(closeError);
     }
 
     MidiMessageListener *MidiInputDevice::listener() const {
@@ -96,6 +178,10 @@ namespace talcs {
     }
 
     QStringList MidiInputDevice::devices() {
+#ifdef Q_OS_WIN
+        if (isWinMMInputUnavailable())
+            return {};
+#endif
         QStringList a;
         try {
             RtMidiIn tmp;

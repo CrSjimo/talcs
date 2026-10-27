@@ -22,7 +22,7 @@
 
 #include <QScopedPointer>
 
-#include <TalcsMidi/MidiMessage.h>
+#include <TalcsMidi/MidiInputEvent.h>
 
 namespace talcs {
 
@@ -39,6 +39,10 @@ namespace talcs {
         bool deviceWillStartCallback(MidiInputDevice *device);
         void deviceStoppedCallback();
         bool messageCallback(const MidiMessage &message);
+        /// Dispatches an event through the consuming filter chain. Timestamps use MidiInputEvent::currentTime().
+        /// Callbacks execute on the submitting thread and must not block.
+        /// Filters must be removed before destruction. Returning false preserves delivery to later filters.
+        bool eventCallback(const MidiInputEvent &event);
         void errorCallback(const QString &errorString);
 
         void addFilter(MidiMessageListener *filter);
@@ -48,6 +52,7 @@ namespace talcs {
         virtual bool processDeviceWillStart(MidiInputDevice *device);
         virtual void processDeviceStopped();
         virtual bool processMessage(const MidiMessage &message);
+        virtual bool processEvent(const MidiInputEvent &event);
         virtual void processError(const QString &errorString);
 
         explicit MidiMessageListener(MidiMessageListenerPrivate &d);

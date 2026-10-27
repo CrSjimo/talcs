@@ -20,7 +20,9 @@
 #include "MidiMessageListener.h"
 #include "MidiMessageListener_p.h"
 
-#include <algorithm>
+#include <cmath>
+
+#include <QMutexLocker>
 
 namespace talcs {
     MidiMessageListener::MidiMessageListener() : MidiMessageListener(*new MidiMessageListenerPrivate) {
@@ -32,41 +34,65 @@ namespace talcs {
     bool MidiMessageListener::deviceWillStartCallback(MidiInputDevice *device) {
         Q_D(MidiMessageListener);
         QMutexLocker locker(&d->filterMutex);
-        return std::all_of(d->filters.cbegin(), d->filters.cend(), [device](MidiMessageListener *filter) {
-            return filter->deviceWillStartCallback(device);
-        }) && processDeviceWillStart(device);
+        const auto filters = d->filters;
+        for (auto filter : filters) {
+            if (d->filters.contains(filter) && !filter->deviceWillStartCallback(device))
+                return false;
+        }
+        return processDeviceWillStart(device);
     }
 
     void MidiMessageListener::deviceStoppedCallback() {
         Q_D(MidiMessageListener);
         QMutexLocker locker(&d->filterMutex);
-        std::for_each(d->filters.cbegin(), d->filters.cend(), [](MidiMessageListener *filter) {
-            filter->deviceStoppedCallback();
-        });
+        const auto filters = d->filters;
+        for (auto filter : filters) {
+            if (d->filters.contains(filter))
+                filter->deviceStoppedCallback();
+        }
         processDeviceStopped();
     }
 
     bool MidiMessageListener::messageCallback(const MidiMessage &message) {
+        return eventCallback({message});
+    }
+
+    bool MidiMessageListener::eventCallback(const MidiInputEvent &event) {
         Q_D(MidiMessageListener);
         QMutexLocker locker(&d->filterMutex);
-        return std::any_of(d->filters.cbegin(), d->filters.cend(), [&message](MidiMessageListener *filter) {
-            return filter->messageCallback(message);
-        }) || processMessage(message);
+        if (event.type == MidiInputEvent::Message && !event.message.isValid())
+            return false;
+        auto normalized = event;
+        if (!std::isfinite(normalized.message.getTimeStamp()) || normalized.message.getTimeStamp() <= 0)
+            normalized.message.setTimeStamp(MidiInputEvent::currentTime());
+        const auto filters = d->filters;
+        for (auto filter : filters) {
+            if (d->filters.contains(filter) && filter->eventCallback(normalized) && event.type == MidiInputEvent::Message)
+                return true;
+        }
+        return processEvent(normalized);
+    }
+
+    bool MidiMessageListener::processEvent(const MidiInputEvent &event) {
+        return event.type == MidiInputEvent::Message && processMessage(event.message);
     }
 
     void MidiMessageListener::errorCallback(const QString &errorString) {
         Q_D(MidiMessageListener);
         QMutexLocker locker(&d->filterMutex);
-        std::for_each(d->filters.cbegin(), d->filters.cend(), [&errorString](MidiMessageListener *filter) {
-            filter->errorCallback(errorString);
-        });
+        const auto filters = d->filters;
+        for (auto filter : filters) {
+            if (d->filters.contains(filter))
+                filter->errorCallback(errorString);
+        }
         processError(errorString);
     }
 
     void MidiMessageListener::addFilter(MidiMessageListener *filter) {
         Q_D(MidiMessageListener);
         QMutexLocker locker(&d->filterMutex);
-        d->filters.append(filter);
+        if (filter && filter != this && !d->filters.contains(filter))
+            d->filters.append(filter);
     }
 
     void MidiMessageListener::removeFilter(MidiMessageListener *filter) {

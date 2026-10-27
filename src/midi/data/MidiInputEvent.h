@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 CrSjimo                                                 *
+ * Copyright (c) 2023-2024 CrSjimo                                            *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,54 +17,34 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_DSPXNOTECONTEXT_H
-#define TALCS_DSPXNOTECONTEXT_H
+#ifndef TALCS_MIDIINPUTEVENT_H
+#define TALCS_MIDIINPUTEVENT_H
 
-#include <QObject>
+#include <QMetaType>
 
-#include <TalcsDspx/TalcsDspxGlobal.h>
+#include <TalcsMidi/MidiMessage.h>
 
 namespace talcs {
 
-    class DspxSingingClipContext;
-    class DspxPseudoSingerContext;
+    struct TALCSMIDI_EXPORT MidiInputEvent {
+        enum Type {
+            Message,
+            SourceStopped,
+            AllSourcesStopped,
+        };
 
-    class DspxNoteContextPrivate;
+        MidiMessage message;
+        quint64 sourceId{};
+        Type type{Message};
 
-    class TALCSDSPX_EXPORT DspxNoteContext : public QObject {
-        Q_OBJECT
-        Q_DECLARE_PRIVATE(DspxNoteContext)
-        friend class DspxSingingClipContext;
-        friend class DspxPseudoSingerContext;
-    public:
-        ~DspxNoteContext() override;
-
-        DspxSingingClipContext *singingClipContext() const;
-
-        void setPos(int tick);
-        int pos() const;
-
-        void setLength(int tick);
-        int length() const;
-
-        void updatePosition();
-
-        void setKeyCent(int cent);
-        int keyCent() const;
-
-        void addPitchAnchor(int pos, const QVariant &anchorData);
-        void removePitchAnchor(int pos);
-        void clearPitchAnchor();
-
-        void addEnergyAnchor(int pos, const QVariant &anchorData);
-        void removeEnergyAnchor(int pos);
-        void clearEnergyAnchor();
-
-    private:
-        explicit DspxNoteContext(DspxSingingClipContext *singingClipContext);
-        QScopedPointer<DspxNoteContextPrivate> d_ptr;
+        /// Returns seconds from the process-wide steady clock used by MIDI input events.
+        static double currentTime() noexcept;
+        /// Returns a process-wide source identity for physical or callback-based inputs.
+        static quint64 createSourceId() noexcept;
     };
 
-} // talcs
+}
 
-#endif //TALCS_DSPXNOTECONTEXT_H
+Q_DECLARE_METATYPE(talcs::MidiInputEvent)
+
+#endif // TALCS_MIDIINPUTEVENT_H

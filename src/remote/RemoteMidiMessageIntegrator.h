@@ -35,6 +35,7 @@ namespace talcs {
 
         bool open(qint64 bufferSize, double sampleRate) override;
         void close() override;
+        quint64 sourceId() const;
 
     protected:
         QList<IntegratedMidiMessage> fetch(qint64 length) override;

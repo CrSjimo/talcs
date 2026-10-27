@@ -42,6 +42,7 @@ namespace talcs {
             NoteOff,
             NoteOn,
             NoteOnIfNotPlaying,
+            SoundOff,
         };
 
         struct Note {
@@ -55,12 +56,16 @@ namespace talcs {
             double frequency;
             double velocity;
             NoteMessageType messageType;
+            /// Identifies an independent voice group. Zero addresses the ungrouped or global state.
+            quint64 voiceId{};
         };
         struct Pitch {
             double deltaPitch;
+            quint64 voiceId{};
         };
         struct Volume {
             double volume;
+            quint64 voiceId{};
         };
         NoteSynthesizerDetectorMessage(SpecialValueNull null = {}) : position(-1), messageType{}, pitch{} {
         }

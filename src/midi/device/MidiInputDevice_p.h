@@ -35,6 +35,9 @@ namespace talcs {
     public:
         MidiInputDevice *q_ptr;
         int portNumber;
+        quint64 sourceId{};
+        double timeStamp{};
+        bool timeStampInitialized{};
         QScopedPointer<RtMidiIn> midi;
         mutable MidiMessageListener listener;
 

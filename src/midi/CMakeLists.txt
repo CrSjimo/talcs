@@ -10,3 +10,7 @@ talcs_add_library(${PROJECT_NAME} AUTOGEN
     LINKS_PRIVATE RtMidi::rtmidi
     QT_INCLUDE_PRIVATE Core
 )
+
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE winmm)
+endif()

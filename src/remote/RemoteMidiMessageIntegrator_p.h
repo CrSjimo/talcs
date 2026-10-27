@@ -29,6 +29,8 @@ namespace talcs {
         Q_DECLARE_PUBLIC(RemoteMidiMessageIntegrator)
     public:
         QList<IntegratedMidiMessage> midiMessages;
+        const quint64 sourceId{MidiInputEvent::createSourceId()};
+        double messageSampleRate{};
         QMutex mutex;
     };
 }

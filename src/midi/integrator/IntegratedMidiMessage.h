@@ -20,13 +20,16 @@
 #ifndef TALCS_INTEGRATEDMIDIMESSAGE_H
 #define TALCS_INTEGRATEDMIDIMESSAGE_H
 
-#include <TalcsMidi/MidiMessage.h>
+#include <TalcsMidi/MidiInputEvent.h>
 
 namespace talcs {
 
     struct IntegratedMidiMessage {
+        /// Stores a sample offset in the current audio block.
         qint64 position;
         MidiMessage message;
+        quint64 sourceId{};
+        MidiInputEvent::Type type{MidiInputEvent::Message};
     };
 
 } // talcs

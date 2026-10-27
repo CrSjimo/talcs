@@ -20,6 +20,9 @@
 #include "AudioMidiStream.h"
 #include "AudioMidiStream_p.h"
 
+#include <algorithm>
+#include <cmath>
+
 namespace talcs {
     AudioMidiStream::AudioMidiStream() : AudioMidiStream(*new AudioMidiStreamPrivate) {
     }
@@ -33,7 +36,12 @@ namespace talcs {
         Q_D(AudioMidiStream);
         QMutexLocker locker(&d->filterMutex);
         AudioStreamBase::close();
+        if (d->filter.loadRelaxed())
+            d->filter.loadRelaxed()->close();
+        if (bufferSize <= 0 || !std::isfinite(sampleRate) || sampleRate <= 0)
+            return false;
         if (d->filter.loadRelaxed() && !d->filter.loadRelaxed()->open(bufferSize, sampleRate)) {
+            d->filter.loadRelaxed()->close();
             return false;
         }
         return AudioStreamBase::open(bufferSize, sampleRate);
@@ -49,21 +57,43 @@ namespace talcs {
 
     qint64 AudioMidiStream::read(const AudioSourceReadData &readData, const QList<IntegratedMidiMessage> &midiEvents) {
         Q_D(AudioMidiStream);
-        qint64 l = processReading(readData, midiEvents);
+        if (!isOpen() || readData.length <= 0)
+            return 0;
+        QList<IntegratedMidiMessage> events;
+        events.reserve(midiEvents.size());
+        for (auto event : midiEvents) {
+            if (event.position >= readData.length || (event.type == MidiInputEvent::Message && !event.message.isValid()))
+                continue;
+            event.position = std::max<qint64>(0, event.position);
+            events.append(event);
+        }
+        std::stable_sort(events.begin(), events.end(), [](const auto &left, const auto &right) { return left.position < right.position; });
+        qint64 l = std::clamp(processReading(readData, events), qint64{0}, readData.length);
         if (!d->filter) return l;
         QMutexLocker locker(&d->filterMutex);
         if (d->filter.loadRelaxed()) {
-            d->filter.loadRelaxed()->read({readData.buffer, readData.startPos, l, readData.silentFlags}, midiEvents);
+            d->filter.loadRelaxed()->read({readData.buffer, readData.startPos, l, readData.silentFlags}, events);
         }
         return l;
     }
 
-    void AudioMidiStream::setReadingFilter(AudioMidiStream *filter) {
+    bool AudioMidiStream::setReadingFilter(AudioMidiStream *filter) {
         Q_D(AudioMidiStream);
         QMutexLocker locker(&d->filterMutex);
+        if (d->filter.loadRelaxed() == filter)
+            return true;
+        for (auto current = filter; current; current = current->readingFilter()) {
+            if (current == this)
+                return false;
+        }
+        if (isOpen() && filter && !filter->open(bufferSize(), sampleRate())) {
+            filter->close();
+            return false;
+        }
+        if (d->filter.loadRelaxed())
+            d->filter.loadRelaxed()->close();
         d->filter = filter;
-        if (isOpen())
-            filter->open(bufferSize(), sampleRate());
+        return true;
     }
 
     AudioMidiStream *AudioMidiStream::readingFilter() const {

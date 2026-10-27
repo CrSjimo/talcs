@@ -40,7 +40,8 @@ namespace talcs {
 
         qint64 read(const AudioSourceReadData &readData, const QList<IntegratedMidiMessage> &midiEvents);
 
-        void setReadingFilter(AudioMidiStream *filter);
+        /// Replaces the borrowed filter. Returns false for a cycle or an open failure.
+        bool setReadingFilter(AudioMidiStream *filter);
 
         AudioMidiStream *readingFilter() const;
 

@@ -20,10 +20,11 @@
 #ifndef TALCS_MIDIMESSAGELISTENER_P_H
 #define TALCS_MIDIMESSAGELISTENER_P_H
 
-#include <QList>
-#include <QMutex>
-
 #include <TalcsMidi/MidiMessageListener.h>
+
+#include <QList>
+#include <QRecursiveMutex>
+
 
 namespace talcs {
 
@@ -32,7 +33,7 @@ namespace talcs {
     public:
         MidiMessageListener *q_ptr;
         QList<MidiMessageListener *> filters;
-        QMutex filterMutex;
+        QRecursiveMutex filterMutex;
     };
 
 }

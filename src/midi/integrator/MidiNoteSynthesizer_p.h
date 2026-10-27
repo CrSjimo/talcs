@@ -22,25 +22,30 @@
 
 #include <TalcsMidi/MidiNoteSynthesizer.h>
 
+#include <atomic>
+
+#include <QHash>
 #include <QList>
+#include <QPair>
 
 #include <TalcsCore/NoteSynthesizer.h>
 #include <TalcsCore/TakeOwnershipPointer.h>
 
-#include <TalcsMidi/private/AudioMidiStream_p.h>
 
 namespace talcs {
-    class MidiNoteSynthesizerPrivate final : public NoteSynthesizerDetector {
+    class MidiNoteSynthesizerPrivate : public NoteSynthesizerDetector {
         Q_DECLARE_PUBLIC(MidiNoteSynthesizer)
     public:
         MidiNoteSynthesizer *q_ptr;
 
         TakeOwnershipPointer<NoteSynthesizer> noteSynthesizer;
 
-        double frequencyOfA = 440.0;
+        std::atomic<double> frequencyOfA{440.0};
+        QHash<QPair<quint64, int>, quint64> voiceIds;
+        quint64 nextVoiceId{1};
 
-        QList<IntegratedMidiMessage> midiEvents;
-        QList<IntegratedMidiMessage>::const_iterator midiEventsIterator;
+        QList<NoteSynthesizerDetectorMessage> messages;
+        qsizetype messageIndex{};
 
         void detectInterval(qint64 intervalLength) override;
         NoteSynthesizerDetectorMessage nextMessage() override;

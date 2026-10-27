@@ -38,7 +38,8 @@ namespace talcs {
         bool open(qint64 bufferSize, double sampleRate) override;
         void close() override;
 
-        void setStream(AudioMidiStream *stream, bool takeOwnership = false);
+        /// Replaces the stream. Returns false if opening the replacement fails.
+        bool setStream(AudioMidiStream *stream, bool takeOwnership = false);
         AudioMidiStream *stream() const;
 
     protected:

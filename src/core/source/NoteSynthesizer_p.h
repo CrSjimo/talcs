@@ -20,11 +20,13 @@
 #ifndef TALCS_NoteSynthesizer_P_H
 #define TALCS_NoteSynthesizer_P_H
 
+#include <TalcsCore/NoteSynthesizer.h>
+
 #include <cmath>
 
+#include <QHash>
 #include <QList>
 
-#include <TalcsCore/NoteSynthesizer.h>
 #include <TalcsCore/private/AudioSource_p.h>
 
 namespace talcs {
@@ -49,6 +51,9 @@ namespace talcs {
                 Decay,
                 Release,
             } state;
+            quint64 voiceId{};
+            double deltaPitch{};
+            double volume{1.0};
             inline double nextVel();
         };
 
@@ -57,6 +62,11 @@ namespace talcs {
         double deltaPitch = 0.0;
         double volume = 1.0;
 
+        struct VoiceControl {
+            double deltaPitch{};
+            double volume{1.0};
+        };
+        QHash<quint64, VoiceControl> controls;
         QList<KeyInfo> keys;
 
         struct GenerateSineWave {
@@ -159,9 +169,9 @@ namespace talcs {
                     envelop = .0;
         }
         x++;
-        integration += frequency / d->q_func()->sampleRate() * std::pow(2, d->deltaPitch / 12.0);
+        integration += frequency / d->q_func()->sampleRate() * std::pow(2, (d->deltaPitch + deltaPitch) / 12.0);
         integration = std::fmod(integration, 1.0);
-        return ret * d->volume * d->config.d->amplitude;
+        return ret * d->volume * volume * d->config.d->amplitude;
     }
     double NoteSynthesizerPrivate::generate(double integration) const {
         return config.d->generatorFunction(integration);

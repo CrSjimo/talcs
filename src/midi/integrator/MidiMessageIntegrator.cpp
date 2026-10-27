@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 CrSjimo                                                 *
+ * Copyright (c) 2023-2024 CrSjimo                                            *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -20,72 +20,121 @@
 #include "MidiMessageIntegrator.h"
 #include "MidiMessageIntegrator_p.h"
 
-#include <QList>
+#include <algorithm>
+#include <cmath>
+#include <mutex>
 
 namespace talcs {
-    MidiMessageIntegrator::MidiMessageIntegrator() : MidiMessageIntegrator(*new MidiMessageIntegratorPrivate) {
 
+    MidiMessageIntegrator::MidiMessageIntegrator() : MidiMessageIntegrator(*new MidiMessageIntegratorPrivate) {
     }
 
-    MidiMessageIntegrator::~MidiMessageIntegrator() = default;
+    MidiMessageIntegrator::~MidiMessageIntegrator() {
+        close();
+    }
 
     bool MidiMessageIntegrator::open(qint64 bufferSize, double sampleRate) {
         Q_D(MidiMessageIntegrator);
-        d->queue.clear();
-        return AbstractMidiMessageIntegrator::open(bufferSize, sampleRate);
+        if (bufferSize <= 0 || !std::isfinite(sampleRate) || sampleRate <= 0)
+            return false;
+        {
+            QMutexLocker locker(&d->queueMutex);
+            d->queue.clear();
+            d->queue.reserve(d->capacity);
+            d->accepting = false;
+        }
+        const bool result = AbstractMidiMessageIntegrator::open(bufferSize, sampleRate);
+        QMutexLocker locker(&d->queueMutex);
+        d->accepting = result;
+        return result;
     }
 
     void MidiMessageIntegrator::close() {
         Q_D(MidiMessageIntegrator);
-        d->queue.clear();
+        {
+            QMutexLocker locker(&d->queueMutex);
+            d->accepting = false;
+            d->queue.clear();
+        }
         AbstractMidiMessageIntegrator::close();
     }
 
     void MidiMessageIntegrator::flush() {
         Q_D(MidiMessageIntegrator);
+        QMutexLocker locker(&d->queueMutex);
         d->queue.clear();
+        if (d->accepting)
+            d->queue.push_back({MidiMessage().withTimeStamp(MidiInputEvent::currentTime()), 0, MidiInputEvent::AllSourcesStopped});
     }
 
-    bool MidiMessageIntegrator::processDeviceWillStart(MidiInputDevice *device) {
-        Q_D(MidiMessageIntegrator);
-        d->queue.clear();
-        return true;
+    quint64 MidiMessageIntegrator::droppedEventCount() const {
+        Q_D(const MidiMessageIntegrator);
+        QMutexLocker locker(&d->queueMutex);
+        return d->droppedEvents;
     }
 
-    void MidiMessageIntegrator::processDeviceStopped() {
+    bool MidiMessageIntegrator::enqueueBlock(const QList<IntegratedMidiMessage> &events, double blockTime, double blockSampleRate) {
+        if (!std::isfinite(blockTime) || !std::isfinite(blockSampleRate) || blockSampleRate <= 0)
+            return false;
+        const auto droppedBefore = droppedEventCount();
+        for (const auto &event : events) {
+            if (event.position < 0 || !std::isfinite(blockTime + event.position / blockSampleRate) ||
+                (event.type == MidiInputEvent::Message && !event.message.isValid()))
+                return false;
+            eventCallback({event.message.withTimeStamp(blockTime + event.position / blockSampleRate), event.sourceId, event.type});
+        }
         Q_D(MidiMessageIntegrator);
-        d->queue.clear();
+        QMutexLocker locker(&d->queueMutex);
+        return d->accepting && droppedBefore == d->droppedEvents;
     }
 
-    bool MidiMessageIntegrator::processMessage(const MidiMessage &message) {
+    bool MidiMessageIntegrator::processEvent(const MidiInputEvent &input) {
         Q_D(MidiMessageIntegrator);
-        d->queue.push(message);
+        if (input.type == MidiInputEvent::Message && !input.message.isValid())
+            return false;
+        auto event = input;
+        if (!std::isfinite(event.message.getTimeStamp()) || event.message.getTimeStamp() <= 0)
+            event.message.setTimeStamp(MidiInputEvent::currentTime());
+        QMutexLocker locker(&d->queueMutex);
+        if (!d->accepting)
+            return false;
+        if (event.type == MidiInputEvent::AllSourcesStopped) {
+            d->queue.clear();
+        } else if (event.type == MidiInputEvent::SourceStopped) {
+            d->queue.erase(std::remove_if(d->queue.begin(), d->queue.end(), [&](const auto &queued) { return queued.sourceId == event.sourceId; }), d->queue.end());
+        }
+        if (d->queue.size() == d->capacity) {
+            d->droppedEvents += d->queue.size();
+            d->queue.clear();
+            d->queue.push_back({MidiMessage().withTimeStamp(MidiInputEvent::currentTime()), 0, MidiInputEvent::AllSourcesStopped});
+        }
+        const auto position = std::upper_bound(d->queue.begin(), d->queue.end(), event.message.getTimeStamp(),
+            [](double time, const MidiInputEvent &queued) { return time < queued.message.getTimeStamp(); });
+        d->queue.insert(position, event);
         return false;
-    }
-
-    void MidiMessageIntegrator::processError(const QString &errorString) {
-        Q_D(MidiMessageIntegrator);
-        d->queue.push({0xf0, 0xf7, -qInf()});
     }
 
     QList<IntegratedMidiMessage> MidiMessageIntegrator::fetch(qint64 length) {
         Q_D(MidiMessageIntegrator);
-        if (d->queue.empty())
+        std::unique_lock locker(d->queueMutex, std::try_to_lock);
+        if (!locker.owns_lock() || length <= 0)
             return {};
-        QList<IntegratedMidiMessage> midiEvents = {{0, d->queue.top()}};
-        d->queue.pop();
-        while (!d->queue.empty()) {
-            auto message = d->queue.top();
-            auto position = static_cast<qint64>((message.getTimeStamp() - midiEvents[0].message.getTimeStamp()) * sampleRate());
-            if (position >= length)
-                break;
-            d->queue.pop();
-            midiEvents.append({position, message});
+        // Live input is rendered one block after capture. Late events are applied at the block start.
+        const double end = MidiInputEvent::currentTime();
+        const double start = end - static_cast<double>(length) / sampleRate();
+        QList<IntegratedMidiMessage> result;
+        const auto last = std::upper_bound(d->queue.begin(), d->queue.end(), end,
+            [](double time, const MidiInputEvent &event) { return time < event.message.getTimeStamp(); });
+        result.reserve(static_cast<qsizetype>(last - d->queue.begin()));
+        for (auto it = d->queue.begin(); it != last; ++it) {
+            const double offset = std::clamp((it->message.getTimeStamp() - start) * sampleRate(), 0.0, static_cast<double>(length - 1));
+            result.append({static_cast<qint64>(offset), it->message, it->sourceId, it->type});
         }
-        return midiEvents;
+        d->queue.erase(d->queue.begin(), last);
+        return result;
     }
 
     MidiMessageIntegrator::MidiMessageIntegrator(MidiMessageIntegratorPrivate &d) : AbstractMidiMessageIntegrator(d) {
-
     }
-} // talcs
+
+}

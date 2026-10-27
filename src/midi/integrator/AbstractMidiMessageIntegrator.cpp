@@ -20,7 +20,11 @@
 #include "AbstractMidiMessageIntegrator.h"
 #include "AbstractMidiMessageIntegrator_p.h"
 
+#include <cmath>
+
 #include <QList>
+
+#include <TalcsCore/IAudioSampleContainer.h>
 
 namespace talcs {
     AbstractMidiMessageIntegrator::AbstractMidiMessageIntegrator() : AbstractMidiMessageIntegrator(*new AbstractMidiMessageIntegratorPrivate) {
@@ -36,9 +40,19 @@ namespace talcs {
         Q_D(AbstractMidiMessageIntegrator);
         QMutexLocker locker(&d->mutex);
         AudioSource::close();
-        if (d->stream && !d->stream->open(bufferSize, sampleRate))
+        if (d->stream)
+            d->stream->close();
+        if (bufferSize <= 0 || !std::isfinite(sampleRate) || sampleRate <= 0)
             return false;
-        return AudioSource::open(bufferSize, sampleRate);
+        if (d->stream && !d->stream->open(bufferSize, sampleRate)) {
+            d->stream->close();
+            return false;
+        }
+        if (AudioSource::open(bufferSize, sampleRate))
+            return true;
+        if (d->stream)
+            d->stream->close();
+        return false;
     }
 
     void AbstractMidiMessageIntegrator::close() {
@@ -49,12 +63,21 @@ namespace talcs {
         AudioSource::close();
     }
 
-    void AbstractMidiMessageIntegrator::setStream(AudioMidiStream *stream, bool takeOwnership) {
+    bool AbstractMidiMessageIntegrator::setStream(AudioMidiStream *stream, bool takeOwnership) {
         Q_D(AbstractMidiMessageIntegrator);
         QMutexLocker locker(&d->mutex);
+        if (d->stream.get() == stream) {
+            d->stream.reset(stream, takeOwnership);
+            return true;
+        }
+        if (isOpen() && stream && !stream->open(bufferSize(), sampleRate())) {
+            stream->close();
+            return false;
+        }
+        if (d->stream)
+            d->stream->close();
         d->stream.reset(stream, takeOwnership);
-        if (isOpen())
-            d->stream->open(bufferSize(), sampleRate());
+        return true;
     }
 
     AudioMidiStream *AbstractMidiMessageIntegrator::stream() const {
@@ -68,6 +91,8 @@ namespace talcs {
         auto midiEvents = fetch(readData.length);
         if (d->stream)
             return d->stream->read(readData, midiEvents);
+        for (int channel = 0; channel < readData.buffer->channelCount(); ++channel)
+            readData.buffer->clear(channel, readData.startPos, readData.length);
         return readData.length;
     }
 

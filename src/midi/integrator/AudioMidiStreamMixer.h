@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 CrSjimo                                                 *
+ * Copyright (c) 2023-2024 CrSjimo                                            *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,34 +17,31 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_DSPXPSEUDOSINGERCONTEXT_P_H
-#define TALCS_DSPXPSEUDOSINGERCONTEXT_P_H
+#ifndef TALCS_AUDIOMIDISTREAMMIXER_H
+#define TALCS_AUDIOMIDISTREAMMIXER_H
 
-#include <memory>
-
-#include <QMap>
-
-#include <TalcsCore/NoteSynthesizer.h>
-
-#include <TalcsDspx/DspxPseudoSingerContext.h>
+#include <TalcsMidi/AudioMidiStream.h>
 
 namespace talcs {
 
-    class AudioSourceClipSeries;
+    class AudioMidiStreamMixerPrivate;
 
-    class DspxPseudoSingerContextPrivate {
-        Q_DECLARE_PUBLIC(DspxPseudoSingerContext);
+    class TALCSMIDI_EXPORT AudioMidiStreamMixer : public AudioMidiStream {
+        Q_DECLARE_PRIVATE(AudioMidiStreamMixer)
     public:
-        DspxPseudoSingerContext *q_ptr;
+        explicit AudioMidiStreamMixer();
+        ~AudioMidiStreamMixer() override;
 
-        std::unique_ptr<AudioSourceClipSeries> clipSeries;
+        bool open(qint64 bufferSize, double sampleRate) override;
+        void close() override;
+        /// Registers a borrowed stream. The stream must be removed before destruction.
+        bool addStream(AudioMidiStream *stream);
+        void removeStream(AudioMidiStream *stream);
 
-        DspxTrackContext *trackContext;
-
-        QMap<int, DspxSingingClipContext *> clips;
-
-        NoteSynthesizerConfig config;
+    protected:
+        qint64 processReading(const AudioSourceReadData &readData, const QList<IntegratedMidiMessage> &events) override;
     };
+
 }
 
-#endif //TALCS_DSPXPSEUDOSINGERCONTEXT_P_H
+#endif // TALCS_AUDIOMIDISTREAMMIXER_H

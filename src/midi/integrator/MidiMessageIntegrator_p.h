@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 CrSjimo                                                 *
+ * Copyright (c) 2023-2024 CrSjimo                                            *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -22,49 +22,24 @@
 
 #include <TalcsMidi/MidiMessageIntegrator.h>
 
+#include <vector>
+
+#include <QMutex>
+
 #include <TalcsMidi/private/AbstractMidiMessageIntegrator_p.h>
 
 namespace talcs {
 
-    struct MidiMessageIntegratorQueue {
-        MidiMessage p[1024];
-        QAtomicInteger<size_t> head = 0;
-        size_t tail = 0;
-        QAtomicInteger<size_t> counter = 0;
-        void push(const MidiMessage &message) {
-            if (counter.loadAcquire() == 1024)
-                return;
-            counter.fetchAndAddOrdered(1);
-            p[tail++] = message;
-            tail %= 1024;
-        }
-        void clear() {
-            counter.storeRelease(0);
-            tail = head;
-            tail %= 1024;
-        }
-        bool empty() const {
-            return !counter;
-        }
-        MidiMessage top() {
-            if (!counter.loadAcquire())
-                return {0xf0, 0xf7, -qInf()};
-            return p[head];
-        }
-        void pop() {
-            if (!counter.loadAcquire())
-                return;
-            counter.fetchAndAddOrdered(-1);
-            head++;
-            head = head % 1024;
-        }
-    };
-
     class MidiMessageIntegratorPrivate : public AbstractMidiMessageIntegratorPrivate {
         Q_DECLARE_PUBLIC(MidiMessageIntegrator)
     public:
-        MidiMessageIntegratorQueue queue;
+        static constexpr size_t capacity = 1024;
+        mutable QMutex queueMutex;
+        std::vector<MidiInputEvent> queue;
+        quint64 droppedEvents{};
+        bool accepting{};
     };
+
 }
 
-#endif //TALCS_MIDIMESSAGEINTEGRATOR_P_H
+#endif // TALCS_MIDIMESSAGEINTEGRATOR_P_H

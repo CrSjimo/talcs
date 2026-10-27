@@ -37,13 +37,16 @@ namespace talcs {
 
         void close() override;
 
+        /// Discards pending events and requests silence from all connected sources.
         void flush();
+        quint64 droppedEventCount() const;
+
+        /// Enqueues sample-positioned events using the steady-clock time of the block start.
+        /// Returns whether every event was accepted. Source identities remain available to recording listeners.
+        bool enqueueBlock(const QList<IntegratedMidiMessage> &events, double blockTime, double blockSampleRate);
 
     protected:
-        bool processDeviceWillStart(MidiInputDevice *device) override;
-        void processDeviceStopped() override;
-        bool processMessage(const MidiMessage &message) override;
-        void processError(const QString &errorString) override;
+        bool processEvent(const MidiInputEvent &event) override;
 
         QList<IntegratedMidiMessage> fetch(qint64 length) override;
 

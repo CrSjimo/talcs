@@ -17,12 +17,13 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
+#include "NoteSynthesizer.h"
+#include "NoteSynthesizer_p.h"
+
+#include <algorithm>
 #include <cmath>
 
 #include <QList>
-
-#include "NoteSynthesizer.h"
-#include "NoteSynthesizer_p.h"
 
 namespace talcs {
 
@@ -527,7 +528,8 @@ namespace talcs {
         d->detector->detectInterval(readData.length);
         int currentPos = 0;
         for (auto msg = d->detector->nextMessage(); ; msg = d->detector->nextMessage()) {
-            for (;currentPos < (msg.position != -1 ? msg.position : readData.length); currentPos++) {
+            const auto eventPosition = msg.isNull() ? readData.length : std::clamp<qint64>(msg.position, currentPos, readData.length);
+            for (; currentPos < eventPosition; ++currentPos) {
                 for (auto &keyInfo : d->keys) {
                     double vel = keyInfo.nextVel();
                     if (readData.silentFlags == -1)
@@ -562,13 +564,20 @@ namespace talcs {
     }
 
     void NoteSynthesizerPrivate::handleNoteMessage(const NoteSynthesizerDetectorMessage::Note &msg) {
-        if (qFuzzyIsNull(msg.frequency) && msg.messageType == NoteSynthesizerDetectorMessage::NoteOff) { // All notes off
+        if (msg.messageType == NoteSynthesizerDetectorMessage::SoundOff) {
+            keys.removeIf([&](const auto &key) { return msg.voiceId == 0 || key.voiceId == msg.voiceId; });
+            if (msg.voiceId == 0)
+                controls.clear();
+            else
+                controls.remove(msg.voiceId);
+        } else if (qFuzzyIsNull(msg.frequency) && msg.messageType == NoteSynthesizerDetectorMessage::NoteOff) {
             for (auto &key : keys) {
-                key.state = NoteSynthesizerPrivate::KeyInfo::Release;
+                if (msg.voiceId == 0 || key.voiceId == msg.voiceId)
+                    key.state = NoteSynthesizerPrivate::KeyInfo::Release;
             }
         } else {
             auto it = std::find_if(keys.begin(), keys.end(), [&](const auto &item) {
-                return qFuzzyCompare(item.frequency, msg.frequency);
+                return item.voiceId == msg.voiceId && qFuzzyCompare(item.frequency, msg.frequency);
             });
             if (msg.messageType == NoteSynthesizerDetectorMessage::NoteOff) {
                 if (it != keys.end())
@@ -580,18 +589,35 @@ namespace talcs {
                         it->state = NoteSynthesizerPrivate::KeyInfo::Attack;
                     }
                 } else {
-                    keys.append({this, msg.frequency, msg.velocity, {}, {}, {}});
+                    const auto control = controls.value(msg.voiceId);
+                    keys.append({this, msg.frequency, msg.velocity, {}, {}, {}, KeyInfo::Attack, msg.voiceId, control.deltaPitch, control.volume});
                 }
             }
         }
     }
 
     void NoteSynthesizerPrivate::handlePitchMessage(const NoteSynthesizerDetectorMessage::Pitch &msg) {
-        deltaPitch = msg.deltaPitch;
+        if (msg.voiceId == 0) {
+            deltaPitch = msg.deltaPitch;
+        } else {
+            controls[msg.voiceId].deltaPitch = msg.deltaPitch;
+            for (auto &key : keys) {
+                if (key.voiceId == msg.voiceId)
+                    key.deltaPitch = msg.deltaPitch;
+            }
+        }
     }
 
     void NoteSynthesizerPrivate::handleVolumeMessage(const NoteSynthesizerDetectorMessage::Volume &msg) {
-        volume = msg.volume;
+        if (msg.voiceId == 0) {
+            volume = msg.volume;
+        } else {
+            controls[msg.voiceId].volume = msg.volume;
+            for (auto &key : keys) {
+                if (key.voiceId == msg.voiceId)
+                    key.volume = msg.volume;
+            }
+        }
     }
 
 
@@ -621,6 +647,9 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         if (force) {
             d->keys.clear();
+            d->controls.clear();
+            d->deltaPitch = 0;
+            d->volume = 1;
         } else {
             for (auto &key : d->keys)
                 key.state = NoteSynthesizerPrivate::KeyInfo::Release;

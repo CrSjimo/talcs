@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 CrSjimo                                                 *
+ * Copyright (c) 2023-2024 CrSjimo                                            *
  *                                                                            *
  * This file is part of TALCS.                                                *
  *                                                                            *
@@ -17,38 +17,26 @@
  * along with TALCS. If not, see <https://www.gnu.org/licenses/>.             *
  ******************************************************************************/
 
-#ifndef TALCS_DSPXSINGINGCLIPCONTEXT_P_H
-#define TALCS_DSPXSINGINGCLIPCONTEXT_P_H
+#ifndef TALCS_AUDIOMIDISTREAMMIXER_P_H
+#define TALCS_AUDIOMIDISTREAMMIXER_P_H
 
-#include <memory>
+#include <TalcsMidi/AudioMidiStreamMixer.h>
 
-#include <QVariant>
+#include <QMutex>
 
-#include <TalcsCore/AudioSourceClipSeries.h>
-
-#include <TalcsDspx/DspxSingingClipContext.h>
+#include <TalcsCore/AudioBuffer.h>
+#include <TalcsMidi/private/AudioMidiStream_p.h>
 
 namespace talcs {
-    class DspxSingingClipContextPrivate {
-        Q_DECLARE_PUBLIC(DspxSingingClipContext)
+
+    class AudioMidiStreamMixerPrivate : public AudioMidiStreamPrivate {
+        Q_DECLARE_PUBLIC(AudioMidiStreamMixer)
     public:
-        DspxSingingClipContext *q_ptr;
-
-        AudioSourceClipSeries::ClipView clipView;
-
-        std::unique_ptr<AudioSourceClipSeries> noteClipSeries;
-        std::unique_ptr<PositionableMixerAudioSource> controlMixer;
-
-        DspxPseudoSingerContext *pseudoSingerContext;
-
-        int startTick = 0;
-        int clipStartTick = 0;
-        int clipLenTick = 0;
-
-        QVariant data;
-
-        QMap<int, DspxNoteContext *> notes;
+        QMutex mutex;
+        QList<AudioMidiStream *> streams;
+        AudioBuffer scratch;
     };
+
 }
 
-#endif //TALCS_DSPXSINGINGCLIPCONTEXT_P_H
+#endif // TALCS_AUDIOMIDISTREAMMIXER_P_H
