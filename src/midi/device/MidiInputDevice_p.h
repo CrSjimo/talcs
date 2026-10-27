@@ -22,6 +22,8 @@
 
 #include <TalcsMidi/MidiInputDevice.h>
 
+#include <atomic>
+
 #include <rtmidi/RtMidi.h>
 
 #include <TalcsMidi/MidiMessageListener.h>
@@ -38,6 +40,9 @@ namespace talcs {
         quint64 sourceId{};
         double timeStamp{};
         bool timeStampInitialized{};
+        std::atomic<bool> closing{true};
+        bool callbackRegistered{};
+        bool listenerStarted{};
         QScopedPointer<RtMidiIn> midi;
         mutable MidiMessageListener listener;
 

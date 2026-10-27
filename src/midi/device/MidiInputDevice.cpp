@@ -21,6 +21,7 @@
 #include "MidiInputDevice_p.h"
 
 #include <cmath>
+#include <utility>
 #include <vector>
 
 #ifdef Q_OS_WIN
@@ -72,12 +73,14 @@ namespace talcs {
     }
 
     MidiInputDevice::~MidiInputDevice() {
+        Q_D(MidiInputDevice);
         close();
+        d->midi.reset();
     }
 
     void MidiInputDevicePrivate::rtmidiCallback(double timeStamp, std::vector<unsigned char> *message, void *userData) {
         auto d = static_cast<MidiInputDevicePrivate *>(userData);
-        if (!message || message->empty())
+        if (d->closing.load() || !message || message->empty())
             return;
         if (!d->timeStampInitialized || !std::isfinite(timeStamp) || timeStamp < 0) {
             d->timeStamp = MidiInputEvent::currentTime();
@@ -94,6 +97,8 @@ namespace talcs {
         if (type == RtMidiError::WARNING || type == RtMidiError::DEBUG_WARNING)
             return;
         auto d = static_cast<MidiInputDevicePrivate *>(userData);
+        if (d->closing.load())
+            return;
         const auto error = QString::fromStdString(errorText);
         const auto reportError = [device = d->q_ptr, error] { device->setErrorString(error); };
         if (QThread::currentThread() == d->q_ptr->thread())
@@ -120,19 +125,22 @@ namespace talcs {
             return false;
         if (isOpen())
             return true;
+        d->closing.store(false);
         try {
             if (d->portNumber < 0 || static_cast<unsigned>(d->portNumber) >= d->midi->getPortCount()) {
                 setErrorString(tr("The MIDI input device is unavailable."));
                 return false;
             }
+            d->listenerStarted = true;
             if (!d->listener.deviceWillStartCallback(this)) {
-                d->listener.deviceStoppedCallback();
+                close();
                 setErrorString(tr("The MIDI input listener could not start."));
                 return false;
             }
             d->timeStampInitialized = false;
             d->midi->ignoreTypes(false, false, false);
             d->midi->setCallback(&MidiInputDevicePrivate::rtmidiCallback, d);
+            d->callbackRegistered = true;
             d->midi->setErrorCallback(&MidiInputDevicePrivate::rtmidiErrorCallback, d);
             d->midi->openPort(d->portNumber);
             if (!d->midi->isPortOpen()) {
@@ -157,18 +165,25 @@ namespace talcs {
 
     void MidiInputDevice::close() {
         Q_D(MidiInputDevice);
+        if (d->closing.exchange(true))
+            return;
         QString closeError;
         if (d->midi) {
             try {
-                d->midi->setErrorCallback(nullptr);
-                d->midi->cancelCallback();
+                // Port shutdown must complete before callback registration changes.
                 d->midi->closePort();
+                if (d->callbackRegistered) {
+                    d->midi->cancelCallback();
+                    d->callbackRegistered = false;
+                }
             } catch (const RtMidiError &error) {
                 closeError = QString::fromStdString(error.getMessage());
             }
         }
-        d->listener.eventCallback({MidiMessage().withTimeStamp(MidiInputEvent::currentTime()), d->sourceId, MidiInputEvent::SourceStopped});
-        d->listener.deviceStoppedCallback();
+        if (std::exchange(d->listenerStarted, false)) {
+            d->listener.eventCallback({MidiMessage().withTimeStamp(MidiInputEvent::currentTime()), d->sourceId, MidiInputEvent::SourceStopped});
+            d->listener.deviceStoppedCallback();
+        }
         setErrorString(closeError);
     }
 
