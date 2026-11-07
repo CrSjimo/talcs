@@ -20,6 +20,8 @@
 #include "AudioSourceClipSeries.h"
 #include "AudioSourceClipSeries_p.h"
 
+#include <utility>
+
 #include <QDebug>
 
 namespace talcs {
@@ -59,7 +61,7 @@ namespace talcs {
             readData.buffer->clear(ch, readData.startPos, readData.length);
         }
         QMutexLocker locker(&d->mutex);
-        qAsConst(d->clips).overlap_find_all(
+        std::as_const(d->clips).overlap_find_all(
             readDataInterval, [=](const decltype(d->clips)::const_iterator &it) {
                 auto clip = it->interval();
                 auto [clipReadPosition, clipReadData] =

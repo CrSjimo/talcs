@@ -95,7 +95,7 @@ namespace talcs {
         Q_D(FutureAudioSource);
         d->callbacks = callbacks;
         d->futureWatcher = new QFutureWatcher<PositionableAudioSource *>(this);
-        connect(d->futureWatcher, &QFutureWatcher<PositionableAudioSource *>::paused, this, [=]() { d->_q_statusChanged(Paused); });
+        connect(d->futureWatcher, &QFutureWatcher<PositionableAudioSource *>::suspending, this, [=]() { d->_q_statusChanged(Paused); });
         connect(d->futureWatcher, &QFutureWatcher<PositionableAudioSource *>::resumed, this, [=]() { d->_q_statusChanged(Running); });
         connect(d->futureWatcher, &QFutureWatcher<PositionableAudioSource *>::canceled, this,
                 [=]() { d->_q_statusChanged(Cancelled); });
@@ -224,7 +224,7 @@ namespace talcs {
      */
     void FutureAudioSource::pause() {
         Q_D(FutureAudioSource);
-        d->futureWatcher->pause();
+        d->futureWatcher->suspend();
     }
 
     /**
@@ -267,7 +267,7 @@ namespace talcs {
         Q_D(const FutureAudioSource);
         if (d->futureWatcher->isCanceled())
             return Cancelled;
-        if (d->futureWatcher->isPaused())
+        if (d->futureWatcher->isSuspending() || d->futureWatcher->isSuspended())
             return Paused;
         if (d->futureWatcher->isFinished())
             return Ready;

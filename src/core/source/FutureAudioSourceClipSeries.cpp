@@ -19,8 +19,10 @@
 
 #include "FutureAudioSourceClipSeries.h"
 #include "FutureAudioSourceClipSeries_p.h"
-#include "FutureAudioSource.h"
 
+#include <utility>
+
+#include <TalcsCore/FutureAudioSource.h>
 #include <TalcsCore/TransportAudioSource.h>
 
 namespace talcs {
@@ -127,7 +129,7 @@ namespace talcs {
         for (int ch = 0; ch < readData.buffer->channelCount(); ch++) {
             readData.buffer->clear(ch, readData.startPos, readData.length);
         }
-        qAsConst(d->clips).overlap_find_all(
+        std::as_const(d->clips).overlap_find_all(
             readDataInterval, [=](const decltype(d->clips)::const_iterator &it) {
                 auto clip = it->interval();
                 auto [clipReadPosition, clipReadData] = d->calculateClipReadData(clip, d->position, readData);
@@ -313,7 +315,7 @@ namespace talcs {
             return true;
         FutureAudioSourceClipSeriesPrivate::ClipInterval queryInterval(nullptr, from, length);
         bool flag = true;
-        qAsConst(d->clips).overlap_find_all(queryInterval, [=, &flag](const decltype(d->clips)::const_iterator &it) {
+        std::as_const(d->clips).overlap_find_all(queryInterval, [=, &flag](const decltype(d->clips)::const_iterator &it) {
             auto clip = it->interval();
             if (static_cast<FutureAudioSource *>(clip.content())->status() != FutureAudioSource::Ready) {
                 flag = false;

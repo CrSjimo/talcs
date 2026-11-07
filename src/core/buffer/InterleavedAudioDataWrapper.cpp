@@ -98,7 +98,8 @@ namespace talcs {
     InterleavedAudioDataWrapper::InterleavedAudioDataWrapper(const InterleavedAudioDataWrapper &other) : d(new InterleavedAudioDataWrapperPrivate(*other.d.data())) {
     }
 
-    InterleavedAudioDataWrapper::InterleavedAudioDataWrapper(InterleavedAudioDataWrapper &&other) : d(other.d.take()) {
+    InterleavedAudioDataWrapper::InterleavedAudioDataWrapper(InterleavedAudioDataWrapper &&other) : d(nullptr) {
+        d.swap(other.d);
     }
 
     InterleavedAudioDataWrapper &InterleavedAudioDataWrapper::operator=(const InterleavedAudioDataWrapper &other) {
@@ -107,7 +108,10 @@ namespace talcs {
     }
 
     InterleavedAudioDataWrapper &InterleavedAudioDataWrapper::operator=(InterleavedAudioDataWrapper &&other) {
-        d.reset(other.d.take());
+        if (this != &other) {
+            d.reset();
+            d.swap(other.d);
+        }
         return *this;
     }
 

@@ -102,7 +102,8 @@ namespace talcs {
 
     }
 
-    AudioDataWrapper::AudioDataWrapper(AudioDataWrapper &&other) : d(other.d.take()) {
+    AudioDataWrapper::AudioDataWrapper(AudioDataWrapper &&other) : d(nullptr) {
+        d.swap(other.d);
     }
 
     AudioDataWrapper &AudioDataWrapper::operator=(const AudioDataWrapper &other) {
@@ -111,7 +112,10 @@ namespace talcs {
     }
 
     AudioDataWrapper &AudioDataWrapper::operator=(AudioDataWrapper &&other) {
-        d.reset(other.d.take());
+        if (this != &other) {
+            d.reset();
+            d.swap(other.d);
+        }
         return *this;
     }
 
