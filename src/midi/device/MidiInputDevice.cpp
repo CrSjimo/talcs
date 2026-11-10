@@ -44,10 +44,10 @@ namespace talcs {
     namespace {
 
         bool isWinMMInputUnavailable() {
-            std::vector<RtMidi::Api> apis;
-            RtMidi::getCompiledApi(apis);
+            std::vector<rt::midi::RtMidi::Api> apis;
+            rt::midi::RtMidi::getCompiledApi(apis);
             // WinMM emits the empty-device warning before an error callback can be installed.
-            return apis.size() == 1 && apis.front() == RtMidi::WINDOWS_MM && midiInGetNumDevs() == 0;
+            return apis.size() == 1 && apis.front() == rt::midi::RtMidi::WINDOWS_MM && midiInGetNumDevs() == 0;
         }
 
     }
@@ -65,9 +65,9 @@ namespace talcs {
         }
 #endif
         try {
-            d->midi.reset(new RtMidiIn);
+            d->midi.reset(new rt::midi::RtMidiIn);
             setName(QString::fromStdString(d->midi->getPortName(deviceIndex)));
-        } catch (RtMidiError &e) {
+        } catch (rt::midi::RtMidiError &e) {
             setErrorString(QString::fromStdString(e.getMessage()));
         }
     }
@@ -93,8 +93,8 @@ namespace talcs {
             d->listener.eventCallback({msg, d->sourceId});
     }
 
-    void MidiInputDevicePrivate::rtmidiErrorCallback(RtMidiError::Type type, const std::string &errorText, void *userData) {
-        if (type == RtMidiError::WARNING || type == RtMidiError::DEBUG_WARNING)
+    void MidiInputDevicePrivate::rtmidiErrorCallback(rt::midi::RtMidiError::Type type, const std::string &errorText, void *userData) {
+        if (type == rt::midi::RtMidiError::WARNING || type == rt::midi::RtMidiError::DEBUG_WARNING)
             return;
         auto d = static_cast<MidiInputDevicePrivate *>(userData);
         if (d->closing.load())
@@ -149,7 +149,7 @@ namespace talcs {
                 setErrorString(error.isEmpty() ? tr("The MIDI input device could not be opened.") : error);
                 return false;
             }
-        } catch (RtMidiError &e) {
+        } catch (rt::midi::RtMidiError &e) {
             close();
             setErrorString(QString::fromStdString(e.getMessage()));
             return false;
@@ -176,7 +176,7 @@ namespace talcs {
                     d->midi->cancelCallback();
                     d->callbackRegistered = false;
                 }
-            } catch (const RtMidiError &error) {
+            } catch (const rt::midi::RtMidiError &error) {
                 closeError = QString::fromStdString(error.getMessage());
             }
         }
@@ -199,13 +199,13 @@ namespace talcs {
 #endif
         QStringList a;
         try {
-            RtMidiIn tmp;
+            rt::midi::RtMidiIn tmp;
             unsigned count = tmp.getPortCount();
             a.reserve(count);
             for (unsigned i = 0; i < count; i++) {
                 a.append(QString::fromStdString(tmp.getPortName(i)));
             }
-        } catch (RtMidiError &e) {
+        } catch (rt::midi::RtMidiError &e) {
             qWarning() << "MidiInputDevice:" << QString::fromStdString(e.getMessage());
         }
         return a;

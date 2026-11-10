@@ -28,8 +28,6 @@
 
 #include <TalcsMidi/MidiMessageListener.h>
 
-class RtMidiIn;
-
 namespace talcs {
 
     class MidiInputDevicePrivate {
@@ -43,11 +41,11 @@ namespace talcs {
         std::atomic<bool> closing{true};
         bool callbackRegistered{};
         bool listenerStarted{};
-        QScopedPointer<RtMidiIn> midi;
+        QScopedPointer<rt::midi::RtMidiIn> midi;
         mutable MidiMessageListener listener;
 
         static void rtmidiCallback(double timeStamp, std::vector<unsigned char> *message, void *userData);
-        static void rtmidiErrorCallback(RtMidiError::Type type, const std::string &errorText, void *userData);
+        static void rtmidiErrorCallback(rt::midi::RtMidiError::Type type, const std::string &errorText, void *userData);
     };
 }
 
