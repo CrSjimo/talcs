@@ -20,12 +20,14 @@
 #ifndef TALCS_BUFFERINGAUDIOSOURCE_P_H
 #define TALCS_BUFFERINGAUDIOSOURCE_P_H
 
+#include <TalcsCore/BufferingAudioSource.h>
+
+#include <QAtomicInteger>
 #include <QMutex>
 #include <QRunnable>
 #include <QWaitCondition>
 
 #include <TalcsCore/AudioBuffer.h>
-#include <TalcsCore/BufferingAudioSource.h>
 #include <TalcsCore/private/PositionableAudioSource_p.h>
 
 namespace talcs {
@@ -34,7 +36,6 @@ namespace talcs {
     public:
         explicit BufferingAudioSourceTask(BufferingAudioSourcePrivate *d);
         void run() override;
-        void readByFrame(qint64 startPos, qint64 length) const;
         BufferingAudioSourcePrivate *d;
     };
 
@@ -52,16 +53,19 @@ namespace talcs {
 
         QMutex bufLock;
         AudioBuffer buf;
-        QAtomicInteger<qint64> headPosition;
-        QAtomicInteger<qint64> tailPosition;
+        qint64 headPosition = 0;
+        QAtomicInteger<qint64> tailPosition = 0;
 
         QWaitCondition bufferingFinished;
         QMutex bufferingTaskMutex;
-        QRunnable *currentBufferingTask = nullptr;
+        BufferingAudioSourceTask bufferingTask{this};
+        bool bufferingTaskPending = false;
+        quint64 completedBufferingTasks = 0;
         QAtomicInteger<bool> isTerminateRequested = false;
-        void commitBufferingTask(bool isCritical);
+        void fillBuffer(qint64 targetLength);
+        void commitBufferingTask();
+        void finishBufferingTask();
         void terminateCurrentBufferingTask();
-        void accelerateCurrentBufferingTaskAndWait();
     };
 
 }

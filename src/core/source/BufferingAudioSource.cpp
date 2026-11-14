@@ -46,7 +46,7 @@ namespace talcs {
      * @param src the PositionableAudioSource object from which to read
      * @param takeOwnership whether to take the ownership of the source
      * @param channelCount the number of channel to read
-     * @param readAheadSize the size of buffering (if less than bufferSize(), then it will read directly)
+     * @param readAheadSize the buffering size. Reads go directly to the source if this size is at most bufferSize().
      * @param autoBuffering automatically starts buffering after the source is opened
      * @param threadPool the thread pool in which runs the buffering task
      */
@@ -59,9 +59,6 @@ namespace talcs {
         d->readAheadSize = readAheadSize;
         d->autoBuffering = autoBuffering;
         d->threadPool = threadPool ? threadPool : BufferingAudioSource::threadPool();
-
-        d->headPosition = 0;
-        d->tailPosition = 0;
     }
 
     /**
@@ -76,36 +73,42 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         Q_ASSERT(isOpen());
         if (d->readAheadSize <= bufferSize()) {
-            return d->src->read(readData);
+            const auto readLength = d->src->read(readData);
+            d->position += readLength;
+            return readLength;
         }
-        int channelCount = qMin(readData.buffer->channelCount(), d->channelCount);
-        {
+        const auto channelCount = qMin(readData.buffer->channelCount(), d->channelCount);
+        qint64 readLength = 0;
+        while (readLength < readData.length) {
+            const auto chunkLength = qMin(readData.length - readLength, d->readAheadSize);
             QMutexLocker readLocker(&d->bufLock);
-            qint64 head = d->headPosition;
-            qint64 tail = d->tailPosition;
-            if (tail - head >= readData.length) {
-                readFromBuffer:
-                for (int ch = 0; ch < channelCount; ch++) {
-                    readData.buffer->setSampleRange(ch, readData.startPos, readData.length, d->buf, ch, head);
-                }
-                for (int ch = channelCount; ch < readData.buffer->channelCount(); ch++) {
-                    readData.buffer->clear(ch, readData.startPos, readData.length);
-                }
-            } else {
+            if (d->tailPosition.loadAcquire() - d->headPosition < chunkLength) {
                 readLocker.unlock();
-                d->accelerateCurrentBufferingTaskAndWait();
+                d->terminateCurrentBufferingTask();
+                d->fillBuffer(chunkLength);
                 readLocker.relock();
-                head = d->headPosition;
-                tail = d->tailPosition;
-                Q_ASSERT(tail - head >= readData.length);
-                goto readFromBuffer;
             }
-            d->headPosition += readData.length;
+            const auto available = qMin(chunkLength, d->tailPosition.loadAcquire() - d->headPosition);
+            if (available > 0) {
+                for (int ch = 0; ch < channelCount; ch++) {
+                    readData.buffer->setSampleRange(ch, readData.startPos + readLength, available, d->buf, ch, d->headPosition);
+                }
+                d->headPosition += available;
+                readLength += available;
+            }
+            if (available < chunkLength)
+                break;
         }
-        if (!d->currentBufferingTask)
-            d->commitBufferingTask(false);
-        d->position += readData.length;
-        return readData.length;
+        for (int ch = 0; ch < channelCount; ch++) {
+            readData.buffer->clear(ch, readData.startPos + readLength, readData.length - readLength);
+        }
+        for (int ch = channelCount; ch < readData.buffer->channelCount(); ch++) {
+            readData.buffer->clear(ch, readData.startPos, readData.length);
+        }
+        d->position += readLength;
+        if (readLength > 0 && readLength == readData.length)
+            d->commitBufferingTask();
+        return readLength;
     }
 
     qint64 BufferingAudioSource::length() const {
@@ -122,7 +125,7 @@ namespace talcs {
             flush();
             d->src->setNextReadPosition(pos);
             if (d->autoBuffering)
-                d->commitBufferingTask(false);
+                d->commitBufferingTask();
         } else {
             d->src->setNextReadPosition(pos);
         }
@@ -140,7 +143,7 @@ namespace talcs {
         if (d->readAheadSize > bufferSize) {
             d->buf.resize(d->channelCount, d->readAheadSize * 2);
             if (d->autoBuffering)
-                d->commitBufferingTask(false);
+                d->commitBufferingTask();
         }
         return AudioSource::open(bufferSize, sampleRate);
     }
@@ -160,14 +163,13 @@ namespace talcs {
         QMutexLocker locker(&d->mutex);
         if (size == d->readAheadSize)
             return;
-        if (isOpen() && size > bufferSize()) {
+        if (isOpen() && (d->readAheadSize > bufferSize() || size > bufferSize()))
             flush();
-            d->readAheadSize = size;
+        d->readAheadSize = size;
+        if (isOpen() && size > bufferSize()) {
             d->buf.resize(d->channelCount, size * 2);
             if (d->autoBuffering)
-                d->commitBufferingTask(false);
-        } else {
-            d->readAheadSize = size;
+                d->commitBufferingTask();
         }
     }
 
@@ -192,7 +194,7 @@ namespace talcs {
             d->channelCount = channelCount;
             d->buf.resize(channelCount, d->readAheadSize * 2);
             if (d->autoBuffering)
-                d->commitBufferingTask(false);
+                d->commitBufferingTask();
         } else {
             d->channelCount = channelCount;
         }
@@ -222,7 +224,7 @@ namespace talcs {
             d->takeOwnership = takeOwnership;
             d->src->setNextReadPosition(d->position);
             if (d->autoBuffering)
-                d->commitBufferingTask(false);
+                d->commitBufferingTask();
         } else {
             d->src = src;
             d->takeOwnership = takeOwnership;
@@ -254,14 +256,21 @@ namespace talcs {
     }
 
     /**
-     * Waits for the current buffering task to finish.
+     * Waits for the current buffering task to finish or be canceled.
      * @param deadline the deadline
-     * @return whether the task is finish
+     * @return Whether the task finished or was canceled by the deadline, or no task was pending.
      */
     bool BufferingAudioSource::waitForBuffering(QDeadlineTimer deadline) {
         Q_D(BufferingAudioSource);
         QMutexLocker locker(&d->bufferingTaskMutex);
-        return d->bufferingFinished.wait(&d->bufferingTaskMutex, deadline);
+        if (!d->bufferingTaskPending)
+            return true;
+        const auto completedTasks = d->completedBufferingTasks;
+        while (d->completedBufferingTasks == completedTasks) {
+            if (!d->bufferingFinished.wait(&d->bufferingTaskMutex, deadline))
+                return d->completedBufferingTasks != completedTasks;
+        }
+        return true;
     }
 
     /**
@@ -279,81 +288,72 @@ namespace talcs {
     }
 
     BufferingAudioSourceTask::BufferingAudioSourceTask(BufferingAudioSourcePrivate *d) : d(d) {
+        setAutoDelete(false);
     }
 
     void BufferingAudioSourceTask::run() {
-        qint64 head = d->headPosition;
-        qint64 tail = d->tailPosition;
-        if (head > d->readAheadSize) {
-            QMutexLocker locker(&d->bufLock);
-            head = d->headPosition;
-            tail = d->tailPosition;
-            for (int ch = 0; ch < d->channelCount; ch++) {
-                d->buf.setSampleRange(ch, 0, tail - head, d->buf, ch, head);
-            }
-            d->tailPosition -= head;
-            d->headPosition = 0;
-            head = d->headPosition;
-            tail = d->tailPosition;
-        }
-        readByFrame(tail, d->readAheadSize - (tail - head));
+        d->fillBuffer(d->readAheadSize);
+        QMutexLocker locker(&d->bufferingTaskMutex);
+        d->finishBufferingTask();
+    }
+
+    void BufferingAudioSourcePrivate::fillBuffer(qint64 targetLength) {
+        qint64 missingLength;
         {
-            QMutexLocker locker(&d->bufferingTaskMutex);
-            d->currentBufferingTask = nullptr;
-            d->bufferingFinished.wakeAll();
+            QMutexLocker locker(&bufLock);
+            const auto tail = tailPosition.loadRelaxed();
+            const auto available = tail - headPosition;
+            if (headPosition > readAheadSize) {
+                if (available > 0) {
+                    for (int ch = 0; ch < channelCount; ch++) {
+                        buf.setSampleRange(ch, 0, available, buf, ch, headPosition);
+                    }
+                }
+                headPosition = 0;
+                tailPosition = available;
+            }
+            missingLength = qMax(0ll, targetLength - available);
+        }
+
+        auto remaining = qBound(0ll, src->length() - src->nextReadPosition(), missingLength);
+        auto tail = tailPosition.loadRelaxed();
+        while (remaining > 0 && !isTerminateRequested) {
+            const auto frameLength = qMin(src->bufferSize(), remaining);
+            const auto readLength = src->read({&buf, tail, frameLength});
+            tail += readLength;
+            tailPosition.storeRelease(tail);
+            if (readLength < frameLength)
+                break;
+            remaining -= readLength;
         }
     }
 
-    void BufferingAudioSourceTask::readByFrame(qint64 startPos, qint64 length) const {
-        if (d->src->length() - d->src->nextReadPosition() < length) {
-            for (int ch = 0; ch < d->channelCount; ch++)
-                d->buf.clear(ch, startPos + d->src->length() - d->src->nextReadPosition(), length + d->src->nextReadPosition() - d->src->length());
-            length = d->src->length() - d->src->nextReadPosition();
-        }
-        if (length <= 0)
+    void BufferingAudioSourcePrivate::commitBufferingTask() {
+        QMutexLocker locker(&bufferingTaskMutex);
+        if (bufferingTaskPending)
             return;
-        qint64 frameLength = qMin(d->src->bufferSize(), length);
-        length = length - (length % frameLength);
-        for (qint64 offset = 0; offset < length; offset += frameLength) {
-            if (d->isTerminateRequested)
-                return;
-            d->src->read(AudioSourceReadData(&d->buf, startPos + offset, frameLength));
-            d->tailPosition += frameLength;
-        }
+        bufferingTaskPending = true;
+        threadPool->start(&bufferingTask);
     }
 
-
-    void BufferingAudioSourcePrivate::commitBufferingTask(bool isCritical) {
-        currentBufferingTask = new BufferingAudioSourceTask(this);
-        if (isCritical) {
-            QScopedPointer<QRunnable> p(currentBufferingTask);
-            currentBufferingTask->run();
-        } else {
-            threadPool->start(currentBufferingTask);
-        }
+    void BufferingAudioSourcePrivate::finishBufferingTask() {
+        bufferingTaskPending = false;
+        ++completedBufferingTasks;
+        bufferingFinished.wakeAll();
     }
 
     void BufferingAudioSourcePrivate::terminateCurrentBufferingTask() {
-        Q_Q(BufferingAudioSource);
-        if (threadPool->tryTake(currentBufferingTask)) {
-            delete currentBufferingTask;
-            currentBufferingTask = nullptr;
+        QMutexLocker locker(&bufferingTaskMutex);
+        if (!bufferingTaskPending)
+            return;
+        if (threadPool->tryTake(&bufferingTask)) {
+            finishBufferingTask();
             return;
         }
-        {
-            QMutexLocker locker(&bufferingTaskMutex);
-            if (!currentBufferingTask)
-                return;
-            isTerminateRequested = true;
+        isTerminateRequested = true;
+        while (bufferingTaskPending)
             bufferingFinished.wait(&bufferingTaskMutex);
-            isTerminateRequested = false;
-        }
-    }
-
-    void BufferingAudioSourcePrivate::accelerateCurrentBufferingTaskAndWait() {
-        Q_Q(BufferingAudioSource);
-        terminateCurrentBufferingTask();
-        commitBufferingTask(true);
+        isTerminateRequested = false;
     }
 
 
