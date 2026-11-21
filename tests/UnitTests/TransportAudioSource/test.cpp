@@ -19,8 +19,10 @@
 
 #include <QtTest/QtTest>
 
-#include <TalcsCore/TransportAudioSource.h>
+#include <TalcsCore/AudioBuffer.h>
+#include <TalcsCore/AudioSourceClipSeries.h>
 #include <TalcsCore/SineWaveAudioSource.h>
+#include <TalcsCore/TransportAudioSource.h>
 
 using namespace talcs;
 
@@ -94,6 +96,31 @@ private slots:
         spy.clear();
         tpSrc.setPosition(114514);
         QVERIFY(spy.isEmpty());
+    }
+
+    void readAcrossLoopEnd_data() {
+        QTest::addColumn<qint64>("position");
+        QTest::addColumn<qint64>("nextPosition");
+
+        QTest::newRow("at loop end") << qint64(32) << qint64(24);
+        QTest::newRow("before loop end") << qint64(29) << qint64(21);
+    }
+
+    void readAcrossLoopEnd() {
+        QFETCH(qint64, position);
+        QFETCH(qint64, nextPosition);
+
+        AudioSourceClipSeries source;
+        TransportAudioSource tpSrc(&source);
+        AudioBuffer buffer(2, 8);
+        QVERIFY(tpSrc.open(buffer.sampleCount(), 48000));
+        tpSrc.setLoopingRange(16, 32);
+        tpSrc.play();
+        tpSrc.setPosition(position);
+
+        QCOMPARE(tpSrc.read({&buffer, 0, buffer.sampleCount()}), buffer.sampleCount());
+        QCOMPARE(source.nextReadPosition(), nextPosition);
+        QCOMPARE(tpSrc.position(), nextPosition);
     }
 
     void resetSourceWhenOpen() {

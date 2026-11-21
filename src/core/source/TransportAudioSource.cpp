@@ -61,17 +61,14 @@ namespace talcs {
 
     static inline void safeRead(IAudioSampleContainer *dest, qint64 destPos, qint64 length,
                                 PositionableAudioSource *src) {
-        src->read({dest, destPos, qBound(0ll, src->length() - src->nextReadPosition(), length)});
-    }
-
-    static inline bool inRange(qint64 x, qint64 l, qint64 r) {
-        return x >= l && x < r;
+        const auto readLength = qMin(length, src->length() - src->nextReadPosition());
+        if (readLength > 0) {
+            src->read({dest, destPos, readLength});
+        }
     }
 
     qint64 TransportAudioSource::processReading(const AudioSourceReadData &readData) {
         Q_D(TransportAudioSource);
-        if (d->position == d->loopingStart && d->position == d->loopingEnd)
-            return 0;
         QMutexLocker locker(&d->mutex);
         int channelCount = readData.buffer->channelCount();
         for (int i = 0; i < channelCount; i++) {
@@ -85,24 +82,23 @@ namespace talcs {
         }
         if (d->bufferingCounter)
             return readData.length;
+        qint64 lengthToRead = readData.length;
         if (d->src) {
             qint64 curBufPos = readData.startPos;
-            qint64 lengthToRead = readData.length;
-            qint64 srcPos = d->position;
-            d->src->setNextReadPosition(srcPos);
-            while (curBufPos + d->loopingEnd - srcPos < readData.startPos + readData.length &&
-                   inRange(d->loopingEnd, srcPos, srcPos + lengthToRead)) {
-                safeRead(readData.buffer, curBufPos, d->loopingEnd - srcPos, d->src);
-                curBufPos += d->loopingEnd - srcPos;
-                lengthToRead -= d->loopingEnd - srcPos;
+            d->src->setNextReadPosition(d->position);
+            while (d->loopingStart < d->loopingEnd && d->position <= d->loopingEnd &&
+                   d->loopingEnd - d->position < lengthToRead) {
+                const auto segmentLength = d->loopingEnd - d->position;
+                safeRead(readData.buffer, curBufPos, segmentLength, d->src);
+                curBufPos += segmentLength;
+                lengthToRead -= segmentLength;
                 d->src->setNextReadPosition(d->loopingStart);
                 d->position = d->loopingStart;
                 d->_q_positionAboutToChange(d->loopingStart);
-                srcPos = d->loopingStart;
             }
             safeRead(readData.buffer, curBufPos, lengthToRead, d->src);
         }
-        d->position += readData.length;
+        d->position += lengthToRead;
         if (readData.length != 0)
             d->_q_positionAboutToChange(d->position);
         if (d->playbackStatus == AboutToPause) {
