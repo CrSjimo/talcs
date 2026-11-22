@@ -48,7 +48,7 @@ namespace talcs {
         return stream->seek(pos) ? 0 : -1;
     }
     static inline int wpSetPosRel(QFileDevice *stream, qint64 delta, int mode) {
-        if (mode == SEEK_SET) {
+        if (mode == SEEK_CUR) {
             delta += stream->pos();
         } else if (mode == SEEK_END) {
             delta += stream->size();
@@ -56,7 +56,7 @@ namespace talcs {
         return wpSetPosAbs(stream, delta);
     }
     static inline int wpPushBackByte(QFileDevice *stream, int c) {
-        return stream->putChar(static_cast<char>(c)) ? c : -1;
+        return stream->pos() > 0 && stream->seek(stream->pos() - 1) ? c : -1;
     }
     static inline qint64 wpGetLength(const QFileDevice *stream) {
         return stream->size();
@@ -142,6 +142,11 @@ namespace talcs {
         }
         if (!d->stream) {
             qWarning() << "WavpackAudioFormatIO: Cannot open because stream is null.";
+            return false;
+        }
+        if ((!d->stream->isSequential() && !d->stream->seek(0))
+            || (d->corrStream && !d->corrStream->isSequential() && !d->corrStream->seek(0))) {
+            setErrorString(QStringLiteral("WavpackAudioFormatIO: Cannot rewind the input stream."));
             return false;
         }
         if (mode.testFlag(Read)) {
@@ -241,7 +246,7 @@ namespace talcs {
     }
 
     static inline void convertSamplesInPlaceToFloat(float *p, qsizetype size, int bitDepth) {
-        const double NORM = ((1 << (bitDepth - 1)) - 1) + 0.49999;
+        const double NORM = ((quint64(1) << (bitDepth - 1)) - 1) + 0.49999;
         for (float *pp = p; pp < p + size; pp++) {
             *pp = static_cast<float>(*reinterpret_cast<qint32 *>(pp) / NORM);
         }
@@ -255,7 +260,7 @@ namespace talcs {
         if (fmt == Float) {
             return ret;
         } else {
-            convertSamplesInPlaceToFloat(ptr, length * channelCount(), fmt);
+            convertSamplesInPlaceToFloat(ptr, qint64(ret) * channelCount(), fmt);
             return ret;
         }
     }
@@ -267,7 +272,8 @@ namespace talcs {
 
     qint64 WavpackAudioFormatIO::seek(qint64 pos) {
         Q_D(WavpackAudioFormatIO);
-        return WavpackSeekSample64(d->context, pos);
+        TEST_IS_OPEN(-1)
+        return WavpackSeekSample64(d->context, pos) ? pos : -1;
     }
 
     qint64 WavpackAudioFormatIO::pos() const {

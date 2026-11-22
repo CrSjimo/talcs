@@ -184,9 +184,11 @@ namespace talcs {
             return nullptr;
         }
         f->setParent(io.get());
-        corrFile->setParent(io.get());
         std::ignore = f.release();
-        std::ignore = corrFile.release();
+        if (corrFile) {
+            corrFile->setParent(io.get());
+            std::ignore = corrFile.release();
+        }
         return io.release();
     }
 
