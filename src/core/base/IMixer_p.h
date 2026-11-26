@@ -194,10 +194,13 @@ namespace talcs {
             int routeCnt = 0;
             qint64 actualReadLength = 0;
             for (auto src: sourceList) {
+                if (routeChannels && routeCnt >= channelCount / 2)
+                    break;
+
                 auto srcInfo = sourceDict.value(src);
                 bool isMutedBySoloSetting = (soloCounter && !srcInfo.isSolo);
 
-                if (sourceList.size() == 1) { // fast-read
+                if (!routeChannels && sourceList.size() == 1) { // fast-read
                     IAudioSampleContainer *adoptedBuffer = readData.buffer->isContinuous() ? readData.buffer : &tmpBuf;
                     actualReadLength = src->read(AudioSourceReadData(adoptedBuffer, adoptedBuffer == readData.buffer ? readData.startPos : 0, readLength, isMutedBySoloSetting ? -1 : silentFlags));
                     for (int i = 0; i < channelCount; i++) {
@@ -221,8 +224,6 @@ namespace talcs {
                     tmpBuf.clear();
 
                 if (routeChannels) {
-                    if (routeCnt >= channelCount / 2)
-                        break;
                     if ((1 & silentFlags) == 0)
                         readData.buffer->addSampleRange(routeCnt * 2, readData.startPos, readLength, tmpBuf, 0, 0,
                                                         gainLeftRight.first);
