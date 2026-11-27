@@ -347,8 +347,12 @@ namespace talcs {
     void FutureAudioSourceClipSeries::setReadMode(FutureAudioSourceClipSeries::ReadMode readMode) {
         Q_D(FutureAudioSourceClipSeries);
         QMutexLocker locker(&d->mutex);
-        d->checkAndNotify(FutureAudioSourceClipSeriesPrivate::Resume);
+        const bool leavingNotify = d->readMode == Notify && readMode != Notify;
+        if (!leavingNotify)
+            d->checkAndNotify(FutureAudioSourceClipSeriesPrivate::Resume);
         d->readMode = readMode;
+        if (leavingNotify)
+            d->notifyResume();
     }
 
     /**
